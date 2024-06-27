@@ -93,12 +93,6 @@ jobs:
             # Cleanup: Remove unused Docker images
             docker image prune -a -f --filter "until=24h"
 
-      - name: Post deployment status
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: "Los cambios fueron deployados! :rocket: \n [aquí](http://${{ secrets.SSH_HOST }}/pr-${available_port - 3000}/)."
-
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
