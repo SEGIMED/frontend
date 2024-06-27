@@ -1,0 +1,74 @@
+name: Deploy PR to VPS
+
+on:
+  pull_request:
+    branches:
+      - main # or any branch you want to deploy from
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t segimed/frontend:${{ github.sha }} .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push segimed/frontend:${{ github.sha }}
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            TARGET_DIR="/home/segimed-pr-${{ github.sha }}"
+            mkdir -p $TARGET_DIR
+            cd $TARGET_DIR
+
+            docker pull segimed/frontend:${{ github.sha }}
+
+            echo "version: '3.9'
+
+            services:
+              app:
+                image: segimed/frontend:${{ github.sha }}
+                ports:
+                  - \"3001:3000\"
+                environment:
+                  - NODE_ENV=production
+                restart: always" > docker-compose.yml
+
+            docker-compose up -d
+
+            # Cleanup: Remove unused Docker images older than 24 hours
+            docker image prune -a -f --filter "until=24h"
+
+      - name: Post deployment status
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "Los cambios fueron deployados! :rocket: \n [here](http://${{ github.sha }}.segimed.com)."
