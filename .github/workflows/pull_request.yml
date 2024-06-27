@@ -3,7 +3,7 @@ name: Deploy PR to VPS
 on:
   pull_request:
     branches:
-      - main # or any branch you want to deploy from
+      - main
       - develop
 
 jobs:
@@ -45,30 +45,56 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            # Obtener todos los contenedores actuales para PRs
+            current_containers=$(docker ps -q --filter "name=segimed-frontend-pr-*")
+
+            # Contar el número de contenedores actuales
+            container_count=$(echo "$current_containers" | wc -l)
+
+            # Si hay más de 3 contenedores, eliminar el más antiguo
+            if [ "$container_count" -ge 3 ]; then
+              oldest_container=$(docker ps -q --filter "name=segimed-frontend-pr-*" --format "{{.ID}}" | tail -n 1)
+              docker stop "$oldest_container"
+              docker rm "$oldest_container"
+            fi
+
+            # Asignar un puerto único
+            used_ports=$(docker ps --format "{{.Ports}}" | grep -oP '(?<=:)\d+(?=->3000)')
+            for port in {3001..3003}; do
+              if ! echo "$used_ports" | grep -q "$port"; then
+                available_port=$port
+                break
+              fi
+            done
+
+            # Crear y mover al directorio del PR
             TARGET_DIR="/home/segimed-pr-${{ github.sha }}"
             mkdir -p $TARGET_DIR
             cd $TARGET_DIR
 
+            # Tirar la última imagen de Docker Hub
             docker pull segimed/frontend:${{ github.sha }}
 
+            # Crear docker-compose.yml
             echo "version: '3.9'
 
             services:
               app:
                 image: segimed/frontend:${{ github.sha }}
                 ports:
-                  - \"3001:3000\"
+                  - \"$available_port:3000\"
                 environment:
                   - NODE_ENV=production
                 restart: always" > docker-compose.yml
 
+            # Ejecutar docker-compose
             docker-compose up -d
 
-            # Cleanup: Remove unused Docker images older than 24 hours
+            # Cleanup: Remove unused Docker images
             docker image prune -a -f --filter "until=24h"
 
       - name: Post deployment status
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: "Los cambios fueron deployados! :rocket: \n [here](http://${{ github.sha }}.segimed.com)."
+          body: "Los cambios fueron deployados! :rocket: \n [aquí](http://${{ secrets.SSH_HOST }}/pr-${available_port - 3000}/)."
