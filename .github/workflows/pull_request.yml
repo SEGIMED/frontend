@@ -59,7 +59,7 @@ jobs:
 
             # Si no hay puertos disponibles, eliminar el contenedor más antiguo
             if [ -z "$available_port" ]; then
-              oldest_container=$(docker ps -q --filter "name=segimed-frontend-pr-*" --format "{{.ID}}" | tail -n 1)
+              oldest_container=$(docker ps -q --filter "name=segimed-pr-*" --format "{{.ID}}" | tail -n 1)
               docker stop "$oldest_container"
               docker rm "$oldest_container"
 
