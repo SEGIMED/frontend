@@ -19,7 +19,7 @@ export default function HomePte() {
   return (
     <div className="min-h-screen flex flex-col ">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
-        <h2 className="text-2xl">¡Bienvenido {user?.name}!</h2>
+        <h2 className="text-2xl">¡Hola {user?.name}!</h2>
       </div>
       <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
         <div className="flex justify-center items-center ml-5">
