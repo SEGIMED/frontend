@@ -98,3 +98,9 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: "Los cambios fueron deployados! :rocket: \n [aquí](http://${{ secrets.SSH_HOST }}/pr-${available_port - 3000}/)."
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            http://${{ secrets.SSH_HOST }}:${available_port - 3000} ! :wave:
