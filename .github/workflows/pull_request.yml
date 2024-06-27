@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -101,4 +102,4 @@ jobs:
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: "${{github.sha}}/ ! :wave:"
+          message: "http://${{ secrets.SSH_HOST }}${{github.sha}}/ ! :wave:"
