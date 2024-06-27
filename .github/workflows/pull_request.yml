@@ -73,8 +73,12 @@ jobs:
               done
             fi
 
-            # Crear un directorio temporal y guardar el puerto en un archivo temporal
+            # Guardar el puerto en un archivo temporal en el directorio actual
             echo "$available_port" > available_port.txt
+
+            # Verificar que el archivo se haya creado correctamente
+            ls -l available_port.txt
+            cat available_port.txt
             
             # Crear y mover al directorio del PR
             TARGET_DIR="/home/segimed-pr-${{ github.sha }}"
@@ -99,7 +103,7 @@ jobs:
             docker-compose up -d
 
             # Cleanup: Remove unused Docker images
-            docker image prune -a -f --filter "until=24h"
+            docker image prune -a -f
 
       - name: Read available port
         id: read-port
