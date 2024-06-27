@@ -29,21 +29,18 @@ export default function SubNavbar({ id }) {
                         "justify-start",
                         "pr-4",
                         "py-2",
-
                         "border-r-2",
                         "hover:bg-gray-100",
-                        "data-[active=true]:bg-gray-100",
-                        "data-[active=true]:font-medium",
                     ],
                 }}
             >
                 <NavbarContent className="hidden sm:flex gap-4 " justify="start">
-                    <NavbarItem isActive>
+                    <NavbarItem>
                         <Link color="foreground" className="flex items-center gap-2" href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.Datos}`} aria-current="page">
                             <IconClinicalHistory />    Datos del Paciente
                         </Link>
                     </NavbarItem>
-                    <NavbarItem isActive>
+                    <NavbarItem >
                         <Link className="flex items-center gap-2" href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Consultas}`} aria-current="page">
                             <IconSubNavbar />  Consultas
                         </Link>
