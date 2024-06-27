@@ -73,8 +73,9 @@ jobs:
               done
             fi
 
-            # Guardar el puerto en un archivo temporal
-            echo "$available_port" > available_port.txt
+            # Crear un directorio temporal y guardar el puerto en un archivo temporal
+            mkdir -p /tmp/segimed
+            echo "$available_port" > /tmp/segimed/available_port.txt
 
             # Crear y mover al directorio del PR
             TARGET_DIR="/home/segimed-pr-${{ github.sha }}"
@@ -100,11 +101,13 @@ jobs:
 
             # Cleanup: Remove unused Docker images
             docker image prune -a -f --filter "until=24h"
-      
+
       - name: Read available port
         id: read-port
         run: |
-          available_port=$(cat available_port.txt)
+          # Imprimir el contenido del directorio temporal para depuración
+          ls /tmp/segimed
+          available_port=$(cat /tmp/segimed/available_port.txt)
           echo "::set-output name=port::$available_port"
 
       - name: Comment PR
