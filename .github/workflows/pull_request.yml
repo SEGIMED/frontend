@@ -73,13 +73,6 @@ jobs:
               done
             fi
 
-            # Guardar el puerto en un archivo temporal en el directorio actual
-            echo "$available_port" > available_port.txt
-
-            # Verificar que el archivo se haya creado correctamente
-            ls -l available_port.txt
-            cat available_port.txt
-            
             # Crear y mover al directorio del PR
             TARGET_DIR="/home/segimed-pr-${{ github.sha }}"
             mkdir -p $TARGET_DIR
@@ -105,15 +98,7 @@ jobs:
             # Cleanup: Remove unused Docker images
             docker image prune -a -f
 
-      - name: Read available port
-        id: read-port
-        run: |
-          # Imprimir el contenido del directorio actual para depuración
-          ls -l
-          available_port=$(cat available_port.txt)
-          echo "::set-output name=port::$available_port"
-
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: "http://${{ secrets.SSH_HOST }}:${{ steps.read-port.outputs.port}}/ ! :wave:"
+          message: "http://${{ secrets.SSH_HOST }}:${{github.sha}}/ ! :wave:"
