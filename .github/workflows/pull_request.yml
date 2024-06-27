@@ -50,6 +50,10 @@ jobs:
             bash /home/deploy_pr.sh $SHORT_SHA segimed/frontend:${{ github.sha }}
 
       - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v2
-        with:
-          message: "http://pr-$(echo ${{ github.sha }} | cut -c1-7).test.segimed.com/ ! :wave:"
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"body\": \"http://pr-${SHORT_SHA}.test.segimed.com/ ! 👋\"}" \
+               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments
