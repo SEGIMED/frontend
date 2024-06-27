@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: 
-            bash /home/deploy_pr.sh $SHORT_SHA segimed/frontend:${{ github.sha }}
+            bash /home/deploy_pr.sh ${{github.sha}} segimed/frontend:${{ github.sha }}
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
