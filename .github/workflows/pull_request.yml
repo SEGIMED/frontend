@@ -45,61 +45,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: |
-            # Obtener los puertos actualmente en uso
-            used_ports=$(docker ps --format "{{.Ports}}" | grep -oP '(?<=:)\d+(?=->3000)')
-            available_port=""
-
-            # Buscar un puerto disponible entre 3001 y 3003
-            for port in {3001..3003}; do
-              if ! echo "$used_ports" | grep -q "$port"; then
-                available_port=$port
-                break
-              fi
-            done
-
-            # Si no hay puertos disponibles, eliminar el contenedor más antiguo
-            if [ -z "$available_port" ]; then
-              oldest_container=$(docker ps -q --filter "name=segimed-pr-*" --format "{{.ID}}" | tail -n 1)
-              docker stop "$oldest_container"
-              docker rm "$oldest_container"
-
-              # Buscar nuevamente un puerto disponible después de liberar el más antiguo
-              used_ports=$(docker ps --format "{{.Ports}}" | grep -oP '(?<=:)\d+(?=->3000)')
-              for port in {3001..3003}; do
-                if ! echo "$used_ports" | grep -q "$port"; then
-                  available_port=$port
-                  break
-                fi
-              done
-            fi
-
-            # Crear y mover al directorio del PR
-            TARGET_DIR="/home/segimed-pr-${{ github.sha }}"
-            mkdir -p $TARGET_DIR
-            cd $TARGET_DIR
-
-            # Tirar la última imagen de Docker Hub
-            docker pull segimed/frontend:${{ github.sha }}
-
-            # Crear docker-compose.yml
-            echo "version: '3.9'
-            services:
-              app:
-                image: segimed/frontend:${{ github.sha }}
-                ports:
-                  - \"$available_port:3000\"
-                environment:
-                  - NODE_ENV=production
-                restart: always" > docker-compose.yml
-
-            # Ejecutar docker-compose
-            docker-compose up -d
-
-            # Cleanup: Remove unused Docker images
-            docker image prune -a -f
+          script: 
+            bash /home/deploy_pr.sh $SHORT_SHA segimed/frontend:${{ github.sha }}
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: "http://test.segimed.com/pr-${{github.sha}}/ ! :wave:"
+          message: "http://pr-$(echo ${{ github.sha }} | cut -c1-7).test.segimed.com/ ! :wave:"
