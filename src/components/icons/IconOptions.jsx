@@ -1,7 +1,6 @@
 const IconOptions = ({ color }) => {
   return (
     <svg
-      className="hidden md:block"
       width="24.000000"
       height="24.000000"
       viewBox="0 0 24 24"

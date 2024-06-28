@@ -9,15 +9,16 @@ import { useRouter } from "next/navigation";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import rutas from "@/utils/rutas";
+import { extractHourMinutes, extractMonthDay } from "@/utils/formatDate";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority) {
     case "Alta":
-      return <IconAlarmRed />;
+      return <IconAlarmRed className="md:w-8 w-1/2" />;
     case "Media":
-      return <IconAlarmYellow />;
+      return <IconAlarmYellow className="md:w-8 w-1/2" />;
     case "Baja":
-      return <IconAlarmGreen />;
+      return <IconAlarmGreen className="md:w-8 w-1/2" />;
     default:
       return null;
   }
@@ -49,30 +50,32 @@ export default function TableAlarm({ pacientes }) {
         {pacientes?.map((paciente, index) => (
           <div
             key={index}
-            className="grid md:grid-cols-6 grid-cols-5 items-center border-b border-b-[#cecece] md:pr-6 py-2 bg-white w-full h-14 ">
-            <div className="text-[#5F5F5F] flex items-center justify-start md:gap-6">
+            className="grid md:grid-cols-6 grid-cols-5 items-center border-b border-b-[#cecece] md:pr-6 py-2 md:px-2 bg-white w-full h-14 text-center md:text-start">
+            <div className="text-[#5F5F5F] flex items-center justify-center md:justify-start md:gap-4">
               <PriorityIcon priority={paciente.highestPriority} />
               <span className="hidden md:block">
                 {paciente.highestPriority}
               </span>
               <IconCurrentRouteNav className="w-3 hidden md:block " />
             </div>
-            <div className="text-[#5F5F5F]">{paciente.hora}</div>
-            <div className="text-[#5F5F5F]">{paciente.fecha}</div>
             <span className="text-[#5F5F5F]">
               {paciente.name} {paciente.lastname}
             </span>
+            <div className="text-[#5F5F5F]">
+              {extractHourMinutes(paciente.hora)}
+            </div>
+            <div className="text-[#5F5F5F]">
+              {extractMonthDay(paciente.fecha)}
+            </div>
             {/* <div className="text-[#5F5F5F]"></div> */}
             <div className="text-[#5F5F5F] hidden md:block">
               {paciente.alarmDescription}
             </div>
 
-            <div className="text-[#5F5F5F] justify-center">
-              <AlarmButtonDoc
-                id={paciente.id}
-                handleStatus={() => handleStatus({ id: paciente.id })}
-              />
-            </div>
+            <AlarmButtonDoc
+              id={paciente.id}
+              handleStatus={() => handleStatus({ id: paciente.id })}
+            />
           </div>
         ))}
       </div>

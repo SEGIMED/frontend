@@ -59,24 +59,25 @@ export default function HomeDoc() {
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
         {/* <Ordenar /> */}
-        <div></div>
-        <h1 className="font-bold">Listado de pacientes</h1>
+        <h1 className="font-bold">Listado de Alarmas</h1>
         <Link href={`${rutas.Doctor}${rutas.Alarm}${rutas.resueltas}`}>
           <button className="flex items-center px-6 py-2 bg-[#70C247] rounded-xl gap-3 text-white font-bold">
             Ver resueltas
           </button>
         </Link>
       </div>
-      <div className="grid grid-cols-5 md:grid-cols-6 items-center border-b border-b-[#cecece] pl-2 pr-6 py-2 bg-white sticky top-14 z-10 md:z-4">
+      <div className="grid grid-cols-5 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white sticky top-14 z-10 md:z-4">
         <p className="font-bold text-[#5F5F5F]">Prioridad</p>
+        <p className="font-bold text-[#5F5F5F]">Paciente</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
-        <p className="font-bold text-[#5F5F5F]">Paciente</p>
         {/* <p className="font-bold text-[#5F5F5F]">HTP</p> */}
         <p className="font-bold text-[#5F5F5F] hidden md:block">
           Motivo de alarma
         </p>
-        <p className="font-bold text-[#5F5F5F]"></p>
+        <div>
+          <p className="font-bold text-[#5F5F5F] block md:hidden"> Opciones</p>
+        </div>
       </div>
       <TableAlarm pacientes={activeAlarms} />
     </div>
