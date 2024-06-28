@@ -20,6 +20,7 @@ import { socket } from "@/utils/socketio";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
+  const avatar = "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png"
 
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
 
@@ -148,7 +149,9 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       <div className="flex justify-center items-center gap-4">
         <div className="w-12 h-12 flex justify-center items-center">
           <img
-            src={user?.avatar}
+            src={user?.avatar !== null ? user.avatar : avatar}
+
+
             alt=""
             className="w-12 h-12 object-cover rounded-3xl "
           />
