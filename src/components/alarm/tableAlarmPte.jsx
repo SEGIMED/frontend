@@ -45,30 +45,28 @@ export default function TableAlarm({ paciente }) {
   const handleStatus = (id) => {};
 
   return (
-    <div className="h-screen flex flex-col">
-      {paciente.map((paciente, index) => {
-        const highestPriority = determinePriority(paciente.questionsPriority);
+    <div className="flex flex-col">
+      {paciente.map((alarm, index) => {
+        const highestPriority = determinePriority(alarm.questionsPriority);
 
         return (
           <div
             key={index}
-            className="grid grid-cols-5 items-center border-b border-b-[#cecece] md:pr-6 md:px-2 py-2 text-center md:text-start bg-white w-full h-14 ">
-            <div className="text-[#5F5F5F] flex items-center justify-center md:justify-start md:gap-4  ">
+            className="grid grid-cols-5 items-center border-b border-b-[#cecece] md:pr-6 md:px-2 py-2 text-center md:text-start bg-white w-full h-14">
+            <div className="text-[#5F5F5F] flex items-center justify-center md:justify-start md:gap-4">
               <PriorityIcon priority={highestPriority} />
               <span className="hidden md:block">{highestPriority}</span>
-              <IconCurrentRouteNav className="w-3 hidden md:block " />
+              <IconCurrentRouteNav className="w-3 hidden md:block" />
             </div>
-            <div className="text-[#5F5F5F] ">
-              {extractHourMinutes(paciente.hora)}
+            <div className="text-[#5F5F5F]">
+              {extractHourMinutes(alarm.hora)}
             </div>
-            <div className="text-[#5F5F5F] ">
-              {extractMonthDay(paciente.fecha)}
-            </div>
-            <span className="text-[#5F5F5F] ">
-              {paciente.name} {paciente.lastname}
+            <div className="text-[#5F5F5F]">{extractMonthDay(alarm.fecha)}</div>
+            <span className="text-[#5F5F5F]">
+              {alarm.name} {alarm.lastname}
             </span>
-            <span className="text-[#5F5F5F] ">
-              {paciente?.solved === false ? "Sin resolver" : "Resuelta"}
+            <span className="text-[#5F5F5F]">
+              {alarm.solved === false ? "Sin resolver" : "Resuelta"}
             </span>
           </div>
         );

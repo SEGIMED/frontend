@@ -57,7 +57,7 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-50">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
         {/* <Ordenar /> */}
         <div></div>
         <h1 className="font-bold">Alarmas resueltas</h1>
@@ -67,7 +67,7 @@ export default function HomeDoc() {
           </button>
         </Link>
       </div>
-      <div className="flex items-center justify-between text-start border-b border-b-[#cecece] py-4 p-2 bg-white sticky top-14 z-10">
+      <div className="flex items-center justify-between text-start border-b border-b-[#cecece] py-4 p-2 bg-white sticky top-14 z-20 md:z-50">
         <p className="font-bold text-[#5F5F5F] w-1/6">Prioridad</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Paciente</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Hora</p>
@@ -78,7 +78,9 @@ export default function HomeDoc() {
           Tiempo de respuesta
         </p>
       </div>
-      <TableAlarmResueltas pacientes={inactiveAlarms} />
+      <div className="overflow-auto h-full">
+        <TableAlarmResueltas pacientes={inactiveAlarms} />
+      </div>
     </div>
   );
 }

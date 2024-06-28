@@ -46,7 +46,7 @@ export default function AlarmPte() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-10">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
         {/* <Ordenar funcion={handleSortToggle} /> */}
         <h1 className="font-bold">Listado de Alarmas</h1>
         <button
@@ -58,14 +58,16 @@ export default function AlarmPte() {
           <IconAlarmBlue /> Crear Alarma
         </button>
       </div>
-      <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-14 z-10">
+      <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-10 z-20 md:z-50">
         <p className="font-bold text-[#5F5F5F]">Prioridad</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
         <p className="font-bold text-[#5F5F5F]">Paciente</p>
         <p className="font-bold text-[#5F5F5F]">Status</p>
       </div>
-      <TableAlarmPte paciente={sortedAlarms} />
+      <div className="overflow-auto h-full">
+        <TableAlarmPte paciente={sortedAlarms} />
+      </div>
     </div>
   );
 }

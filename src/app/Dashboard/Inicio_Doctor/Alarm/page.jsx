@@ -79,7 +79,9 @@ export default function HomeDoc() {
           <p className="font-bold text-[#5F5F5F] block md:hidden"> Opciones</p>
         </div>
       </div>
-      <TableAlarm pacientes={activeAlarms} />
+      <div className="overflow-auto h-full">
+        <TableAlarm pacientes={activeAlarms} />
+      </div>
     </div>
   );
 }

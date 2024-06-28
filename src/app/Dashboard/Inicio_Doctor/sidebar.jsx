@@ -37,25 +37,26 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const dispatch = useAppDispatch();
 
   const getUser = async (headers) => {
-    const id = Cookies.get("c")
+    const id = Cookies.get("c");
     const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
 
     if (response.data) {
       dispatch(adduser(response.data));
     }
-  }
+  };
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(`/patients`, headers);
     if (response.data) {
-      const pacientesFormateados = response.data.map(paciente => {
-        const fechaFormateada = new Date(paciente.lastLogin).toLocaleString().replace(/\,/g, " -");
+      const pacientesFormateados = response.data.map((paciente) => {
+        const fechaFormateada = new Date(paciente.lastLogin)
+          .toLocaleString()
+          .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-      dispatch(setAllPatients(pacientesFormateados))
+      dispatch(setAllPatients(pacientesFormateados));
     }
-
-  }
+  };
 
   const getSchedules = async (headers) => {
     try {
@@ -68,7 +69,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       console.error(error);
     }
   };
-
 
   const user = useAppSelector((state) => state.user);
 
@@ -93,7 +93,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   }, []);
 
   return (
-    <div className=" flex  items-center justify-between   border-b-2 border-b-[#cecece] p-4">
+    <div className=" flex  items-center justify-between h-[12%] border-b-2 border-b-[#cecece] p-4">
       <div className="md:hidden p-4">
         <button
           className="text-[#B2B2B2] p-2 border rounded-lg focus:outline-none"
@@ -158,9 +158,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           <span className="text-start ">
             {user?.name} {user?.lastname}
           </span>
-          <span className="text-start text-[#808080]">
-            Médico
-          </span>
+          <span className="text-start text-[#808080]">Médico</span>
         </div>
 
         <button>
@@ -173,4 +171,4 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       </div>
     </div>
   );
-}
+};

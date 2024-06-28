@@ -22,7 +22,7 @@ const PriorityIcon = ({ priority }) => {
 
 export default function TableAlarmResueltas({ pacientes }) {
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col">
       <div className="">
         {pacientes?.map((paciente, index) => (
           <div
