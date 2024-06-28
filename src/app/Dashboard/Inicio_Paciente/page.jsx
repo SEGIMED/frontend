@@ -16,7 +16,7 @@ export default function HomePte() {
   const user = useAppSelector((state) => state.user);
   console.log(user);
   return (
-    <div className="min-h-screen flex flex-col ">
+    <div className="h-full flex flex-col">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
         <h2 className="text-2xl">¡Hola {user?.name}!</h2>
       </div>

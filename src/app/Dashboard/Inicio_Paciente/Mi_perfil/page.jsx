@@ -20,7 +20,6 @@ import IconCircle from "@/components/icons/IconCircle";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
 
-
 // Definir opciones para el select de sexo
 const sexoOptions = [
   { value: 2, label: "Masculino" },
@@ -28,7 +27,6 @@ const sexoOptions = [
 ];
 
 export default function HomePte() {
- 
   const paciente = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const id = Cookies.get("c");
@@ -43,9 +41,9 @@ export default function HomePte() {
     second: "2-digit",
     hour12: false,
   };
-  
+
   const [buttonSize, setButtonSize] = useState("lg");
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -76,7 +74,7 @@ export default function HomePte() {
     const token = Cookies.get("a");
     const myId = Number(Cookies.get("c"));
     const body = { ...data, patientId: myId };
-    console.log(paciente, "paciente", data, "data")
+    console.log(paciente, "paciente", data, "data");
     const patientDispatch = {
       ...paciente,
       ...data,
@@ -91,7 +89,11 @@ export default function HomePte() {
     const headers = { headers: { token: token } };
 
     try {
-      const response = await ApiSegimed.patch(`/update-full-patient`, body, headers);
+      const response = await ApiSegimed.patch(
+        `/update-full-patient`,
+        body,
+        headers
+      );
       setEdit(false);
       dispatch(adduser(patientDispatch));
       Swal.fire({
@@ -114,11 +116,13 @@ export default function HomePte() {
   const closeModalFoto = () => setIsModalOpen(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-full overflow-y-scroll flex flex-col">
       <div
-        className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"} justify-between items-center gap-2 pl-10 pr-6 py-1 md:py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}
-      >
-        <div className="flex items-center gap-4">
+        className={`flex ${
+          edit ? "flex-col md:flex-row" : "md:flex-row"
+        } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
+        <div
+          className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
           <Image src={ruteActual} alt="ruta actual" />
           <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
             Sus datos personales
@@ -227,12 +231,15 @@ export default function HomePte() {
           </label>
           {edit ? (
             <select
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.genreId ? "red" : "#DCDBDB"}]`}
+              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
+                errors.genreId ? "red" : "#DCDBDB"
+              }]`}
               defaultValue={
                 paciente.sociodemographicDetails?.genre === "Masculino" ? 2 : 1
               }
-              {...register("genreId", { required: "*Este campo es obligatorio" })}
-            >
+              {...register("genreId", {
+                required: "*Este campo es obligatorio",
+              })}>
               {sexoOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -252,10 +259,14 @@ export default function HomePte() {
           </label>
           {edit ? (
             <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${errors.birthDate ? "red" : "#DCDBDB"}]`}
+              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
+                errors.birthDate ? "red" : "#DCDBDB"
+              }]`}
               type="date"
               defaultValue={paciente.sociodemographicDetails?.birthDate}
-              {...register("birthDate", { required: "*Este campo es obligatorio" })}
+              {...register("birthDate", {
+                required: "*Este campo es obligatorio",
+              })}
             />
           ) : (
             <span className="w-full text-start px-6 py-2">
@@ -270,7 +281,9 @@ export default function HomePte() {
           </label>
           {edit ? (
             <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"}]`}
+              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
+                errors.emergencyContactPhone ? "red" : "#DCDBDB"
+              }]`}
               type="text"
               defaultValue={paciente?.cellphone}
               {...register("cellphone", {
@@ -292,9 +305,13 @@ export default function HomePte() {
           </label>
           {edit ? (
             <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"}]`}
+              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
+                errors.emergencyContactPhone ? "red" : "#DCDBDB"
+              }]`}
               type="text"
-              defaultValue={paciente.sociodemographicDetails?.emergencyContactPhone}
+              defaultValue={
+                paciente.sociodemographicDetails?.emergencyContactPhone
+              }
               {...register("emergencyContactPhone", {
                 required: "*Este campo es obligatorio",
                 minLength: 10,
@@ -336,7 +353,7 @@ export default function HomePte() {
           )}
         </div>
       </form>
-      <div className="flex items-center justify-center pl-6 md:pl-11 py-2">
+      <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
         <label className="w-full flex items-center justify-start gap-3 font-medium">
           <IconCircle />
           Última conexión:
@@ -345,7 +362,9 @@ export default function HomePte() {
           {LastLogin(paciente.lastLogin)}
         </span>
       </div>
-      {showModal &&<MapModal isOpen={showModal} onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <MapModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      )}
       <PhotoModalPte isOpen={isModalOpen} onClose={closeModalFoto} />
     </div>
   );
