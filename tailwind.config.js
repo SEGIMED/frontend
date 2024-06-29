@@ -17,6 +17,7 @@ module.exports = {
       colors: {
         primary: '#0070f3',
         secondary: '#ff4081',
+        tertiary: 'rgb(112, 194, 71)',
       },
       darkMode: "class",
     },

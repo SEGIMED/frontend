@@ -15,8 +15,14 @@ export default function InputConsulta({
   defaultOpen = false,
   options,
   riskGroup,
-  groupHTP
+  groupHTP,
+  preconsult,
+  paciente
 }) {
+  const valuesAmnesis=[preconsult?.consultationReason,preconsult?.healthChangesDescription ,preconsult?.importantSymptoms]
+
+  const handleOption = (sub) => {
+  };
   const { register } = useFormContext();
   return (
     <div className="flex flex-col">
@@ -39,9 +45,9 @@ export default function InputConsulta({
             </label>
              <div className="flex">
               {options?.map((sub, index) => (
-                <button className=" p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7]">
+                <button className=" p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7]" onClick={handleOption(sub)}>
                   {sub}
-                </button>
+                </button >
               ))}
             </div> 
           </div>
@@ -75,6 +81,7 @@ export default function InputConsulta({
               className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
+              value={valuesAmnesis[index]}
             />
           </div>
         ))}

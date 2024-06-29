@@ -4,11 +4,11 @@ import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
 import FileUpload from "./file";
 
-export default function InputFile({ title, defaultOpen = false }) {
+export default function InputFile({ title, defaultOpen = false , Links}) {
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex px-6 py-2 border gap-1 items-center cursor-pointer justify-center">
+        <summary className="flex items-center justify-center gap-1 px-6 py-2 border cursor-pointer">
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
@@ -16,17 +16,18 @@ export default function InputFile({ title, defaultOpen = false }) {
             </p>
           </div>
         </summary>
-        <FileUpload label={"Electrocardiograma"} />
-        <FileUpload label={"RX de Torax"} />
-        <FileUpload label={"Ecocardiograma"} />
-        <FileUpload label={"Test de caminata"} />
-        <FileUpload label={"Funcional respiratorio"} />
-        <FileUpload label={"Tomografías"} />
-        <FileUpload label={"Cateterismo cardiaco derecho"} />
-        <FileUpload label={"CCG (Coronariografia)"} />
-        <FileUpload label={"Resonancia"} />
-        <FileUpload label={"Cateterismo cardiaco izquierdo"} />
-        <FileUpload label={"Otros estudios"} />
+        
+        <FileUpload label={"Electrocardiograma"} Link={Links.electrocardiogram}/>
+        <FileUpload label={"RX de Torax"} Link={Links.rxThorax}/>
+        <FileUpload label={"Ecocardiograma"} Link={Links.echocardiogram}/>
+        <FileUpload label={"Test de caminata"} Link={Links.walkTest}/>
+        <FileUpload label={"Funcional respiratorio"} Link={Links.respiratoryFunctional}/>
+        <FileUpload label={"Tomografías"} Link={Links.tomographies}/>
+        <FileUpload label={"Cateterismo cardiaco derecho"} Link={Links.rightHeartCatheterization}/>
+        <FileUpload label={"CCG (Coronariografia)"} Link={Links.ccg}/>
+        <FileUpload label={"Resonancia"} Link={Links.resonance}/>
+        <FileUpload label={"Cateterismo cardiaco izquierdo"} Link={Links.leftHeartCatheterization}/>
+        <FileUpload label={"Otros estudios"} Links={Links.laboratoryResults}/>
       </details>
     </div>
   );

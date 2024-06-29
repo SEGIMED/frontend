@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import circleData from '@/components/images/circleData.png';
 import Image from 'next/image';
 
-export default function SignosVitalesInfo({ paciente, title, defaultOpen = false }) {
+export default function SignosVitalesInfo({ paciente, title, defaultOpen = false, preconsult }) {
     const [glucemiaValue, setGlucemiaValue] = useState('');
     const [glucemiaElevada, setGlucemiaElevada] = useState(null); // Estado para el botón "Sí" de la glucemia elevada
     const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState(['', '', '', '']);
@@ -28,7 +28,7 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
     return (
         <div className="flex flex-col">
             <details open={defaultOpen}>
-                <summary className="flex px-6 py-2 border gap-1 items-center cursor-pointer justify-center">
+                <summary className="flex items-center justify-center gap-1 px-6 py-2 border cursor-pointer">
                     <div className="flex items-center">
                         <Image src={circleData} alt="" />
                         <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
@@ -97,7 +97,7 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                                 key={index}
                                 type="text"
                                 className='px-6 py-2 border-2 rounded-xl border-[#DCDBDB] w-1/6'
-                                value={value}
+                                value={value || preconsult?.lastAbnormalGlycemia[index]}
                                 onChange={(event) => handleAnormalValueChange(index, event)}
                             />
                         ))}
