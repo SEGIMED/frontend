@@ -175,7 +175,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
                   />
                   <li className="text-lg md:text-md">Alarmas</li>
                 </Link>
-                <Link
+                {/* <Link
                   onClick={toggleSidebar}
                   href={`${rutas.Doctor}${rutas.Interconsultas}`}
                   className={`flex items-center gap-4 ${
@@ -192,7 +192,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
                     }`}
                   />
                   <li className="text-lg md:text-md">Interconsultas</li>
-                </Link>
+                </Link> */}
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.Doctor}${rutas.Pacientes}`}
@@ -211,7 +211,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
                   />
                   <li className="text-lg md:text-md">Pacientes</li>
                 </Link>
-                <Link
+                {/* <Link
                   onClick={toggleSidebar}
                   href={`${rutas.Doctor}${rutas.Soporte_tecnico}`}
                   className={`flex items-center gap-4 ${
@@ -228,7 +228,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
                     }`}
                   />
                   <li className="text-lg md:text-md">Soporte tecnico</li>
-                </Link>
+                </Link> */}
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.Doctor}${rutas.Sugerencias}`}
@@ -256,7 +256,11 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
             
             Cerrar sesión
           </button> */}
-          <Elboton icon={<IconOut />} nombre={"Cerrar sesión"} onPress={handleLogout}/>
+          <Elboton
+            icon={<IconOut />}
+            nombre={"Cerrar sesión"}
+            onPress={handleLogout}
+          />
         </div>
         <div
           className="flex-1 bg-black opacity-50"
