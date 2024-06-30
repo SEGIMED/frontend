@@ -74,7 +74,6 @@ export default function HomePte() {
     const token = Cookies.get("a");
     const myId = Number(Cookies.get("c"));
     const body = { ...data, patientId: myId };
-    console.log(paciente, "paciente", data, "data");
     const patientDispatch = {
       ...paciente,
       ...data,
@@ -114,7 +113,7 @@ export default function HomePte() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModalfoto = () => setIsModalOpen(true);
   const closeModalFoto = () => setIsModalOpen(false);
-
+  console.log(errors);
   return (
     <div className="h-full overflow-y-scroll flex flex-col">
       <div
@@ -177,16 +176,27 @@ export default function HomePte() {
             Nombre completo:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
-              type="text"
-              defaultValue={paciente?.name}
-              {...register("name", {
-                required: "*Este campo es obligatorio",
-                minLength: 2,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
+                type="text"
+                defaultValue={paciente?.name}
+                {...register("name", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                })}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {paciente?.name}
@@ -199,16 +209,29 @@ export default function HomePte() {
             Apellido:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
-              type="text"
-              defaultValue={paciente?.lastname}
-              {...register("lastname", {
-                required: "*Este campo es obligatorio",
-                minLength: 2,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
+                type="text"
+                defaultValue={paciente?.lastname}
+                {...register("lastname", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                })}
+              />
+              {errors.lastname && (
+                <p className="text-red-500 text-sm">
+                  {errors.lastname.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {paciente?.lastname}
@@ -230,22 +253,29 @@ export default function HomePte() {
             Sexo:
           </label>
           {edit ? (
-            <select
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
-                errors.genreId ? "red" : "#DCDBDB"
-              }]`}
-              defaultValue={
-                paciente.sociodemographicDetails?.genre === "Masculino" ? 2 : 1
-              }
-              {...register("genreId", {
-                required: "*Este campo es obligatorio",
-              })}>
-              {sexoOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="w-full flex flex-col">
+              <select
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
+                  errors.genreId ? "red" : "#DCDBDB"
+                }]`}
+                defaultValue={
+                  paciente.sociodemographicDetails?.genre === "Masculino"
+                    ? 2
+                    : 1
+                }
+                {...register("genreId", {
+                  required: "*Este campo es obligatorio",
+                })}>
+                {sexoOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {errors.genreId && (
+                <p className="text-red-500 text-sm">{errors.genreId.message}</p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {paciente.sociodemographicDetails?.genre}
@@ -258,16 +288,23 @@ export default function HomePte() {
             Fecha de nacimiento:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
-                errors.birthDate ? "red" : "#DCDBDB"
-              }]`}
-              type="date"
-              defaultValue={paciente.sociodemographicDetails?.birthDate}
-              {...register("birthDate", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.birthDate ? "red" : "#DCDBDB"
+                }]`}
+                type="date"
+                defaultValue={paciente.sociodemographicDetails?.birthDate}
+                {...register("birthDate", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.birthDate && (
+                <p className="text-red-500 text-sm">
+                  {errors.birthDate.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {paciente.sociodemographicDetails?.birthDate}
@@ -280,18 +317,35 @@ export default function HomePte() {
             Teléfono de contacto:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
-                errors.emergencyContactPhone ? "red" : "#DCDBDB"
-              }]`}
-              type="text"
-              defaultValue={paciente?.cellphone}
-              {...register("cellphone", {
-                required: "*Este campo es obligatorio",
-                minLength: 10,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.cellphone ? "red" : "#DCDBDB"
+                }]`}
+                type="text"
+                defaultValue={paciente?.cellphone}
+                {...register("cellphone", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 10,
+                    message: "Debe tener al menos 10 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Solo se permiten números",
+                  },
+                })}
+              />
+              {errors.cellphone && (
+                <p className="text-red-500 text-sm">
+                  {errors.cellphone.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {paciente?.cellphone}
@@ -304,20 +358,37 @@ export default function HomePte() {
             Teléfono de contacto de Emergencia:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
-                errors.emergencyContactPhone ? "red" : "#DCDBDB"
-              }]`}
-              type="text"
-              defaultValue={
-                paciente.sociodemographicDetails?.emergencyContactPhone
-              }
-              {...register("emergencyContactPhone", {
-                required: "*Este campo es obligatorio",
-                minLength: 10,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.emergencyContactPhone ? "red" : "#DCDBDB"
+                }]`}
+                type="text"
+                defaultValue={
+                  paciente.sociodemographicDetails?.emergencyContactPhone
+                }
+                {...register("emergencyContactPhone", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 10,
+                    message: "Debe tener al menos 10 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Solo se permiten números",
+                  },
+                })}
+              />
+              {errors.emergencyContactPhone && (
+                <p className="text-red-500 text-sm">
+                  {errors.emergencyContactPhone.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {paciente.sociodemographicDetails?.emergencyContactPhone}
@@ -331,14 +402,21 @@ export default function HomePte() {
           </label>
           {edit ? (
             <div className="flex items-center gap-2 w-full">
-              <input
-                className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2"
-                type="text"
-                defaultValue={paciente.sociodemographicDetails?.address}
-                {...register("address", {
-                  required: "*Este campo es obligatorio",
-                })}
-              />
+              <div className="w-full flex flex-col">
+                <input
+                  className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2"
+                  type="text"
+                  defaultValue={paciente.sociodemographicDetails?.address}
+                  {...register("address", {
+                    required: "*Este campo es obligatorio",
+                  })}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-sm">
+                    {errors.address.message}
+                  </p>
+                )}
+              </div>
               <Elboton
                 size={buttonSize}
                 onPress={openModal}

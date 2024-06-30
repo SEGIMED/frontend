@@ -212,16 +212,27 @@ export default function HomeDoc() {
             Nombre:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.name}
-              {...register("name", {
-                required: "*Este campo es obligatorio",
-                minLength: 2,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.name}
+                {...register("name", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                })}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">{doctor?.name}</span>
           )}
@@ -232,16 +243,29 @@ export default function HomeDoc() {
             Apellido
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border text-[#686868] outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.lastname}
-              {...register("lastname", {
-                required: "*Este campo es obligatorio",
-                minLength: 2,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border text-[#686868] outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.lastname}
+                {...register("lastname", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                })}
+              />
+              {errors.lastname && (
+                <p className="text-red-500 text-sm">
+                  {errors.lastname.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.lastname}
@@ -304,16 +328,23 @@ export default function HomeDoc() {
             Nacionalidad:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
-                errors.nacionalidad ? "red" : "#DCDBDB"
-              }]`}
-              type="text"
-              defaultValue={doctor?.nationality}
-              {...register("nationality", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
+                  errors.nacionalidad ? "red" : "#DCDBDB"
+                }]`}
+                type="text"
+                defaultValue={doctor?.nationality}
+                {...register("nationality", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.nationality && (
+                <p className="text-red-500 text-sm">
+                  {errors.nationality.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.nationality}
@@ -326,15 +357,25 @@ export default function HomeDoc() {
             Pais:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.currentLocationCountry}
-              {...register("currentLocationCountry", {
-                required: "*Este campo es obligatorio",
-                minLength: 3,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.currentLocationCountry}
+                {...register("currentLocationCountry", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 3,
+                    message: "Debe tener al menos 3 caracteres",
+                  },
+                })}
+              />
+              {errors.currentLocationCountry && (
+                <p className="text-red-500 text-sm">
+                  {errors.currentLocationCountry.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.currentLocationCountry}
@@ -348,15 +389,25 @@ export default function HomeDoc() {
             Ciudad:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.currentLocationProvince}
-              {...register("currentLocationProvince", {
-                required: "*Este campo es obligatorio",
-                minLength: 3,
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.currentLocationProvince}
+                {...register("currentLocationProvince", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 3,
+                    message: "Debe tener al menos 3 caracteres",
+                  },
+                })}
+              />
+              {errors.currentLocationProvince && (
+                <p className="text-red-500 text-sm">
+                  {errors.currentLocationProvince.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.currentLocationProvince}
@@ -370,13 +421,20 @@ export default function HomeDoc() {
             Matricula Nacional:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              defaultValue={doctor?.medicalRegistries?.Nacional?.registryId}
-              {...register("registryIdNacional", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                defaultValue={doctor?.medicalRegistries?.Nacional?.registryId}
+                {...register("registryIdNacional", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.registryIdNacional && (
+                <p className="text-red-500 text-sm">
+                  {errors.registryIdNacional.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.medicalRegistries?.Nacional?.registryId}
@@ -389,13 +447,20 @@ export default function HomeDoc() {
             Matricula Provincial:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              defaultValue={doctor?.medicalRegistries?.Provincial?.registryId}
-              {...register("registryIdProvincial", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                defaultValue={doctor?.medicalRegistries?.Provincial?.registryId}
+                {...register("registryIdProvincial", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.registryIdProvincial && (
+                <p className="text-red-500 text-sm">
+                  {errors.registryIdProvincial.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.medicalRegistries?.Provincial?.registryId}
@@ -409,14 +474,19 @@ export default function HomeDoc() {
             Lugar de Atención (Nombre):
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.attendancePlace?.alias}
-              {...register("alias", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.attendancePlace?.alias}
+                {...register("alias", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.alias && (
+                <p className="text-red-500 text-sm">{errors.alias.message}</p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.attendancePlace?.alias}
@@ -430,14 +500,21 @@ export default function HomeDoc() {
             Lugar de Atención (Link de Maps):
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.attendancePlace?.googleMapsLink}
-              {...register("googleMapsLink", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.attendancePlace?.googleMapsLink}
+                {...register("googleMapsLink", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.googleMapsLink && (
+                <p className="text-red-500 text-sm">
+                  {errors.googleMapsLink.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.attendancePlace?.googleMapsLink}
@@ -450,14 +527,21 @@ export default function HomeDoc() {
             Direccion de Atención:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.attendancePlace?.addressDetails}
-              {...register("addressDetails", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.attendancePlace?.addressDetails}
+                {...register("addressDetails", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.addressDetails && (
+                <p className="text-red-500 text-sm">
+                  {errors.addressDetails.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.attendancePlace?.addressDetails}
@@ -491,18 +575,23 @@ export default function HomeDoc() {
             Correo electronico:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.email}
-              {...register("email", {
-                required: "*Este campo es obligatorio",
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: "*Debe ser un correo electrónico válido",
-                },
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.email}
+                {...register("email", {
+                  required: "*Este campo es obligatorio",
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "*Debe ser un correo electrónico válido",
+                  },
+                })}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">{doctor?.email}</span>
           )}
@@ -514,14 +603,29 @@ export default function HomeDoc() {
             Numero de contacto:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-              type="text"
-              defaultValue={doctor?.cellphone}
-              {...register("cellphone", {
-                required: "*Este campo es obligatorio",
-              })}
-            />
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.cellphone}
+                {...register("cellphone", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 10,
+                    message: "Debe tener al menos 10 caracteres",
+                  },
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Solo se permiten números",
+                  },
+                })}
+              />
+              {errors.cellphone && (
+                <p className="text-red-500 text-sm">
+                  {errors.cellphone.message}
+                </p>
+              )}
+            </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
               {doctor?.cellphone}
