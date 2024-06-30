@@ -156,11 +156,11 @@ export default function HomePte() {
       <form>
         {edit && (
           <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-            <label className="w-full flex items-center justify-start gap-3 font-medium">
+            <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
               <IconCircle />
               Foto de perfil
             </label>
-            <div className="w-full h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
+            <div className="w-1/2 h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
               <Elboton
                 size={buttonSize}
                 onPress={openModalfoto}
@@ -171,12 +171,12 @@ export default function HomePte() {
           </div>
         )}
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
-            Nombre completo:
+            Nombre:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
+            <div className="w-1/2 flex flex-col">
               <input
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
                 type="text"
@@ -198,18 +198,16 @@ export default function HomePte() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
-              {paciente?.name}
-            </span>
+            <span className="w-1/2 text-start px-6 py-2">{paciente?.name}</span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Apellido:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
+            <div className="w-1/2 flex flex-col">
               <input
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
                 type="text"
@@ -233,27 +231,27 @@ export default function HomePte() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente?.lastname}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Edad:
           </label>
-          <span className="w-full text-start px-6 py-2">
+          <span className="w-1/2 text-start px-6 py-2">
             {CalcularEdad(paciente.sociodemographicDetails?.birthDate)}
           </span>
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Sexo:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
+            <div className="w-1/2 flex flex-col">
               <select
                 className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
                   errors.genreId ? "red" : "#DCDBDB"
@@ -277,18 +275,18 @@ export default function HomePte() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.genre}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Fecha de nacimiento:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
+            <div className="w-1/2 flex flex-col">
               <input
                 className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
                   errors.birthDate ? "red" : "#DCDBDB"
@@ -306,18 +304,18 @@ export default function HomePte() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.birthDate}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Teléfono de contacto:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
+            <div className="w-1/2 flex flex-col">
               <input
                 className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
                   errors.cellphone ? "red" : "#DCDBDB"
@@ -347,18 +345,18 @@ export default function HomePte() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente?.cellphone}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Teléfono de contacto de Emergencia:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
+            <div className="w-1/2 flex flex-col">
               <input
                 className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
                   errors.emergencyContactPhone ? "red" : "#DCDBDB"
@@ -390,19 +388,19 @@ export default function HomePte() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.emergencyContactPhone}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Dirección:
           </label>
           {edit ? (
-            <div className="flex items-center gap-2 w-full">
-              <div className="w-full flex flex-col">
+            <div className="flex items-center gap-2 w-1/2">
+              <div className="w-full md:w-2/3 flex flex-col">
                 <input
                   className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2"
                   type="text"
@@ -420,23 +418,24 @@ export default function HomePte() {
               <Elboton
                 size={buttonSize}
                 onPress={openModal}
+                className="hidden md:flex"
                 icon={<IconEditar />}
                 nombre={"Mapa"}
               />
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.address}
             </span>
           )}
         </div>
       </form>
       <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
-        <label className="w-full flex items-center justify-start gap-3 font-medium">
+        <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
           <IconCircle />
           Última conexión:
         </label>
-        <span className="w-full text-start px-6 py-2">
+        <span className="w-1/2 text-start px-6 py-2">
           {LastLogin(paciente.lastLogin)}
         </span>
       </div>

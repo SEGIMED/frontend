@@ -274,19 +274,19 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium py-2">
             <IconCircle />
             Especialidades:
           </label>
           {edit ? (
             <Dropdown>
-              <DropdownTrigger>
+              <DropdownTrigger className="md:w-1/2 w-full">
                 <Button
                   style={{
-                    width: "99%",
+                    //   width: "90%",
                     borderRadius: "0.5rem",
                     textAlign: "start",
-                    marginRight: "1.5rem",
+                    // marginRight: "1.5rem",
                     borderWidth: "1px",
                     justifyContent: "flex-start",
                     opacity: "1",
@@ -312,7 +312,7 @@ export default function HomeDoc() {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <div className="w-full text-start px-6 py-2">
+            <div className="w-1/2 text-start px-2 py-2">
               {doctor?.specialties?.map((specialty) => (
                 <span className="pr-2" key={specialty.id}>
                   {specialty.name} /
