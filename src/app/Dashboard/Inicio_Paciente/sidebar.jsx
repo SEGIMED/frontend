@@ -223,7 +223,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         <div className="w-12 h-12 flex justify-center items-center">
           <AvatarSideBar avatar={user.avatar} />
         </div>
-        <div className="flex flex-col">
+        <div className=" flex-col hidden md:flex">
           <span className="text-start text-[#686868] font-normal text-lg leading-6">
             {user?.name} {user?.lastname}
           </span>
