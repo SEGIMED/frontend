@@ -36,7 +36,7 @@ export default function MensajesDoc() {
   const handleImg = (img) => {
     if (img) {
       return (
-        <img src={img} alt="" className="w-12 h-12 object-cover rounded-3xl " />
+        <img src={img} alt="" className="w-8 h-8 object-cover rounded-3xl " />
       );
     }
   };
@@ -54,13 +54,13 @@ export default function MensajesDoc() {
       chats.map((chat) => (
         <div
           key={chat._id}
-          className="flex justify-between h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center ">
-          <div className="flex gap-4">
-            <div className="w-12 h-12 flex justify-center items-center">
+          className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden  px-1 py-6">
+          <div className="flex gap-4 items-center">
+            <div className="w-8 h-8 flex justify-center items-center">
               {handleImg(chat?.target?.avatar)}
             </div>
-            <div className="flex flex-col h-fit md:flex-row md:items-center ">
-              <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 line-clamp-2">
+            <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
+              <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
                 {chat?.target?.fullName} - {chat?.target?.role}
               </p>
               <Image src={ruteActual} alt="" className="hidden md:block" />
@@ -97,15 +97,18 @@ export default function MensajesDoc() {
   }
 
   return (
-    <div className="h-screen text-[#686868] w-full flex flex-col">
-      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+    <div className="h-full text-[#686868] w-full flex flex-col md:gap-2">
+      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2 ">
         <Link href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}>
-          <Elboton nombre={"Nuevo Chat"} size={"lg"} icon={<IconMas />} />
+          <Elboton
+            nombre={"Nuevo Chat"}
+            className="w-full md:w-48 md:h-12 md:text-lg"
+            icon={<IconMas />}
+          />
         </Link>
-        <div></div>
         {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder/>}/> */}
       </div>
-      <div className="flex flex-col gap-2 items-start justify-center w-full overflow-y-auto">
+      <div className="relative flex flex-col max-h-[90%] md:max-h-[90%] gap-2 items-start justify-center w-full overflow-y-auto ">
         {chatElements}
       </div>
     </div>
