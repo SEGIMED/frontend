@@ -54,7 +54,7 @@ export default function MensajesDoc() {
       chats.map((chat) => (
         <div
           key={chat._id}
-          className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden  px-1 py-6">
+          className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden  px-1 py-3">
           <div className="flex gap-4 items-center">
             <div className="w-8 h-8 flex justify-center items-center">
               {handleImg(chat?.target?.avatar)}
@@ -97,7 +97,7 @@ export default function MensajesDoc() {
   }
 
   return (
-    <div className="h-full text-[#686868] w-full flex flex-col md:gap-2">
+    <div className="h-full text-[#686868] w-full flex flex-col">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2 ">
         <Link href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}>
           <Elboton
@@ -108,7 +108,7 @@ export default function MensajesDoc() {
         </Link>
         {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder/>}/> */}
       </div>
-      <div className="relative flex flex-col max-h-[90%] md:max-h-[90%] gap-2 items-start justify-center w-full overflow-y-auto ">
+      <div className="relative max-h-[90%] gap-2 items-start justify-center w-full overflow-y-auto ">
         {chatElements}
       </div>
     </div>
