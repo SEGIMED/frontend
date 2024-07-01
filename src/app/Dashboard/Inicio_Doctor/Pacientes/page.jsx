@@ -120,7 +120,7 @@ export default function HomeDoc() {
         </button> */}
         <div></div>
 
-        <h1 className="font-bold hidden md:block">Listado de pacientes</h1>
+        <h1 className="font-bold">Listado de pacientes</h1>
 
         {/* <FiltroDocPacientes
           onClickSort={handleSortClick}
@@ -131,7 +131,7 @@ export default function HomeDoc() {
         <div></div>
       </div>
 
-      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-scroll">
+      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
@@ -170,7 +170,7 @@ export default function HomeDoc() {
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
+      {/* <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
         <button className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
           <IconPrev /> Anterior
         </button>
@@ -179,7 +179,7 @@ export default function HomeDoc() {
           Siguiente
           <IconNext />
         </button>
-      </div>
+      </div> */}
       <ModalConsultation
         isOpen={isModalOpen}
         onClose={closeModal}

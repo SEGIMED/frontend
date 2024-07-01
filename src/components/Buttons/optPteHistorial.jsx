@@ -24,7 +24,7 @@ export default function OptPteHistorial({ paciente, ruta, id }) {
             Más
           </p>
         </summary>
-        <ul className="absolute bg-white z-50 p-2 text-start text-[#686868] font-normal text-base leading-6 w-64 right-0 border-2 border-[#D7D7D7] rounded-lg gap-4 mt-2 shadow-lg">
+        <ul className="absolute bg-white z-40 p-2 text-start text-[#686868] font-normal text-base leading-6 w-64 right-0 border-2 border-[#D7D7D7] rounded-lg gap-4 mt-2 shadow-lg">
           <li className="flex items-center gap-2 font-medium text-sm leading-4">
             <IconInfo />
             Información

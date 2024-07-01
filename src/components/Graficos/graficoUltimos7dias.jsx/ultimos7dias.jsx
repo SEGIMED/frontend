@@ -36,10 +36,11 @@ const data = {
 
 export const BarChart = () => {
   return (
-    <div style={{ width: "1000px", height: "100%" }}>
+    <div className="w-full h-full lg:w-[1000px]  p-5 flex items-center justify-center">
       <Bar
         data={data}
         options={{
+          responsive: true,
           scales: {
             y: {
               beginAtZero: true,
