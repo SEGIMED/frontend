@@ -63,7 +63,7 @@ export default function AuthSelect() {
                             <h2 className="text-2xl text-[#5F5F5F] text-center pb-3 font-semibold leading-7 capitalize">
                                 Ingrese su nueva contraseña
                             </h2>
-                            <p className="text-center text-[#5F5F5F] font-normal text-base leading-7">
+                            <p className="hidden md:flex text-center text-[#5F5F5F] font-normal text-base leading-7 ">
                                 Ya puede establecer una nueva contraseña para su cuenta. Por favor, asegúrese de que sea una combinación única que no haya utilizado previamente. Esto es esencial para mantener la seguridad de su cuenta.
                             </p>
                         </header>
