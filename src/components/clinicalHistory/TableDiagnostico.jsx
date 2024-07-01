@@ -4,6 +4,8 @@ import IconArrowDetailDown from '../icons/IconArrowDetailDown';
 import IconArrowDetailUp from '../icons/IconArrowDetailUp';
 import IconConsulta from '../icons/IconConsulta';
 import IconCurrentRouteNav from '../icons/IconCurrentRouteNav';
+import InputInfo from './InputInfo';
+import InputInfo2 from './InputInfoV2';
 
 
 export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
@@ -19,55 +21,31 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
 
     return (
         <div className="h-full flex flex-col">
-            {pacientes.map((paciente, index) => (
+            {pacientes?.map((paciente, index) => (
                 <div key={index}>
                     <details open={openDetails[index]} onToggle={() => toggleDetail(index)}>
                         <summary className="flex items-center cursor-pointer">
-                            <div className="grid grid-cols-7  items-center border-b border-b-[#cecece] pr-6 py-2 bg-white w-full h-14">
+                            <div className="grid grid-cols-7  items-center border-b border-b-[#cecece] pr-6 py-2 bg-white w-full h-fit">
                                 <div className='flex justify-center'>
                                     <IconConsulta />
                                 </div>
-                                <div className="text-[#5F5F5F] ">{paciente.hora}</div>
-                                <div className="text-[#5F5F5F]">{paciente.fecha}</div>
+                                <div className="text-[#5F5F5F]">{new Date(paciente.timestamp).toLocaleDateString()}</div>
+                                <div className="text-[#5F5F5F]">{new Date(paciente.timestamp).toLocaleTimeString()}</div>
                                 <div className="text-[#FF8300]">{paciente.HTP}</div>
-                                <div className="text-[#5F5F5F]">{paciente.lugar}</div>
-                                <div className="text-[#5F5F5F]">{paciente.motivo}</div>
+                                <div className="text-[#5F5F5F]">{paciente?.attendancePlace?.alias}</div>
+                                <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
                                 <div className='flex justify-center'>
                                     {openDetails[index] ? <IconArrowDetailUp /> : <IconArrowDetailDown />}
                                 </div>
                             </div>
                         </summary>
                         <div className="p-5 ">
-                            {subtitle2?.map((sub, index) => (
-                                <div
-                                    key={index}
-                                    className="flex flex-col gap-2 px-6 py-4 md:py-2 border-b border-b-[#cecece]">
-                                    <label className="text-start  py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-                                        <IconCurrentRouteNav className="w-3" />
-                                        {sub}
-                                    </label>
-                                    <p
-                                        className="w-full md:w-1/2 h-auto text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-2 md:py-1 outline-[#a8a8a8]"
-                                        placeholder={`Escribe el ${sub} `}
-
-                                    />
-                                </div>
-                            ))}
-                            {subtitle?.map((sub, index) => (
-                                <div
-                                    key={index}
-                                    className="flex flex-col gap-2 px-6 py-2 border-b border-b-[#cecece]">
-                                    <label className="text-start text-[#686868] py-1 font-medium text-base leading-4 flex gap-2 items-center">
-                                        <IconConsulta />
-                                        {sub}
-                                    </label>
-                                    <p
-                                        className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
-                                        placeholder="Ingrese aqui sus anotaciones"
-
-                                    />
-                                </div>
-                            ))}
+                            <InputInfo2 title='Diagnósticos' info={paciente.diagnostics} keyProp='disease' />
+                            <InputInfo2 title='Medicamentos' info={paciente.drugPrescriptions} keyProp='drugName' />
+                            <InputInfo2 title='Procedimientos' info={paciente.medicalProcedures} keyProp='procedureName' />
+                            {/* <InputInfo title='Conducta terapeutica' info={paciente.medicalProcedures} /> */}
+                            <InputInfo title='Tratamiento no farmacológico' info={paciente.treatmentPlan} />
+                            <InputInfo title='Pauta de alarma' info={paciente.alarmPattern} />
                         </div>
                     </details>
                 </div>

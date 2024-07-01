@@ -20,7 +20,6 @@ import IconCircle from "@/components/icons/IconCircle";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
 
-
 // Definir opciones para el select de sexo
 const sexoOptions = [
   { value: 2, label: "Masculino" },
@@ -28,7 +27,6 @@ const sexoOptions = [
 ];
 
 export default function HomePte() {
- 
   const paciente = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const id = Cookies.get("c");
@@ -43,9 +41,9 @@ export default function HomePte() {
     second: "2-digit",
     hour12: false,
   };
-  
+
   const [buttonSize, setButtonSize] = useState("lg");
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -76,7 +74,6 @@ export default function HomePte() {
     const token = Cookies.get("a");
     const myId = Number(Cookies.get("c"));
     const body = { ...data, patientId: myId };
-    console.log(paciente, "paciente", data, "data")
     const patientDispatch = {
       ...paciente,
       ...data,
@@ -91,7 +88,11 @@ export default function HomePte() {
     const headers = { headers: { token: token } };
 
     try {
-      const response = await ApiSegimed.patch(`/update-full-patient`, body, headers);
+      const response = await ApiSegimed.patch(
+        `/update-full-patient`,
+        body,
+        headers
+      );
       setEdit(false);
       dispatch(adduser(patientDispatch));
       Swal.fire({
@@ -112,13 +113,15 @@ export default function HomePte() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModalfoto = () => setIsModalOpen(true);
   const closeModalFoto = () => setIsModalOpen(false);
-
+  console.log(errors);
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-full overflow-y-scroll flex flex-col">
       <div
-        className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"} justify-between items-center gap-2 pl-10 pr-6 py-1 md:py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}
-      >
-        <div className="flex items-center gap-4">
+        className={`flex ${
+          edit ? "flex-col md:flex-row" : "md:flex-row"
+        } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
+        <div
+          className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
           <Image src={ruteActual} alt="ruta actual" />
           <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
             Sus datos personales
@@ -153,11 +156,11 @@ export default function HomePte() {
       <form>
         {edit && (
           <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-            <label className="w-full flex items-center justify-start gap-3 font-medium">
+            <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
               <IconCircle />
               Foto de perfil
             </label>
-            <div className="w-full h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
+            <div className="w-1/2 h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
               <Elboton
                 size={buttonSize}
                 onPress={openModalfoto}
@@ -168,184 +171,277 @@ export default function HomePte() {
           </div>
         )}
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
-            Nombre completo:
+            Nombre:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
-              type="text"
-              defaultValue={paciente?.name}
-              {...register("name", {
-                required: "*Este campo es obligatorio",
-                minLength: 2,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-1/2 flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
+                type="text"
+                defaultValue={paciente?.name}
+                {...register("name", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                })}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
-              {paciente?.name}
-            </span>
+            <span className="w-1/2 text-start px-6 py-2">{paciente?.name}</span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Apellido:
           </label>
           {edit ? (
-            <input
-              className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
-              type="text"
-              defaultValue={paciente?.lastname}
-              {...register("lastname", {
-                required: "*Este campo es obligatorio",
-                minLength: 2,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-1/2 flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6"
+                type="text"
+                defaultValue={paciente?.lastname}
+                {...register("lastname", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                })}
+              />
+              {errors.lastname && (
+                <p className="text-red-500 text-sm">
+                  {errors.lastname.message}
+                </p>
+              )}
+            </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente?.lastname}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Edad:
           </label>
-          <span className="w-full text-start px-6 py-2">
+          <span className="w-1/2 text-start px-6 py-2">
             {CalcularEdad(paciente.sociodemographicDetails?.birthDate)}
           </span>
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Sexo:
           </label>
           {edit ? (
-            <select
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.genreId ? "red" : "#DCDBDB"}]`}
-              defaultValue={
-                paciente.sociodemographicDetails?.genre === "Masculino" ? 2 : 1
-              }
-              {...register("genreId", { required: "*Este campo es obligatorio" })}
-            >
-              {sexoOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="w-1/2 flex flex-col">
+              <select
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
+                  errors.genreId ? "red" : "#DCDBDB"
+                }]`}
+                defaultValue={
+                  paciente.sociodemographicDetails?.genre === "Masculino"
+                    ? 2
+                    : 1
+                }
+                {...register("genreId", {
+                  required: "*Este campo es obligatorio",
+                })}>
+                {sexoOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {errors.genreId && (
+                <p className="text-red-500 text-sm">{errors.genreId.message}</p>
+              )}
+            </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.genre}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Fecha de nacimiento:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${errors.birthDate ? "red" : "#DCDBDB"}]`}
-              type="date"
-              defaultValue={paciente.sociodemographicDetails?.birthDate}
-              {...register("birthDate", { required: "*Este campo es obligatorio" })}
-            />
+            <div className="w-1/2 flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.birthDate ? "red" : "#DCDBDB"
+                }]`}
+                type="date"
+                defaultValue={paciente.sociodemographicDetails?.birthDate}
+                {...register("birthDate", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.birthDate && (
+                <p className="text-red-500 text-sm">
+                  {errors.birthDate.message}
+                </p>
+              )}
+            </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.birthDate}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Teléfono de contacto:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"}]`}
-              type="text"
-              defaultValue={paciente?.cellphone}
-              {...register("cellphone", {
-                required: "*Este campo es obligatorio",
-                minLength: 10,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-1/2 flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.cellphone ? "red" : "#DCDBDB"
+                }]`}
+                type="text"
+                defaultValue={paciente?.cellphone}
+                {...register("cellphone", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 10,
+                    message: "Debe tener al menos 10 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Solo se permiten números",
+                  },
+                })}
+              />
+              {errors.cellphone && (
+                <p className="text-red-500 text-sm">
+                  {errors.cellphone.message}
+                </p>
+              )}
+            </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente?.cellphone}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Teléfono de contacto de Emergencia:
           </label>
           {edit ? (
-            <input
-              className={`w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"}]`}
-              type="text"
-              defaultValue={paciente.sociodemographicDetails?.emergencyContactPhone}
-              {...register("emergencyContactPhone", {
-                required: "*Este campo es obligatorio",
-                minLength: 10,
-                maxLength: 20,
-              })}
-            />
+            <div className="w-1/2 flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.emergencyContactPhone ? "red" : "#DCDBDB"
+                }]`}
+                type="text"
+                defaultValue={
+                  paciente.sociodemographicDetails?.emergencyContactPhone
+                }
+                {...register("emergencyContactPhone", {
+                  required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 10,
+                    message: "Debe tener al menos 10 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Solo se permiten números",
+                  },
+                })}
+              />
+              {errors.emergencyContactPhone && (
+                <p className="text-red-500 text-sm">
+                  {errors.emergencyContactPhone.message}
+                </p>
+              )}
+            </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.emergencyContactPhone}
             </span>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
             <IconCircle />
             Dirección:
           </label>
           {edit ? (
-            <div className="flex items-center gap-2 w-full">
-              <input
-                className="w-full bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2"
-                type="text"
-                defaultValue={paciente.sociodemographicDetails?.address}
-                {...register("address", {
-                  required: "*Este campo es obligatorio",
-                })}
-              />
+            <div className="flex items-center gap-2 w-1/2">
+              <div className="w-full md:w-2/3 flex flex-col">
+                <input
+                  className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2"
+                  type="text"
+                  defaultValue={paciente.sociodemographicDetails?.address}
+                  {...register("address", {
+                    required: "*Este campo es obligatorio",
+                  })}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-sm">
+                    {errors.address.message}
+                  </p>
+                )}
+              </div>
               <Elboton
                 size={buttonSize}
                 onPress={openModal}
+                className="hidden md:flex"
                 icon={<IconEditar />}
                 nombre={"Mapa"}
               />
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
+            <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.address}
             </span>
           )}
         </div>
       </form>
-      <div className="flex items-center justify-center pl-6 md:pl-11 py-2">
-        <label className="w-full flex items-center justify-start gap-3 font-medium">
+      <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
+        <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
           <IconCircle />
           Última conexión:
         </label>
-        <span className="w-full text-start px-6 py-2">
+        <span className="w-1/2 text-start px-6 py-2">
           {LastLogin(paciente.lastLogin)}
         </span>
       </div>
-      {showModal &&<MapModal isOpen={showModal} onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <MapModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      )}
       <PhotoModalPte isOpen={isModalOpen} onClose={closeModalFoto} />
     </div>
   );

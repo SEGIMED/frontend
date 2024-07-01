@@ -6,6 +6,11 @@ import TableDiagnostico from "@/components/clinicalHistory/TableDiagnostico";
 import pacientesAlarm from "@/utils/dataAlarm";
 import { usePathname } from "next/navigation";
 
+import { useEffect, useState } from "react";
+import { ApiSegimed } from "@/Api/ApiSegimed";
+import Cookies from "js-cookie";
+
+
 
 export default function HomeDoc() {
 
@@ -13,7 +18,28 @@ export default function HomeDoc() {
     const pathArray = pathname.split('/');
     const userId = pathArray[pathArray.length - 2];
 
-    
+
+    const [infoPatient, setInfoPatient] = useState();
+
+    const getConsultas = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(`/medical-event/get-medical-event-history?patientId=${userId}`, headers);
+            if (response.data) {
+                console.log(response.data);
+                setInfoPatient(response.data);
+
+            }
+        } catch (error) {
+            console.error("Error fetching consultas:", error);
+        }
+    };
+
+    useEffect(() => {
+        const token = Cookies.get("a");
+        if (token) {
+            getConsultas({ headers: { token: token } }).catch(console.error);
+        }
+    }, []);
 
     return (
         <div className="h-full w-full flex flex-col">
@@ -31,7 +57,7 @@ export default function HomeDoc() {
                 <p className="font-bold text-[#5F5F5F]">Motivo de consulta</p>
                 <p className="font-bold text-[#5F5F5F]"></p>
             </div>
-            <TableDiagnostico pacientes={pacientesAlarm} subtitle={["Conducta terapeutica", "Tratamiento no farmacológico", "Pauta de alarma"]} subtitle2={["Diagnostico", "Medicamento", "Procedimiento"]} />
+            <TableDiagnostico pacientes={infoPatient} subtitle={["Conducta terapeutica", "Tratamiento no farmacológico", "Pauta de alarma"]} subtitle2={["Diagnostico", "Medicamento", "Procedimiento"]} />
         </div>
     );
 }

@@ -39,7 +39,6 @@ export default function Estadisticas() {
 
   const estadisticas = useAppSelector((state) => state.estadisticas);
 
-  
   const [is3D, setIs3D] = useState(false);
 
   const toggleChartType = () => {
@@ -47,7 +46,7 @@ export default function Estadisticas() {
   };
 
   return (
-    <div className="flex flex-col bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg">
+    <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
       <div className="w-full flex-col md:flex-row flex items-center justify-center gap-4 md:gap-10">
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
