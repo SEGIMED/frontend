@@ -75,7 +75,7 @@ export default function DoctoresPte() {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex  md:h-[10%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6 ">
+      <div className="flex  md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6 ">
         {/* <FiltrosPaciente
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}
@@ -84,7 +84,7 @@ export default function DoctoresPte() {
                 <Ordenar /> */}
         <div className="text-xl font-bold">Lista de Doctores</div>
       </div>
-      <div className="md:h-[90%] h-[95%] w-full overflow-y-auto">
+      <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
         {sortedDoctor?.map((doctor) => (
           <DoctorCard
             key={doctor.id}

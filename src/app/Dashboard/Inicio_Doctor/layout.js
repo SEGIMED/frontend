@@ -10,11 +10,11 @@ export default function RootLayout({ children }) {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="flex h-full w-screen">
+    <div className="flex h-screen w-screen">
       {/* Barra de navegación */}
       <NavDoctor isOpen={isOpen} toggleSidebar={toggleSidebar} />
 
-      <div className="flex flex-col w-full h-screen">
+      <div className="flex flex-col w-full h-full">
         <SideDoctor search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
         <div className="h-[88%] w-full">{children}</div>

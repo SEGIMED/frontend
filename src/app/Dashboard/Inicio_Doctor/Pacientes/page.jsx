@@ -17,7 +17,7 @@ import {
   toggleFavorite,
 } from "@/redux/slices/doctor/allPatients";
 import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
-import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPacientes.jsx"
+import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPacientes.jsx";
 // import OpcionesDocPacientes from "@/components/Buttons/opcionesDocPacientes";
 import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
 import config from "@/components/localData/localdata";
@@ -36,8 +36,6 @@ export default function HomeDoc() {
   useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
-
-
 
   const listaPacientes = useAppSelector((state) => state.allPatients.patients);
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -105,10 +103,8 @@ export default function HomeDoc() {
     return colors[randomIndex];
   };
 
-
-
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full overflow-y-auto">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 bg-white sticky top-0 z-10">
         {/* <button
           onClick={handleFavoriteClick}
@@ -133,7 +129,7 @@ export default function HomeDoc() {
         <div></div>
       </div>
 
-      <div className="flex flex-col items-start justify-center w-full bg-[#FAFAFC] overflow-y-scroll">
+      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-scroll">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
