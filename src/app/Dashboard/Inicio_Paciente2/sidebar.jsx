@@ -9,18 +9,12 @@ import { adduser } from "@/redux/slices/user/user";
 import { getAllDoctores } from "@/redux/slices/doctor/allDoctores";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-import config from "@/components/localData/localdata";
-import perfil from "@/components/images/perfil.png";
-import notificacion from "@/components/images/notificacion.png";
-import notificacion2 from "@/components/images/notificacion2.png";
-import ruteActual from "@/components/images/ruteActual.png";
 import busqueda from "@/components/images/busqueda.png";
 import Cookies from "js-cookie";
 import { socket } from "@/utils/socketio";
 import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
 import LogoSegimed from "@/components/logo/LogoSegimed";
-import { Icon } from "leaflet";
 import { IconChat } from "@/components/InicioPaciente/IconChat";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 
