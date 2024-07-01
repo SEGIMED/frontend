@@ -31,10 +31,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t segimed/frontend:latest .
+        run: docker build -t segimed/frontend:develop .
 
       - name: Push Docker image to Docker Hub
-        run: docker push segimed/frontend:latest
+        run: docker push segimed/frontend:develop
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.6
