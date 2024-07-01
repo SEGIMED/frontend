@@ -15,8 +15,8 @@ export default function HomeDoc() {
 
     const pathname = usePathname();
     const pathArray = pathname.split('/');
-    // const userId = pathArray[pathArray.length - 2];
-    const userId = 8;
+    const userId = pathArray[pathArray.length - 2];
+    // const userId = 8;
 
     const [evoluciones, setEvoluciones] = useState();
 
@@ -25,7 +25,7 @@ export default function HomeDoc() {
             const response = await ApiSegimed.get(`/medical-event/get-medical-event-history?patientId=${userId}`, headers);
             if (response.data) {
                 setEvoluciones(response.data);
-          
+
             }
         } catch (error) {
             console.error("Error fetching consultas:", error);
