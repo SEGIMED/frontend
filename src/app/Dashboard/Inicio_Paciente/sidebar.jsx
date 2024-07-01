@@ -91,8 +91,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getSchedules = async (headers) => {
-    // const userId = Number(id)
-    const userId = 8
+    const userId = Number(id)
+    // const userId = 8
     try {
       const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
       console.log(response.data);
