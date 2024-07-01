@@ -37,7 +37,7 @@ export default function PtesActivos() {
   };
 
   return (
-    <div className="w-full h-full lg:w-[600px]  p-5 flex items-center justify-center">
+    <div className="w-full h-full lg:w-[500px]  p-5 flex items-center justify-center">
       <Doughnut data={data} options={{
           plugins: {
             // title: {

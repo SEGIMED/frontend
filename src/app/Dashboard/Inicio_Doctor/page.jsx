@@ -33,13 +33,13 @@ export default function HomeDoc() {
   };
 
   const charts = [
-    <div key={0}>
+    <div key={0} className="flex-grow flex items-center justify-center ">
       <BarChart />
     </div>,
-    <div key={1}>
+    <div key={1} className="flex-grow flex items-center justify-center ">
       <PtesActivos />
     </div>,
-    <div key={2}>
+    <div key={2} className="flex-grow flex items-center justify-center ">
       <Alarmas />
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
@@ -139,9 +139,9 @@ export default function HomeDoc() {
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
-        <div className="flex-grow flex items-center justify-center " >
+        {/* <div className="flex-grow flex items-center justify-center " > */}
           {charts[currentChart]}
-        </div>
+        {/* </div> */}
       </div>
       <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl mt-5">
         <p className="text-2xl py-72 font-bold flex items-center justify-center">
