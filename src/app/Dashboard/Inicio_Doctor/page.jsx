@@ -139,7 +139,7 @@ export default function HomeDoc() {
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
-        <div className="flex items-center justify-center ">
+        <div className="flex-grow flex items-center justify-center ">
           {charts[currentChart]}
         </div>
       </div>
