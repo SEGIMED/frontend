@@ -3,7 +3,6 @@ name: Deploy PR to VPS
 on:
   pull_request:
     branches:
-      - main
       - develop
 
 jobs:
