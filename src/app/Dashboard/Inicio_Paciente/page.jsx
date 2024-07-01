@@ -12,12 +12,11 @@ import AvatarDashPte from "@/components/avatar/avatarDashPte";
 import CalcularEdad from "@/utils/calcularEdad";
 import LastLogin from "@/utils/lastLogin";
 
-
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
-  console.log(user)
+  console.log(user);
   return (
-    <div className="min-h-screen flex flex-col ">
+    <div className="h-full flex flex-col">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
         <h2 className="text-2xl">¡Bienvenido {user?.name}!</h2>
       </div>
@@ -35,7 +34,9 @@ export default function HomePte() {
                 ? `${CalcularEdad(user.sociodemographicDetails.birthDate)} años`
                 : "Sin especificar nacimiento"}
             </span>
-            <span>{user?.sociodemographicDetails?.isAlive ? "Vivo" : null}</span>
+            <span>
+              {user?.sociodemographicDetails?.isAlive ? "Vivo" : null}
+            </span>
             <span>
               <b>Ultima consulta:</b> {user?.lastMedicalEventDate ? LastLogin(user?.lastMedicalEventDate) : "Sin especificar"}
 
@@ -65,31 +66,19 @@ export default function HomePte() {
           </label>
           <div className="flex gap-3">
             <BotonDashPte
-
-              riesgo={
-                user?.patientCardiovascularRisks?.risk
-              }
+              riesgo={user?.patientCardiovascularRisks?.risk}
               nombre={"Bajo"}
             />
             <BotonDashPte
-
-              riesgo={
-                user?.patientCardiovascularRisks?.risk
-              }
+              riesgo={user?.patientCardiovascularRisks?.risk}
               nombre={"Moderado"}
             />
             <BotonDashPte
-
-              riesgo={
-                user?.patientCardiovascularRisks?.risk
-              }
+              riesgo={user?.patientCardiovascularRisks?.risk}
               nombre={"Alto"}
             />
             <BotonDashPte
-
-              riesgo={
-                user?.patientCardiovascularRisks?.risk
-              }
+              riesgo={user?.patientCardiovascularRisks?.risk}
               nombre={"Muy Alto"}
             />
           </div>
@@ -101,17 +90,14 @@ export default function HomePte() {
           </label>
           <div className="flex gap-3">
             <BotonDashPte
-
               riesgo={user?.patientSurgicalRisks?.risk}
               nombre={"Bajo"}
             />
             <BotonDashPte
-
               riesgo={user?.patientSurgicalRisks?.risk}
               nombre={"Moderado"}
             />
             <BotonDashPte
-
               riesgo={user?.patientSurgicalRisks?.risk}
               nombre={"Alto"}
             />

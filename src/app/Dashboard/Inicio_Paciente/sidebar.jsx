@@ -41,8 +41,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const dispatch = useAppDispatch();
@@ -77,12 +77,14 @@ export const SidePte = ({ search, toggleSidebar }) => {
       const headers = { headers: { token: token } };
       const body = {
         geolocation: JSON.stringify([lat, lon]),
-        patientId: Number(id)
+        patientId: Number(id),
       };
 
-      const response = await ApiSegimed.patch("/update-full-patient", body, headers);
-
-
+      const response = await ApiSegimed.patch(
+        "/update-full-patient",
+        body,
+        headers
+      );
     } catch (error) {
       console.error("Error de red:", error);
     }
@@ -101,30 +103,60 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getUser = async (headers) => {
-
-
-    const response1 = await ApiSegimed.get(`/patient-details?id=${id}`, headers);
-    const response2 = await ApiSegimed.get(`/patient/${id}`, headers)
+    const response1 = await ApiSegimed.get(
+      `/patient-details?id=${id}`,
+      headers
+    );
+    const response2 = await ApiSegimed.get(`/patient/${id}`, headers);
     // const response1= await ApiSegimed.get("/patient-details?id=8", headers);
     const combinedData = {
       ...response1.data,
       ...response2.data,
-      anthropometricDetails: response1.data.anthropometricDetails.length > 0 ? response1.data.anthropometricDetails : paciente.anthropometricDetails || [],
-      vitalSigns: response1.data.vitalSigns.length > 0 ? response1.data.vitalSigns : paciente.vitalSigns || [],
-      sociodemographicDetails: response1.data.sociodemographicDetails || paciente.sociodemographicDetails || {},
+      anthropometricDetails:
+        response1.data.anthropometricDetails.length > 0
+          ? response1.data.anthropometricDetails
+          : paciente.anthropometricDetails || [],
+      vitalSigns:
+        response1.data.vitalSigns.length > 0
+          ? response1.data.vitalSigns
+          : paciente.vitalSigns || [],
+      sociodemographicDetails:
+        response1.data.sociodemographicDetails ||
+        paciente.sociodemographicDetails ||
+        {},
       backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
-      patientPulmonaryHypertensionGroups: response1.data.patientPulmonaryHypertensionGroups.length > 0 ? response1.data.patientPulmonaryHypertensionGroups : paciente.patientPulmonaryHypertensionGroups || {},
-      patientPulmonaryHypertensionRisks: response1.data.patientPulmonaryHypertensionRisks.length > 0 ? response1.data.patientPulmonaryHypertensionRisks : paciente.patientPulmonaryHypertensionRisks || {},
-      patientCardiovascularRisks: response1.data.patientCardiovascularRisks.length > 0 ? response1.data.patientCardiovascularRisks : paciente.patientCardiovascularRisks || {},
-      patientSurgicalRisks: response1.data.patientSurgicalRisks.length > 0 ? response1.data.patientSurgicalRisks : paciente.patientSurgicalRisks || {},
-      lastMedicalEventDate: response1.data.lastMedicalEventDate || paciente.lastMedicalEventDate || null,
-      currentPhysician: response1.data.currentPhysician || paciente.currentPhysician || {},
+      patientPulmonaryHypertensionGroups:
+        response1.data.patientPulmonaryHypertensionGroups.length > 0
+          ? response1.data.patientPulmonaryHypertensionGroups
+          : paciente.patientPulmonaryHypertensionGroups || {},
+      patientPulmonaryHypertensionRisks:
+        response1.data.patientPulmonaryHypertensionRisks.length > 0
+          ? response1.data.patientPulmonaryHypertensionRisks
+          : paciente.patientPulmonaryHypertensionRisks || {},
+      patientCardiovascularRisks:
+        response1.data.patientCardiovascularRisks.length > 0
+          ? response1.data.patientCardiovascularRisks
+          : paciente.patientCardiovascularRisks || {},
+      patientSurgicalRisks:
+        response1.data.patientSurgicalRisks.length > 0
+          ? response1.data.patientSurgicalRisks
+          : paciente.patientSurgicalRisks || {},
+      lastMedicalEventDate:
+        response1.data.lastMedicalEventDate ||
+        paciente.lastMedicalEventDate ||
+        null,
+      currentPhysician:
+        response1.data.currentPhysician || paciente.currentPhysician || {},
       cellphone: response1.data.cellphone || paciente.cellphone || null,
-      currentLocationCity: response1.data.currentLocationCity || paciente.currentLocationCity || null,
-      currentLocationCountry: response1.data.currentLocationCountry || paciente.currentLocationCountry || null,
+      currentLocationCity:
+        response1.data.currentLocationCity ||
+        paciente.currentLocationCity ||
+        null,
+      currentLocationCountry:
+        response1.data.currentLocationCountry ||
+        paciente.currentLocationCountry ||
+        null,
       lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
-
-
     };
     dispatch(adduser(combinedData));
     // dispatch(adduser({ ...response1.data, ...response2.data, ...paciente }));
@@ -137,8 +169,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
     }
   };
 
-
-
   useEffect(() => {
     obtenerUbicacion();
     const idUser = Cookies.get("c");
@@ -146,16 +176,15 @@ export const SidePte = ({ search, toggleSidebar }) => {
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
-      getSchedules({ headers: { token: token } }).catch(console.error)
+      getSchedules({ headers: { token: token } }).catch(console.error);
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
       }
     }
   }, []);
 
-
   return (
-    <div className=" flex  items-center justify-between   border-b-2 border-b-[#cecece] p-4">
+    <div className=" flex  items-center justify-between h-[12%]  border-b-2 border-b-[#cecece] p-4">
       <div className="md:hidden p-4">
         <button
           className="text-[#487FFA] focus:outline-none"
@@ -196,7 +225,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         <div className="w-12 h-12 flex justify-center items-center">
           <AvatarSideBar avatar={user?.avatar !== null ? user.avatar : avatar} />
         </div>
-        <div className="flex flex-col">
+        <div className=" flex-col hidden md:flex">
           <span className="text-start text-[#686868] font-normal text-lg leading-6">
             {user?.name} {user?.lastname}
           </span>
