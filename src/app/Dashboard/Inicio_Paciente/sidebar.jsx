@@ -30,6 +30,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
+  const avatar = "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png"
+
   // Obteniendo la parte de la ruta antes del último segmento
   const pathBeforeLastSegment = pathname.substring(
     0,
@@ -221,7 +223,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       )}
       <div className="flex justify-center items-center gap-4">
         <div className="w-12 h-12 flex justify-center items-center">
-          <AvatarSideBar avatar={user.avatar} />
+          <AvatarSideBar avatar={user?.avatar !== null ? user.avatar : avatar} />
         </div>
         <div className=" flex-col hidden md:flex">
           <span className="text-start text-[#686868] font-normal text-lg leading-6">

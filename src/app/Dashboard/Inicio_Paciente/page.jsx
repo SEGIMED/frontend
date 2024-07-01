@@ -18,7 +18,7 @@ export default function HomePte() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
-        <h2 className="text-2xl">¡Hola {user?.name}!</h2>
+        <h2 className="text-2xl">¡Bienvenido {user?.name}!</h2>
       </div>
       <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
         <div className="flex justify-center items-center ml-5">
@@ -30,17 +30,19 @@ export default function HomePte() {
               {user?.name} {user?.lastname}
             </span>
             <span>
-              {CalcularEdad(user?.sociodemographicDetails?.birthDate)}
+              {user?.sociodemographicDetails?.birthDate
+                ? `${CalcularEdad(user.sociodemographicDetails.birthDate)} años`
+                : "Sin especificar nacimiento"}
             </span>
             <span>
               {user?.sociodemographicDetails?.isAlive ? "Vivo" : null}
             </span>
             <span>
-              <b>Ultima consulta:</b> {LastLogin(user?.lastMedicalEventDate)}
+              <b>Ultima consulta:</b> {user?.lastMedicalEventDate ? LastLogin(user?.lastMedicalEventDate) : "Sin especificar"}
+
             </span>
             <span>
-              <b>Medico tratante: </b> {user?.currentPhysician?.name}{" "}
-              {user?.currentPhysician?.lastname}
+              <b>Medico tratante: </b> {user?.currentPhysician?.name ? `${user?.currentPhysician?.name} ${user?.currentPhysician?.lastname} ` : "Sin medico tratante"}
             </span>
           </div>
         </div>
@@ -102,18 +104,14 @@ export default function HomePte() {
           </div>
         </div>
 
-        <AntecedenteDash
-          subtitle={[
-            "Antecedentes quirúrgicos",
-            "Antecedentes patológicos",
-            "Antecedentes no patológicos",
-            "Antecedentes familiares",
-            "Antecedentes de infancia",
-            "Medicación actual",
-            "Alergias",
-            "Vacunas",
-          ]}
-        />
+        <AntecedenteDash title={"Antecedentes quirúrgicos"} info={user?.backgrounds?.surgicalBackground ? user?.backgrounds?.surgicalBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Antecedentes patológicos"} info={user?.backgrounds?.pathologicBackground ? user?.backgrounds?.pathologicBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Antecedentes no patológicos"} info={user?.backgrounds?.nonPathologicBackground ? user?.backgrounds?.nonPathologicBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Antecedentes familiares"} info={user?.backgrounds?.familyBackground ? user?.backgrounds?.familyBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Antecedentes de infancia"} info={user?.backgrounds?.pediatricBackground ? user?.backgrounds?.pediatricBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Medicación actual"} info={user?.backgrounds?.allergicBackground ? user?.backgrounds?.allergicBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Alergias"} info={user?.backgrounds?.allergicBackground ? user?.backgrounds?.allergicBackground : "No hay antecedentes"} />
+        <AntecedenteDash title={"Vacunas"} info={user?.backgrounds?.vaccinationBackground ? user?.backgrounds?.vaccinationBackground : "No hay antecedentes"} />
       </div>
 
       {/* Descomenta y ajusta este bloque si necesitas los botones en tu diseño */}

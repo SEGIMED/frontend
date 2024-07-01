@@ -1,26 +1,20 @@
-"use client"
+"use client";
 
-import { useAppSelector } from '@/redux/hooks';
 import { useEffect } from 'react';
-import MapPte from '../../../component/MapPte/index'; 
+import MapPte from '../../../component/MapPte/index';
 
+export default function MapModalPte({ onClose, patient }) {
+    const geolocationNumbers = patient.geolocation?.map(parseFloat);
 
-export default function MapModalPte({ onClose, patient}) {
-
-
-    
-    const geolocationNumbers = patient.geolocation?.map(parseFloat) ;
-    
     useEffect(() => {
         function onClose2(event) {
-     
             if (event.key === 'Escape') {
                 onClose();
             }
         }
-    
-        if(typeof window !== "undefined" )window.addEventListener("keydown", onClose2);
-        
+
+        if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+
         // Cleanup function to remove the event listener when the component unmounts
         return () => {
             window.removeEventListener("keydown", onClose2);
@@ -34,12 +28,17 @@ export default function MapModalPte({ onClose, patient}) {
     }
 
     return (
-        <div 
-            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 "  
+        <div
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
             onClick={handleClickOutside}
         >
-            <MapPte positions={geolocationNumbers} />
-
+            {geolocationNumbers && geolocationNumbers.length > 0 ? (
+                <MapPte positions={geolocationNumbers} />
+            ) : (
+                <div className="bg-white p-4 rounded shadow-md">
+                    <p>Geolocalizacion no esta disponible.</p>
+                </div>
+            )}
         </div>
     );
 }

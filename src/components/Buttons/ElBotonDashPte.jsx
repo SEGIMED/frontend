@@ -31,14 +31,14 @@ export default function BotonDashPte({ color, nombre, riesgo }) {
     textColor = "text-black";
     borderColor = "border-gray-300";
   }
- 
+
 
   return (
     <div className="flex flex-wrap gap-4 items-center">
       <button
         className={`px-3 py-2 border-4 rounded-lg ${bgColor} ${textColor} ${borderColor} flex items-center gap-2`}>
         {nombre}
-        <IconCheckBoton />
+        <IconCheckBoton className={"w-4"} />
       </button>
     </div>
   );

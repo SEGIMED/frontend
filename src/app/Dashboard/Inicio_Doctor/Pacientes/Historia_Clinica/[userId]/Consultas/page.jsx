@@ -11,8 +11,8 @@ import Cookies from "js-cookie";
 export default function HomeDoc() {
     const pathname = usePathname();
     const pathArray = pathname.split('/');
-    // const userId = pathArray[pathArray.length - 2];
-    const userId = 8;
+    const userId = pathArray[pathArray.length - 2];
+    // const userId = 8;
 
     const [consultas, setConsultas] = useState();
 
@@ -20,8 +20,9 @@ export default function HomeDoc() {
         try {
             const response = await ApiSegimed.get(`/medical-event/get-medical-event-history?patientId=${userId}`, headers);
             if (response.data) {
+                console.log(response.data)
                 setConsultas(response.data);
-                
+
             }
         } catch (error) {
             console.error("Error fetching consultas:", error);
