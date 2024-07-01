@@ -5,6 +5,9 @@ import FiltrarPacientes from "@/components/Buttons/FiltrarPacientes";
 import pacientesAlarm from "@/utils/dataAlarm";
 import Anamnesis from "@/components/clinicalHistory/TableAnamnesis";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ApiSegimed } from "@/Api/ApiSegimed";
+import Cookies from "js-cookie";
 
 
 
@@ -14,7 +17,27 @@ export default function HomeDoc() {
     const pathArray = pathname.split('/');
     const userId = pathArray[pathArray.length - 2];
 
-    
+    const [consultas, setConsultas] = useState();
+
+    const getConsultas = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(`/medical-event/get-medical-event-history?patientId=${userId}`, headers);
+            if (response.data) {
+                console.log(response.data)
+                setConsultas(response.data);
+
+            }
+        } catch (error) {
+            console.error("Error fetching consultas:", error);
+        }
+    };
+
+    useEffect(() => {
+        const token = Cookies.get("a");
+        if (token) {
+            getConsultas({ headers: { token: token } }).catch(console.error);
+        }
+    }, []);
 
     return (
         <div className="h-full w-full flex flex-col">
@@ -33,7 +56,7 @@ export default function HomeDoc() {
                 <p className="font-bold text-[#5F5F5F]"></p>
             </div>
 
-            <Anamnesis pacientes={pacientesAlarm} subtitle={["Evolución de la enfermedad", "Motivo de consulta", "Síntomas importantes"]} />
+            <Anamnesis pacientes={consultas} />
         </div>
     );
 }
