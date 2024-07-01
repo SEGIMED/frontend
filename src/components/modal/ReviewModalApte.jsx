@@ -61,8 +61,8 @@ export default function ReviewModalApte({ onClose, id }) {
   };
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-scroll">
-        <div className="flex justify-between items-center border-b pb-2 mb-4">
+      <div className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
+        <div className="flex justify-between items-center border-b pb-2 mb-2 h-[10%]">
           <span className="flex gap-4">
             <IconFatArrow />
             <h2 className="text-xl font-bold">Califique a su paciente</h2>
@@ -74,14 +74,14 @@ export default function ReviewModalApte({ onClose, id }) {
           </button>
         </div>
         {ratingQuestions.map((question, qIndex) => (
-          <div key={qIndex} className="mb-4">
+          <div key={qIndex} className="mb-3">
             <div className="flex gap-4 mb-2 mt-2">
               <span>
                 <IconTablillaEstrella />
               </span>
               <span className="mb-2 font-medium">{question}</span>
             </div>
-            <div className="flex justify-center items-center border-b pb-2">
+            <div className="flex justify-center items-center border-b pb-1">
               {[...Array(5)].map((star, index) => (
                 <label key={index} className="cursor-pointer">
                   <input
@@ -106,7 +106,7 @@ export default function ReviewModalApte({ onClose, id }) {
             </div>
           </div>
         ))}
-        <div className="mb-4">
+        <div className="mb-2 ">
           <div className="flex gap-4 mb-2 mt-2">
             <span>
               <IconTablillaTilde />
@@ -122,7 +122,7 @@ export default function ReviewModalApte({ onClose, id }) {
             value={comments}
             onChange={(e) => setComments(e.target.value)}></textarea>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center h-[20%]">
           <button
             onClick={SendReview}
             className="flex px-4 py-2 bg-blue-500 text-white rounded-md">

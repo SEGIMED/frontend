@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main # Trigger deployment on push to main branch
+      - develop
 
 jobs:
   build:
@@ -31,10 +31,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t segimed/frontend:latest .
+        run: docker build -t segimed/frontend:develop .
 
       - name: Push Docker image to Docker Hub
-        run: docker push segimed/frontend:latest
+        run: docker push segimed/frontend:develop
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.6
@@ -44,8 +44,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            docker-compose -f /home/segimed/develop/docker-compose.yml down
             docker pull segimed/frontend:latest
-            docker-compose -f /home/segimed/docker-compose.yml up -d
-
+            docker-compose -f /home/segimed/develop/docker-compose.yml up -d --build
             # Cleanup: Remove old Docker images
             docker image prune -f

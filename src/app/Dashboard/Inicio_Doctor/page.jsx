@@ -32,9 +32,19 @@ export default function HomeDoc() {
     setCurrentChart((prev) => (prev === charts.length - 1 ? 0 : prev + 1));
   };
 
-  const charts = [<div key={0} ><BarChart /></div>, <div key={1}><PtesActivos /></div>, <div key={2}><Alarmas /></div>]; // Agrega aquí todos los componentes de gráfico que desees mostrar
+  const charts = [
+    <div key={0}>
+      <BarChart />
+    </div>,
+    <div key={1}>
+      <PtesActivos />
+    </div>,
+    <div key={2}>
+      <Alarmas />
+    </div>,
+  ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
   return (
-    <div className="h-full  flex flex-col p-10 bg-[#FAFAFC]">
+    <div className="h-full flex flex-col p-10 bg-[#FAFAFC] overflow-y-scroll">
       <h2 className="text-2xl">
         ¡Bienvenido {user.name} {user.lastname}!
       </h2>
@@ -85,57 +95,41 @@ export default function HomeDoc() {
         </div>
 
         <div className="grid-cols-2 gap-2 grid lg:py-5 lg:flex justify-between">
-
           <div className="w-full bg-[#C9FFE2] flex flex-col justify-around gap-3 px-3 md:px-8 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconNewUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">
-                6
-              </span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2">6</span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Nuevos</p>
           </div>
 
-
-
           <div className="w-full bg-[#A9FFCC] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconActiveUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">
-                4
-              </span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2">4</span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Activos</p>
           </div>
 
-
-
           <div className="w-full bg-[#6DFFA7] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconInactiveUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">
-                7
-              </span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2">7</span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Inactivos</p>
           </div>
 
-
-
           <div className="w-full bg-[#58FFA0] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconAlarmUsers className="w-[42%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">
-                1
-              </span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2">1</span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Alarmas Activas</p>
           </div>
-
         </div>
       </div>
       <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl my-5 flex flex-col">
