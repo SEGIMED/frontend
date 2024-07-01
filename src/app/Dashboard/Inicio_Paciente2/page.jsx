@@ -5,7 +5,7 @@ import { IconAntecedentes } from "@/components/InicioPaciente/IconAntecedentes";
 import { IconMedicamentos } from "@/components/InicioPaciente/IconMedicamentos";
 import { IconSolicitudes } from "@/components/InicioPaciente/IconSolicitudes";
 import { IconTurnos } from "@/components/InicioPaciente/IconTurnos";
-import { IconAutoevaluacion } from "@/components/InicioPaciente/iconAutoevaluacion";
+import { IconAutoevaluacion } from "@/components/InicioPaciente/IconAutoevaluacion";
 import { useAppSelector } from "@/redux/hooks";
 
 const Buttons = [
