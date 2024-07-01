@@ -46,8 +46,9 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
   return (
     <div>
       <div
-        className={`flex ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
-          } md:flex`}>
+        className={`flex ${
+          isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
+        } md:flex`}>
         <div className="h-screen w-[60%] px-4 md:w-64 md:px-6 py-5 bg-white border-r-2 border-[#cecece] flex flex-col justify-between">
           <div className="flex flex-col justify-center gap-5">
             <Link href={`${rutas.PacienteDash}`} className="block">
@@ -57,107 +58,121 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
               <ul className="flex flex-col gap-5 md:gap-4 ">
                 <Link
                   href={rutas.PacienteDash}
-                  className={`flex items-center gap-4 ${pathname === rutas.PacienteDash ? "text-[#487FFA]" : ""
-                    }`}>
+                  className={`flex items-center gap-4 ${
+                    pathname === rutas.PacienteDash ? "text-[#487FFA]" : ""
+                  }`}>
                   <IconCube
                     className="w-5"
-                    iconColor={`${pathname === rutas.PacienteDash ? "#487FFA" : "#B2B2B2"
-                      }`}
+                    iconColor={`${
+                      pathname === rutas.PacienteDash ? "#487FFA" : "#B2B2B2"
+                    }`}
                   />
                   <li className="text-lg md:text-md">Tablero</li>
                 </Link>
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Mi_Perfil}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <IconDoctorNav
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Mi perfil</li>
                 </Link>
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Preconsulta}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <IconPreConsulta
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Preconsultas</li>
                 </Link>
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Historial}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Historial}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Historial}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <IconRecordNav
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Historial}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Historial}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Historial Consultas</li>
                 </Link>
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Mensajes}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <IconMessageNav
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Chats</li>
                 </Link>
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Citas}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Citas}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Citas}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <IconCalendarNav
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Citas}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Citas}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Mi Agenda</li>
                 </Link>
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Doctores}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Doctores}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Doctores}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <IconPatientNav
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Doctores}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Doctores}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Doctores</li>
                 </Link>
 
-                <Link
+                {/* <Link
                   href={`${rutas.PacienteDash}${rutas.Tratamientos}`}
                   className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Tratamientos}`
                       ? "text-[#487FFA]"
@@ -171,50 +186,56 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
                       }`}
                   />
                   <li className="text-lg md:text-md">Tratamientos</li>
-                </Link>
+                </Link> */}
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Alarm}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Alarm}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Alarm}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <AlarmDash
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Alarm}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Alarm}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Alarmas</li>
                 </Link>
-                <Link
+                {/* <Link
                   href={`${rutas.PacienteDash}${rutas.Soporte_tecnico}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Soporte_tecnico}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Soporte_tecnico}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <SoporteTecnico
                     className="w-6"
-                    color={`${pathname ===
-                        `${rutas.PacienteDash}${rutas.Soporte_tecnico}`
+                    color={`${
+                      pathname ===
+                      `${rutas.PacienteDash}${rutas.Soporte_tecnico}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Soporte tecnico</li>
-                </Link>
+                </Link> */}
                 <Link
                   href={`${rutas.PacienteDash}${rutas.Sugerencias}`}
-                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
+                  className={`flex items-center gap-4 ${
+                    pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
                       ? "text-[#487FFA]"
                       : ""
-                    }`}>
+                  }`}>
                   <Sugerencias
                     className="w-6"
-                    color={`${pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
+                    color={`${
+                      pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
                         ? "#487FFA"
                         : "#B2B2B2"
-                      }`}
+                    }`}
                   />
                   <li className="text-lg md:text-md">Sugerencias</li>
                 </Link>
@@ -244,7 +265,12 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
             <IconOut />
             Cerrar sesión
           </button> */}
-          <Elboton size={"lg"} nombre={"Cerrar sesión"} icon={<IconOut />} onPress={handleLogout} />
+          <Elboton
+            size={"lg"}
+            nombre={"Cerrar sesión"}
+            icon={<IconOut />}
+            onPress={handleLogout}
+          />
         </div>
         <div
           className="flex-1 bg-black opacity-50"

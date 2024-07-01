@@ -1,23 +1,24 @@
+"use client";
+import OpcionesDocCard from "@/components/Buttons/opcionesDocCard";
 
-"use client"
-import OpcionesDocCard from '@/components/Buttons/opcionesDocCard';
+import DoctorCard from "@/components/card/doctorCard";
+import ModalDetailDoctor from "@/components/modal/ModalPatient/ModalDetailDoctor";
+import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
+import { useState } from "react";
+import FiltrosPaciente from "@/components/Buttons/FiltrosPaciente";
+import Ordenar from "@/components/Buttons/Ordenar";
+import config from "@/components/localData/localdata";
+import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 
-import DoctorCard from '@/components/card/doctorCard';
-import ModalDetailDoctor from '@/components/modal/ModalPatient/ModalDetailDoctor';
-import ModalConsultation from '@/components/modal/ModalDoctor/ModalConsultation';
-import { useState } from 'react';
-import FiltrosPaciente from '@/components/Buttons/FiltrosPaciente';
-import Ordenar from '@/components/Buttons/Ordenar';
-import config from '@/components/localData/localdata';
-import MensajeSkeleton from '@/components/skeletons/MensajeSkeleton';
-
-import { useAppSelector } from '@/redux/hooks';
-import IconMessages from '@/components/icons/IconMessages';
-IconMessages
+import { useAppSelector } from "@/redux/hooks";
+import IconMessages from "@/components/icons/IconMessages";
+IconMessages;
 
 export default function DoctoresPte() {
-  const doctores = useAppSelector(state => state.doctores.doctores);
-  const isLoading = useAppSelector(state => state.doctores.doctores.length === 0);
+  const doctores = useAppSelector((state) => state.doctores.doctores);
+  const isLoading = useAppSelector(
+    (state) => state.doctores.doctores.length === 0
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -26,8 +27,8 @@ export default function DoctoresPte() {
   const [isSorted, setIsSorted] = useState(false);
   const patientId = config.c;
 
-  const filteredDoctor = doctores?.filter((doctor) =>
-    doctor.name.toLowerCase() || doctor.lastname.toLowerCase()
+  const filteredDoctor = doctores?.filter(
+    (doctor) => doctor.name.toLowerCase() || doctor.lastname.toLowerCase()
   );
 
   const sortedDoctor = isSorted
@@ -74,35 +75,37 @@ export default function DoctoresPte() {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+      <div className="flex  md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6 ">
         {/* <FiltrosPaciente
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}
                     onClickSort={handleSortClick}
                 />
                 <Ordenar /> */}
-        <div></div>
-        <div>Lista de Doctores</div>
-        <div></div>
+        <div className="text-xl font-bold">Lista de Doctores</div>
       </div>
-      <div className="flex flex-col items-start justify-center w-full overflow-y-auto">
-        {sortedDoctor?.map(doctor => (
-          <DoctorCard key={doctor.id} doctor={doctor} button={
-            <OpcionesDocCard
-              id={doctor.id}
-              onDetailClick={handleViewDetail}
-              onConsultationClick={() => handleConsultationClick(doctor.id)}
-            />
-          } />
+      <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
+        {sortedDoctor?.map((doctor) => (
+          <DoctorCard
+            key={doctor.id}
+            doctor={doctor}
+            button={
+              <OpcionesDocCard
+                id={doctor.id}
+                onDetailClick={handleViewDetail}
+                onConsultationClick={() => handleConsultationClick(doctor.id)}
+              />
+            }
+          />
         ))}
       </div>
-      {selectedDoctorId && isDetailModalOpen &&
+      {selectedDoctorId && isDetailModalOpen && (
         <ModalDetailDoctor
           isOpen={isDetailModalOpen}
           onClose={closeModal}
           doctorId={selectedDoctorId}
         />
-      }
+      )}
       <ModalConsultation
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -112,4 +115,3 @@ export default function DoctoresPte() {
     </div>
   );
 }
-

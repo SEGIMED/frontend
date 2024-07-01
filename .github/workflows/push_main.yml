@@ -1,15 +1,14 @@
-name: Deploy PR to VPS
+name: Deploy Main to VPS
 
 on:
-  pull_request:
+  push:
     branches:
-      - develop
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -32,10 +31,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t segimed/frontend:${{ github.sha }} .
+        run: docker build -t segimed/frontend:latest .
 
       - name: Push Docker image to Docker Hub
-        run: docker push segimed/frontend:${{ github.sha }}
+        run: docker push segimed/frontend:latest
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.6
@@ -45,14 +44,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-            bash /home/deploy_pr.sh $SHORT_SHA segimed/frontend:${{ github.sha }}
-
-      - name: Comment PR
-        run: |
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -H "Content-Type: application/json" \
-               -X POST \
-               -d "{\"body\": \"http://pr-${SHORT_SHA}.test.segimed.com/ ! 👋\"}" \
-               https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments
+            docker-compose -f /home/segimed/app/docker-compose.yml down
+            docker pull segimed/frontend:latest
+            docker-compose -f /home/segimed/app/docker-compose.yml up -d --build
+            # Cleanup: Remove old Docker images
+            docker image prune -f
