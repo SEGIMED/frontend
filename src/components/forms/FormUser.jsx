@@ -2,15 +2,21 @@
 
 import IconEnter from "@/components/icons/IconEnter";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import IconPasswordClose from "../icons/IconPasswordClose";
+import IconPasswordOpen from "../icons/IconPasswordOpen";
 
 export const FormUser = ({ formData, setFormData }) => {
     const { register, handleSubmit, reset, watch, formState: { errors }, setError } = useForm();
     // const [updatedData, setUpdatedData] = useState(null);
     const router=useRouter()
+    const [showPassword, setShowPassword] = useState(false);
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+        };
 
     const onSubmit = handleSubmit(async (data) => {
         try {
@@ -92,8 +98,17 @@ export const FormUser = ({ formData, setFormData }) => {
 
                     <div className="w-96">
                         <label htmlFor="password">Contraseña</label>
+                        <div className="relative">
+                        <button
+                        type="button"
+                        className="absolute right-2 focus:outline-none pt-6"
+                        onClick={togglePasswordVisibility}
+                        style={{ top: 0, bottom: 0, margin: "auto" }}>
+                        {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
+                        </button>
+                        </div>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Ingrese Contraseña"
                             className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
                             {...register("password", {
@@ -110,11 +125,12 @@ export const FormUser = ({ formData, setFormData }) => {
                                     message: "La contraseña no debe exceder los 20 caracteres."
                                 },
                                 pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,20}$/,
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/,
                                     message: "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial."
                                 }
                             })}
                         />
+                        
                         {errors.password && <span className="text-red-500 text-sm font-medium">{errors.password.message}</span>}
                     </div>
 

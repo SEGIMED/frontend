@@ -24,7 +24,7 @@ export default function PtesActivos() {
   const data = {
     labels: ['Activos', 'Inactivos'],
     datasets: [{
-      data: [dataActives.activePatients, dataActives.inactivePatients],
+      
       backgroundColor: [
         '#70C247', // Verde para activos
         '#487FFA', // Celeste para inactivos
