@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main # Trigger deployment on push to main branch
+      - develop
 
 jobs:
   build:
@@ -44,8 +44,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            docker-compose -f /home/segimed/develop/docker-compose.yml down
             docker pull segimed/frontend:latest
-            docker-compose -f /home/segimed/docker-compose.yml up -d
-
+            docker-compose -f /home/segimed/develop/docker-compose.yml up -d --build
             # Cleanup: Remove old Docker images
             docker image prune -f
