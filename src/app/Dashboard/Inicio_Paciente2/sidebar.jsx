@@ -19,6 +19,10 @@ import Cookies from "js-cookie";
 import { socket } from "@/utils/socketio";
 import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
+import LogoSegimed from "@/components/logo/LogoSegimed";
+import { Icon } from "leaflet";
+import { IconChat } from "@/components/InicioPaciente/IconChat";
+import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -185,8 +189,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   }, []);
 
   return (
-    <div className=" flex  items-center justify-between h-[12%]  border-b-2 border-b-[#cecece] p-4">
-      <div className="md:hidden p-4">
+    <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
+      {/* <div className="md:hidden p-4">
         <button
           className="text-[#487FFA] focus:outline-none"
           onClick={toggleSidebar}>
@@ -203,11 +207,12 @@ export const SidePte = ({ search, toggleSidebar }) => {
               d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
-      </div>
+      </div> */}
 
       <div className="flex justify-center items-center gap-2">
-        <Image src={ruteActual} alt="" />
-        <p className="">{segmentToShow}</p>
+        <Link href="/Inicio_Paciente">
+          <LogoSegimed className="w-[60%]" />
+        </Link>
       </div>
       {showSearch && (
         <div
@@ -222,7 +227,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
           </button>
         </div>
       )}
-      <div className="flex justify-center items-center gap-4">
+      <div className="flex justify-center items-center gap-5">
         <div className="w-12 h-12 flex justify-center items-center">
           <AvatarSideBar
             avatar={user?.avatar !== null ? user.avatar : avatar}
@@ -236,9 +241,14 @@ export const SidePte = ({ search, toggleSidebar }) => {
             {user.role === 3 ? "Paciente" : ""}
           </span>
         </div>
-        <button>
-          <Image src={notificacion2} alt="" />
-        </button>
+        <div className="flex gap-2">
+          <button className="w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center">
+            <IconChat className="w-6 h-6" />
+          </button>
+          <button className="w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center">
+            <IconNotificaciones className="w-6 h-6" />
+          </button>
+        </div>
         {/* <button className=" rounded-xl w-12 h-12 flex justify-center items-center  border border-gray-400">
                     <Image src={notificacion} alt="" />
                 </button> */}
