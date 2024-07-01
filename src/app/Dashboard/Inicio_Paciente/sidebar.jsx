@@ -41,8 +41,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const dispatch = useAppDispatch();
@@ -91,9 +91,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getSchedules = async (headers) => {
+    // const userId = Number(id)
+    const userId = 8
     try {
-      const response = await ApiSegimed.get("/schedules", headers);
-
+      const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
+      console.log(response.data);
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
