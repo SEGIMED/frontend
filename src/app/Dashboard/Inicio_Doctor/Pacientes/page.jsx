@@ -118,7 +118,7 @@ export default function HomeDoc() {
         </button> */}
         <div></div>
 
-        <h1 className="font-bold hidden md:block">Listado de pacientes</h1>
+        <h1 className="font-bold">Listado de pacientes</h1>
 
         {/* <FiltroDocPacientes
           onClickSort={handleSortClick}
@@ -129,7 +129,7 @@ export default function HomeDoc() {
         <div></div>
       </div>
 
-      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-scroll">
+      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
