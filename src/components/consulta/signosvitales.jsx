@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import circleData from '@/components/images/circleData.png';
 import Image from 'next/image';
 
@@ -6,7 +6,12 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
     const [glucemiaValue, setGlucemiaValue] = useState('');
     const [glucemiaElevada, setGlucemiaElevada] = useState(null); // Estado para el botón "Sí" de la glucemia elevada
     const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState(['', '', '', '']);
-
+    
+    useEffect(() => {
+        if (preconsult?.abnormalGlycemia !== undefined) {
+            setGlucemiaElevada(preconsult.abnormalGlycemia);
+        }
+    }, [preconsult]);
     const handleGlucemiaChange = (event) => {
         setGlucemiaValue(event.target.value);
     };

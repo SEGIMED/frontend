@@ -19,8 +19,13 @@ export default function InputConsulta({
   preconsult,
   paciente
 }) {
-  const valuesAmnesis=[preconsult?.consultationReason,preconsult?.healthChangesDescription ,preconsult?.importantSymptoms]
-
+  const valuesAmnesis=[
+    preconsult?.consultationReason,preconsult?.healthChangesDescription ,preconsult?.importantSymptoms
+  ]
+  const valuesBackground = [
+    paciente?.backgrounds.surgicalBackground,paciente?.backgrounds.pathologicBackground ,paciente?.backgrounds.nonPathologicBackground,paciente?.backgrounds.familyBackground,paciente?.backgrounds.pediatricBackground,paciente?.backgrounds.allergicBackground, paciente?.backgrounds.pharmacologicalBackground, paciente?.backgrounds.vaccinationBackground
+  ]
+  console.log(valuesBackground);
   const handleOption = (sub) => {
   };
   const { register } = useFormContext();
@@ -81,7 +86,7 @@ export default function InputConsulta({
               className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
-              value={valuesAmnesis[index]}
+              defaultValue={valuesAmnesis[index] || valuesBackground[index] || ""}
             />
           </div>
         ))}

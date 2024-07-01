@@ -17,17 +17,17 @@ export default function InputFile({ title, defaultOpen = false , Links}) {
           </div>
         </summary>
         
-        <FileUpload label={"Electrocardiograma"} Link={Links.electrocardiogram}/>
-        <FileUpload label={"RX de Torax"} Link={Links.rxThorax}/>
-        <FileUpload label={"Ecocardiograma"} Link={Links.echocardiogram}/>
-        <FileUpload label={"Test de caminata"} Link={Links.walkTest}/>
-        <FileUpload label={"Funcional respiratorio"} Link={Links.respiratoryFunctional}/>
-        <FileUpload label={"Tomografías"} Link={Links.tomographies}/>
-        <FileUpload label={"Cateterismo cardiaco derecho"} Link={Links.rightHeartCatheterization}/>
-        <FileUpload label={"CCG (Coronariografia)"} Link={Links.ccg}/>
-        <FileUpload label={"Resonancia"} Link={Links.resonance}/>
-        <FileUpload label={"Cateterismo cardiaco izquierdo"} Link={Links.leftHeartCatheterization}/>
-        <FileUpload label={"Otros estudios"} Links={Links.laboratoryResults}/>
+        <FileUpload label={"Electrocardiograma"} Link={Links?.electrocardiogram}/>
+        <FileUpload label={"RX de Torax"} Link={Links?.rxThorax}/>
+        <FileUpload label={"Ecocardiograma"} Link={Links?.echocardiogram}/>
+        <FileUpload label={"Test de caminata"} Link={Links?.walkTest}/>
+        <FileUpload label={"Funcional respiratorio"} Link={Links?.respiratoryFunctional}/>
+        <FileUpload label={"Tomografías"} Link={Links?.tomographies}/>
+        <FileUpload label={"Cateterismo cardiaco derecho"} Link={Links?.rightHeartCatheterization}/>
+        <FileUpload label={"CCG (Coronariografia)"} Link={Links?.ccg}/>
+        <FileUpload label={"Resonancia"} Link={Links?.resonance}/>
+        <FileUpload label={"Cateterismo cardiaco izquierdo"} Link={Links?.leftHeartCatheterization}/>
+        <FileUpload label={"Otros estudios"} Links={Links?.laboratoryResults}/>
       </details>
     </div>
   );
