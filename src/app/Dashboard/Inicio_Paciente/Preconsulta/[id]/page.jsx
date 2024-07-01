@@ -174,12 +174,12 @@ export default function PreconsultaPte({ params }) {
     }
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     const getPreConsultation = async () => {
       try {
         const res = await ApiSegimed.get(`/get-all-pateint-preconsultation?patientId=${patientId}`, {
           headers: {
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIzOCwiaWROdW1iZXIiOiIxOS4xNTEuOTk4LTEiLCJ1c2VySWRUeXBlIjoiRE5JIiwibmFtZSI6Ikx1Y2EiLCJsYXN0bmFtZSI6IkJydXp6b25lIiwicm9sZSI6IlBhY2llbnRlIiwidmVyaWZpZWQiOnRydWUsImF2YXRhciI6bnVsbCwiY2VsbHBob25lIjoiKzU2OTkwMTU0NTMzIiwiZW1haWwiOiJsdWNhLmJydXp6b25lOTVAZ21haWwuY29tIiwibmF0aW9uYWxpdHkiOiJDb2xvbWJpYW5hIiwibGFzdExvZ2luIjoiMjAyNC0wNi0yOFQxOTo0NjoxNi4wMDBaIiwiaWF0IjoxNzE5NjA0NDc2LCJleHAiOjE3MjAyMDkyNzZ9.zPCYWx_MBV1PaDjf7oN4tU2jwm6lqjISqx2_SUCVANI',
+            token: token,
           }
         });
         if (res) {
@@ -199,7 +199,7 @@ export default function PreconsultaPte({ params }) {
     questionList();
     getPreConsultation();
   }, []);
-  console.log(preConsultationQuestions);
+  console.log(preConsultationQuestions); */
 
   return (
     <FormProvider {...methods}>
