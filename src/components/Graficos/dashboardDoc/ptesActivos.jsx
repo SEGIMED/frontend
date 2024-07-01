@@ -1,11 +1,7 @@
-"use client"
-import { Chart, registerables } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-
-Chart.register(...registerables);
 
 export default function PtesActivos() {
   const [dataActives, setDataActives] = useState({ activePatients: 0, inactivePatients: 0 });
@@ -37,28 +33,22 @@ export default function PtesActivos() {
   };
 
   return (
-    <div className="w-full h-full lg:w-[500px]  p-5 flex items-center justify-center">
-      <Doughnut data={data} options={{
+    <div className="w-full h-full lg:w-[500px] p-5 flex items-center justify-center">
+      <Doughnut 
+        data={data} 
+        options={{
           plugins: {
-            // title: {
-            //     display: true,
-            //     text: 'Actividad',
-            //     font: {
-            //       size: 40
-            //     },
-                
-            // },
             legend: {
-                display: true,
-                position: 'bottom', 
+              display: true,
+              position: 'bottom', 
               labels: {
                 usePointStyle: true, 
-                padding: 100, 
+                padding: 100, // Ajustamos el padding a 100
               }
             }
           }
         }}
-       />
+      />
     </div>
   );
 };

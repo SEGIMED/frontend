@@ -33,13 +33,13 @@ export default function HomeDoc() {
   };
 
   const charts = [
-    <div key={0} className="flex-grow flex items-center justify-center ">
+    <div key={0} className="flex-grow flex items-center justify-center h-100%">
       <BarChart />
     </div>,
-    <div key={1} className="flex-grow flex items-center justify-center ">
+    <div key={1} className="flex-grow flex items-center justify-center h-100% ">
       <PtesActivos />
     </div>,
-    <div key={2} className="flex-grow flex items-center justify-center ">
+    <div key={2} className="flex-grow flex items-center justify-center h-100% ">
       <Alarmas />
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
