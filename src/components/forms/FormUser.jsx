@@ -130,7 +130,7 @@ export const FormUser = ({ formData, setFormData }) => {
                                 },
                             })}
                         >
-                            <option value="1">Cédula Ciudadanía</option>
+                            <option value="1">DNI</option>
                             <option value="2">Pasaporte</option>
                         </select>
                         {errors.idType && <span className="text-red-500 text-sm font-medium">{errors.idType.message}</span>}

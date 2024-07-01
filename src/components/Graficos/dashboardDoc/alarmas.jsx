@@ -36,7 +36,7 @@ export default function Alarmas() {
   };
 
   return (
-    <div style={{ width: '500px', height: '500px' }}>
+    <div className="w-full h-full lg:w-[600px]  p-5 flex items-center justify-center">
       <Doughnut data={data} options={{
           plugins: {
             legend: {
