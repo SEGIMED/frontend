@@ -4,8 +4,27 @@ import Image from 'next/image';
 
 export default function SignosVitalesInfo({ paciente, title, defaultOpen = false }) {
     const [glucemiaValue, setGlucemiaValue] = useState('');
-    const [glucemiaElevada, setGlucemiaElevada] = useState(null); // Estado para el botón "Sí" de la glucemia elevada
+    const [glucemiaElevada, setGlucemiaElevada] = useState(null);
     const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState(['', '', '', '']);
+
+    const defaultAnthropometricDetails = [
+        { measureType: 'Talla', measureUnit: 'Cm', measure: '' },
+        { measureType: 'Peso', measureUnit: 'Kg', measure: '' },
+        { measureType: 'Perímetro Abdominal', measureUnit: 'Cm', measure: '' },
+        { measureType: 'IMC', measureUnit: 'Kg/m²', measure: '' },
+    ];
+
+    const defaultVitalSigns = [
+        { measureType: 'Presión Arterial Diastólica', measureUnit: 'mmHg', measure: '' },
+        { measureType: 'Presión Arterial Sistólica', measureUnit: 'mmHg', measure: '' },
+        { measureType: 'Saturación de Oxígeno', measureUnit: '%', measure: '' },
+        { measureType: 'Temperatura', measureUnit: '°C', measure: '' },
+        { measureType: 'Frecuencia Respiratoria', measureUnit: 'rpm', measure: '' },
+        { measureType: 'Frecuencia Cardiaca', measureUnit: 'bpm', measure: '' },
+    ];
+
+    const anthropometricDetails = paciente?.anthropometricDetails ? paciente.anthropometricDetails : defaultAnthropometricDetails;
+    const vitalSigns = paciente?.vitalSigns ? paciente.vitalSigns : defaultVitalSigns;
 
     const handleGlucemiaChange = (event) => {
         setGlucemiaValue(event.target.value);
@@ -37,7 +56,7 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                     </div>
                 </summary>
 
-                {paciente?.anthropometricDetails?.map((detail, detailIndex) => (
+                {anthropometricDetails.map((detail, detailIndex) => (
                     <div key={detailIndex} className="flex justify-start items-center gap-2 px-3 border-b border-b-[#cecece] pr-10">
                         <label className='flex w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-4 py-2'>
                             <Image src={circleData} alt="circulo informacion" className='w-6 h-6' /> {detail.measureType}
@@ -51,7 +70,7 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                     </div>
                 ))}
 
-                {paciente?.vitalSigns?.map((vital, vitalIndex) => (
+                {vitalSigns.map((vital, vitalIndex) => (
                     <div key={vitalIndex} className="flex justify-start items-center gap-2 px-3 border-b border-b-[#cecece] pr-10">
                         <label className='flex w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-4 py-2'>
                             <Image src={circleData} alt="circulo informacion" className='w-6 h-6' /> {vital.measureType}
