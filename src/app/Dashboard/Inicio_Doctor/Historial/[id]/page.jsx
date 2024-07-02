@@ -32,9 +32,16 @@ const DetallePaciente = (id) => {
   const userId = id.params.id;
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
+  const [physicalExamination, setPhysicalExamination] = useState();
   const [background, setBackground] = useState();
   const [diagnostic, setDiagnostic] = useState();
-
+  const [medicalIndications, setMedicalIndications] = useState();
+  const [drugPrescription, setDrugPrescription] = useState();
+  const [procedurePrescription, setProcedurePrescription] = useState();
+  const [terapy, setTerapy] = useState();
+  const [selectedRisk, setSelectedRisk] = useState();
+  const [selectedGroup, setSelectedGroup] = useState();
+  
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
 
@@ -52,13 +59,46 @@ const DetallePaciente = (id) => {
       surgicalBackground: data["Antecedentes quirúrgicos"],
       vaccinationBackground: data["Vacunas"]
     })
-
+    setPhysicalExamination({
+    physicalSubsystemId:2 , /// data["selectSubsistema"],
+    description: data["inputSubsistema"],
+    medicalEventId: 5 /// id del medical event
+    })
     setDiagnostic({
-      diagnostic: data.Diagnostico,
+    patientId:8,  /// id del paciente 
+    diseaseId:3,  /// id de la enferemedad ---> (hipertension pulmonar) referenciada catalogo disease
+    diagnosticNotes: data["Diagnostico"],
+    medicalEventId :5
+    })
+    setMedicalIndications({
+    patientId: 8,
+    description: data["Tratamientos no farmacológicos"],
+    medicalEventId:5
+    })
+    setProcedurePrescription({
+    patientId: 8,
+    medicalProcedureId: 4,
+    medicalEvent: 5
+    })
+    setDrugPrescription({
+    diagnosticNotes: data["Procedimientos"],
+    patientId: 8,  /// ID del paciente
+    drugId: 1, // id del medicamento ---> (Losartan) referenciado en el catalogo drug 
+    prescribedDose: data["Medicamentos"],
+    quantity: 60, // cantidad de tabletas etc
+    medicalEventId : 5
+    })
+
+    setTerapy({
+    patientId: 8,
+    therapyId: 2,
+    description: data["Conducta terapeutica"],
+    quantity: 10,
+    medicalEvent: 2
     })
 
   }
-
+  
   console.log(background);
   console.log(patient);
   console.log(preconsult);
@@ -66,7 +106,7 @@ const DetallePaciente = (id) => {
     const headers = config.headers;
     const token = Cookies.get("a");
     const fetchData = async () => {
-      
+
       try {
 
         const [response1, response2, response3] = await Promise.all([
@@ -77,12 +117,6 @@ const DetallePaciente = (id) => {
         console.log(response1.data);
         console.log(response2.data);
         //console.log(response3.data);
-
-        // Crear una promesa que se resuelve después de 1 segundo
-        const delay = new Promise((resolve) => setTimeout(resolve, 100));
-
-        // Esperar el delay
-        await delay;
     
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
@@ -95,7 +129,7 @@ const DetallePaciente = (id) => {
   }, []);
   const handleSave = async() =>{
     const token = Cookies.get("a");
-    console.log(background);
+
     if(patient.backgrounds.length === 0){
       const data = await ApiSegimed.post(`/backgrounds/update-backgrounds`,{background}, {headers: { token: token },})
       console.log(data);
@@ -104,6 +138,15 @@ const DetallePaciente = (id) => {
       const data = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`,{background}, {headers: { token: token },})
       console.log(data);
     }
+    const response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
+    console.log(response1);
+
+    const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
+    console.log(response2);  
+
+    const response3 = await ApiSegimed.post(`/medical-indications/new-indication`,medicalIndications, {headers: { token: token },})
+    console.log(response3);  
+   
   }
   if (!userId) {
     return <div>Cargando...</div>;
@@ -135,7 +178,7 @@ const DetallePaciente = (id) => {
             risk={["Riesgo cardiovascular", "Riesgo quirúrgico"]}
             riskGroup={["Grupo HTP"]}
             groupHTP={["I", "II", "III", "IV", "V"]}
-            options={["Bajo", "Medio", "Alto", " Muy Alto"]}
+            options={["Bajo", "Moderado", "Alto", " Muy Alto"]}
             subtitle={[
               "Antecedentes quirúrgicos",
               "Antecedentes patologicos",
@@ -147,6 +190,8 @@ const DetallePaciente = (id) => {
               "Vacunas",
             ]}
             paciente={patient}
+            onRiskChange={setSelectedRisk}
+            onGroupChange={setSelectedGroup}
           />
           <InputConsulta
             title={"Anamnesis"}
@@ -171,10 +216,10 @@ const DetallePaciente = (id) => {
             title={"Diagnósticos y tratamiento"}
             subtitle={[
               "Conducta terapeutica",
-              "Medicamentos",
-              "Procedimientos",
+              "Tratamientos no farmacológicos",
+              "Pauta de alarma",
             ]}
-            subtitle2={["Diagnostico", "Medicamento", "Procedimiento"]}
+            subtitle2={["Diagnostico", "Medicamentos", "Procedimientos",]}
           />
         </form>
         <div className="flex justify-center m-6">

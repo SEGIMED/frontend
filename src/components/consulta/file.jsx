@@ -39,7 +39,7 @@ const FileUpload = ({ label , Link, Links}) => {
     };
 
     return (
-        <div className="mb-4 p-6">
+        <div className="p-6 mb-4">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
                 <IconCurrentRouteNav className="w-4" />{label}
             </div>
@@ -50,17 +50,7 @@ const FileUpload = ({ label , Link, Links}) => {
                 >
                     <IconUpload /> Adjuntar archivo/informe
                 </button>
-                {Link && <a href={Link}>
-                    <div className='bg-primary flex items-center justify-center gap-3 py-2 px-6 border-2  text-white rounded-lg text-base w-72'>
-                    <IconDownload/> Ver archivo subido
-                    </div>
-                </a>}
-                {Links?.map((sub, index) => (
-                    <a href={sub} key={index}>
-                    <div className='bg-primary flex items-center justify-center gap-3 py-2 px-6 border-2  text-white rounded-lg text-base w-72'>
-                    <IconDownload/> Ver archivo subido
-                    </div>
-                </a>))}  
+                
                 <input
                     type="file"
                     ref={fileInputRef}
@@ -68,7 +58,19 @@ const FileUpload = ({ label , Link, Links}) => {
                     onChange={handleOnChange}
                     accept="application/pdf, image/*"
                 />
+                 
             </div>
+            {Link && <a href={Link} className='mt-4"'>
+                    <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
+                    {Link}
+                    </div>
+                </a>}
+                {Links?.map((sub, index) => (
+                    <a href={sub} key={index} >
+                    <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
+                    {sub}
+                    </div>
+                </a>))} 
             {file && (
                 <div className="mt-4">
                     <div className="flex items-center justify-between">
@@ -78,7 +80,7 @@ const FileUpload = ({ label , Link, Links}) => {
                         </button>
                     </div>
                     <textarea
-                        className="mt-2 p-2 border rounded w-full"
+                        className="w-full p-2 mt-2 border rounded"
                         placeholder="Describa el informe"
                         value={description}
                         onChange={handleDescriptionChange}

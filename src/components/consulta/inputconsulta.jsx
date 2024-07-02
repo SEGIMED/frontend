@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form";
 
 import IconConsulta from "../icons/IconConsulta";
 import IconCheckBotonConsulta from "../icons/iconCheckBotonConsulta";
+import { useEffect, useState } from "react";
 
 
 export default function InputConsulta({
@@ -17,16 +18,33 @@ export default function InputConsulta({
   riskGroup,
   groupHTP,
   preconsult,
-  paciente
+  paciente,
+  onRiskChange,
+  onGroupChange
 }) {
-  const valuesAmnesis=[
-    preconsult?.consultationReason,preconsult?.healthChangesDescription ,preconsult?.importantSymptoms
-  ]
-  const valuesBackground = [
-    paciente?.backgrounds.surgicalBackground,paciente?.backgrounds.pathologicBackground ,paciente?.backgrounds.nonPathologicBackground,paciente?.backgrounds.familyBackground,paciente?.backgrounds.pediatricBackground,paciente?.backgrounds.allergicBackground, paciente?.backgrounds.pharmacologicalBackground, paciente?.backgrounds.vaccinationBackground
-  ]
-  console.log(valuesBackground);
+  const [valuesAmnesis, setValuesAmnesis] = useState([]);
+  const [valuesBackground, setValuesBackground] = useState([]);
+  const [riskCardiovascularButton, setRiskCardiovascularButton] = useState();
+  const [groupPatientPulmonaryHypertensionRisksButton, setGroupPatientPulmonaryHypertensionButton] = useState();
+  
+  useEffect(() => {
+    setRiskCardiovascularButton(paciente?.patientCardiovascularRisks[0]?.risk);
+    setGroupPatientPulmonaryHypertensionButton(paciente?.patientPulmonaryHypertensionGroups[0]?.group);
+    setValuesBackground([paciente?.backgrounds.surgicalBackground,paciente?.backgrounds.pathologicBackground ,paciente?.backgrounds.nonPathologicBackground,paciente?.backgrounds.familyBackground,paciente?.backgrounds.pediatricBackground,paciente?.backgrounds.allergicBackground, paciente?.backgrounds.pharmacologicalBackground, paciente?.backgrounds.vaccinationBackground]);
+  }, [paciente]);
+
+  useEffect(() => {
+    setValuesAmnesis([preconsult?.consultationReason,preconsult?.healthChangesDescription ,preconsult?.importantSymptoms]);
+  }, [preconsult]);
+
+  console.log(groupPatientPulmonaryHypertensionRisksButton);
   const handleOption = (sub) => {
+    setRiskCardiovascularButton(sub);
+    if (onRiskChange) onRiskChange(sub);
+  };
+  const handleGroupChange = (sub) => {
+    setGroupPatientPulmonaryHypertensionButton(sub);
+    if (onGroupChange) onGroupChange(sub);
   };
   const { register } = useFormContext();
   return (
@@ -49,9 +67,13 @@ export default function InputConsulta({
               {sub}
             </label>
              <div className="flex">
-              {options?.map((sub, index) => (
-                <button className=" p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7]" onClick={handleOption(sub)}>
-                  {sub}
+              {options?.map((option, optionIndex) => (
+                <button 
+                key={optionIndex}
+                className={` p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] ${riskCardiovascularButton === option ? 'bg-blue-200' : ''}`} 
+                onClick={() => handleOption(option)}
+                >
+                  {option}
                 </button >
               ))}
             </div> 
@@ -67,7 +89,11 @@ export default function InputConsulta({
             </label>
              <div className="flex">
               {groupHTP?.map((sub, index) => (
-                <button key={index} className=" p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex">
+                <button 
+                key={index} 
+                className={` p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex ${groupPatientPulmonaryHypertensionRisksButton === sub ? 'bg-blue-200' : ''}`}
+                onClick={() => handleGroupChange(sub)}
+                >
                   {/*<IconCheckBotonConsulta className={"w-5  h-5 bg-black"} />*/}{sub}
                 </button>
               ))}
