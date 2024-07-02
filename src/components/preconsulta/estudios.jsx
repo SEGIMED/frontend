@@ -19,8 +19,8 @@ export default function InputFilePreconsultation({ title, defaultOpen = false })
                         </p>
                     </div>
                 </summary>
-                {Object.entries(formData.estudios).map(([key, value]) => (
-                    <FileUpload label={value.title} />
+                {Object.keys(formData.estudios).map((key, index) => (
+                    <FileUpload key={index} label={formData.estudios[key].title} />
                 ))}
             </details>
         </div>

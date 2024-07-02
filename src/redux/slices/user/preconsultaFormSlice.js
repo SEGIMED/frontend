@@ -379,7 +379,7 @@ const initialState = {
         selectedOption: "Dolor de cabeza :("
       },
       importantSymptoms: {
-        title: 'Síntomas relevantes',
+        title: 'Síntomas importantes',
         selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
       },
       currentMedications: {
@@ -391,6 +391,22 @@ const initialState = {
         ]
       },
     },
+    anamnesis: {
+      consultationReason: {
+        title: '¿Por qué solicitó la consulta?',
+        selectedOption: "Dolor de cabeza :("
+      },
+      importantSymptoms: {
+        title: 'Síntomas importantes',
+        selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
+      },
+    },
+    tratamiento: {
+      medicines: {
+        title: 'Medicamentos',
+        selectedOption: ''
+      }
+    }
   },
 };
 
