@@ -177,9 +177,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      // if (!socket.isConnected()) {
-      //   socket.setSocket(token, dispatch);
-      // }
+      if (!socket.isConnected()) {
+        socket.setSocket(token, dispatch);
+        socket.emit("onJoin", { id: idUser });
+      }
     }
   }, []);
 

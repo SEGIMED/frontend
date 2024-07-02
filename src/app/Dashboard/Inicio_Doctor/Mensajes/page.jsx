@@ -32,10 +32,10 @@ export default function MensajesDoc() {
   
   useEffect(() => {
     
-    if (!socket.isConnected()) {
-      socket.setSocket(token, dispatch);
-      socket.emit("onJoin", { id: idUser });
-    }
+    // if (!socket.isConnected()) {
+    //   socket.setSocket(token, dispatch);
+    //   socket.emit("onJoin", { id: idUser });
+    // }
     
   //   const listChats = Object.values(getChats);
   //   if (listChats) setChats(listChats) 
