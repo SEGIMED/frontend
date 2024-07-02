@@ -19,6 +19,7 @@ import IconMas from "@/components/icons/iconMas";
 import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
+import avatar from "@/utils/defaultAvatar";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -57,7 +58,7 @@ export default function MensajesDoc() {
           className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden  px-1 py-3">
           <div className="flex gap-4 items-center">
             <div className="w-8 h-8 flex justify-center items-center">
-              {handleImg(chat?.target?.avatar)}
+              {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
             </div>
             <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">

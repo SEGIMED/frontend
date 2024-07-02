@@ -19,6 +19,7 @@ import IconMas from "@/components/icons/iconMas";
 import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
+import avatar from "@/utils/defaultAvatar";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -41,6 +42,7 @@ export default function MensajesDoc() {
     }
   };
 
+
   const counterM = (message) => {
     if (!message.length) return false;
     const userId = Cookies.get("c");
@@ -57,7 +59,7 @@ export default function MensajesDoc() {
           className="flex justify-between h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center ">
           <div className="flex gap-4">
             <div className="w-12 h-12 flex justify-center items-center">
-              {handleImg(chat?.target?.avatar)}
+              {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
             </div>
             <div className="flex flex-col h-fit md:flex-row md:items-center ">
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 line-clamp-2">

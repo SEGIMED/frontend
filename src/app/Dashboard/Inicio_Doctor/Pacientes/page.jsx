@@ -21,6 +21,7 @@ import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPaci
 // import OpcionesDocPacientes from "@/components/Buttons/opcionesDocPacientes";
 import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
 import config from "@/components/localData/localdata";
+import avatar from "@/utils/defaultAvatar";
 
 export default function HomeDoc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -103,6 +104,7 @@ export default function HomeDoc() {
     return colors[randomIndex];
   };
 
+
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 bg-white sticky top-0 z-10">
@@ -118,7 +120,7 @@ export default function HomeDoc() {
         </button> */}
         <div></div>
 
-        <h1 className="font-bold hidden md:block">Listado de pacientes</h1>
+        <h1 className="font-bold">Listado de pacientes</h1>
 
         {/* <FiltroDocPacientes
           onClickSort={handleSortClick}
@@ -129,7 +131,7 @@ export default function HomeDoc() {
         <div></div>
       </div>
 
-      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-scroll">
+      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
@@ -149,7 +151,7 @@ export default function HomeDoc() {
                                 height={100} // Establece la altura de la imagen
                                 className="w-12 h-12 object-cover rounded-3xl"/> */}
                 <img
-                  src={paciente.avatar ? paciente.avatar : Segimed}
+                  src={paciente?.avatar !== null ? paciente.avatar : avatar}
                   alt={paciente.name}
                   className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
                 />
@@ -168,7 +170,7 @@ export default function HomeDoc() {
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
+      {/* <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
         <button className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
           <IconPrev /> Anterior
         </button>
@@ -177,7 +179,7 @@ export default function HomeDoc() {
           Siguiente
           <IconNext />
         </button>
-      </div>
+      </div> */}
       <ModalConsultation
         isOpen={isModalOpen}
         onClose={closeModal}

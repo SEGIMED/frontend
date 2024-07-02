@@ -1,22 +1,46 @@
 "use client"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import Cookies from "js-cookie";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 Chart.register(...registerables);
 
+
+
+
+export const GenreChart = () => {
+  const [dataGenre, setDataGenre] = useState({ women: 0, men: 0});
+
+  useEffect(() => {
+    const getGenre = async () => {
+      try {
+        const token = Cookies.get("a");
+        const response = await ApiSegimed.get("/statistics-genre", { headers: { 'token': token } });
+        console.log("esto es 2d", response.data)
+        setDataGenre(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getGenre();
+  }, []);
+
+  
 const data = {
   labels: ["Femenino", "Masculino"],
   datasets: [
     {
-      label: "My First Dataset",
-      data: [300, 50],
+      label: "Distribución de géneros",
+      data: [dataGenre.women, dataGenre.men],
       backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
     },
   ],
 };
 
-export const GenreChart = () => {
+
   return (
     <div className="w-full">
       <Pie
@@ -37,6 +61,24 @@ export const GenreChart = () => {
 };
 
 export const GooglePieChart = () => {
+  const [dataGenre, setDataGenre] = useState({ women: 0, men: 0 });
+
+  useEffect(() => {
+    const getGenre = async () => {
+      try {
+        const token = Cookies.get("a");
+        const response = await ApiSegimed.get("/statistics-genre", {
+          headers: { token: token },
+        });
+        setDataGenre(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getGenre();
+  }, []);
+
   useEffect(() => {
     // Load the Google Charts script
     const script = document.createElement("script");
@@ -51,16 +93,14 @@ export const GooglePieChart = () => {
     function drawChart() {
       const data = google.visualization.arrayToDataTable([
         ["Color", "Votes"],
-        ["Femenino", 300],
-        ["Masculino", 50],
+        ["Femenino", Number(dataGenre.women)],
+        ["Masculino", Number(dataGenre.men)],
       ]);
 
       const options = {
         is3D: true,
         colors: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
         pieStartAngle: 0,
-        // tooltip: {trigger: 'none'}
-        // pieSliceText: 'label
         enableInteractivity: false,
         pieSliceText: "value-and-label",
         legend: { textStyle: { fontSize: 16 } },
@@ -71,7 +111,7 @@ export const GooglePieChart = () => {
       );
       chart.draw(data, options);
     }
-  }, []);
+  }, [dataGenre]); // Dependencia añadida para que se actualice cuando dataGenre cambie
 
   return (
     <div>
