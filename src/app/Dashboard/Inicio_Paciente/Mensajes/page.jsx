@@ -26,19 +26,40 @@ export default function MensajesDoc() {
   const dispatch = useAppDispatch ()
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [reload, setReload]=useState(false)
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
 
+
   useEffect(() => {
+    
     if (!socket.isConnected()) {
       socket.setSocket(token, dispatch);
       socket.emit("onJoin", { id: idUser });
     }
-    const listChats = Object.values(getChats);
-    if (listChats) setChats(listChats);
-
-    if (getChats.length !== 0) setIsLoading(false);
+    
+  //   const listChats = Object.values(getChats);
+  //   if (listChats) setChats(listChats) 
+  //   if (counter === 0) setCounter(1) && window.location.reload() 
+  //   if (getChats.length !== 0) setIsLoading(false);
+    if(!reload){
+    const navigationEntries = performance.getEntriesByType("navigation");
+    const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
+    
+    if (navigationType === "reload") {
+      // Page was reloaded
+      const listChats = Object.values(getChats);
+      if (listChats) setChats(listChats);
+  
+      if (getChats.length !== 0) setIsLoading(false);
+    } else {
+      // First load, trigger a reload
+      window.location.reload();
+      setReload(true)
+    }
+  }
   }, [getChats]);
+
   
 
 
@@ -108,7 +129,7 @@ export default function MensajesDoc() {
   return (
     <div className="h-full text-[#686868] w-full flex flex-col">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2 ">
-        <Link href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}>
+        <Link href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}> 
           <Elboton
             nombre={"Nuevo Chat"}
             className="w-full md:w-48 md:h-12 md:text-lg"
