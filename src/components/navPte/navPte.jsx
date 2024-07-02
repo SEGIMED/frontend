@@ -37,10 +37,17 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
     Cookies.remove("a");
     Cookies.remove("b");
     Cookies.remove("c");
+
     socket.disconnect();
+
     dispatch(resetApp());
 
     router.push("/");
+
+    setTimeout(() => {
+      // Realizar la recarga de la página para limpiar todos los datos
+      window.location.reload(true);
+    }, 2000); 
   };
 
   return (

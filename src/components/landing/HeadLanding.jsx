@@ -34,7 +34,7 @@ const HeadLanding = () => {
               Crear Cuenta
             </button>
 
-            <Link href="/accounts/login">
+            <Link href="/">
               <span className="text-white font-extrabold">Iniciar Sesion</span>
             </Link>
           </div>

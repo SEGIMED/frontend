@@ -33,7 +33,7 @@ export default function AuthSelect() {
                 text: response.data.msg,
                 icon: "success"
             });
-            router.push("/accounts/login")
+            router.push("/")
         } catch (error) {
             Swal.fire({
                 title: "No pudo actualizar la contraseña",
