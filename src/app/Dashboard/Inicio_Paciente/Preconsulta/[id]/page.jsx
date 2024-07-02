@@ -128,8 +128,7 @@ export default function PreconsultaPte({ params }) {
         hydrationStatus: preConsultationQuestions.hydrationStatus.selectedOption,
         urineStatus: preConsultationQuestions.urineStatus.selectedOption,
         exerciseStatus: preConsultationQuestions.exerciseStatus.selectedOption,
-        //
-        /* abnormalGlycemia: true,
+        abnormalGlycemia: false,
         lastAbnormalGlycemia: [526, 589, 600],
         physicalExamination: 1,
         laboratoryResults: [
@@ -160,7 +159,7 @@ export default function PreconsultaPte({ params }) {
           "medicamento1",
           "medicamento2",
           "medicamento3"
-        ], */
+        ],
       }
       console.log(formDataBody);
       /* const response = await ApiSegimed.post(`/pre-consultation`, formDataBody, {
@@ -174,7 +173,7 @@ export default function PreconsultaPte({ params }) {
     }
   };
 
-  /* useEffect(() => {
+  useEffect(() => {
     const getPreConsultation = async () => {
       try {
         const res = await ApiSegimed.get(`/get-all-pateint-preconsultation?patientId=${patientId}`, {
@@ -197,9 +196,9 @@ export default function PreconsultaPte({ params }) {
       setPreConsultationQuestions(object);
     }
     questionList();
-    getPreConsultation();
+    // getPreConsultation();
   }, []);
-  console.log(preConsultationQuestions); */
+  console.log(preConsultationQuestions);
 
   return (
     <FormProvider {...methods}>
@@ -239,6 +238,10 @@ export default function PreconsultaPte({ params }) {
         {/* <InputFile title={"Estudios"} defaultOpen /> */}
         <InputConsulta
           title={"Anamnesis"}
+          defaultOpen
+        />
+        <InputFile
+          title={"Estudios"}
           subtitle={["Motivo de consulta", "Sintomas"]}
           defaultOpen
         />
