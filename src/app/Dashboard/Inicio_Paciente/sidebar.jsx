@@ -18,15 +18,20 @@ import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
 import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
 
+import rutas from "@/utils/rutas";
+
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
 
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
+  
 
   const handleSearchChange = (e) => {
+
     dispatch(setSearchTerm1(e.target.value));
+    
   };
 
  
@@ -35,7 +40,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
-    pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+    // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
     pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
@@ -230,7 +235,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
             type="text"
             placeholder="Buscar doctores"
             className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
-            value={searchTerm1}
+            value={searchTerm1 } 
           />
           <button>
             <Image src={busqueda} alt="" />
