@@ -5,7 +5,6 @@ import circleData from "@/components/images/circleData.png";
 import { useFormContext } from "react-hook-form";
 
 import IconConsulta from "../icons/IconConsulta";
-import IconCheckBotonConsulta from "../icons/iconCheckBotonConsulta";
 import { useEffect, useState } from "react";
 
 
@@ -129,7 +128,7 @@ export default function InputConsulta({
                 className={` p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex ${groupPatientPulmonaryHypertensionRisksButton === sub ? 'bg-blue-200' : ''}`}
                 onClick={() => handleGroupChange(sub)}
                 >
-                  {/*<IconCheckBotonConsulta className={"w-5  h-5 bg-black"} />*/}{sub}
+                  {sub}
                 </button>
               ))}
             </div> 
