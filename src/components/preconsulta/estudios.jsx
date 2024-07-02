@@ -5,7 +5,7 @@ import circleData from "@/components/images/circleData.png";
 import FileUpload from "@/components/consulta/file";
 import { useAppSelector } from "@/redux/hooks";
 
-export default function InputFile({ title, defaultOpen = false }) {
+export default function InputFilePreconsultation({ title, defaultOpen = false }) {
     const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
     return (

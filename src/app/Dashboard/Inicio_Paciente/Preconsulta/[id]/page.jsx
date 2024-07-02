@@ -3,7 +3,7 @@
 import Elboton from "@/components/Buttons/Elboton";
 import InputDiagnostico from "@/components/consulta/inputDiagnostico";
 import InputConsulta from "@/components/consulta/inputconsulta";
-import InputFile from "@/components/preconsulta/estudios";
+import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PreconsultaQuestion from "@/components/preconsulta/PreconsultaQuestion";
 import Link from "next/link";
@@ -129,7 +129,7 @@ export default function PreconsultaPte({ params }) {
         hydrationStatus: preConsultationQuestions.hydrationStatus.selectedOption,
         urineStatus: preConsultationQuestions.urineStatus.selectedOption,
         exerciseStatus: preConsultationQuestions.exerciseStatus.selectedOption,
-        abnormalGlycemia: false,
+        abnormalGlycemia: false, // pendiente
         lastAbnormalGlycemia: [526, 589, 600],
         physicalExamination: 1,
         laboratoryResults: [
@@ -241,9 +241,8 @@ export default function PreconsultaPte({ params }) {
           title={"Anamnesis"}
           defaultOpen
         />
-        <InputFile
+        <InputFilePreconsultation
           title={"Estudios"}
-          subtitle={["Motivo de consulta", "Sintomas"]}
           defaultOpen
         />
         <InputDiagnostico
