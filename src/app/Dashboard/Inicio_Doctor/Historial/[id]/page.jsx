@@ -33,7 +33,11 @@ const DetallePaciente = (id) => {
   const userId = id.params.id;
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
-  const [physicalExamination, setPhysicalExamination] = useState();
+  const [physicalExamination, setPhysicalExamination] = useState({
+    physicalSubsystemId:null,
+    description: "",
+    medicalEventId: null
+    });
   const [vitalSigns, setVitalSigns] = useState();
   const [background, setBackground] = useState();
   const [diagnostic, setDiagnostic] = useState();
@@ -50,8 +54,9 @@ const DetallePaciente = (id) => {
   const onSubmit = (data) => {
     console.log(data);
     console.log(selectedRisk);
+    console.log(physicalExamination);
     setBackground({
-      id: patient.backgrounds.id,
+      id: patient?.backgrounds?.id || null,
       allergicBackground: data["Alergias"],
       familyBackground: data["Antecedentes familiares"],
       medicalEvent: data["Anotaciones de la consulta"],
@@ -106,7 +111,7 @@ const DetallePaciente = (id) => {
     }])
     setPhysicalExamination({
     physicalSubsystemId:2 , /// data["selectSubsistema"],
-    description: data["inputSubsistema"],
+    description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
     medicalEventId: 5 /// id del medical event
     })
     setDiagnostic({
@@ -172,7 +177,7 @@ const DetallePaciente = (id) => {
   const handleSave = async() =>{
     const token = Cookies.get("a");
     setLoading(true);
-    if(patient.backgrounds.length === 0){
+    if(patient?.backgrounds?.length === 0){
       const data = await ApiSegimed.post(`/backgrounds/update-backgrounds`,{background}, {headers: { token: token },})
       console.log(data);
     }
@@ -189,10 +194,13 @@ const DetallePaciente = (id) => {
       const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
       console.log(data);
     }*/
-   if(!patient.physicalExaminations.length === 0){
-    const response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
-    console.log(response1);
+    let response1;
+   if(physicalExamination?.description === ""){
+    response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
+   }else {
+    response1 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`,physicalExamination, {headers: { token: token },})
    }
+   console.log(response1);
     const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
     console.log(response2);  
 

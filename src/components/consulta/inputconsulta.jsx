@@ -33,7 +33,7 @@ export default function InputConsulta({
     setRiskCardiovascularButton(paciente?.patientCardiovascularRisks[0]?.risk);
     setRiskSurgicalButton(paciente?.patientSurgicalRisks[0]?.risk);
     setGroupPatientPulmonaryHypertensionButton(paciente?.patientPulmonaryHypertensionGroups[0]?.group);
-    setValuesBackground([paciente?.backgrounds.surgicalBackground,paciente?.backgrounds.pathologicBackground ,paciente?.backgrounds.nonPathologicBackground,paciente?.backgrounds.familyBackground,paciente?.backgrounds.pediatricBackground,paciente?.backgrounds.allergicBackground, paciente?.backgrounds.pharmacologicalBackground, paciente?.backgrounds.vaccinationBackground]);
+    setValuesBackground([paciente?.backgrounds?.surgicalBackground,paciente?.backgrounds?.pathologicBackground ,paciente?.backgrounds?.nonPathologicBackground,paciente?.backgrounds?.familyBackground,paciente?.backgrounds?.pediatricBackground,paciente?.backgrounds?.allergicBackground, paciente?.backgrounds?.pharmacologicalBackground, paciente?.backgrounds?.vaccinationBackground]);
   }, [paciente]);
 
   useEffect(() => {
@@ -43,11 +43,11 @@ export default function InputConsulta({
   console.log(groupPatientPulmonaryHypertensionRisksButton);
   const handleOption = (sub) => {
     setRiskCardiovascularButton(sub);
-    if (onRiskChange) onRiskChange(sub);
+
   };
   const handleOption2 = (sub) => {
     setRiskSurgicalButton(sub);
-    if (onRiskChange) onRiskChange(sub);
+
   };
   const handleGroupChange = (sub) => {
     setGroupPatientPulmonaryHypertensionButton(sub);
@@ -78,8 +78,10 @@ export default function InputConsulta({
                 <button 
                 key={optionIndex}
                 className={` p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] ${riskCardiovascularButton === option ? 'bg-blue-200' : ''}`} 
-                onClick={() => handleOption(option)}
-
+                onClick={(event) => {
+                  event.preventDefault(); // Prevent the default form submission
+                  handleOption(option);
+              }}
                 >
                   {option}
                 </button >
@@ -102,7 +104,9 @@ export default function InputConsulta({
                 <button 
                 key={optionIndex}
                 className={` p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] ${riskSurgicalButton === option ? 'bg-blue-200' : ''}`} 
-                onClick={() => handleOption2(option)}
+                onClick={(event) => {
+                  event.preventDefault();
+                   handleOption2(option)}}
                 {...register(option)}
                 >
                   {option}
@@ -126,7 +130,9 @@ export default function InputConsulta({
                 <button 
                 key={index} 
                 className={` p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex ${groupPatientPulmonaryHypertensionRisksButton === sub ? 'bg-blue-200' : ''}`}
-                onClick={() => handleGroupChange(sub)}
+                onClick={(event) => {
+                  event.preventDefault(); handleGroupChange(sub)
+                }}
                 >
                   {sub}
                 </button>
