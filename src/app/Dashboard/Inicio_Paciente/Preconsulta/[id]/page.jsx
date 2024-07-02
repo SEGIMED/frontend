@@ -9,6 +9,7 @@ import PreconsultaQuestion from "@/components/preconsulta/PreconsultaQuestion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import rutas from "@/utils/rutas";
 import {
   updateField,
   updateSubquestion,
@@ -99,7 +100,7 @@ export default function PreconsultaPte({ params }) {
       <div className="flex flex-col h-[50%]">
         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] ">
           <div className="md:w-1/2">
-            <Link href={``}>
+            <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
               <Elboton
                 size={"lg"}
                 nombre={"Regresar"}

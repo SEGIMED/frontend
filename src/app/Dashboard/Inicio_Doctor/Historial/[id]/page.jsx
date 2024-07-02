@@ -159,7 +159,7 @@ const DetallePaciente = (id) => {
           <div className="flex items-center ">
             <Image src={ruteActual} alt="ruta actual" />
             <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
-              Detalle de consulta
+              Detalle de consulta 
             </p>
           </div>
           <div>

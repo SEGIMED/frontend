@@ -3,6 +3,7 @@
 
 import Avatars from '../avatar/avatarChat';
 import LastLogin from "@/utils/lastLogin";
+import avatar from "@/utils/defaultAvatar";
 
 export default function DoctorCardConsulta({ doctor, button, consulta }) {
     const specialtiesString = doctor?.specialties?.map(specialty => specialty.name).join(' ');
@@ -22,19 +23,19 @@ export default function DoctorCardConsulta({ doctor, button, consulta }) {
         }
     };
 
-    const status = getStatusTextAndColor(consulta?.schedulingStatus);
+    const status = getStatusTextAndColor(doctor?.schedulingStatus);
 
     return (
         <div className="flex justify-between w-full border-b border-b-[#cecece] px-6 py-2 items-center">
             <div className="flex gap-3 items-center">
                 <div className="w-12 h-12 flex justify-center items-center">
-                    <Avatars avatar={doctor.avatar} />
+                    <Avatars avatar1={doctor?.physicianThatAttend?.avatar ? doctor.physicianThatAttend.avatar : avatar} />
                 </div>
-                <p className="text-start text-[#686868] font-normal text-base leading-6">{doctor?.name} {doctor?.lastname} - {specialtiesString ? specialtiesString : null}</p>
+                <p className="text-start text-[#686868] font-normal text-base leading-6">{doctor?.physicianThatAttend?.name} {doctor?.physicianThatAttend?.lastname} - {specialtiesString ? specialtiesString : null}</p>
                 <div className="flex gap-3 items-center justify-center text-center">
-                <p className="text-center text-[#686868] font-normal text-base leading-6">{consulta?.reasonForConsultation}</p>
-                <p className="text-center text-[#686868] font-normal text-base leading-6">{LastLogin(consulta?.scheduledStartTimestamp)}</p>
-                <p className={`text-center font-normal text-base leading-6 ${status?.color}`}>{status?.text}</p>
+                    <p className="text-center text-[#686868] font-normal text-base leading-6">{doctor?.reasonForConsultation}</p>
+                    <p className="text-center text-[#686868] font-normal text-base leading-6">{LastLogin(doctor?.scheduledEndTimestamp)}</p>
+                    <p className={`text-center font-normal text-base leading-6 ${status?.color}`}>{status?.text}</p>
                 </div>
             </div>
             {button}

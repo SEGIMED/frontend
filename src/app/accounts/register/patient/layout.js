@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         {children}
       </div>
       {/* Pie de página */}
-      <div className="fixed bottom-0 left-0 z-50 w-full flex justify-start">
+      <div className="fixed bottom-0 left-0 z-10 w-full flex justify-start">
         <FooterAcc />
       </div>
     </div>
