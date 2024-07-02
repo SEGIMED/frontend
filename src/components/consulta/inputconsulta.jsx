@@ -13,8 +13,10 @@ export default function InputConsulta({
   title,
   subtitle,
   risk,
+  risk2,
   defaultOpen = false,
   options,
+  options2,
   riskGroup,
   groupHTP,
   preconsult,
@@ -25,10 +27,12 @@ export default function InputConsulta({
   const [valuesAmnesis, setValuesAmnesis] = useState([]);
   const [valuesBackground, setValuesBackground] = useState([]);
   const [riskCardiovascularButton, setRiskCardiovascularButton] = useState();
+  const [riskSurgicalButton, setRiskSurgicalButton] = useState();
   const [groupPatientPulmonaryHypertensionRisksButton, setGroupPatientPulmonaryHypertensionButton] = useState();
   
   useEffect(() => {
     setRiskCardiovascularButton(paciente?.patientCardiovascularRisks[0]?.risk);
+    setRiskSurgicalButton(paciente?.patientSurgicalRisks[0]?.risk);
     setGroupPatientPulmonaryHypertensionButton(paciente?.patientPulmonaryHypertensionGroups[0]?.group);
     setValuesBackground([paciente?.backgrounds.surgicalBackground,paciente?.backgrounds.pathologicBackground ,paciente?.backgrounds.nonPathologicBackground,paciente?.backgrounds.familyBackground,paciente?.backgrounds.pediatricBackground,paciente?.backgrounds.allergicBackground, paciente?.backgrounds.pharmacologicalBackground, paciente?.backgrounds.vaccinationBackground]);
   }, [paciente]);
@@ -40,6 +44,10 @@ export default function InputConsulta({
   console.log(groupPatientPulmonaryHypertensionRisksButton);
   const handleOption = (sub) => {
     setRiskCardiovascularButton(sub);
+    if (onRiskChange) onRiskChange(sub);
+  };
+  const handleOption2 = (sub) => {
+    setRiskSurgicalButton(sub);
     if (onRiskChange) onRiskChange(sub);
   };
   const handleGroupChange = (sub) => {
@@ -72,11 +80,38 @@ export default function InputConsulta({
                 key={optionIndex}
                 className={` p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] ${riskCardiovascularButton === option ? 'bg-blue-200' : ''}`} 
                 onClick={() => handleOption(option)}
+
                 >
                   {option}
                 </button >
               ))}
+              
             </div> 
+            
+          </div>
+        ))}
+        {risk2?.map((sub, index) => (
+          <div
+            key={index}
+            className="flex flex-col md:flex-row gap-2 px-6 md:py-2 py-4 border-b border-b-[#cecece]">
+            <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
+              <IconConsulta />
+              {sub}
+            </label>
+             <div className="flex">
+              {options2?.map((option, optionIndex) => (
+                <button 
+                key={optionIndex}
+                className={` p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] ${riskSurgicalButton === option ? 'bg-blue-200' : ''}`} 
+                onClick={() => handleOption2(option)}
+                {...register(option)}
+                >
+                  {option}
+                </button >
+              ))}
+              
+            </div> 
+            
           </div>
         ))}
         {riskGroup?.map((sub, index) => (

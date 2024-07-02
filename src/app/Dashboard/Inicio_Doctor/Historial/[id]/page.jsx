@@ -157,7 +157,7 @@ const DetallePaciente = (id) => {
 
         const [response1, response2, response3] = await Promise.all([
           ApiSegimed.get(`/patient-details?id=${userId}`, {headers: { token: token },}),  
-          ApiSegimed2.get(`/get-all-pateint-preconsultation?patientId=8`,{headers: { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIyLCJpZE51bWJlciI6IjQyMTE5ODU2IiwidXNlcklkVHlwZSI6IkROSSIsIm5hbWUiOiJTYW50aWFnbyIsImxhc3RuYW1lIjoiUGF6Iiwicm9sZSI6Ik3DqWRpY28iLCJ2ZXJpZmllZCI6dHJ1ZSwiYXZhdGFyIjoiaHR0cDovL3Jlcy5jbG91ZGluYXJ5LmNvbS9keWExZWtrZDUvaW1hZ2UvdXBsb2FkL3YxNzE5NTM4NTEwL25teDBzd2d3OXZwa250aXJzejI1LmF2aWYiLCJjZWxscGhvbmUiOiIyMjM1NzgxMzY5IiwiZW1haWwiOiJzYW50aXBhejEyQGdtYWlsLmNvbSIsIm5hdGlvbmFsaXR5IjoiQ29sb21iaWFuYSIsImxhc3RMb2dpbiI6IjIwMjQtMDYtMjhUMTU6MTM6MjMuMDAwWiIsImlhdCI6MTcxOTU4OTgwNiwiZXhwIjoxNzIwMTk0NjA2fQ._D5vWvsycHo9taYksesc82caWv9m9O7z3tTybHeIjrY" },}),
+          ApiSegimed.get(`/get-all-pateint-preconsultation?patientId=${userId}`,{headers: { token: token },}),
         ]);
         console.log(response1.data);
         console.log(response2.data);
@@ -191,9 +191,10 @@ const DetallePaciente = (id) => {
       const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
       console.log(data);
     }*/
+   if(!patient.physicalExaminations.length === 0){
     const response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
     console.log(response1);
-
+   }
     const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
     console.log(response2);  
 
@@ -255,10 +256,12 @@ const DetallePaciente = (id) => {
           <Consulta title={"Datos del paciente"} paciente={patient} />
           <InputConsulta
             title={"Antecedentes"}
-            risk={["Riesgo cardiovascular", "Riesgo quirúrgico"]}
+            risk={["Riesgo cardiovascular"]}
+            risk2={["Riesgo quirúrgico"]}
             riskGroup={["Grupo HTP"]}
             groupHTP={["I", "II", "III", "IV", "V"]}
             options={["Bajo", "Moderado", "Alto", " Muy Alto"]}
+            options2={["Bajo", "Moderado", "Alto"]}
             subtitle={[
               "Antecedentes quirúrgicos",
               "Antecedentes patologicos",

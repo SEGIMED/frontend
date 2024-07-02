@@ -28,6 +28,12 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
     const [glucemiaElevada, setGlucemiaElevada] = useState(null);
     const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState(['', '', '', '']);
 
+    const { register } = useFormContext();
+    useEffect(() => {
+        console.log(glucemiaElevada);
+        register("glucemiaElevada", {glucemiaElevada});
+    },[glucemiaElevada]);
+
     useEffect(() => {
         setAnthropometricDetails(paciente?.anthropometricDetails.length ? paciente?.anthropometricDetails  : defaultAnthropometricDetails);
         setVitalSigns(paciente?.vitalSigns.length ? paciente?.vitalSigns : defaultVitalSigns);
@@ -47,23 +53,22 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
 
     const handleGlucemiaSiClick = () => {
         setGlucemiaElevada(true);
-        setValue("glucemiaElevada", true);
+        //register("glucemiaElevada", true);
     };
 
     const handleGlucemiaNoClick = () => {
         setGlucemiaElevada(false);
-        setValue("glucemiaElevada", false);
+        //register("glucemiaElevada", false);
     };
     useEffect(() => {
         setGlucemiaElevada(preconsult?.abnormalGlycemia);
-        register("glucemiaElevada", { value: glucemiaElevada });
+        //register("glucemiaElevada", glucemiaElevada);
     }, [preconsult]);
     const handleAnormalValueChange = (index, event) => {
         const updatedValues = [...ultimosValoresAnormales];
         updatedValues[index] = event.target.value ;
         setUltimosValoresAnormales(updatedValues);
     };
-    const { register } = useFormContext();
     return (
         <div className="flex flex-col">
             <details open={defaultOpen}>
@@ -115,8 +120,7 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                             type="button"
                             className={`px-6 py-2 border-2 rounded-xl border-[#DCDBDB] ${glucemiaElevada === true ? 'bg-blue-200' : ''}`}
                             onClick={handleGlucemiaSiClick}
-                            //{...register("glucemiaElevada")}
-                            //value={glucemiaElevada}
+                            {...register("glucemiaElevada")} value={glucemiaElevada}
                         >
                             Sí
                         </button>
@@ -124,12 +128,11 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                             type="button"
                             className={`px-6 py-2 border-2 rounded-xl border-[#DCDBDB] ${glucemiaElevada === false ? 'bg-blue-200' : ''}`}
                             onClick={handleGlucemiaNoClick}
-                            //{...register("glucemiaElevada")}
-                            value={false}
+                            {...register("glucemiaElevada")} value={glucemiaElevada}
                         >
                             No
                         </button>
-                        
+                        {/*<input type="hidden" {...register("glucemiaElevada")} value={glucemiaElevada} />*/}
                     </div>
                     
                 </div>
