@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-import { ApiSegimed2 } from "@/Api/ApiSegimed2";
 import { useEffect, useState } from "react";
 import rutas from "@/utils/rutas";
 import Cookies from "js-cookie";
@@ -23,7 +22,6 @@ import Component from "@/components/consulta/inputCuerpo";
 import { useForm, FormProvider } from "react-hook-form";
 import { useAppSelector } from "@/redux/hooks";
 import Elboton from "@/components/Buttons/Elboton";
-//import IconList from "@/utils/IconsList";
 import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
@@ -314,8 +312,6 @@ const DetallePaciente = (id) => {
             className={"bg-tertiary w-60 text-sm font-bold"}
           />
         </div>
-        
-      {/*<IconList />*/}
       </div>
     </FormProvider>
   );
