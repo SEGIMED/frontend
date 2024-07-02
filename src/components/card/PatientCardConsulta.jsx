@@ -45,7 +45,7 @@ export default function PatientCardConsulta({ paciente, button, consulta }) {
           alt="Punto de color"
         />
         <div className="md:w-[10%] h-12 gap-3 flex justify-center items-center ">
-          <Avatars avatar1={paciente?.avatar} />
+          <Avatars avatar1={paciente?.patientUser?.avatar} />
           <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 w-36 md:w-fit">
             {paciente?.patientUser?.name} {paciente?.patientUser?.lastname}
           </p>
