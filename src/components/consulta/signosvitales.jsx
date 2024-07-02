@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import circleData from '@/components/images/circleData.png';
 import Image from 'next/image';
+import { useFormContext } from 'react-hook-form';
 
 const defaultAnthropometricDetails = [
     { measureType: 'Talla', measureUnit: 'Cm', measure: '' },
@@ -20,33 +21,49 @@ const defaultVitalSigns = [
 
 
 export default function SignosVitalesInfo({ paciente, title, defaultOpen = false, preconsult }) {
-    const [glucemiaValue, setGlucemiaValue] = useState('');
-    const [glucemiaElevada, setGlucemiaElevada] = useState(null); // Estado para el botón "Sí" de la glucemia elevada
-    const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState(['', '', '', '']);
     
+    
+    const [anthropometricDetails, setAnthropometricDetails] = useState([]);
+    const [vitalSigns, setVitalSigns] = useState([]);
+    const [glucemiaElevada, setGlucemiaElevada] = useState(null);
+    const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState(['', '', '', '']);
+
     useEffect(() => {
-        if (preconsult?.abnormalGlycemia !== undefined) {
-            setGlucemiaElevada(preconsult.abnormalGlycemia);
-        }
-    }, [preconsult]);
-    const handleGlucemiaChange = (event) => {
-        setGlucemiaValue(event.target.value);
+        setAnthropometricDetails(paciente?.anthropometricDetails.length ? paciente?.anthropometricDetails  : defaultAnthropometricDetails);
+        setVitalSigns(paciente?.vitalSigns.length ? paciente?.vitalSigns : defaultVitalSigns);
+    }, [paciente]);
+
+    const handleDetailChange = (index, value) => {
+        const updatedDetails = [...anthropometricDetails];
+        updatedDetails[index].measure = value ;
+        setAnthropometricDetails(updatedDetails);
+    };
+
+    const handleVitalChange = (index, value) => {
+        const updatedVitalSigns = [...vitalSigns];
+        updatedVitalSigns[index].measure = value  ;
+        setVitalSigns(updatedVitalSigns);
     };
 
     const handleGlucemiaSiClick = () => {
         setGlucemiaElevada(true);
+        setValue("glucemiaElevada", true);
     };
 
     const handleGlucemiaNoClick = () => {
         setGlucemiaElevada(false);
+        setValue("glucemiaElevada", false);
     };
-
+    useEffect(() => {
+        setGlucemiaElevada(preconsult?.abnormalGlycemia);
+        register("glucemiaElevada", { value: glucemiaElevada });
+    }, [preconsult]);
     const handleAnormalValueChange = (index, event) => {
         const updatedValues = [...ultimosValoresAnormales];
         updatedValues[index] = event.target.value ;
         setUltimosValoresAnormales(updatedValues);
     };
-
+    const { register } = useFormContext();
     return (
         <div className="flex flex-col">
             <details open={defaultOpen}>
@@ -67,8 +84,9 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                         <input
                             type="text"
                             className='w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1'
-                            value={detail.measure}
+                            defaultValue={detail.measure}
                             onChange={(e) => handleDetailChange(detailIndex, e.target.value)}
+                            {...register(detail.measureType)}
                         />
                     </div>
                 ))}
@@ -81,8 +99,9 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                         <input
                             type="text"
                             className='w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1'
-                            value={vital.measure}
+                            defaultValue={vital.measure}
                             onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
+                            {...register(vital.measureType)}
                         />
                     </div>
                 ))}
@@ -96,6 +115,8 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                             type="button"
                             className={`px-6 py-2 border-2 rounded-xl border-[#DCDBDB] ${glucemiaElevada === true ? 'bg-blue-200' : ''}`}
                             onClick={handleGlucemiaSiClick}
+                            //{...register("glucemiaElevada")}
+                            //value={glucemiaElevada}
                         >
                             Sí
                         </button>
@@ -103,10 +124,14 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                             type="button"
                             className={`px-6 py-2 border-2 rounded-xl border-[#DCDBDB] ${glucemiaElevada === false ? 'bg-blue-200' : ''}`}
                             onClick={handleGlucemiaNoClick}
+                            //{...register("glucemiaElevada")}
+                            value={false}
                         >
                             No
                         </button>
+                        
                     </div>
+                    
                 </div>
 
                 <div className="flex justify-start h-14 items-center gap-2 px-3 border-b border-b-[#cecece] pr-10">
@@ -119,8 +144,9 @@ export default function SignosVitalesInfo({ paciente, title, defaultOpen = false
                                 key={index}
                                 type="text"
                                 className='px-6 py-2 border-2 rounded-xl border-[#DCDBDB] w-1/6'
-                                value={value || preconsult?.lastAbnormalGlycemia[index]}
+                                defaultValue={value || preconsult?.lastAbnormalGlycemia[index]}
                                 onChange={(event) => handleAnormalValueChange(index, event)}
+                                //{...register("lastAbnormalGlycemia" )}
                             />
                         ))}
                     </div>

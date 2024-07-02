@@ -25,14 +25,18 @@ import { useAppSelector } from "@/redux/hooks";
 import Elboton from "@/components/Buttons/Elboton";
 //import IconList from "@/utils/IconsList";
 import IconGuardar from "@/components/icons/iconGuardar";
-import axios from "axios";
+import LoadingFallback from "@/components/loading/loading";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 
 const DetallePaciente = (id) => {
+  const [loading, setLoading] = useState(false);
   const userId = id.params.id;
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
   const [physicalExamination, setPhysicalExamination] = useState();
+  const [vitalSigns, setVitalSigns] = useState();
   const [background, setBackground] = useState();
   const [diagnostic, setDiagnostic] = useState();
   const [medicalIndications, setMedicalIndications] = useState();
@@ -44,9 +48,10 @@ const DetallePaciente = (id) => {
   
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
-
+  const router = useRouter();
   const onSubmit = (data) => {
     console.log(data);
+    console.log(selectedRisk);
     setBackground({
       id: patient.backgrounds.id,
       allergicBackground: data["Alergias"],
@@ -59,38 +64,79 @@ const DetallePaciente = (id) => {
       surgicalBackground: data["Antecedentes quirúrgicos"],
       vaccinationBackground: data["Vacunas"]
     })
+    setVitalSigns([{
+      patientId: userId, // id del paciente
+      measureType: 7, // id del parametro "frecuencia cardiaca" en el catalogo vital signs
+      measure: data["Presión Arterial Diastólica"], // medida introducida por el médico o paciente,
+      schedulingId:null , /// id del scheduling si se crea en preconsulta
+      medicalEventId:4 /// id del medical event si se crea durante medical event
+    },
+    {
+      patientId: userId, 
+      measureType: 7, 
+      measure: data["Presión Arterial Sistólica"], 
+      schedulingId:null , 
+      medicalEventId:4 
+    },
+    {
+      patientId: userId, 
+      measureType: 7, 
+      measure: data["Saturación de Oxígeno"], 
+      schedulingId:null , 
+      medicalEventId:4
+    },
+    {
+      patientId: userId,
+      measureType: 7, 
+      measure: data["Temperatura"], 
+      schedulingId:null , 
+      medicalEventId:4 
+    },
+    {
+      patientId: userId, 
+      measureType: 7, 
+      measure: data["Frecuencia Respiratoria"],
+      schedulingId:null , 
+      medicalEventId:4 
+    },
+    {
+      patientId: userId,
+      measureType: 7, 
+      measure: data["Frecuencia Cardiaca"],
+      schedulingId:null , 
+      medicalEventId:4 
+    }])
     setPhysicalExamination({
     physicalSubsystemId:2 , /// data["selectSubsistema"],
     description: data["inputSubsistema"],
     medicalEventId: 5 /// id del medical event
     })
     setDiagnostic({
-    patientId:8,  /// id del paciente 
+    patientId: userId,  /// id del paciente 
     diseaseId:3,  /// id de la enferemedad ---> (hipertension pulmonar) referenciada catalogo disease
     diagnosticNotes: data["Diagnostico"],
     medicalEventId :5
     })
     setMedicalIndications({
-    patientId: 8,
+    patientId: userId,
     description: data["Tratamientos no farmacológicos"],
     medicalEventId:5
     })
     setProcedurePrescription({
-    patientId: 8,
+    patientId: userId,
     medicalProcedureId: 4,
     medicalEvent: 5
+    //diagnosticNotes: data["Procedimientos"],
     })
     setDrugPrescription({
-    diagnosticNotes: data["Procedimientos"],
-    patientId: 8,  /// ID del paciente
+    patientId: userId,  /// ID del paciente
     drugId: 1, // id del medicamento ---> (Losartan) referenciado en el catalogo drug 
     prescribedDose: data["Medicamentos"],
     quantity: 60, // cantidad de tabletas etc
     medicalEventId : 5
     })
-
     setTerapy({
-    patientId: 8,
+    patientId: userId,
     therapyId: 2,
     description: data["Conducta terapeutica"],
     quantity: 10,
@@ -112,11 +158,9 @@ const DetallePaciente = (id) => {
         const [response1, response2, response3] = await Promise.all([
           ApiSegimed.get(`/patient-details?id=${userId}`, {headers: { token: token },}),  
           ApiSegimed2.get(`/get-all-pateint-preconsultation?patientId=8`,{headers: { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIyLCJpZE51bWJlciI6IjQyMTE5ODU2IiwidXNlcklkVHlwZSI6IkROSSIsIm5hbWUiOiJTYW50aWFnbyIsImxhc3RuYW1lIjoiUGF6Iiwicm9sZSI6Ik3DqWRpY28iLCJ2ZXJpZmllZCI6dHJ1ZSwiYXZhdGFyIjoiaHR0cDovL3Jlcy5jbG91ZGluYXJ5LmNvbS9keWExZWtrZDUvaW1hZ2UvdXBsb2FkL3YxNzE5NTM4NTEwL25teDBzd2d3OXZwa250aXJzejI1LmF2aWYiLCJjZWxscGhvbmUiOiIyMjM1NzgxMzY5IiwiZW1haWwiOiJzYW50aXBhejEyQGdtYWlsLmNvbSIsIm5hdGlvbmFsaXR5IjoiQ29sb21iaWFuYSIsImxhc3RMb2dpbiI6IjIwMjQtMDYtMjhUMTU6MTM6MjMuMDAwWiIsImlhdCI6MTcxOTU4OTgwNiwiZXhwIjoxNzIwMTk0NjA2fQ._D5vWvsycHo9taYksesc82caWv9m9O7z3tTybHeIjrY" },}),
-          //ApiSegimed.get(`/vital-signs/create-vital-sign?id=${userId}`, {headers: { token: token },}),
         ]);
         console.log(response1.data);
         console.log(response2.data);
-        //console.log(response3.data);
     
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
@@ -129,7 +173,7 @@ const DetallePaciente = (id) => {
   }, []);
   const handleSave = async() =>{
     const token = Cookies.get("a");
-
+    setLoading(true);
     if(patient.backgrounds.length === 0){
       const data = await ApiSegimed.post(`/backgrounds/update-backgrounds`,{background}, {headers: { token: token },})
       console.log(data);
@@ -138,15 +182,50 @@ const DetallePaciente = (id) => {
       const data = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`,{background}, {headers: { token: token },})
       console.log(data);
     }
+
+    /*if(patient.vitalSigns.length === 0){
+      const data = await ApiSegimed.post(`/vital-signs/create-vital-sign`,vitalSigns, {headers: { token: token },})
+      console.log(data);
+    }
+    else{
+      const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
+      console.log(data);
+    }*/
     const response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
     console.log(response1);
 
     const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
     console.log(response2);  
 
-    const response3 = await ApiSegimed.post(`/medical-indications/new-indication`,medicalIndications, {headers: { token: token },})
-    console.log(response3);  
-   
+    const response3 = await ApiSegimed.post(`/procedure/create-procedure-prescription`,procedurePrescription, {headers: { token: token },})
+    console.log(response3); 
+
+    const response4 = await ApiSegimed.post(`/drug-prescription/create-drug-prescription`,drugPrescription, {headers: { token: token },})
+    console.log(response4); 
+
+    //const response5 = await ApiSegimed.post(`/therapy/create-therapy-prescription`,terapy, {headers: { token: token },})
+    //console.log(response5); tiene un error la ruta
+
+    const response6 = await ApiSegimed.post(`/medical-indications/new-indication`,medicalIndications, {headers: { token: token },})
+    console.log(response6);  
+
+    //pautas de alarma
+    if(response1.status === 200 && response2.status === 200 && response3.status === 200 && response4.status === 200 && response6.status === 200){
+      setLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: "Exito",
+        text: "Se ha creado la consulta",
+      })
+      router.push(`/Dashboard/Inicio_Doctor/Historial`);
+    }else{
+      setLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al crear la consulta",
+      })
+    }
   }
   if (!userId) {
     return <div>Cargando...</div>;
@@ -171,7 +250,8 @@ const DetallePaciente = (id) => {
             </Link>
           </div>
         </div>
-        <form onChange={methods.handleSubmit(onSubmit)}>
+        {loading===false ? (
+          <form onChange={methods.handleSubmit(onSubmit)}>
           <Consulta title={"Datos del paciente"} paciente={patient} />
           <InputConsulta
             title={"Antecedentes"}
@@ -221,7 +301,7 @@ const DetallePaciente = (id) => {
             ]}
             subtitle2={["Diagnostico", "Medicamentos", "Procedimientos",]}
           />
-        </form>
+        </form>):(<div className="flex items-center justify-center h-20"><LoadingFallback /></div>)}
         <div className="flex justify-center m-6">
           <Elboton
             nombre={"Guardar Cambios"}
@@ -231,6 +311,7 @@ const DetallePaciente = (id) => {
             className={"bg-tertiary w-60 text-sm font-bold"}
           />
         </div>
+        
       {/*<IconList />*/}
       </div>
     </FormProvider>
