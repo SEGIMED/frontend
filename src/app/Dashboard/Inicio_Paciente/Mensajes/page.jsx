@@ -27,12 +27,28 @@ export default function MensajesDoc() {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const listChats = Object.values(getChats);
-    if (listChats) setChats(listChats);
+  // useEffect(() => {
+  //   const listChats = Object.values(getChats);
+  //   if (listChats) setChats(listChats);
 
-    if (getChats.length !== 0) setIsLoading(false);
+  //   if (getChats.length !== 0) setIsLoading(false);
+  // }, [getChats]);
+  useEffect(() => {
+    const navigationEntries = performance.getEntriesByType("navigation");
+    const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
+
+    if (navigationType === "reload") {
+      // Page was reloaded
+      const listChats = Object.values(getChats);
+      if (listChats) setChats(listChats);
+
+      if (getChats.length !== 0) setIsLoading(false);
+    } else {
+      // First load, trigger a reload
+      window.location.reload();
+    }
   }, [getChats]);
+
 
   const handleImg = (img) => {
     if (img) {
