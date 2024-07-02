@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   };
   return (
     <div className="flex h-screen w-screen">
-      <div className="flex flex-col w-full h-full gap-8">
+      <div className="flex flex-col w-full h-full">
         <SidePte search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
         <div className="h-[88%] w-full">{children}</div>
