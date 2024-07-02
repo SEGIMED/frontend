@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useMemo, useState } from "react";
 import Image from "next/image";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-
+import { socket } from "@/utils/socketio";
 import rutas from "@/utils/rutas";
 
 import ruteActual from "@/components/images/ruteActual.png";
@@ -23,31 +23,37 @@ import avatar from "@/utils/defaultAvatar";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
-  // const isLoading = useAppSelector(state => state.doctores.length === 0);
+  const dispatch= useAppDispatch()
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const listChats = Object.values(getChats);
-  //   if (listChats) setChats(listChats);
-
-  //   if (getChats.length !== 0) setIsLoading(false);
-  // }, [getChats]);
+  const token = Cookies.get("a");
+  const idUser = Cookies.get("c");
+  
   useEffect(() => {
-    const navigationEntries = performance.getEntriesByType("navigation");
-    const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
-
-    if (navigationType === "reload") {
-      // Page was reloaded
-      const listChats = Object.values(getChats);
-      if (listChats) setChats(listChats);
-
-      if (getChats.length !== 0) setIsLoading(false);
-    } else {
-      // First load, trigger a reload
-      window.location.reload();
+    if (!socket.isConnected()) {
+      socket.setSocket(token, dispatch);
+      socket.emit("onJoin", { id: idUser });
     }
+    const listChats = Object.values(getChats);
+    if (listChats) setChats(listChats);
+
+    if (getChats.length !== 0) setIsLoading(false);
   }, [getChats]);
+  // useEffect(() => {
+  //   const navigationEntries = performance.getEntriesByType("navigation");
+  //   const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
+
+  //   if (navigationType === "reload") {
+  //     // Page was reloaded
+  //     const listChats = Object.values(getChats);
+  //     if (listChats) setChats(listChats);
+
+  //     if (getChats.length !== 0) setIsLoading(false);
+  //   } else {
+  //     // First load, trigger a reload
+  //     window.location.reload();
+  //   }
+  // }, [getChats]);
 
   const handleImg = (img) => {
     if (img) {
@@ -122,7 +128,7 @@ export default function MensajesDoc() {
         <div></div>
         {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder />} /> */}
       </div>
-      <div className="flex flex-col gap-2 items-start justify-center w-full overflow-y-auto">
+      <div className="gap-2 items-start justify-center w-full overflow-y-auto">
         {chatElements}
       </div>
     </div>

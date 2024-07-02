@@ -87,10 +87,10 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      if (!socket.isConnected()) {
-        socket.setSocket(token, dispatch);
-        socket.emit("onJoin", { id: idUser });
-      }
+      // if (!socket.isConnected()) {
+      //   socket.setSocket(token, dispatch);
+      //   socket.emit("onJoin", { id: idUser });
+      // }
     }
   }, []);
 

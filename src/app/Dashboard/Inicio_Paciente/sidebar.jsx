@@ -93,7 +93,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
     // const userId = 8
     try {
       const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
-      console.log(response.data);
+     
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -177,9 +177,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      if (!socket.isConnected()) {
-        socket.setSocket(token, dispatch);
-      }
+      // if (!socket.isConnected()) {
+      //   socket.setSocket(token, dispatch);
+      // }
     }
   }, []);
 
