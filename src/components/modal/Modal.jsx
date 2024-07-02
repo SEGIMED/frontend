@@ -61,11 +61,11 @@ const Modal = ({ isOpen, onClose }) => {
             </div>
             <div className="flex justify-center gap-5 text-base">
               <p>¿Ya tienes cuenta?</p>
-              <Link href="/accounts/login" passHref>
-                <span className="text-[#487FFA] cursor-pointer">
+              
+                <span  onClick={handleClose} className="text-[#487FFA] cursor-pointer">
                   Iniciar Sesión
                 </span>
-              </Link>
+             
             </div>
           </div>
         </div>

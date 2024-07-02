@@ -291,33 +291,122 @@ const initialState = {
       painFrequency: "",
       worstPain: "",
     },
-    estudios: [
-      {
-        title: "Electrocardiograma",
-        selectedOption: null,
-        field: "electrocardiogram",
+    estudios: {
+      abnormalGlycemia: {
+        title: 'Glicemia anormal',
+        active: false
       },
-      {
-        title: "Ecocardiograma",
-        selectedOption: null,
-        field: "echocardiogram",
+      lastAbnormalGlycemia: {
+        title: 'Última glicemia anormal',
+        active: false,
+        selectedOption: [526, 589, 600]
       },
-      {
-        title: "Radiografía de tórax",
-        selectedOption: null,
-        field: "chestXRay",
+      physicalExamination: {
+        title: 'Examen físico',
+        selectedOption: 1
       },
-      {
-        title: "Laboratorio",
-        selectedOption: null,
-        field: "laboratory",
+      laboratoryResults: {
+        title: 'Resultados de laboratorio',
+        selectedOption: [
+          "https:cloudinary1",
+          "https:cloudinary2"
+        ],
+        laboratoryResultsDescription: {
+          title: 'Descripción resultados de laboratorio',
+          selectedOption: [
+            "description1",
+            "description2"
+          ]
+        }
       },
-      {
-        title: "Otro",
-        selectedOption: null,
-        field: "other",
+      electrocardiogram: {
+        title: 'Electrocardiograma',
+        selectedOption: "https:cloudinary",
+        electrocardiogramDescription: {
+          title: 'Descripción electrocardiograma',
+          selectedOption: "decription electrocardiogram"
+        }
       },
-    ],
+      rxThorax: {
+        title: 'RX de Torax',
+        selectedOption: "https:cloudinary"
+      },
+      echocardiogram: {
+        title: 'Ecocardiograma',
+        selectedOption: "https:cloudinary"
+      },
+      walkTest: {
+        title: 'Test de caminata',
+        selectedOption: "https:cloudinary"
+      },
+      respiratoryFunctional: {
+        title: 'Funcional respiratorio',
+        selectedOption: "https:cloudinary"
+      },
+      tomographies: {
+        title: 'Tomografías',
+        selectedOption: "https:cloudinary"
+      },
+      rightHeartCatheterization: {
+        title: 'Cateterismo cardiaco derecho',
+        selectedOption: "https:cloudinary"
+      },
+      ccg: {
+        title: 'CCG (Coronariografia)',
+        selectedOption: "https:cloudinary"
+      },
+      resonance: {
+        title: 'Resonancia',
+        selectedOption: "https:cloudinary"
+      },
+      leftHeartCatheterization: {
+        title: 'Cateterismo cardiaco izquierdo',
+        selectedOption: "https:cloudinary"
+      },
+      otherStudies: {
+        title: 'Otros estudios',
+        selectedOption: [
+          "other study 1",
+          "other study 2"
+        ]
+      },
+      pendingStudies: {
+        title: 'Estudios pendientes',
+        selectedOption: "No one is pending :) Good patient"
+      },
+      consultationReason: {
+        title: 'Motivo de la consulta',
+        selectedOption: "Dolor de cabeza :("
+      },
+      importantSymptoms: {
+        title: 'Síntomas importantes',
+        selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
+      },
+      currentMedications: {
+        title: 'Medicamentos actuales',
+        selectedOption: [
+          "medicamento1",
+          "medicamento2",
+          "medicamento3"
+        ]
+      },
+    },
+    anamnesis: {
+      consultationReason: {
+        title: '¿Por qué solicitó la consulta?',
+        selectedOption: "Dolor de cabeza :("
+      },
+      importantSymptoms: {
+        title: 'Síntomas importantes',
+        selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
+      },
+    },
+    tratamiento: {
+      medicines: {
+        title: 'Medicamentos',
+        selectedOption: ''
+      }
+    }
   },
 };
 

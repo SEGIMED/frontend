@@ -22,7 +22,7 @@ const FileUpload = ({ label , Link, Links}) => {
             if (e.target.files.length) {
                 const selectedFile = e.target.files[0];
                 setFile(selectedFile);
-
+                console.log({ msj: 'documento cargado con éxito', selectedFile });
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);
@@ -48,7 +48,7 @@ const FileUpload = ({ label , Link, Links}) => {
                     className="flex items-center justify-center gap-3 py-2 px-6 border-2 border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
                     onClick={handleButtonClick}
                 >
-                    <IconUpload /> Adjuntar archivo/informe
+                    <IconUpload /> Adjuntar archivo/informe 
                 </button>
                 
                 <input
@@ -73,18 +73,18 @@ const FileUpload = ({ label , Link, Links}) => {
                 </a>))} 
             {file && (
                 <div className="mt-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
                         <span>{file.name}</span>
                         <button onClick={handleDeleteFile}>
                             <IconUpload className="w-4 text-red-500" />
                         </button>
                     </div>
-                    <textarea
+                    {/* <textarea
                         className="w-full p-2 mt-2 border rounded"
                         placeholder="Describa el informe"
                         value={description}
                         onChange={handleDescriptionChange}
-                    />
+                    /> */}
                 </div>
             )}
         </div>
