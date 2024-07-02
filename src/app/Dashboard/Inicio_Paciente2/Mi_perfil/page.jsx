@@ -19,6 +19,10 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import IconCircle from "@/components/icons/IconCircle";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
+import IconOut from "@/components/icons/iconOut";
+import { socket } from "@/utils/socketio";
+import { resetApp } from "@/redux/rootReducer";
+import { useRouter } from "next/navigation";
 
 // Definir opciones para el select de sexo
 const sexoOptions = [
@@ -43,6 +47,25 @@ export default function HomePte() {
     };
 
     const [buttonSize, setButtonSize] = useState("lg");
+
+    const router = useRouter();
+
+    const handleLogout = () => {
+        Cookies.remove("a");
+        Cookies.remove("b");
+        Cookies.remove("c");
+
+        socket.disconnect();
+
+        dispatch(resetApp());
+
+        router.push("/");
+
+        setTimeout(() => {
+            // Realizar la recarga de la página para limpiar todos los datos
+            window.location.reload(true);
+        }, 2000);
+    };
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -428,7 +451,7 @@ export default function HomePte() {
                     )}
                 </div>
             </form>
-            <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
+            <div className="flex items-center justify-center pl-3 md:pl-8 py-2 border-b border-b-[#cecece] ">
                 <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
                     <IconCircle />
                     Última conexión:
@@ -437,6 +460,13 @@ export default function HomePte() {
                     {LastLogin(paciente.lastLogin)}
                 </span>
             </div>
+            <div className="w-full flex justify-center mt-5">
+                <button className="bg-[#E73F3F] rounded-lg px-6 py-2 items-center flex w-fit " onClick={handleLogout}>
+                    <IconOut className="w-6 h-6" />
+                    <p className="text-white">Cerrar sesion</p>
+                </button>
+            </div>
+
             {showModal && (
                 <MapModal isOpen={showModal} onClose={() => setShowModal(false)} />
             )}
