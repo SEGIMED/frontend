@@ -60,10 +60,11 @@ export default function HomePte() {
             Sus comentarios son importantes para nosotros y cada sugerencia será
             considerada cuidadosamente para mejorar nuestro sitio web y los
             servicios que ofrecemos.
-            <hr />
-            ¡Gracias por tomarse el tiempo de ayudarnos a mejorar! Asegúrese de
-            proporcionar detalles claros y concisos para que podamos entender y
-            actuar según sus recomendaciones de manera efectiva.
+            <p>
+              ¡Gracias por tomarse el tiempo de ayudarnos a mejorar! Asegúrese de
+              proporcionar detalles claros y concisos para que podamos entender y
+              actuar según sus recomendaciones de manera efectiva.
+            </p>
           </p>
         </div>
         <form className="flex flex-col justify-center text-start w-full" onSubmit={handleSubmit}>
