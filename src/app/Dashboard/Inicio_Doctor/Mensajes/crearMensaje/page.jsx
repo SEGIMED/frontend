@@ -59,7 +59,7 @@ export default function DoctoresPte() {
                 <Elboton nombre={"Regresar"} size={"lg"} icon={<IconRegresar/>} />
                 </Link>
             </div>
-            <div className="flex flex-col items-start w-full overflow-y-auto ">
+            <div className=" items-start w-full overflow-y-auto ">
                 {sortedPatients?.map(paciente => (
                     <PatientCard
                         key={paciente.id} 

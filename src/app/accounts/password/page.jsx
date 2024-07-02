@@ -86,7 +86,7 @@ export default function AuthSelect() {
                 Enviar correo <IconSend />
               </button>
               <button
-                onClick={() => router.push("/accounts/login")}
+                onClick={() => router.push("/")}
                 type="button"
                 className="text-[#487FFA] border-1 border-gray-400 text-center px-10 py-3 rounded-md flex items-center gap-2 justify-center hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
                 Regresar

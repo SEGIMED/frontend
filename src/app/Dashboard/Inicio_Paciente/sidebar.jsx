@@ -21,10 +21,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const user = useAppSelector((state) => state.user);
   const showSearch =
-    pathname === "/Inicio_Paciente/Doctores" ||
-    pathname === "/Inicio_Paciente/Mensajes" ||
-    pathname === "/Inicio_Paciente/Mensajes/crearMensaje" ||
-    pathname === "/Inicio_Paciente/Historial";
+    pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
+    pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
   const avatar =
@@ -93,7 +93,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
     // const userId = 8
     try {
       const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
-      console.log(response.data);
+     
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -179,6 +179,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       getSchedules({ headers: { token: token } }).catch(console.error);
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
+        socket.emit("onJoin", { id: idUser });
       }
     }
   }, []);
