@@ -20,7 +20,7 @@ export default function PatientCard({ paciente, button, consulta }) {
       <div className="flex gap-1 md:gap-3 items-center">
         <Image src={getRandomColor()} alt="Punto de color" />
         <div className="w-12 h-12 flex justify-center items-center">
-          <Avatars avatar={paciente?.avatar} />
+          <Avatars avatar1={paciente?.avatar} />
         </div>
         <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 w-36 md:w-fit">
           {paciente?.name} {paciente?.lastname}

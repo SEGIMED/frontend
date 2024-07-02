@@ -42,7 +42,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
     setTimeout(() => {
       // Realizar la recarga de la página para limpiar todos los datos
       window.location.reload(true);
-    }, 1000); 
+    }, 2000); 
   };
 
   return (

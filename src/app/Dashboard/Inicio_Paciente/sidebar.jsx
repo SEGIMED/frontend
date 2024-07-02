@@ -21,10 +21,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const user = useAppSelector((state) => state.user);
   const showSearch =
-    pathname === "/Inicio_Paciente/Doctores" ||
-    pathname === "/Inicio_Paciente/Mensajes" ||
-    pathname === "/Inicio_Paciente/Mensajes/crearMensaje" ||
-    pathname === "/Inicio_Paciente/Historial";
+    pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
+    pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
   const avatar =
