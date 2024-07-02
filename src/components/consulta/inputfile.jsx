@@ -3,11 +3,8 @@
 import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
 import FileUpload from "./file";
-import { useAppSelector } from "@/redux/hooks";
 
 export default function InputFile({ title, defaultOpen = false }) {
-  const formData = useAppSelector((state) => state.preconsultaForm.formData);
-
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
@@ -19,9 +16,17 @@ export default function InputFile({ title, defaultOpen = false }) {
             </p>
           </div>
         </summary>
-        {Object.entries(formData.estudios).map(([key, value]) => (
-          <FileUpload label={value.title} />
-        ))}
+        <FileUpload label={"Electrocardiograma"} />
+        <FileUpload label={"RX de Torax"} />
+        <FileUpload label={"Ecocardiograma"} />
+        <FileUpload label={"Test de caminata"} />
+        <FileUpload label={"Funcional respiratorio"} />
+        <FileUpload label={"Tomografías"} />
+        <FileUpload label={"Cateterismo cardiaco derecho"} />
+        <FileUpload label={"CCG (Coronariografia)"} />
+        <FileUpload label={"Resonancia"} />
+        <FileUpload label={"Cateterismo cardiaco izquierdo"} />
+        <FileUpload label={"Otros estudios"} />
       </details>
     </div>
   );
