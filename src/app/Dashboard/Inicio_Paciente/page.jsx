@@ -14,7 +14,7 @@ import LastLogin from "@/utils/lastLogin";
 
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
-  console.log(user);
+ 
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
