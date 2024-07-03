@@ -103,10 +103,16 @@ export default function HomeDoc() {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-
+  
+  function handleClickOutside(event) {
+    if (event.target === event.currentTarget) {
+        closeModal();
+      }
+      }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto">
+    <div onClick={handleClickOutside}
+    className="flex flex-col h-full overflow-y-auto">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 bg-white sticky top-0 z-10">
         {/* <button
           onClick={handleFavoriteClick}
@@ -180,7 +186,7 @@ export default function HomeDoc() {
           <IconNext />
         </button>
       </div> */}
-      <ModalConsultation
+      < ModalConsultation
         isOpen={isModalOpen}
         onClose={closeModal}
         doctorId={userId}

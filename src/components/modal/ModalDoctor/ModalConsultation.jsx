@@ -59,11 +59,6 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
     };
     }, [onClose]);
 
-  function handleClickOutside(event) {
-    if (event.target === event.currentTarget) {
-        onClose();
-      }
-      }
 
   useEffect(() => {
     const startDateTime = combineDateTime(date, time);
@@ -108,11 +103,16 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       }
     }
   });
+  function handleClickOutside(event) {
+    if (event.target === event.currentTarget) {
+        onClose();
+      }
+      }
 
   return isOpen ? (
-    <div onClick={handleClickOutside}
-    className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-      <div className="fixed inset-0 bg-black opacity-50"></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+      <div onClick={handleClickOutside}
+      className="fixed inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
         <form
           onSubmit={onSubmit}
