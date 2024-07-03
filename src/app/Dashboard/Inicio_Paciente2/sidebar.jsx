@@ -228,7 +228,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
           <div>
             <Link href={`${rutas.PacienteDash}2`}>
               <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
-                <IconRegresar /> Regresar
+                <IconRegresar />
+                <p>Regresar</p>
               </button>
             </Link>
           </div>
