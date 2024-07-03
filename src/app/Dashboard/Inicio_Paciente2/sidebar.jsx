@@ -17,8 +17,9 @@ import paciente from "@/utils/paciente";
 import LogoSegimed from "@/components/logo/LogoSegimed";
 import { IconChat } from "@/components/InicioPaciente/IconChat";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
-import IconRegresar from '@/components/icons/iconRegresar';
+import IconRegresar from "@/components/icons/iconRegresar";
 import rutas from "@/utils/rutas";
+import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -29,10 +30,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
-  const lastSegmentText = pathname.substring(pathname.lastIndexOf("/") + 1).replace(/_/g, ' ');
+  const lastSegmentText = pathname
+    .substring(pathname.lastIndexOf("/") + 1)
+    .replace(/_/g, " ");
 
   console.log(lastSegment);
-
 
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
@@ -46,10 +48,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
-
 
   const dispatch = useAppDispatch();
   const id = Cookies.get("c");
@@ -188,34 +189,47 @@ export const SidePte = ({ search, toggleSidebar }) => {
       }
     }
   }, []);
+  const [showNotifications, setShowNotifications] = useState(false);
 
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
+  const Notificaciones = [
+    {
+      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 14:30 hs",
+      id: 1,
+      leida: false,
+    },
+    {
+      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 18:30 hs",
+      id: 2,
+    },
+    {
+      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
+      id: 3,
+    },
+    {
+      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
+      id: 3,
+    },
+    {
+      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
+      id: 4,
+    },
+    {
+      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
+      id: 5,
+    },
+  ];
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
-      {/* <div className="md:hidden p-4">
-        <button
-          className="text-[#487FFA] focus:outline-none"
-          onClick={toggleSidebar}>
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div> */}
-
       <div className="flex justify-center items-center gap-2">
         {lastSegment !== "Inicio_Paciente2" ? (
           <div>
             <Link href={`${rutas.PacienteDash}2`}>
               <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
-                <IconRegresar /> Regresar
+                <IconRegresar />
+                <p>Regresar</p>
               </button>
             </Link>
           </div>
@@ -228,7 +242,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
       {lastSegment !== "Inicio_Paciente2" ? (
         <p className="font-semibold text-xl leading-6 text-[#686868]">
           {lastSegmentText}
-        </p>) : null}
+        </p>
+      ) : null}
 
       {showSearch && (
         <div
@@ -263,13 +278,38 @@ export const SidePte = ({ search, toggleSidebar }) => {
           <button className="w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center">
             <IconChat className="w-6 h-6" />
           </button>
-          <button className="w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center">
-            <IconNotificaciones className="w-6 h-6" />
+          <button
+            onClick={handleNotificationClick}
+            className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+              showNotifications && "bg-[#E73F3F]"
+            }`}>
+            <IconNotificaciones
+              className="w-6 h-6"
+              color={showNotifications && "white"}
+            />
           </button>
+          {showNotifications && (
+            <div
+              onClick={handleNotificationClick}
+              className="fixed top-0 left-0 w-screen h-screen z-40">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
+                <p className="text-2xl text-bluePrimary font-semibold py-2">
+                  Notificaciones
+                </p>
+                <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
+                  {Notificaciones.map((notificacion) => (
+                    <NotificacionElement
+                      key={notificacion.id}
+                      notificacion={notificacion}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        {/* <button className=" rounded-xl w-12 h-12 flex justify-center items-center  border border-gray-400">
-                    <Image src={notificacion} alt="" />
-                </button> */}
       </div>
     </div>
   );
