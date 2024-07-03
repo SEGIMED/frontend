@@ -39,6 +39,9 @@ const DetallePaciente = (id) => {
     medicalEventId: null
     });
   const [vitalSigns, setVitalSigns] = useState();
+  const [cardiovascularRisk, setCardiovascularRisk] = useState();
+  const [surgicalRisk, setSurgicalRisk] = useState();
+  const [hpGroup, setHpGroup] = useState();
   const [background, setBackground] = useState();
   const [diagnostic, setDiagnostic] = useState();
   const [medicalIndications, setMedicalIndications] = useState();
@@ -55,6 +58,18 @@ const DetallePaciente = (id) => {
     console.log(data);
     console.log(selectedRisk);
     console.log(physicalExamination);
+    setCardiovascularRisk({
+      patientId: userId, // id del paciente
+      riskId: 1  //// id a actualizar el riesgo cardiovascular del catalogo  cardiovascular risk
+    })
+    setSurgicalRisk({
+      patientId: userId, // id del paciente
+      surgicalRiskId: 3 //// id a actualizar del riesgo quirurgico del catalogo cat surgycal risk 
+    })
+    setHpGroup({
+      patientId: userId,  /// id del paciente 
+      hpGroupId: 3 //// id del grupo a actualizar --> obtenido del cat pulmonary hypertension group 
+    })
     setBackground({
       id: patient?.backgrounds?.id || null,
       allergicBackground: data["Alergias"],
@@ -67,6 +82,7 @@ const DetallePaciente = (id) => {
       surgicalBackground: data["Antecedentes quirúrgicos"],
       vaccinationBackground: data["Vacunas"]
     })
+
     setVitalSigns([{
       patientId: userId, // id del paciente
       measureType: 7, // id del parametro "frecuencia cardiaca" en el catalogo vital signs
@@ -185,6 +201,33 @@ const DetallePaciente = (id) => {
       const data = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`,{background}, {headers: { token: token },})
       console.log(data);
     }
+    
+    if(patient?.patientCardiovascularRisks[0]?.length === 0){
+      const data = await ApiSegimed.post(`/patient-new-cardiovascular-risk`,{cardiovascularRisk}, {headers: { token: token },})
+      console.log(data);
+    }
+    else{
+      const data = await ApiSegimed.patch(`/patient-update-cardiovascular-risk`,{cardiovascularRisk}, {headers: { token: token },})
+      console.log(data);
+    }
+
+    if(patient?.patientSurgicalRisks[0]?.length === 0){
+      const data = await ApiSegimed.post(`/patient-new-surgical-risk`,{surgicalRisk}, {headers: { token: token },})
+      console.log(data);
+    }
+    else{
+      const data = await ApiSegimed.patch(`/patient-update-surgical-risk`,{surgicalRisk}, {headers: { token: token },})
+      console.log(data);
+    }
+
+    if(patient?.patientPulmonaryHypertensionGroups[0]?.length === 0){
+      const data = await ApiSegimed.post(`/patient-new-hp-group`,{hpGroup}, {headers: { token: token },})
+      console.log(data);
+    }
+    else{
+      const data = await ApiSegimed.patch(`/patient-update-hp-group`,{hpGroup}, {headers: { token: token },})
+      console.log(data);
+    }
 
     /*if(patient.vitalSigns.length === 0){
       const data = await ApiSegimed.post(`/vital-signs/create-vital-sign`,vitalSigns, {headers: { token: token },})
@@ -194,13 +237,17 @@ const DetallePaciente = (id) => {
       const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
       console.log(data);
     }*/
-    let response1;
-   if(physicalExamination?.description === ""){
-    response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
-   }else {
+    /*let response1;
+    if(physicalExamination?.description === ""){
+      response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
+    }else {
     response1 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`,physicalExamination, {headers: { token: token },})
-   }
-   console.log(response1);
+    }
+    console.log(response1);*/
+
+
+
+    
     const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
     console.log(response2);  
 
@@ -217,7 +264,7 @@ const DetallePaciente = (id) => {
     console.log(response6);  
 
     //pautas de alarma
-    if(response1.status === 200 && response2.status === 200 && response3.status === 200 && response4.status === 200 && response6.status === 200){
+    if(/*response1.status === 200 && */ response2.status === 200 && response3.status === 200 && response4.status === 200 && response6.status === 200){
       setLoading(false);
       Swal.fire({
         icon: "success",

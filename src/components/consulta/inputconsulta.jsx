@@ -47,13 +47,13 @@ export default function InputConsulta({
   };
   const handleOption2 = (sub) => {
     setRiskSurgicalButton(sub);
-
+    
   };
   const handleGroupChange = (sub) => {
     setGroupPatientPulmonaryHypertensionButton(sub);
     if (onGroupChange) onGroupChange(sub);
   };
-  const { register } = useFormContext();
+  const { setValue, register } = useFormContext();
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
@@ -78,9 +78,11 @@ export default function InputConsulta({
                 <button 
                 key={optionIndex}
                 className={` p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] ${riskCardiovascularButton === option ? 'bg-blue-200' : ''}`} 
+                
                 onClick={(event) => {
                   event.preventDefault(); // Prevent the default form submission
                   handleOption(option);
+                  
               }}
                 >
                   {option}
@@ -107,12 +109,12 @@ export default function InputConsulta({
                 onClick={(event) => {
                   event.preventDefault();
                    handleOption2(option)}}
-                {...register(option)}
                 >
                   {option}
                 </button >
+                
               ))}
-              
+              <input type="hidden" {...register(sub)} value={riskSurgicalButton} />
             </div> 
             
           </div>
