@@ -294,25 +294,30 @@ const initialState = {
     estudios: {
       abnormalGlycemia: {
         title: 'Glicemia anormal',
-        active: false
+        file: '',
+        active: false,
       },
       lastAbnormalGlycemia: {
         title: 'Última glicemia anormal',
+        file: '',
         active: false,
         selectedOption: [526, 589, 600]
       },
       physicalExamination: {
         title: 'Examen físico',
+        file: '',
         selectedOption: 1
       },
       laboratoryResults: {
         title: 'Resultados de laboratorio',
+        file: '',
         selectedOption: [
           "https:cloudinary1",
           "https:cloudinary2"
         ],
         laboratoryResultsDescription: {
           title: 'Descripción resultados de laboratorio',
+          file: '',
           selectedOption: [
             "description1",
             "description2"
@@ -321,50 +326,62 @@ const initialState = {
       },
       electrocardiogram: {
         title: 'Electrocardiograma',
+        file: '',
         selectedOption: "https:cloudinary",
         electrocardiogramDescription: {
           title: 'Descripción electrocardiograma',
+          file: '',
           selectedOption: "decription electrocardiogram"
         }
       },
       rxThorax: {
         title: 'RX de Torax',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       echocardiogram: {
         title: 'Ecocardiograma',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       walkTest: {
         title: 'Test de caminata',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       respiratoryFunctional: {
         title: 'Funcional respiratorio',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       tomographies: {
         title: 'Tomografías',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       rightHeartCatheterization: {
         title: 'Cateterismo cardiaco derecho',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       ccg: {
         title: 'CCG (Coronariografia)',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       resonance: {
         title: 'Resonancia',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       leftHeartCatheterization: {
         title: 'Cateterismo cardiaco izquierdo',
+        file: '',
         selectedOption: "https:cloudinary"
       },
       otherStudies: {
         title: 'Otros estudios',
+        file: '',
         selectedOption: [
           "other study 1",
           "other study 2"
@@ -372,18 +389,22 @@ const initialState = {
       },
       pendingStudies: {
         title: 'Estudios pendientes',
+        file: '',
         selectedOption: "No one is pending :) Good patient"
       },
       consultationReason: {
         title: 'Motivo de la consulta',
+        file: '',
         selectedOption: "Dolor de cabeza :("
       },
       importantSymptoms: {
         title: 'Síntomas importantes',
+        file: '',
         selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
       },
       currentMedications: {
         title: 'Medicamentos actuales',
+        file: '',
         selectedOption: [
           "medicamento1",
           "medicamento2",
@@ -452,6 +473,10 @@ const preconsultaFormSlice = createSlice({
       const { field, value } = action.payload;
       state.formData.bodySection[field] = value;
     },
+    updateFileUploaded(state, action) {
+      const { field, file } = action.payload;
+      state.formData.estudios[field].file = file;
+    },
     setFormData(state, action) {
       state.formData = action.payload;
     },
@@ -468,5 +493,6 @@ export const {
   setFormData,
   resetForm,
   updateBodyField,
+  updateFileUploaded
 } = preconsultaFormSlice.actions;
 export default preconsultaFormSlice.reducer;

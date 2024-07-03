@@ -5,11 +5,10 @@ import { useAppDispatch } from '@/redux/hooks';
 
 import IconCurrentRouteNav from '../icons/IconCurrentRouteNav';
 
-const FileUpload = ({ label }) => {
+const FileUpload = ({ label, field, onLoadFile }) => {
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("");
     const fileInputRef = useRef(null);
-    const dispatch = useAppDispatch();
 
     const handleButtonClick = (e) => {
         e.preventDefault(); // Previene el comportamiento predeterminado
@@ -21,7 +20,7 @@ const FileUpload = ({ label }) => {
             if (e.target.files.length) {
                 const selectedFile = e.target.files[0];
                 setFile(selectedFile);
-                console.log({ msj: 'documento cargado con éxito', selectedFile });
+                onLoadFile(field, selectedFile);
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);

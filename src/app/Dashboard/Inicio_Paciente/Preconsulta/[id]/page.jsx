@@ -12,6 +12,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
   updateField,
+  updateFileUploaded,
   updateSubquestion,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { Button } from "@nextui-org/react";
@@ -27,11 +28,14 @@ export default function PreconsultaPte({ params }) {
   const token = Cookies.get('a');
   const patientId = Cookies.get('c');
   const [preConsultationQuestions, setPreConsultationQuestions] = useState(null);
+  const [estudios, setEstudios] = useState({});
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
+  console.log(formData);
+
   const handleQuestionChange = (sectionIndex, field, value) => {
     dispatch(updateField({ sectionIndex, field, value }));
   };
-  console.log(useAppSelector((state) => state.preconsultaForm));
+  // console.log(useAppSelector((state) => state.preconsultaForm));
   const handleSubquestionChange = (
     sectionIndex,
     subquestionIndex,
@@ -42,6 +46,12 @@ export default function PreconsultaPte({ params }) {
       updateSubquestion({ sectionIndex, subquestionIndex, field, value })
     );
   };
+
+  const handleUploadFile = (field, file) => {
+    const studies = estudios;
+    setEstudios({ ...studies, [field]: file });
+    console.log({ ...studies, [field]: file });
+  }
 
   const methods = useForm();
   // function transformFormData(formData) {
@@ -199,7 +209,6 @@ export default function PreconsultaPte({ params }) {
     questionList();
     // getPreConsultation();
   }, []);
-  console.log(preConsultationQuestions);
 
   return (
     <FormProvider {...methods}>
@@ -237,12 +246,13 @@ export default function PreconsultaPte({ params }) {
         />
         <InputCuerpoPre title={"Exploracion fisica"} defaultOpen />
         {/* <InputFile title={"Estudios"} defaultOpen /> */}
-        <InputConsulta
+        {/* <InputConsulta
           title={"Anamnesis"}
           defaultOpen
-        />
+        /> */}
         <InputFilePreconsultation
           title={"Estudios"}
+          onLoadFile={handleUploadFile}
           defaultOpen
         />
         <InputDiagnostico

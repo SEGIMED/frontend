@@ -5,7 +5,7 @@ import circleData from "@/components/images/circleData.png";
 import FileUpload from "@/components/consulta/file";
 import { useAppSelector } from "@/redux/hooks";
 
-export default function InputFilePreconsultation({ title, defaultOpen = false }) {
+export default function InputFilePreconsultation({ title, onLoadFile, defaultOpen = false }) {
     const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
     return (
@@ -20,7 +20,7 @@ export default function InputFilePreconsultation({ title, defaultOpen = false })
                     </div>
                 </summary>
                 {Object.keys(formData.estudios).map((key, index) => (
-                    <FileUpload key={index} label={formData.estudios[key].title} />
+                    <FileUpload key={index} onLoadFile={onLoadFile} field={key} label={formData.estudios[key].title} />
                 ))}
             </details>
         </div>
