@@ -49,7 +49,7 @@ export default function Home() {
       // const result = await response.json();
       const response = await ApiSegimed.post("/user/login", postData);
       const result = response.data;
-
+      console.log("esto es result", result)
       if (response.status !== 200) {
         throw new Error(result.error);
       }
@@ -75,14 +75,15 @@ export default function Home() {
         }
       }
     } catch (error) {
-      let errorMessage = error.message;
+      console.log("error", error)
+      let errorMessage = error?.response?.data?.error
 
       // Mostrar el error usando Swal si es un error de conexión
-      if (errorMessage) {
+      if (error) {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: errorMessage,
+          text: errorMessage ? errorMessage : error.message,
         });
       }
     }
