@@ -63,13 +63,12 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const { date, time, ...rest } = data;
-     
-      const token= Cookies.get("a")
-      const headers={ headers: { token: token } }
-      
-      const response = await ApiSegimed.post("/schedules", rest, headers );
-      
-      
+
+      const token = Cookies.get("a");
+      const headers = { headers: { token: token } };
+
+      const response = await ApiSegimed.post("/schedules", rest, headers);
+
       if (response.data) {
         alert("cita agendada");
       }
@@ -171,30 +170,30 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
           <div className="border w-full" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
-  <div className="flex items-center justify-start gap-3 text-sm font-semibold">
-    <IconCenterAtenttion /> Centro de atención
-  </div>
-  <select
-    id="healthCenter"
-    className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-      errors.healthCenter ? 'border-red-500' : ''
-    }`}
-    {...register("healthCenter", {
-      required: {
-        value: true,
-        message: "* ¿En cuál centro de atención quieres ser atendido? *",
-      },
-    })}
-  >
-    <option value="">Seleccione el centro de atención</option>
-    <option value="1">Centro Gallegos</option>
-  </select>
-  {errors.healthCenter && (
-    <span className="text-red-500 text-sm font-medium">
-      {errors.healthCenter.message}
-    </span>
-  )}
-</div>
+            <div className="flex items-center justify-start gap-3 text-sm font-semibold">
+              <IconCenterAtenttion /> Centro de atención
+            </div>
+            <select
+              id="healthCenter"
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                errors.healthCenter ? "border-red-500" : ""
+              }`}
+              {...register("healthCenter", {
+                required: {
+                  value: true,
+                  message:
+                    "* ¿En cuál centro de atención quieres ser atendido? *",
+                },
+              })}>
+              <option value="">Seleccione el centro de atención</option>
+              <option value="1">Centro Gallegos</option>
+            </select>
+            {errors.healthCenter && (
+              <span className="text-red-500 text-sm font-medium">
+                {errors.healthCenter.message}
+              </span>
+            )}
+          </div>
 
           <div className="border w-full" />
 
