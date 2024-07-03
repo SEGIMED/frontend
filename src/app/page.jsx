@@ -75,7 +75,6 @@ export default function Home() {
         }
       }
     } catch (error) {
-      
       let errorMessage = error?.response?.data?.error
 
       // Mostrar el error usando Swal si es un error de conexión
@@ -86,6 +85,7 @@ export default function Home() {
           text: errorMessage ? errorMessage : error.message,
         });
       }
+     
     }
   };
 
