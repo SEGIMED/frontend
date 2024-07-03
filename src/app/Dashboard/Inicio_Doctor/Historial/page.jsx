@@ -115,7 +115,7 @@ export default function HomeDoc() {
                 /> */}
                 <div></div>
             </div>
-            <div className="flex flex-col items-start justify-center w-full">
+            <div className="items-start justify-center w-full">
                 {scheduledConsultas?.map(paciente => (
                     <PatientCardConsulta key={paciente.id} paciente={paciente} consulta={paciente.consulta} button={<OptPteHistorial id={paciente.patient}
                         ruta={`${rutas.Doctor}${rutas.Historial}/${paciente.patient}`} />} />

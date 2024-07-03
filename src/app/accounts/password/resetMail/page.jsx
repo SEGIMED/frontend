@@ -33,7 +33,7 @@ export default function AuthSelect() {
                 text: response.data.msg,
                 icon: "success"
             });
-            router.push("/accounts/login")
+            router.push("/")
         } catch (error) {
             Swal.fire({
                 title: "No pudo actualizar la contraseña",
@@ -63,7 +63,7 @@ export default function AuthSelect() {
                             <h2 className="text-2xl text-[#5F5F5F] text-center pb-3 font-semibold leading-7 capitalize">
                                 Ingrese su nueva contraseña
                             </h2>
-                            <p className="text-center text-[#5F5F5F] font-normal text-base leading-7">
+                            <p className="hidden md:flex text-center text-[#5F5F5F] font-normal text-base leading-7 ">
                                 Ya puede establecer una nueva contraseña para su cuenta. Por favor, asegúrese de que sea una combinación única que no haya utilizado previamente. Esto es esencial para mantener la seguridad de su cuenta.
                             </p>
                         </header>
@@ -103,15 +103,7 @@ export default function AuthSelect() {
                             </label>
                             <label className="w-full">
                                 <p className="text-[#5F5F5F] pb-2 leading-3 pt-10">Nueva contraseña</p>
-                                <div className="relative ">
-                                <button
-                                type="button"
-                                className="absolute right-2 focus:outline-none pt-4 "
-                                onClick={togglePasswordVisibility}
-                                style={{ top: 0, bottom: 0, margin: "auto"}}>
-                                {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
-                                </button>
-                                </div>
+                        
                                 <input
                                     {...register("newPassword", {
                                         required: "Este campo es obligatorio",
@@ -124,19 +116,20 @@ export default function AuthSelect() {
                                     className="text-[#808080] w-full bg-[#F2F2F2] px-6 py-2 border leading-3 rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
                                     placeholder="Ingrese su nueva contraseña"
                                 />
+                                <div className="relative">
+                                    <button
+                                    type="button"
+                                    className="absolute right-2 focus:outline-none pb-14"
+                                    onClick={togglePasswordVisibility}
+                                    style={{ top: 0, bottom: 0, margin: "auto" }}>
+                                    {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
+                                    </button>
+                                    </div>
                                 {errors.newPassword && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.newPassword.message}</span>}
                             </label>
                             <label className="w-full">
                                 <p className="text-[#5F5F5F] pb-2 pt-10 leading-3">Confirme su nueva contraseña</p>
-                                <div className="relative">
-                                <button
-                                type="button"
-                                className="absolute right-2 focus:outline-none pt-2"
-                                onClick={togglePasswordVisibility}
-                                style={{ top: 0, bottom: 0}}>
-                                {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
-                                </button>
-                                </div>
+                          
                                 <input
                                     {...register("confirmPassword", {
                                         required: true,
@@ -146,6 +139,15 @@ export default function AuthSelect() {
                                     className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
                                     placeholder="Ingrese nuevamente su contraseña"
                                 />
+                                <div className="relative">
+                                    <button
+                                    type="button"
+                                    className="absolute right-2 focus:outline-none pb-14"
+                                    onClick={togglePasswordVisibility}
+                                    style={{ top: 0, bottom: 0, margin: "auto" }}>
+                                    {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
+                                    </button>
+                                    </div>
                                 {errors.confirmPassword && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.confirmPassword.message}</span>}
                             </label>
                         </fieldset>
@@ -161,10 +163,10 @@ export default function AuthSelect() {
                 </div>
             </div>
 
-            <div className="md:w-1/2 h-full bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400 items-center justify-center flex flex-col">
-                <div className="flex items-center justify-center">
+            <div className="hidden md:flex md:w-1/2 h-full bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400 items-center justify-center flex-col">
+               
                     <Image src={LostPassword} width={600} height={300} alt="Lost Password Image" />
-                </div>
+                
                 <h3 className="text-center px-8 py-2 text-lg font-normal leading-8 text-white">
                     SEGIMED es una novedosa plataforma médica interactiva que permite una intercomunicación continua entre médicos y pacientes, generando un vínculo entre ambos donde quieras que estés.
                 </h3>

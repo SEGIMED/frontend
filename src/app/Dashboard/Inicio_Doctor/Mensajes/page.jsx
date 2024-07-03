@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useMemo, useState } from "react";
 import Image from "next/image";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-
+import { socket } from "@/utils/socketio";
 import rutas from "@/utils/rutas";
 
 import ruteActual from "@/components/images/ruteActual.png";
@@ -19,18 +19,44 @@ import IconMas from "@/components/icons/iconMas";
 import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
+import avatar from "@/utils/defaultAvatar";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
-  // const isLoading = useAppSelector(state => state.doctores.length === 0);
+  const dispatch= useAppDispatch()
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [reload, setReload]=useState(false)
+  const token = Cookies.get("a");
+  const idUser = Cookies.get("c");
+  
   useEffect(() => {
-    const listChats = Object.values(getChats);
-    if (listChats) setChats(listChats);
-
-    if (getChats.length !== 0) setIsLoading(false);
+    
+    // if (!socket.isConnected()) {
+    //   socket.setSocket(token, dispatch);
+    //   socket.emit("onJoin", { id: idUser });
+    // }
+    
+  //   const listChats = Object.values(getChats);
+  //   if (listChats) setChats(listChats) 
+  //   if (counter === 0) setCounter(1) && window.location.reload() 
+  //   if (getChats.length !== 0) setIsLoading(false);
+    if(!reload){
+    const navigationEntries = performance.getEntriesByType("navigation");
+    const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
+    
+    if (navigationType === "reload") {
+      // Page was reloaded
+      const listChats = Object.values(getChats);
+      if (listChats) setChats(listChats);
+  
+      if (getChats.length !== 0) setIsLoading(false);
+    } else {
+      // First load, trigger a reload
+      window.location.reload();
+      setReload(true)
+    }
+  }
   }, [getChats]);
 
   const handleImg = (img) => {
@@ -40,6 +66,7 @@ export default function MensajesDoc() {
       );
     }
   };
+
 
   const counterM = (message) => {
     if (!message.length) return false;
@@ -57,7 +84,7 @@ export default function MensajesDoc() {
           className="flex justify-between h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center ">
           <div className="flex gap-4">
             <div className="w-12 h-12 flex justify-center items-center">
-              {handleImg(chat?.target?.avatar)}
+              {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
             </div>
             <div className="flex flex-col h-fit md:flex-row md:items-center ">
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 line-clamp-2">
@@ -105,7 +132,7 @@ export default function MensajesDoc() {
         <div></div>
         {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder />} /> */}
       </div>
-      <div className="flex flex-col gap-2 items-start justify-center w-full overflow-y-auto">
+      <div className="gap-2 items-start justify-center w-full overflow-y-auto">
         {chatElements}
       </div>
     </div>

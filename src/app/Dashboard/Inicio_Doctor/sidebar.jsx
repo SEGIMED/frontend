@@ -15,19 +15,20 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setAllPatients } from "@/redux/slices/doctor/allPatients";
 import { setSearchTerm } from "@/redux/slices/doctor/allPatients";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
+import avatar from "@/utils/defaultAvatar";
 
 import { socket } from "@/utils/socketio";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
-  const avatar = "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png"
+
 
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
 
   // reemplazar pathname por adjustedPathname
   const showSearch =
     pathname === "/Dashboard/Inicio_Doctor/Pacientes" ||
-    pathname === "/Dashboard/Inicio_Doctor/Mensajes" ||
+    // pathname === "/Dashboard/Inicio_Doctor/Mensajes" ||
     pathname === "/Dashboard/Inicio_Doctor/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Doctor/Historial";
   // reemplazar pathname por adjustedPathname

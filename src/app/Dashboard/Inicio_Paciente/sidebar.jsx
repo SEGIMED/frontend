@@ -9,9 +9,6 @@ import { adduser } from "@/redux/slices/user/user";
 import { getAllDoctores } from "@/redux/slices/doctor/allDoctores";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-import config from "@/components/localData/localdata";
-import perfil from "@/components/images/perfil.png";
-import notificacion from "@/components/images/notificacion.png";
 import notificacion2 from "@/components/images/notificacion2.png";
 import ruteActual from "@/components/images/ruteActual.png";
 import busqueda from "@/components/images/busqueda.png";
@@ -19,18 +16,37 @@ import Cookies from "js-cookie";
 import { socket } from "@/utils/socketio";
 import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
+import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
+
+import rutas from "@/utils/rutas";
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
+
   const user = useAppSelector((state) => state.user);
+  const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
+  
+
+  const handleSearchChange = (e) => {
+
+    dispatch(setSearchTerm1(e.target.value));
+    
+  };
+
+ 
+
+
+
   const showSearch =
-    pathname === "/Inicio_Paciente/Doctores" ||
-    pathname === "/Inicio_Paciente/Mensajes" ||
-    pathname === "/Inicio_Paciente/Mensajes/crearMensaje" ||
-    pathname === "/Inicio_Paciente/Historial";
+    pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
+    // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
+    pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
-  const avatar = "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png"
+  const avatar =
+    "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
 
   // Obteniendo la parte de la ruta antes del último segmento
   const pathBeforeLastSegment = pathname.substring(
@@ -41,11 +57,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
-  const dispatch = useAppDispatch();
+  
   const id = Cookies.get("c");
   const token = Cookies.get("a");
 
@@ -91,9 +107,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getSchedules = async (headers) => {
+    const userId = Number(id)
+    // const userId = 8
     try {
-      const response = await ApiSegimed.get("/schedules", headers);
-
+      const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
+     
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -179,6 +197,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       getSchedules({ headers: { token: token } }).catch(console.error);
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
+        socket.emit("onJoin", { id: idUser });
       }
     }
   }, []);
@@ -212,9 +231,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
         <div
           className={`flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
+            onChange={handleSearchChange}
             type="text"
             placeholder="Buscar doctores"
             className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
+            value={searchTerm1 } 
           />
           <button>
             <Image src={busqueda} alt="" />
@@ -223,7 +244,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
       )}
       <div className="flex justify-center items-center gap-4">
         <div className="w-12 h-12 flex justify-center items-center">
-          <AvatarSideBar avatar={user?.avatar !== null ? user.avatar : avatar} />
+          <AvatarSideBar
+            avatar={user?.avatar !== null ? user.avatar : avatar}
+          />
         </div>
         <div className=" flex-col hidden md:flex">
           <span className="text-start text-[#686868] font-normal text-lg leading-6">

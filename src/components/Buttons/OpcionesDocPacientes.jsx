@@ -36,7 +36,7 @@ export default function OpcionesDocPacientes({
       </button>
 
       {isOpen && (
-        <ul className="flex flex-col absolute p-2 bg-white z-50 w-80 right-0 border-2 border-[#D7D7D7] rounded-lg shadow-lg mt-1">
+        <ul className="flex flex-col absolute p-2 bg-white z-40 w-80 right-0 border-2 border-[#D7D7D7] rounded-lg shadow-lg mt-1">
           <span className="flex items-center gap-2 font-medium text-sm px-3 pt-3">
             <IconAccion />
             Acciones
@@ -101,9 +101,9 @@ export default function OpcionesDocPacientes({
           </div>
         </ul>
       )}
-      {showModal && <MapModalPte onClose={() => setShowModal(false)} patient={paciente} />}
+      {showModal && (
+        <MapModalPte onClose={() => setShowModal(false)} patient={paciente} />
+      )}
     </div>
   );
-};
-
-
+}

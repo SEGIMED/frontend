@@ -1,25 +1,37 @@
 'use client'
 
-import { useAppSelector } from '@/redux/hooks';
+import { useAppSelector, useAppDispatch } from '@/redux/hooks';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
 import DoctorCard from '@/components/card/doctorCard';
 
 
 import rutas from '@/utils/rutas';
 import Elboton from '@/components/Buttons/Elboton';
 import IconMensajeBoton from '@/components/icons/IconMensajeBoton';
-
+import { setSearchTerm1 } from '@/redux/slices/doctor/allDoctores';
 import { socket } from '@/utils/socketio';
 import MensajeSkeleton from '@/components/skeletons/MensajeSkeleton';
 import IconOrder from '@/components/icons/IconOrder';
 import IconRegresar from '@/components/icons/iconRegresar';
 
 export default function DoctoresPte() {
-    
+    const dispatch= useAppDispatch()
     const doctores = useAppSelector(state => state.doctores.doctores);
     const isLoading = useAppSelector(state => state.doctores.doctores.length === 0);
+    const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
+
     
+    useEffect(() => {
+        dispatch(setSearchTerm1(""));
+      }, [dispatch]);
+
+      const filteredDoctor = doctores?.filter(
+        (doc) =>
+          (doc.name.toLowerCase().includes(searchTerm1.toLowerCase()) ||
+            doc.lastname.toLowerCase().includes(searchTerm1.toLowerCase()))
+      );  
+
     if (isLoading) {
         return <MensajeSkeleton/>;
     }
@@ -39,8 +51,8 @@ export default function DoctoresPte() {
                 <Elboton nombre={"Regresar"} size={"lg"} icon={<IconRegresar/>} />
                 </Link>
             </div>
-            <div className="flex flex-col items-start w-full overflow-y-auto ">
-                {doctores?.map(doctor => (
+            <div className=" items-start w-full overflow-y-auto ">
+                {filteredDoctor?.map(doctor => (
                     <DoctorCard 
                         key={doctor.id} 
                         doctor={doctor}
