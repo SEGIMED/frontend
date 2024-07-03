@@ -134,7 +134,7 @@ const DetallePaciente = (id) => {
     patientId: userId,  /// id del paciente 
     diseaseId:3,  /// id de la enferemedad ---> (hipertension pulmonar) referenciada catalogo disease
     diagnosticNotes: data["Diagnostico"],
-    medicalEventId :5
+    medicalEventId:5
     })
     setMedicalIndications({
     patientId: userId,
@@ -249,7 +249,7 @@ const DetallePaciente = (id) => {
 
     
     const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
-    console.log(response2);  
+    console.log(response2);
 
     const response3 = await ApiSegimed.post(`/procedure/create-procedure-prescription`,procedurePrescription, {headers: { token: token },})
     console.log(response3); 
@@ -364,7 +364,7 @@ const DetallePaciente = (id) => {
             icon={<IconGuardar />}
             onPress={handleSave}
             size={"lg"}
-            className={"bg-tertiary w-60 text-sm font-bold"}
+            className={"bg-green-500 w-60 text-sm font-bold"}
           />
         </div>
       </div>

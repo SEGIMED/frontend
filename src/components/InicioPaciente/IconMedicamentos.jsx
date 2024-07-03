@@ -64,7 +64,7 @@ export const IconMedicamentos = ({ className }) => {
           strokeOpacity="1.000000"
           strokeWidth="5.000000"
           strokeLinejoin="round"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
         <path
           id="Stroke-293"
@@ -80,7 +80,7 @@ export const IconMedicamentos = ({ className }) => {
           strokeOpacity="1.000000"
           strokeWidth="4.000000"
           strokeLinejoin="round"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
       </g>
     </svg>
