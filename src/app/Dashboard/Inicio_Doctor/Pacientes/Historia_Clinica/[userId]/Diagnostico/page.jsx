@@ -19,7 +19,7 @@ export default function HomeDoc() {
     const userId = pathArray[pathArray.length - 2];
 
 
-    const [infoPatient, setInfoPatient] = useState();
+    const [infoPatient, setInfoPatient] = useState([]);
 
     const getConsultas = async (headers) => {
         try {
@@ -57,7 +57,8 @@ export default function HomeDoc() {
                 <p className="font-bold text-[#5F5F5F]">Motivo de consulta</p>
                 <p className="font-bold text-[#5F5F5F]"></p>
             </div>
-            <TableDiagnostico pacientes={infoPatient} subtitle={["Conducta terapeutica", "Tratamiento no farmacológico", "Pauta de alarma"]} subtitle2={["Diagnostico", "Medicamento", "Procedimiento"]} />
+            {infoPatient.length === 0 ? (<p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center " >No hay informacion disponible</p>) : (<TableDiagnostico pacientes={infoPatient} subtitle={["Conducta terapeutica", "Tratamiento no farmacológico", "Pauta de alarma"]} subtitle2={["Diagnostico", "Medicamento", "Procedimiento"]} />)}
+
         </div>
     );
 }

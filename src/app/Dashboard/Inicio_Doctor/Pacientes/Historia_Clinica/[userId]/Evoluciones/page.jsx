@@ -18,7 +18,7 @@ export default function HomeDoc() {
     const userId = pathArray[pathArray.length - 2];
     // const userId = 8;
 
-    const [evoluciones, setEvoluciones] = useState();
+    const [evoluciones, setEvoluciones] = useState([]);
 
     const getConsultas = async (headers) => {
         try {
@@ -56,8 +56,8 @@ export default function HomeDoc() {
                 <p className="font-bold text-[#5F5F5F]">Motivo de consulta</p>
                 <p className="font-bold text-[#5F5F5F]"></p>
             </div>
+            {evoluciones.length === 0 ? (<p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">No hay informacion disponible</p>) : (<Evoluciones pacientes={evoluciones} />)}
 
-            <Evoluciones pacientes={evoluciones} />
         </div>
     );
 }
