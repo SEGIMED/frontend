@@ -8,6 +8,7 @@ import riesgoVerde from "@/components/images/riesgoVerde.png";
 
 import Avatars from "../avatar/avatarChat";
 import LastLogin from "@/utils/lastLogin";
+import avatar from "@/utils/defaultAvatar";
 
 export default function PatientCardConsulta({ paciente, button, consulta }) {
   const getRandomColor = () => {
@@ -34,6 +35,7 @@ export default function PatientCardConsulta({ paciente, button, consulta }) {
   const status = getStatusTextAndColor(paciente?.schedulingStatus);
 
 
+
   return (
     <div className="w-full border-b border-b-[#cecece] md:px-6 py-2 items-center pl-4">
       <div className="md:w-full md:flex grid grid-cols-3 md:grid-cols-6 gap-1 md:gap-4 items-center">
@@ -43,7 +45,7 @@ export default function PatientCardConsulta({ paciente, button, consulta }) {
           alt="Punto de color"
         />
         <div className="md:w-[10%] h-12 gap-3 flex justify-center items-center ">
-          <Avatars avatar={paciente?.avatar} />
+          <Avatars avatar1={paciente?.avatar} />
           <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 w-36 md:w-fit">
             {paciente?.patientUser?.name} {paciente?.patientUser?.lastname}
           </p>

@@ -1,14 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Modal from "../modal/Modal";
-
+import { useRouter, usePathname } from "next/navigation";
 import LogoSegimed from "../logo/LogoSegimed";
 
 export const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHome, setIsHome] =useState(false)
+  const router = useRouter();
+  const pathname = usePathname()
+
+  useEffect(() => {
+    if(pathname === "/") setIsHome(true)
+  }, [pathname]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -16,6 +23,10 @@ export const NavBar = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleLogin = () => {
+    router.push("/");
   };
 
   return (
@@ -36,12 +47,25 @@ export const NavBar = () => {
                 </ul> 
             </div>*/}
       <div className="flex justify-center gap-10 mr-10">
-        <button
+        {/* <button
           className="bg-[#487FFA] text-white font-bold py-2 px-4 rounded-md hover:bg-[#70C247] transition duration-300 
                 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1"
           onClick={openModal}>
           Crear Cuenta
-        </button>
+        </button> */}
+         {isHome ? (
+          <button
+            className="bg-[#487FFA] text-white font-bold py-2 px-4 rounded-md hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1"
+            onClick={openModal}>
+            Crear Cuenta
+          </button>
+        ) : (
+          <button
+            className="bg-[#487FFA] text-white font-bold py-2 px-4 rounded-md hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1"
+            onClick={handleLogin}>
+            Iniciar Sesión
+          </button>
+        )}
 
         {/* <ul className="flex items-center justify-center gap-7 text-[#487FFA] font-bold">
                 <Link href="/accounts/login">  

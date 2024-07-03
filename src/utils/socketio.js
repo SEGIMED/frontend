@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 import { setChats, updateChat, addChat } from "@/redux/slices/chat/chat";
-
 import { dataClear } from "@/redux/slices/chat/chat";
+import {local, url} from "@/Api/ApiSegimed2"
 
 class Socket {
   constructor() {

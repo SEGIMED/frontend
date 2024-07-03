@@ -21,6 +21,7 @@ import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPaci
 // import OpcionesDocPacientes from "@/components/Buttons/opcionesDocPacientes";
 import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
 import config from "@/components/localData/localdata";
+import avatar from "@/utils/defaultAvatar";
 
 export default function HomeDoc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -103,6 +104,7 @@ export default function HomeDoc() {
     return colors[randomIndex];
   };
 
+
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 bg-white sticky top-0 z-10">
@@ -149,7 +151,7 @@ export default function HomeDoc() {
                                 height={100} // Establece la altura de la imagen
                                 className="w-12 h-12 object-cover rounded-3xl"/> */}
                 <img
-                  src={paciente.avatar ? paciente.avatar : Segimed}
+                  src={paciente?.avatar !== null ? paciente.avatar : avatar}
                   alt={paciente.name}
                   className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
                 />

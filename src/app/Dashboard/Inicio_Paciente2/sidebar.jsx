@@ -17,6 +17,8 @@ import paciente from "@/utils/paciente";
 import LogoSegimed from "@/components/logo/LogoSegimed";
 import { IconChat } from "@/components/InicioPaciente/IconChat";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
+import IconRegresar from "@/components/icons/iconRegresar";
+import rutas from "@/utils/rutas";
 import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
 
 export const SidePte = ({ search, toggleSidebar }) => {
@@ -28,6 +30,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
+  const lastSegmentText = pathname
+    .substring(pathname.lastIndexOf("/") + 1)
+    .replace(/_/g, " ");
+
+  console.log(lastSegment);
 
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
@@ -217,10 +224,26 @@ export const SidePte = ({ search, toggleSidebar }) => {
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
       <div className="flex justify-center items-center gap-2">
-        <Link href="/Inicio_Paciente">
-          <LogoSegimed className="w-[60%]" />
-        </Link>
+        {lastSegment !== "Inicio_Paciente2" ? (
+          <div>
+            <Link href={`${rutas.PacienteDash}2`}>
+              <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
+                <IconRegresar /> Regresar
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <Link href={`${rutas.PacienteDash}2`}>
+            <LogoSegimed className="w-[60%]" />
+          </Link>
+        )}
       </div>
+      {lastSegment !== "Inicio_Paciente2" ? (
+        <p className="font-semibold text-xl leading-6 text-[#686868]">
+          {lastSegmentText}
+        </p>
+      ) : null}
+
       {showSearch && (
         <div
           className={`flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
@@ -236,9 +259,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
       )}
       <div className="flex justify-center items-center gap-5">
         <div className="w-12 h-12 flex justify-center items-center">
-          <AvatarSideBar
-            avatar={user?.avatar !== null ? user.avatar : avatar}
-          />
+          <Link href={`${rutas.PacienteDash}2${rutas.Mi_Perfil}`}>
+            <AvatarSideBar
+              avatar={user?.avatar !== null ? user.avatar : avatar}
+            />
+          </Link>
         </div>
         <div className=" flex-col hidden md:flex">
           <span className="text-start text-[#686868] font-normal text-lg leading-6">

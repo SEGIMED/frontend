@@ -17,7 +17,7 @@ export default function HomeDoc() {
     const pathArray = pathname.split('/');
     const userId = pathArray[pathArray.length - 2];
 
-    const [infoPatient, setInfoPatient] = useState();
+    const [infoPatient, setInfoPatient] = useState([]);
 
     const getConsultas = async (headers) => {
         try {
@@ -56,8 +56,8 @@ export default function HomeDoc() {
                 <p className="font-bold text-[#5F5F5F]">Motivo de consulta</p>
                 <p className="font-bold text-[#5F5F5F]"></p>
             </div>
+            {infoPatient.length === 0 ? (<p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">No hay informacion disponible</p>) : (<ExamFisico pacientes={infoPatient} />)}
 
-            <ExamFisico pacientes={infoPatient} />
         </div>
     );
 }

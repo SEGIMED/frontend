@@ -21,10 +21,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const user = useAppSelector((state) => state.user);
   const showSearch =
-    pathname === "/Inicio_Paciente/Doctores" ||
-    pathname === "/Inicio_Paciente/Mensajes" ||
-    pathname === "/Inicio_Paciente/Mensajes/crearMensaje" ||
-    pathname === "/Inicio_Paciente/Historial";
+    pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+    pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
+    pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
   const avatar =
@@ -39,8 +39,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const dispatch = useAppDispatch();
@@ -89,9 +89,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getSchedules = async (headers) => {
+    const userId = Number(id)
+    // const userId = 8
     try {
-      const response = await ApiSegimed.get("/schedules", headers);
-
+      const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
+     
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -177,6 +179,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       getSchedules({ headers: { token: token } }).catch(console.error);
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
+        socket.emit("onJoin", { id: idUser });
       }
     }
   }, []);
