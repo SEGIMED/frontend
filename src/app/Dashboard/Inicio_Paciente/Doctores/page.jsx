@@ -4,18 +4,20 @@ import OpcionesDocCard from "@/components/Buttons/opcionesDocCard";
 import DoctorCard from "@/components/card/doctorCard";
 import ModalDetailDoctor from "@/components/modal/ModalPatient/ModalDetailDoctor";
 import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FiltrosPaciente from "@/components/Buttons/FiltrosPaciente";
 import Ordenar from "@/components/Buttons/Ordenar";
 import config from "@/components/localData/localdata";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
-
-import { useAppSelector } from "@/redux/hooks";
+import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import IconMessages from "@/components/icons/IconMessages";
 IconMessages;
 
 export default function DoctoresPte() {
   const doctores = useAppSelector((state) => state.doctores.doctores);
+  const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
+  const dispatch= useAppDispatch()
   const isLoading = useAppSelector(
     (state) => state.doctores.doctores.length === 0
   );
@@ -27,8 +29,14 @@ export default function DoctoresPte() {
   const [isSorted, setIsSorted] = useState(false);
   const patientId = config.c;
 
+  useEffect(() => {
+    dispatch(setSearchTerm1(""));
+  }, [dispatch]);
+
   const filteredDoctor = doctores?.filter(
-    (doctor) => doctor.name.toLowerCase() || doctor.lastname.toLowerCase()
+    (doc) =>
+      (doc.name.toLowerCase().includes(searchTerm1.toLowerCase()) ||
+        doc.lastname.toLowerCase().includes(searchTerm1.toLowerCase()))
   );
 
   const sortedDoctor = isSorted

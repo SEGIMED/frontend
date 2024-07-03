@@ -38,6 +38,11 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
     dispatch(resetApp());
 
     router.push("/");
+
+    setTimeout(() => {
+      // Realizar la recarga de la página para limpiar todos los datos
+      window.location.reload(true);
+    }, 2000); 
   };
 
   return (

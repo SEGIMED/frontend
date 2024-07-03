@@ -31,7 +31,7 @@ export default function Verify() {
       console.log(response);
       setApiResponse(response.data);
       if (response.data) {
-        router.push("/accounts/login");
+        router.push("/");
       }
     } catch (error) {
       console.error("Error al verificar el código:", error);

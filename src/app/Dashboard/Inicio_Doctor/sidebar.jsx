@@ -28,7 +28,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   // reemplazar pathname por adjustedPathname
   const showSearch =
     pathname === "/Dashboard/Inicio_Doctor/Pacientes" ||
-    pathname === "/Dashboard/Inicio_Doctor/Mensajes" ||
+    // pathname === "/Dashboard/Inicio_Doctor/Mensajes" ||
     pathname === "/Dashboard/Inicio_Doctor/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Doctor/Historial";
   // reemplazar pathname por adjustedPathname

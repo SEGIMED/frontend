@@ -13,44 +13,44 @@ const Buttons = [
     name: "Mis Turnos",
     path: "/historial",
     icon: IconTurnos,
-    background: "bg-[#487FFA]",
+    backgroundColor: "bg-[#487FFA]",
   },
   {
     name: "Medicamentos",
     path: "/medicamentos",
     icon: IconMedicamentos,
-    background: "bg-[#FF7E7E]",
+    backgroundColor: "bg-[#FF7E7E]",
   },
   {
     name: "Autoevaluación",
     path: "/Autoevaluación",
     icon: IconAutoevaluacion,
-    background: "bg-[#FFA3ED]",
+    backgroundColor: "bg-[#FFA3ED]",
   },
   {
     name: "Alarmas",
     path: "/Alarm",
     icon: IconAlarmas,
-    background: "bg-[#875CF2]",
+    backgroundColor: "bg-[#875CF2]",
   },
   {
     name: "Solicitudes",
     path: "/Solicitudes",
     icon: IconSolicitudes,
-    background: "bg-[#64D594]",
+    backgroundColor: "bg-[#64D594]",
   },
   {
     name: "Antecedentes",
     path: "/Antecedentes",
     icon: IconAntecedentes,
-    background: "bg-[#ECD652]",
+    backgroundColor: "bg-[#ECD652]",
   },
 ];
 
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
   return (
-    <div className="h-full flex flex-col items-center gap-8">
+    <div className="h-full flex flex-col items-center gap-8 pt-8">
       <div className="flex justify-center items-center gap-2 px-4 md:py-3">
         <h2 className="text-3xl text-[#808080] font-medium">
           ¡Bienvenido{" "}
@@ -61,7 +61,7 @@ export default function HomePte() {
         {Buttons.map((route, index) => (
           <div
             key={index}
-            className={`${route.background} rounded-2xl flex flex-col items-center justify-center gap-4`}>
+            className={`${route.backgroundColor} rounded-2xl flex flex-col items-center justify-center gap-4`}>
             <route.icon className="md:w-24 md:h-24 w-16 h-16" />
             <p className="text-lg md:text-3xl font-medium text-white">
               {route.name}
