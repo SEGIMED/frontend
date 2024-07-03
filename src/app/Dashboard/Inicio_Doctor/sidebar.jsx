@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
@@ -16,6 +16,7 @@ import { setAllPatients } from "@/redux/slices/doctor/allPatients";
 import { setSearchTerm } from "@/redux/slices/doctor/allPatients";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import avatar from "@/utils/defaultAvatar";
+import { resetApp } from "@/redux/rootReducer";
 
 import { socket } from "@/utils/socketio";
 
@@ -38,10 +39,14 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   const dispatch = useAppDispatch();
 
+  const router = useRouter(); // Use the useRouter hook
+
   const getUser = async (headers) => {
     const id = Cookies.get("c");
     const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
+
+
 
     if (response.data) {
       dispatch(adduser(response.data));
@@ -83,6 +88,24 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   useEffect(() => {
     const token = Cookies.get("a");
     const idUser = Cookies.get("c");
+    const rol = Cookies.get("b");
+
+    if (rol !== "Médico") {
+      Cookies.remove("a");
+      Cookies.remove("b");
+      Cookies.remove("c");
+
+      dispatch(resetApp());
+
+      router.push("/");
+
+      setTimeout(() => {
+        // Realizar la recarga de la página para limpiar todos los datos
+        window.location.reload(true);
+      }, 2000);
+      return;
+    }
+
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);

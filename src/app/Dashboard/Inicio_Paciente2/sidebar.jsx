@@ -19,6 +19,11 @@ import { IconChat } from "@/components/InicioPaciente/IconChat";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 import IconRegresar from '@/components/icons/iconRegresar';
 import rutas from "@/utils/rutas";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@nextui-org/react";
+import avatar from "@/utils/defaultAvatar";
+import { resetApp } from "@/redux/rootReducer";
+import { useRouter } from "next/navigation";
+
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -175,6 +180,25 @@ export const SidePte = ({ search, toggleSidebar }) => {
     }
   };
 
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove("a");
+    Cookies.remove("b");
+    Cookies.remove("c");
+
+    socket.disconnect();
+
+    dispatch(resetApp());
+
+    router.push("/");
+
+    setTimeout(() => {
+      // Realizar la recarga de la página para limpiar todos los datos
+      window.location.reload(true);
+    }, 1000);
+  };
+
   useEffect(() => {
     obtenerUbicacion();
     const idUser = Cookies.get("c");
@@ -188,6 +212,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
       }
     }
   }, []);
+
+  const isMobile = window.innerWidth <= 768;
 
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
@@ -243,8 +269,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
           </button>
         </div>
       )}
+
+
+
       <div className="flex justify-center items-center gap-5">
-        <div className="w-12 h-12 flex justify-center items-center">
+        {/* <div className="w-12 h-12 flex justify-center items-center">
           <Link href={`${rutas.PacienteDash}2${rutas.Mi_Perfil}`}>
             <AvatarSideBar
               avatar={user?.avatar !== null ? user.avatar : avatar}
@@ -258,7 +287,33 @@ export const SidePte = ({ search, toggleSidebar }) => {
           <span className="text-start text-[#808080] font-normal text-sm leading-6">
             {user.role === 3 ? "Paciente" : ""}
           </span>
-        </div>
+        </div> */}
+
+        <Dropdown placement="bottom-start">
+          <DropdownTrigger>
+            <User
+              as="button"
+              avatarProps={{
+                isBordered: true,
+                src: user?.avatar ? user.avatar : avatar,
+              }}
+              className="transition-transform"
+              description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
+              name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="User Actions" variant="flat">
+            <DropdownItem key="inicio">
+              <Link href={`${rutas.PacienteDash}2`}>Inicio</Link>
+            </DropdownItem>
+            <DropdownItem key="mi_perfil">
+              <Link href={`${rutas.PacienteDash}2${rutas.Mi_Perfil}`}>Mi perfil</Link>
+            </DropdownItem>
+            <DropdownItem key="logout" onClick={handleLogout} color="danger">
+              Cerrar sesión
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
         <div className="flex gap-2">
           <button className="w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center">
             <IconChat className="w-6 h-6" />
