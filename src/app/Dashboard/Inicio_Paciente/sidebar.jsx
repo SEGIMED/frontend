@@ -16,13 +16,31 @@ import Cookies from "js-cookie";
 import { socket } from "@/utils/socketio";
 import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
+import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
+
+import rutas from "@/utils/rutas";
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
+
   const user = useAppSelector((state) => state.user);
+  const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
+  
+
+  const handleSearchChange = (e) => {
+
+    dispatch(setSearchTerm1(e.target.value));
+    
+  };
+
+ 
+
+
+
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
-    pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+    // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
     pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
@@ -43,7 +61,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
     )
     : lastSegment;
 
-  const dispatch = useAppDispatch();
+  
   const id = Cookies.get("c");
   const token = Cookies.get("a");
 
@@ -213,9 +231,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
         <div
           className={`flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
+            onChange={handleSearchChange}
             type="text"
             placeholder="Buscar doctores"
             className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
+            value={searchTerm1 } 
           />
           <button>
             <Image src={busqueda} alt="" />
