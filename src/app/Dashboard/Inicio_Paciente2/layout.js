@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen w-screen bg-[#FAFAFC]">
       <div className="flex flex-col w-full h-full gap-8">
         <SidePte search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
