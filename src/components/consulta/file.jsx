@@ -21,7 +21,7 @@ const FileUpload = ({ label }) => {
             if (e.target.files.length) {
                 const selectedFile = e.target.files[0];
                 setFile(selectedFile);
-
+                console.log({ msj: 'documento cargado con éxito', selectedFile });
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);
@@ -59,18 +59,18 @@ const FileUpload = ({ label }) => {
             </div>
             {file && (
                 <div className="mt-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
                         <span>{file.name}</span>
                         <button onClick={handleDeleteFile}>
                             <IconUpload className="w-4 text-red-500" />
                         </button>
                     </div>
-                    <textarea
+                    {/* <textarea
                         className="mt-2 p-2 border rounded w-full"
                         placeholder="Describa el informe"
                         value={description}
                         onChange={handleDescriptionChange}
-                    />
+                    /> */}
                 </div>
             )}
         </div>

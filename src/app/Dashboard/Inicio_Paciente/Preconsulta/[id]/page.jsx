@@ -3,7 +3,7 @@
 import Elboton from "@/components/Buttons/Elboton";
 import InputDiagnostico from "@/components/consulta/inputDiagnostico";
 import InputConsulta from "@/components/consulta/inputconsulta";
-import InputFile from "@/components/consulta/inputfile";
+import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PreconsultaQuestion from "@/components/preconsulta/PreconsultaQuestion";
 import Link from "next/link";
@@ -18,9 +18,15 @@ import { Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
+import Cookies from "js-cookie";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
+  const scheduleId = params.id
+  const token = Cookies.get('a');
+  const patientId = Cookies.get('c');
+  const [preConsultationQuestions, setPreConsultationQuestions] = useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
   const handleQuestionChange = (sectionIndex, field, value) => {
     dispatch(updateField({ sectionIndex, field, value }));
@@ -90,11 +96,111 @@ export default function PreconsultaPte({ params }) {
   //   setQuestionsData(newQuestionsData);
   // };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Form data", formData);
     // Aquí puedes manejar el envío del formulario, por ejemplo, enviando los datos a una API
+    try {
+      if (!formData || !preConsultationQuestions) { // si esque no se cargaron las preguntas del formulario o el paciente no seleccionó nada
+        console.error('No form data to submit');
+        return;
+      }
+      const formDataBody = {
+        patient: patientId,
+        appointmentSchedule: scheduleId,
+        // Questions
+        lackOfAir: preConsultationQuestions.lackOfAir.active,
+        lackOfAirAsAlways: false, // quedó obsoleto
+        lackOfAirIncremented: preConsultationQuestions.lackOfAir.subquestions[0].selectedOption,
+        lackOfAirClasification: preConsultationQuestions.lackOfAir.subquestions[1].selectedOption,
+        chestPainAtRest: preConsultationQuestions.chestPainAtRest.active,
+        chestPainOnExertion: preConsultationQuestions.chestPainOnExertion.active,
+        chestPainOnExertionAmount: preConsultationQuestions.chestPainOnExertion.selectedOption,
+        edemaPresence: preConsultationQuestions.edemaPresence.active,
+        edemaPresenceDescription: preConsultationQuestions.edemaPresence.selectedOption,
+        feelings: preConsultationQuestions.feelings.selectedOption,
+        healthChanges: preConsultationQuestions.healthChanges.active,
+        healthChangesDescription: preConsultationQuestions.healthChanges.text,
+        healthWorsened: preConsultationQuestions.healthWorsened.selectedOption,
+        bodyPain: preConsultationQuestions.bodyPain.active,
+        mentalHealthAffected: preConsultationQuestions.mentalHealthAffected.active,
+        mentalHealthAffectedDescription: preConsultationQuestions.mentalHealthAffected.text,
+        energyStatus: preConsultationQuestions.energyStatus.selectedOption,
+        feed: preConsultationQuestions.feed.selectedOption,
+        hydrationStatus: preConsultationQuestions.hydrationStatus.selectedOption,
+        urineStatus: preConsultationQuestions.urineStatus.selectedOption,
+        exerciseStatus: preConsultationQuestions.exerciseStatus.selectedOption,
+        abnormalGlycemia: false, // pendiente
+        lastAbnormalGlycemia: [526, 589, 600],
+        physicalExamination: 1,
+        laboratoryResults: [
+          "https:cloudinary1",
+          "https:cloudinary2"],
+        laboratoryResultsDescription: [
+          "description1",
+          "description2"],
+        electrocardiogram: "https:cloudinary",
+        electrocardiogramDescription: "decription electrocardiogram",
+        rxThorax: "https:cloudinary",
+        echocardiogram: "https:cloudinary",
+        walkTest: "https:cloudinary",
+        respiratoryFunctional: "https:cloudinary",
+        tomographies: "https:cloudinary",
+        rightHeartCatheterization: "https:cloudinary",
+        ccg: "https:cloudinary",
+        resonance: "https:cloudinary",
+        leftHeartCatheterization: "https:cloudinary",
+        otherStudies: [
+          "other study 1",
+          "other study 2"
+        ],
+        pendingStudies: "No one is pending :) Good patient",
+        consultationReason: "Dolor de cabeza :(",
+        importantSymptoms: "Dolor de cabeza muy fuerte por 2 días :(",
+        currentMedications: [
+          "medicamento1",
+          "medicamento2",
+          "medicamento3"
+        ],
+      }
+      console.log(formDataBody);
+      /* const response = await ApiSegimed.post(`/pre-consultation`, formDataBody, {
+        headers: {
+          token: token,
+          'Content-Type': 'application/json'
+        }
+      }); */
+    } catch (error) {
+      console.error('Error fetching data', error);
+    }
   };
+
+  useEffect(() => {
+    const getPreConsultation = async () => {
+      try {
+        const res = await ApiSegimed.get(`/get-all-pateint-preconsultation?patientId=${patientId}`, {
+          headers: {
+            token: token,
+          }
+        });
+        if (res) {
+          console.log({ preConsultationLength: res.data.length });
+        }
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    }
+    const questionList = () => {
+      let object = {};
+      formData?.questions.forEach(question => {
+        object = { ...object, [question.field]: question };
+      });
+      setPreConsultationQuestions(object);
+    }
+    questionList();
+    // getPreConsultation();
+  }, []);
+  console.log(preConsultationQuestions);
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-[50%]">
@@ -133,7 +239,10 @@ export default function PreconsultaPte({ params }) {
         {/* <InputFile title={"Estudios"} defaultOpen /> */}
         <InputConsulta
           title={"Anamnesis"}
-          subtitle={["Motivo de consulta", "Sintomas"]}
+          defaultOpen
+        />
+        <InputFilePreconsultation
+          title={"Estudios"}
           defaultOpen
         />
         <InputDiagnostico
