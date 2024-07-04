@@ -10,6 +10,8 @@ import IconRegresar from "../icons/iconRegresar";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
 
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+
 export default function SubNavbar({ id }) {
     const [openDetails, setOpenDetails] = useState(false);
     const pathname = usePathname();
@@ -88,31 +90,38 @@ export default function SubNavbar({ id }) {
                         </Link>
                     </NavbarItem>
                     <NavbarItem className="flex items-center gap-2">
-                        <details className="flex px-6 py-2 gap-1 items-center cursor-pointer" onToggle={() => setOpenDetails(!openDetails)}>
-                            <summary className="flex items-center cursor-pointer">
-                                Más {openDetails ? <IconArrowDetailUp /> : <IconArrowDetailDown />}
-                            </summary>
-                            <div className="absolute bg-white z-50 p-2 text-start text-[#686868] font-normal text-base leading-6 w-64 right-0 border-2 border-[#D7D7D7] rounded-lg gap-4 mt-5 shadow-lg">
-                                <button className={`font-normal text-base leading-8 pl-6 w-full flex items-center gap-2 rounded-lg ${getLinkClass(rutas.ExamenFisico)}`}>
-                                    <Link
-                                        href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.ExamenFisico}`}>
-                                        Examen Fisico
-                                    </Link>
-                                </button>
-                                <button className={`font-normal text-base leading-8 pl-6 w-full flex items-center gap-2 rounded-lg ${getLinkClass(rutas.SignosVitales)}`}>
-                                    <Link className={getLinkClass(rutas.SignosVitales)}
-                                        href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.SignosVitales}`}>
-                                        Signos Vitales
-                                    </Link>
-                                </button>
-                                <button className={`font-normal text-base leading-8 pl-6 w-full flex items-center gap-2 rounded-lg ${getLinkClass(rutas.Diagnostico)}`}>
-                                    <Link className={getLinkClass(rutas.Diagnostico)}
-                                        href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Diagnostico}`}>
-                                        Diagnosticos y tratamientos
-                                    </Link>
-                                </button>
-                            </div>
-                        </details>
+
+                        <Dropdown>
+                            <DropdownTrigger >
+                                <Button style={{
+                                    color: "#686868",
+                                    fontWeight: 400,
+                                    fontSize: 16,
+                                    border: "0",
+                                }}
+                                    variant="bordered"
+                                    onClick={() => setOpenDetails(!openDetails)}
+                                >
+                                    Mas {openDetails ? <IconArrowDetailUp /> : <IconArrowDetailDown />}
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label="Static Actions">
+                                <DropdownItem onClick={() => setOpenDetails(!openDetails)} className={getLinkClass(rutas.ExamenFisico)} key="new">     <Link
+                                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.ExamenFisico}`}>
+                                    Examen Fisico
+                                </Link></DropdownItem>
+                                <DropdownItem onClick={() => setOpenDetails(!openDetails)} className={getLinkClass(rutas.SignosVitales)} key="copy"> <Link
+                                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.SignosVitales}`}>
+                                    Signos Vitales
+                                </Link></DropdownItem>
+                                <DropdownItem onClick={() => setOpenDetails(!openDetails)} className={getLinkClass(rutas.Diagnostico)} key="edit">  <Link
+                                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Diagnostico}`}>
+                                    Diagnosticos y tratamientos
+                                </Link></DropdownItem>
+
+                            </DropdownMenu>
+                        </Dropdown>
+
                     </NavbarItem>
                 </NavbarContent>
             </Navbar>

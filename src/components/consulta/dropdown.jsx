@@ -15,11 +15,11 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const dispatch = useAppDispatch();
-  const { setValue, register } = useFormContext();
+  // const { setValue, register } = useFormContext();
   const handleSelectionChange = (key) => {
     const selectedOption = key;
     setSelectedOptionState(selectedOption);
-    setValue(name, selectedOption);
+    // setValue(name, selectedOption);
     dispatch(setSelectedOption({ name, option: selectedOption }));
   };
 
@@ -63,7 +63,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
           selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
           onSelectionChange={(keys) =>
             handleSelectionChange(Array.from(keys)[0])
-            
+
           }>
           {options?.map((option) => (
             <DropdownItem key={option} aria-label={option} >
@@ -73,7 +73,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
         </DropdownMenu>) : (null)}
 
       </Dropdown>
-      <input type="hidden" {...register(name)} value={selectedOption} />
+      {/* <input type="hidden" {...register(name)} value={selectedOption} /> */}
     </div>
   );
 }
