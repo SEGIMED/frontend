@@ -101,7 +101,11 @@ export default function HomePte() {
         icon: "success",
       });
     } catch (error) {
-      console.error("Error updating data:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "No se pudieron actualizar los datos",
+        icon: "error",
+      });
     }
   };
 

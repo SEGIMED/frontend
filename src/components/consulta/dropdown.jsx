@@ -9,21 +9,23 @@ import {
 } from "@nextui-org/react";
 import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import { useFormContext } from "react-hook-form";
 
 export default function DropNext({ text, options, text2, name, disabled, selectedOptions }) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const dispatch = useAppDispatch();
-
+  const { setValue, register } = useFormContext();
   const handleSelectionChange = (key) => {
     const selectedOption = key;
     setSelectedOptionState(selectedOption);
+    setValue(name, selectedOption);
     dispatch(setSelectedOption({ name, option: selectedOption }));
   };
 
   return (
     <div>
-      <div className="font-bold mb-2">{text}</div>
+      <div className="mb-2 font-bold">{text}</div>
       <Dropdown className="emptyContent">
         <DropdownTrigger
           style={{
@@ -61,15 +63,17 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
           selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
           onSelectionChange={(keys) =>
             handleSelectionChange(Array.from(keys)[0])
+            
           }>
           {options?.map((option) => (
-            <DropdownItem key={option} aria-label={option}>
+            <DropdownItem key={option} aria-label={option} >
               {option}
             </DropdownItem>
           ))}
         </DropdownMenu>) : (null)}
 
       </Dropdown>
+      <input type="hidden" {...register(name)} value={selectedOption} />
     </div>
   );
 }
