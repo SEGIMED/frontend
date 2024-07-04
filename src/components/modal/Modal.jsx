@@ -35,7 +35,7 @@ const Modal = ({ isOpen, onClose }) => {
   return isOpen && !showUserForm ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
       <div className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="relative z-50 bg-white p-10 rounded-lg w-[45rem] h-[39rem] flex flex-col items-center gap-5">
+      <div className="relative z-50 bg-white md:p-10 rounded-lg w-[90%] md:w-[45rem] h-[39rem] flex flex-col items-center gap-5">
         <div className="h-full w-full flex flex-col items-center justify-between">
           <div className="h-full flex flex-col items-center justify-center gap-10">
             <p className="font-semibold text-4xl text-center">
@@ -46,32 +46,33 @@ const Modal = ({ isOpen, onClose }) => {
                 onClick={handleDoctorClick}
                 onMouseEnter={() => setHoverDoctor(true)}
                 onMouseLeave={() => setHoverDoctor(false)}
-                className="w-[25rem] h-40 p-5 rounded-xl flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
+                className="w-full md:w-[25rem] h-40 p-5 rounded-xl  flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
                 <IconDoctor color={hoverDoctor ? "#FFFFFF" : "#5F5F5F"} />{" "}
-                Doctor
+                Médico
               </button>
               <button
                 onClick={handlePatientClick}
                 onMouseEnter={() => setHoverPatient(true)}
                 onMouseLeave={() => setHoverPatient(false)}
-                className="w-[25rem] h-40 p-5 rounded-xl flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
+                className="w-full md:w-[25rem] h-40 p-5 rounded-xl flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
                 <IconUser color={hoverPatient ? "#FFFFFF" : "#5F5F5F"} />{" "}
                 Paciente
               </button>
             </div>
             <div className="flex justify-center gap-5 text-base">
               <p>¿Ya tienes cuenta?</p>
-              
-                <span  onClick={handleClose} className="text-[#487FFA] cursor-pointer">
-                  Iniciar Sesión
-                </span>
-             
+
+              <span
+                onClick={handleClose}
+                className="text-[#487FFA] cursor-pointer">
+                Iniciar Sesión
+              </span>
             </div>
           </div>
         </div>
         <button
           onClick={handleClose}
-          className="absolute top-0 right-0 m-10 font-bold text-xl">
+          className="absolute top-[3%] right-[5%] font-bold text-2xl">
           X
         </button>
       </div>

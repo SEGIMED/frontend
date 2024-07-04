@@ -9,6 +9,8 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useState, useEffect } from "react";
 import TableAlarmPte from "@/components/alarm/tableAlarmPte";
 import IconAlarmRed from "@/components/icons/iconAlarmRed";
+import IconArrowLeft from "@/components/icons/IconArrowLeft";
+import IconRegresar from "@/components/icons/iconRegresar";
 
 export default function AlarmPte() {
   // Filter the patients with active alarm status
@@ -27,7 +29,7 @@ export default function AlarmPte() {
   const router = useRouter();
   const myID = Cookies.get("c");
 
-  const UnsolvedAlarmas = alarms.filter((alarm) => alarm.patient === Number(myId) && alarm.solved === false);
+  const UnsolvedAlarmas = alarms.filter((alarm) => alarm.patient === Number(myId) && alarm.solved === true);
 
   useEffect(() => {
     getMyAlarms();
@@ -61,12 +63,12 @@ export default function AlarmPte() {
         <button
           // className="flex items-center px-2 py-2 bg-white rounded-xl  text-[#487FFA] 
           //           font-bold border-solid border-[#487FFA] border-3"
-          className="flex items-center px-2 py-2 bg-[#E73F3F] rounded-xl  text-white
-          font-bold border-solid border-red-600 border-3"
+          className="flex items-center px-4 py-2 bg-blue-400 rounded-xl  text-white
+          font-bold border-solid border-blue-4000 border-3"
           onClick={() => {
-            router.push(`${rutas.PacienteDash}${rutas.Alarm}/${myID}`);
+            router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
           }}>
-          <IconAlarmBlue color={"white"} /> Crear Alarma
+          <IconRegresar/> Regresar
         </button>
       </div>
       <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-10 z-20 md:z-50">
