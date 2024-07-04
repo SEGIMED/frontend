@@ -245,7 +245,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       id: 5,
     },
   ];
-  const isMobile = window.innerWidth <= 768;
+  // const isMobile = window.innerWidth <= 768;
 
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
