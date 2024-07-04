@@ -313,8 +313,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
                 src: user?.avatar ? user.avatar : avatar,
               }}
               className="transition-transform"
-              description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
-              name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
+              description={user?.role === 3 ? "Paciente" : ""}
+              // description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
+              // name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
+              name={user ? `${user?.name} ${user?.lastname}` : ''}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="User Actions" variant="flat">
