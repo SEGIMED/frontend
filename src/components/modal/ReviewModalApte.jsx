@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import IconTStar3 from "../icons/iconStar3";
 import IconArrowRight from "../icons/iconArrowRight";
 import IconFatArrow from "../icons/iconFatarrowDash";
@@ -59,8 +59,31 @@ export default function ReviewModalApte({ onClose, id }) {
       console.error("Error sending review:", error);
     }
   };
+
+  
+  useEffect(() => {
+    function onClose2(event) {
+        if (event.key === 'Escape') {
+            onClose();
+        }
+    }
+
+    if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+        window.removeEventListener("keydown", onClose2);
+    };
+  }, [onClose]);
+
+  function handleClickOutside(event) {
+    if (event.target === event.currentTarget) {
+        onClose();
+    }
+    }
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div onClick={handleClickOutside}
+    className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-2 mb-2 h-[10%]">
           <span className="flex gap-4">

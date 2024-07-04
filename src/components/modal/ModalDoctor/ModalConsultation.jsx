@@ -43,6 +43,22 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const addMinutes = (date, minutes) => {
     return new Date(date.getTime() + minutes * 60000);
   };
+  useEffect(() => {
+    function onClose2(event) {
+    
+        if (event.key === 'Escape') {
+            onClose();
+        }
+    }
+
+    if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+    
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+        window.removeEventListener("keydown", onClose2);
+    };
+    }, [onClose]);
+
 
   useEffect(() => {
     const startDateTime = combineDateTime(date, time);
@@ -63,13 +79,12 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const { date, time, ...rest } = data;
-     
-      const token= Cookies.get("a")
-      const headers={ headers: { token: token } }
-      
-      const response = await ApiSegimed.post("/schedules", rest, headers );
-      
-      
+
+      const token = Cookies.get("a");
+      const headers = { headers: { token: token } };
+
+      const response = await ApiSegimed.post("/schedules", rest, headers);
+
       if (response.data) {
         alert("cita agendada");
       }
@@ -87,10 +102,16 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       }
     }
   });
+  function handleClickOutside(event) {
+    if (event.target === event.currentTarget) {
+        onClose();
+      }
+      }
 
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-      <div className="fixed inset-0 bg-black opacity-50"></div>
+      <div onClick={handleClickOutside}
+      className="fixed inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
         <form
           onSubmit={onSubmit}
@@ -171,30 +192,30 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
           <div className="border w-full" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
-  <div className="flex items-center justify-start gap-3 text-sm font-semibold">
-    <IconCenterAtenttion /> Centro de atención
-  </div>
-  <select
-    id="healthCenter"
-    className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-      errors.healthCenter ? 'border-red-500' : ''
-    }`}
-    {...register("healthCenter", {
-      required: {
-        value: true,
-        message: "* ¿En cuál centro de atención quieres ser atendido? *",
-      },
-    })}
-  >
-    <option value="">Seleccione el centro de atención</option>
-    <option value="1">Centro Gallegos</option>
-  </select>
-  {errors.healthCenter && (
-    <span className="text-red-500 text-sm font-medium">
-      {errors.healthCenter.message}
-    </span>
-  )}
-</div>
+            <div className="flex items-center justify-start gap-3 text-sm font-semibold">
+              <IconCenterAtenttion /> Centro de atención
+            </div>
+            <select
+              id="healthCenter"
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                errors.healthCenter ? "border-red-500" : ""
+              }`}
+              {...register("healthCenter", {
+                required: {
+                  value: true,
+                  message:
+                    "* ¿En cuál centro de atención quieres ser atendido? *",
+                },
+              })}>
+              <option value="">Seleccione el centro de atención</option>
+              <option value="1">Centro Gallegos</option>
+            </select>
+            {errors.healthCenter && (
+              <span className="text-red-500 text-sm font-medium">
+                {errors.healthCenter.message}
+              </span>
+            )}
+          </div>
 
           <div className="border w-full" />
 

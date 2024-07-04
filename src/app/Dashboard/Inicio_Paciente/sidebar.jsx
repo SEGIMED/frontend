@@ -26,17 +26,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
-  
 
   const handleSearchChange = (e) => {
-
     dispatch(setSearchTerm1(e.target.value));
-    
   };
-
- 
-
-
 
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
@@ -57,11 +50,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
-  
   const id = Cookies.get("c");
   const token = Cookies.get("a");
 
@@ -107,11 +99,14 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getSchedules = async (headers) => {
-    const userId = Number(id)
+    const userId = Number(id);
     // const userId = 8
     try {
-      const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
-     
+      const response = await ApiSegimed.get(
+        `/schedules?patientId=${userId}`,
+        headers
+      );
+
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -229,13 +224,13 @@ export const SidePte = ({ search, toggleSidebar }) => {
       </div>
       {showSearch && (
         <div
-          className={`flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
+          className={`hidden md:flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar doctores"
             className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
-            value={searchTerm1 } 
+            value={searchTerm1}
           />
           <button>
             <Image src={busqueda} alt="" />

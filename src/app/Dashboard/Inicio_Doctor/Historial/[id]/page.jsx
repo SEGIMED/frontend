@@ -6,18 +6,14 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useEffect, useState } from "react";
 import rutas from "@/utils/rutas";
 import Cookies from "js-cookie";
-
 import ruteActual from "../../../../../components/images/ruteActual.png";
 import backChanges from "../../../../../components/images/backChanges.png";
 import Consulta from "@/components/consulta/dataconsulta";
 import InputConsulta from "@/components/consulta/inputconsulta";
 import InputFile from "@/components/consulta/inputfile";
 import SignosVitalesInfo from "@/components/consulta/signosvitales";
-
-import config from "@/components/localData/localdata";
 import InputDiagnostico from "@/components/consulta/inputDiagnostico";
 import InputExam from "@/components/consulta/inputExam";
-
 import Component from "@/components/consulta/inputCuerpo";
 import { useForm, FormProvider } from "react-hook-form";
 import { useAppSelector } from "@/redux/hooks";
@@ -26,7 +22,6 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-
 
 const DetallePaciente = (id) => {
   const [loading, setLoading] = useState(false);
@@ -39,52 +34,93 @@ const DetallePaciente = (id) => {
     medicalEventId: null
     });
   const [vitalSigns, setVitalSigns] = useState();
+  const [preconsultPhysical, setPreconsultPhysical] = useState();
   const [cardiovascularRisk, setCardiovascularRisk] = useState();
   const [surgicalRisk, setSurgicalRisk] = useState();
   const [hpGroup, setHpGroup] = useState();
   const [background, setBackground] = useState();
   const [diagnostic, setDiagnostic] = useState();
-  const [medicalIndications, setMedicalIndications] = useState();
-  const [drugPrescription, setDrugPrescription] = useState();
-  const [procedurePrescription, setProcedurePrescription] = useState();
-  const [terapy, setTerapy] = useState();
   const [selectedRisk, setSelectedRisk] = useState();
+  const [selectedRisk2, setSelectedRisk2] = useState();
   const [selectedGroup, setSelectedGroup] = useState();
-  
+
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const router = useRouter();
+  console.log(selectedGroup);
+  console.log(selectedRisk2);
+  console.log(selectedGroup);
   const onSubmit = (data) => {
     console.log(data);
-    console.log(selectedRisk);
-    console.log(physicalExamination);
     setCardiovascularRisk({
-      patientId: userId, // id del paciente
-      riskId: 1  //// id a actualizar el riesgo cardiovascular del catalogo  cardiovascular risk
-    })
+      patientId: Number(userId), 
+      riskId: selectedRisk
+    });
     setSurgicalRisk({
-      patientId: userId, // id del paciente
-      surgicalRiskId: 3 //// id a actualizar del riesgo quirurgico del catalogo cat surgycal risk 
+      patientId: Number(userId), 
+      surgicalRiskId: selectedRisk2
     })
     setHpGroup({
-      patientId: userId,  /// id del paciente 
-      hpGroupId: 3 //// id del grupo a actualizar --> obtenido del cat pulmonary hypertension group 
+      patientId: Number(userId), 
+      hpGroupId: selectedGroup
     })
     setBackground({
       id: patient?.backgrounds?.id || null,
-      allergicBackground: data["Alergias"],
-      familyBackground: data["Antecedentes familiares"],
-      medicalEvent: data["Anotaciones de la consulta"],
-      nonPathologicBackground: data["Antecedentes no patologicos"],
-      pathologicBackground: data["Antecedentes patologicos"],
-      pediatricBackground: data["Antecedentes de infancia"],
-      pharmacologicalBackground: data["Medicamentos actuales"],
-      surgicalBackground: data["Antecedentes quirúrgicos"],
-      vaccinationBackground: data["Vacunas"]
+      allergicBackground: data["Alergias"] === "" ? patient?.backgrounds?.allergicBackground : data["Alergias"],
+      familyBackground: data["Antecedentes familiares"] === "" ? patient?.backgrounds?.familyBackground : data["Antecedentes familiares"],
+      medicalEvent: data["Anotaciones de la consulta"] === "" ? patient?.backgrounds?.medicalEvent : data["Anotaciones de la consulta"],
+      nonPathologicBackground: data["Antecedentes no patologicos"] === "" ? patient?.backgrounds?.nonPathologicBackground : data["Antecedentes no patologicos"],
+      pathologicBackground: data["Antecedentes patologicos"] === "" ? patient?.backgrounds?.pathologicBackground : data["Antecedentes patologicos"],
+      pediatricBackground: data["Antecedentes de infancia"] === "" ? patient?.backgrounds?.pediatricBackground : data["Antecedentes de infancia"],
+      pharmacologicalBackground: data["Medicamentos actuales"] === "" ? patient?.backgrounds?.pharmacologicalBackground : data["Medicamentos actuales"],
+      surgicalBackground: data["Antecedentes quirúrgicos"] === "" ? patient?.backgrounds?.surgicalBackground : data["Antecedentes quirúrgicos"],
+      vaccinationBackground: data["Vacunas"] === "" ? patient?.backgrounds?.vaccinationBackground : data["Vacunas"]
     })
-
+    setPreconsultPhysical({
+    preconsultationId:preconsult.id,
+    patient: Number(userId),
+    appointmentSchedule: 4,
+    bodyPain: false,
+    abnormalGlycemia: data["glucemiaElevada"] === "" ? preconsult?.abnormalGlycemia : data["glucemiaElevada"],
+    lastAbnormalGlycemia: [
+        526,
+        589,
+        600
+    ],
+    physicalExamination: 1,
+    laboratoryResults: [
+        "https:cloudinary1",
+        "https:cloudinary2"
+    ],
+    laboratoryResultsDescription: [
+        "description1",
+        "description2"
+    ],
+    electrocardiogram: "https:cloudinary",
+    electrocardiogramDescription: "decription electrocardiogram",
+    rxThorax: "https:cloudinary",
+    echocardiogram: "https:cloudinary",
+    walkTest: "https:cloudinary",
+    respiratoryFunctional: "https:cloudinary",
+    tomographies: "https:cloudinary",
+    rightHeartCatheterization: "https:cloudinary",
+    ccg: "https:cloudinary",
+    resonance: "https:cloudinary",
+    leftHeartCatheterization: "https:cloudinary",
+    otherStudies: [
+        "other study 1",
+        "other study 2"
+    ],
+    consultationReason: data["Motivo de consulta"] === "" ? preconsult?.consultationReason : data["Motivo de consulta"],
+    importantSymptoms: data["Sintomas importantes"] === "" ? preconsult?.importantSymptoms : data["Sintomas importantes"],
+    currentMedications: [
+        "medicamento1",
+        "medicamento2",
+        "medicamento3"
+    ]
+    })
     setVitalSigns([{
-      patientId: userId, // id del paciente
+      patientId: Number(userId), // id del paciente
       measureType: 7, // id del parametro "frecuencia cardiaca" en el catalogo vital signs
       measure: data["Presión Arterial Diastólica"], // medida introducida por el médico o paciente,
       schedulingId:null , /// id del scheduling si se crea en preconsulta
@@ -126,54 +162,34 @@ const DetallePaciente = (id) => {
       medicalEventId:4 
     }])
     setPhysicalExamination({
-    physicalSubsystemId:2 , /// data["selectSubsistema"],
+    physicalSubsystemId:2 , 
     description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-    medicalEventId: 5 /// id del medical event
+    medicalEventId: 5 
     })
     setDiagnostic({
-    patientId: userId,  /// id del paciente 
-    diseaseId:3,  /// id de la enferemedad ---> (hipertension pulmonar) referenciada catalogo disease
-    diagnosticNotes: data["Diagnostico"],
-    medicalEventId:5
-    })
-    setMedicalIndications({
-    patientId: userId,
-    description: data["Tratamientos no farmacológicos"],
-    medicalEventId:5
-    })
-    setProcedurePrescription({
-    patientId: userId,
-    medicalProcedureId: 4,
-    medicalEvent: 5
-    //diagnosticNotes: data["Procedimientos"],
-    })
-    setDrugPrescription({
-    patientId: userId,  /// ID del paciente
-    drugId: 1, // id del medicamento ---> (Losartan) referenciado en el catalogo drug 
-    prescribedDose: data["Medicamentos"],
-    quantity: 60, // cantidad de tabletas etc
-    medicalEventId : 5
-    })
-    setTerapy({
-    patientId: userId,
-    therapyId: 2,
-    description: data["Conducta terapeutica"],
-    quantity: 10,
-    medicalEvent: 2
-    })
-
+      patientId: Number(userId), 
+      diseaseId : 3,
+      diagnosticNotes: data["Diagnostico"],
+      medicalEventId : 5,
+      drugId: 1,  
+      prescribedDose: data["Medicamentos"],
+      quantityDrug: 60,
+      medicalProcedureId: 4,
+      //diagnosticNotes: data["Procedimientos"],
+      therapyId: 2,
+      descriptionTherapy:data["Conducta terapeutica"],
+      quantityTherapy: 10,
+      descriptionIndication: data["Tratamientos no farmacológicos"]
+      
+    }
+    )
   }
-  
-  console.log(background);
-  console.log(patient);
-  console.log(preconsult);
+
   useEffect(() => {
-    const headers = config.headers;
     const token = Cookies.get("a");
     const fetchData = async () => {
 
       try {
-
         const [response1, response2, response3] = await Promise.all([
           ApiSegimed.get(`/patient-details?id=${userId}`, {headers: { token: token },}),  
           ApiSegimed.get(`/get-all-pateint-preconsultation?patientId=${userId}`,{headers: { token: token },}),
@@ -194,39 +210,39 @@ const DetallePaciente = (id) => {
     const token = Cookies.get("a");
     setLoading(true);
     if(patient?.backgrounds?.length === 0){
-      const data = await ApiSegimed.post(`/backgrounds/update-backgrounds`,{background}, {headers: { token: token },})
+      const data = await ApiSegimed.post(`/backgrounds/update-backgrounds`,background, {headers: { token: token },})
       console.log(data);
     }
     else{
-      const data = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`,{background}, {headers: { token: token },})
+      const data = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`,background, {headers: { token: token },})
       console.log(data);
     }
-    
+    console.log(cardiovascularRisk);
     if(patient?.patientCardiovascularRisks[0]?.length === 0){
-      const data = await ApiSegimed.post(`/patient-new-cardiovascular-risk`,{cardiovascularRisk}, {headers: { token: token },})
+      const data = await ApiSegimed.post(`/patient-new-cardiovascular-risk`,cardiovascularRisk, {headers: { token: token },})
       console.log(data);
     }
     else{
-      const data = await ApiSegimed.patch(`/patient-update-cardiovascular-risk`,{cardiovascularRisk}, {headers: { token: token },})
+      const data = await ApiSegimed.patch(`/patient-update-cardiovascular-risk`,cardiovascularRisk, {headers: { token: token },})
       console.log(data);
     }
 
     if(patient?.patientSurgicalRisks[0]?.length === 0){
-      const data = await ApiSegimed.post(`/patient-new-surgical-risk`,{surgicalRisk}, {headers: { token: token },})
+      const data = await ApiSegimed.post(`/patient-new-surgical-risk`,surgicalRisk, {headers: { token: token },})
       console.log(data);
     }
     else{
-      const data = await ApiSegimed.patch(`/patient-update-surgical-risk`,{surgicalRisk}, {headers: { token: token },})
+      const data = await ApiSegimed.patch(`/patient-update-surgical-risk`,surgicalRisk, {headers: { token: token },})
       console.log(data);
     }
-
+    console.log(hpGroup);
     if(patient?.patientPulmonaryHypertensionGroups[0]?.length === 0){
-      const data = await ApiSegimed.post(`/patient-new-hp-group`,{hpGroup}, {headers: { token: token },})
+      const data = await ApiSegimed.post(`/patient-new-hp-group`,hpGroup, {headers: { token: token },})
       console.log(data);
     }
     else{
-      const data = await ApiSegimed.patch(`/patient-update-hp-group`,{hpGroup}, {headers: { token: token },})
-      console.log(data);
+      const data = await ApiSegimed.patch(`/patient-update-hp-group`,hpGroup, {headers: { token: token },})
+      console.log(data.data);
     }
 
     /*if(patient.vitalSigns.length === 0){
@@ -236,35 +252,32 @@ const DetallePaciente = (id) => {
     else{
       const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
       console.log(data);
-    }*/
-    /*let response1;
+    }
+
+    let response1;
     if(physicalExamination?.description === ""){
       response1 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
     }else {
     response1 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`,physicalExamination, {headers: { token: token },})
     }
-    console.log(response1);*/
+    console.log(response1);
 
-
-
+    if(preconsult?.length === 0){
+      const data = await ApiSegimed.post(`/pre-consultation`,preconsultPhysical, {headers: { token: token },})
+      console.log(data);
+    }
+    else{
+      const data = await ApiSegimed.patch(`/update-pre-consultation`,preconsultPhysical, {headers: { token: token },})
+      console.log(data.data);
+    }
+*/
     
     const response2 = await ApiSegimed.post(`/patient-diagnostic`,diagnostic, {headers: { token: token },})
     console.log(response2);
 
-    const response3 = await ApiSegimed.post(`/procedure/create-procedure-prescription`,procedurePrescription, {headers: { token: token },})
-    console.log(response3); 
-
-    const response4 = await ApiSegimed.post(`/drug-prescription/create-drug-prescription`,drugPrescription, {headers: { token: token },})
-    console.log(response4); 
-
-    //const response5 = await ApiSegimed.post(`/therapy/create-therapy-prescription`,terapy, {headers: { token: token },})
-    //console.log(response5); tiene un error la ruta
-
-    const response6 = await ApiSegimed.post(`/medical-indications/new-indication`,medicalIndications, {headers: { token: token },})
-    console.log(response6);  
 
     //pautas de alarma
-    if(/*response1.status === 200 && */ response2.status === 200 && response3.status === 200 && response4.status === 200 && response6.status === 200){
+    if(/*response1.status === 200 && */ response2.status === 200 ){
       setLoading(false);
       Swal.fire({
         icon: "success",
@@ -306,7 +319,7 @@ const DetallePaciente = (id) => {
         </div>
         {loading===false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
-          <Consulta title={"Datos del paciente"} paciente={patient} />
+          <Consulta title={"Datos del paciente"} paciente={patient}/>
           <InputConsulta
             title={"Antecedentes"}
             risk={["Riesgo cardiovascular"]}
@@ -327,6 +340,7 @@ const DetallePaciente = (id) => {
             ]}
             paciente={patient}
             onRiskChange={setSelectedRisk}
+            onRiskChange2={setSelectedRisk2}
             onGroupChange={setSelectedGroup}
           />
           <InputConsulta
