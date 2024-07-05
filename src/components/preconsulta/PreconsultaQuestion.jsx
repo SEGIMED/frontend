@@ -8,21 +8,41 @@ import IconMalFace from "./IconMalFace";
 import IconRegularFace from "./IconRegularFace";
 import IconNormalFace from "./IconNormalFace";
 import IconBienFace from "./IconBienFace";
+import { useState } from "react";
+import IconCircle from "../icons/IconCircle";
 
-export default function PreconsultaQuestion({
-  section,
-  sectionIndex,
-  onQuestionChange,
-  onSubquestionChange,
-}) {
-  const handleQuestionFieldChange = (field, value) => {
-    onQuestionChange(sectionIndex, field, value);
-  };
+const SimpleQuestionBox = ({ question, title, index, selectedOption, onQuestionChange }) => {
+  return (
+    <div className="flex md:flex-row px-4 md:pl-20 py-4 flex-col">
+      <div className="self-start flex md:flex-row w-full md:w-[40%] gap-2 items-center">
+        <IconCircle />
+        <p className="text-[#686868] font-medium text-base leading-4">
+          {title}
+        </p>
+      </div>
+      <div className="grid grid-cols-2 p-4 w-[100%] md:w-[100%]  md:p-0 gap-4 items-center">
+        <div key={index} className="flex gap-2 md:w-[60%] w-[90%]">
+          <input
+            type="checkbox"
+            checked={selectedOption === index}
+            onChange={() => onQuestionChange(question, index)}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
 
+function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive, onSubquestionChange, onQuestionChange, onDescriptionChange }) {
+  const [currentDescription, setCurrentDescription] = useState('');
+
+  const handleChangeDescription = (e) => {
+    setCurrentDescription(e.target.value);
+    onDescriptionChange(question, e.target.value);
+  }
   const handleSubquestionFieldChange = (subquestionIndex, field, value) => {
     onSubquestionChange(sectionIndex, subquestionIndex, field, value);
   };
-
   const iconMap = {
     Mal: <IconMalFace className="w-8" />,
     Regular: <IconRegularFace className="w-8" />,
@@ -32,39 +52,34 @@ export default function PreconsultaQuestion({
 
   return (
     <div
-      className={`flex ${
-        section.showRowOptions || section.showSlider ? "flex-row" : "flex-col"
-      }`}>
+      className={`flex ${section.showRowOptions || section.showSlider ? "flex-row" : "flex-col"
+        }`}>
       <div className="flex flex-col w-[100%] justify-between md:flex-row md:gap-2 px-6 md:px-8 md:py-2 border-b-[#cecece]">
         <label className="text-start py-4 md:py-0 w-full md:w-[50%] text-[#686868] font-bold text-lg leading-4 flex gap-2 items-center">
           <IconFatArrow /> {section.title}
         </label>
-        <div
-          className={`py-2 md:py-0 flex justify-evenly md:gap-3 ${
-            section.showRowOptions || section.showSlider ? "hidden" : "block"
-          }`}>
+        {section.binaryOptions && <div
+          className={`py-2 md:py-0 flex justify-evenly md:gap-3 ${section.showRowOptions || section.showSlider ? "hidden" : "block"
+            }`}>
           <BotonPreconsulta
             label="Sí"
-            onClick={() => handleQuestionFieldChange("active", true)}
+            onClick={() => onQuestionActive(question, true)}
             active={section.active}
           />
           <BotonPreconsulta
             label="No"
-            onClick={() => handleQuestionFieldChange("active", false)}
+            onClick={() => onQuestionActive(question, false)}
             active={!section.active}
           />
-        </div>
+        </div>}
         {section.showRowOptions && (
           <div className="md:flex grid grid-cols-2 md:flex-row md:justify-between w-full md:w-[60%] py-1">
             {section.options?.map((option, index) => (
               <button
                 key={index}
-                className={`flex flex-row gap-3 items-center px-4 py-4 md:py-2 border-1 rounded-xl shadow-md ${
-                  section.selectedOption === index && "bg-green-300"
-                }`}
-                onClick={() =>
-                  handleQuestionFieldChange("selectedOption", index)
-                }>
+                className={`flex flex-row gap-3 items-center px-4 py-4 md:py-2 border-1 rounded-xl shadow-md ${section.selectedOption === index && "bg-green-300"
+                  }`}
+                onClick={() => onQuestionChange(question, index)}>
                 <p className="text-[#686868] font-medium text-base md:text-lg leading-4">
                   {option.label}
                 </p>
@@ -100,9 +115,7 @@ export default function PreconsultaQuestion({
               defaultValue={section.selectedOption || 1}
               className="max-w-md"
               showTooltip={true}
-              onChange={(value) =>
-                handleQuestionFieldChange("selectedOption", value)
-              }
+              onChange={(value) => onQuestionChange(question, value)}
             />
             <span className="h-12">
               <IconDolor />
@@ -110,29 +123,40 @@ export default function PreconsultaQuestion({
           </div>
         )}
       </div>
-      {section.active &&
-        !section.showTextInput &&
-        section.subquestions?.map((subquestion, subquestionIndex) => (
+      {(section.active && section.subquestions) &&
+        Object.keys(section.subquestions)?.map((subquestion, index) => (
           <PreconsultaSubquestion
-            key={subquestionIndex}
+            key={index}
+            question={question}
             subquestion={subquestion}
-            subquestionIndex={subquestionIndex}
+            subquestionIndex={index}
             sectionIndex={sectionIndex}
-            section={section}
+            section={section.subquestions[subquestion]}
             onSubquestionChange={onSubquestionChange}
-            onQuestionChange={onQuestionChange}
           />
         ))}
-      {section.showTextInput && section.active && (
+      {(section.active && !section.binaryOptions && section.options.length > 0) &&
+        section.options.map((option, index) => (
+          <SimpleQuestionBox
+            key={index}
+            index={index}
+            question={question}
+            title={option.label}
+            selectedOption={section.selectedOption}
+            onQuestionChange={onQuestionChange} />
+        ))}
+      {section.active && section.showTextInput && (
         <div className="w-full flex justify-center">
           <textarea
             className="w-[96%] p-2 h-24 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg outline-[#a8a8a8]"
-            placeholder={`Ingrese aquí sus anotaciones sobre el`}
-            value={section.text || ""}
-            onChange={(e) => handleQuestionFieldChange("text", e.target.value)}
+            placeholder={`Ingrese aquí una descripción`}
+            value={currentDescription}
+            onChange={handleChangeDescription}
           />
         </div>
       )}
     </div>
   );
 }
+
+export default PreconsultaQuestion;

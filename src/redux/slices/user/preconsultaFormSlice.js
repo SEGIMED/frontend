@@ -2,20 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   formData: {
-    questions: [
-      {
+    questions: {
+      lackOfAir: {
         title: "¿Tiene falta de aire (Disnea)?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
-        field: "lackOfAir",
-        subquestions: [
-          //   {
-          //     title: "Igual que siempre",
-          //     options: [],
-          //     selectedOption: null,
-          //     field: "lackOfAirAsAlways",
-          //   },
-          {
+        description: '',
+        subquestions: {
+          lackOfAirIncremented: {
             title: "Se ha incrementado en las últimas:",
             options: [
               { label: "Horas" },
@@ -23,263 +18,273 @@ const initialState = {
               { label: "Semanas" },
             ],
             selectedOption: null,
-            field: "lackOfAirIncremented",
           },
-          {
+          lackOfAirClasification: {
             title: "Califique su falta de aire",
             options: [
               {
-                label:
-                  "Puedo caminar a paso rápido más de 10 cuadras sin parar.",
+                label: "Puedo caminar a paso rápido más de 10 cuadras sin parar.",
               },
               {
-                label:
-                  "Puedo caminar a paso rápido menos de 5 cuadras sin parar.",
+                label: "Puedo caminar a paso rápido menos de 5 cuadras sin parar.",
               },
               {
-                label:
-                  "No puedo caminar más de 3 cuadras, solo realizo tareas domésticas, uso oxígeno eventualmente.",
+                label: "No puedo caminar más de 3 cuadras, solo realizo tareas domésticas, uso oxígeno eventualmente.",
               },
               {
-                label:
-                  "No puedo caminar ni una cuadra, tampoco realizar tareas domésticas con normalidad, me hace falta el aire aunque esté en reposo, uso oxígeno todo el tiempo.",
+                label: "No puedo caminar ni una cuadra, tampoco realizar tareas domésticas con normalidad, me hace falta el aire aunque esté en reposo, uso oxígeno todo el tiempo.",
               },
             ],
             selectedOption: null,
             orientation: "column",
-            field: "lackOfAirClasification",
           },
-        ],
+        },
       },
-      {
+      chestPainAtRest: {
         title: "¿Tiene dolor de pecho en reposo?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
-        field: "chestPainAtRest",
-        subquestions: [],
+        description: '',
       },
-      {
+      chestPainOnExertion: {
         title: "¿Tiene dolor de pecho al hacer esfuerzos físicos?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
-        field: "chestPainOnExertion",
-        subquestions: [
-          {
-            title: "Con poco esfuerzo físico",
+        description: '',
+        subquestions: {
+          chestPainOnExertionAmount: {
+            options: [
+              { label: "Con poco esfuerzo físico" },
+              { label: "Con esfuerzo físico moderado" },
+              { label: "Con esfuerzo físico intenso" },
+            ],
             selectedOption: null,
-            field: "chestPainOnExertionAmount",
-          },
-          {
-            title: "Con esfuerzo físico moderado",
-            selectedOption: null,
-            field: "chestPainOnExertionAmount",
-          },
-          {
-            title: "Con esfuerzo físico intenso",
-            selectedOption: null,
-            field: "chestPainOnExertionAmount",
-          },
-        ],
+          }
+        }
       },
-      {
+      edemaPresence: {
         title: "¿Ha notado edemas (hinchazón) o aumento del edema previo?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
-        field: "edemaPresence",
-        subquestions: [
-          {
-            title: "Hinchazón en los pies",
+        description: '',
+        subquestions: {
+          edemaPresenceDescription: {
+            options: [
+              { label: "Hinchazón en los pies" },
+              { label: "Hinchazón por debajo de las rodillas" },
+              { label: "Hinchazón de las rodillas a la cadera" },
+              { label: "Hinchazón general" },
+            ],
             selectedOption: null,
-            field: "edemaPresenceDescription",
-          },
-          {
-            title: "Hinchazón por debajo de las rodillas",
-            selectedOption: null,
-            field: "edemaPresenceDescription",
-          },
-          {
-            title: "Hinchazón de las rodillas a la cadera",
-            selectedOption: null,
-            field: "edemaPresenceDescription",
-          },
-          {
-            title: "Hinchazón general",
-            selectedOption: null,
-            field: "edemaPresenceDescription",
-          },
-        ],
+          }
+        }
       },
-      {
+      feelings: {
         title: "¿Cómo se encuentra el día de hoy?",
         active: false,
+        binaryOptions: false,
         selectedOption: null,
         showRowOptions: true,
+        description: '',
         options: [
           { label: "Mal" },
           { label: "Regular" },
           { label: "Normal" },
           { label: "Bien" },
         ],
-        field: "feelings",
       },
-      {
+      healthChanges: {
         title: "¿Ha notado algún cambio en su salud?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
         showTextInput: true,
-        field: "healthChanges",
-        subquestions: [
-          {
-            selectedOption: null,
-            field: "healthChangesDescription",
-          },
-        ],
+        description: '',
+        // healthChangesDescription: ''
       },
-      {
+      healthWorsened: {
         title: "Siente que su salud se ha empeorado en las últimas:",
         active: false,
+        binaryOptions: false,
         selectedOption: null,
         showRowOptions: true,
+        description: '',
         options: [
           { label: "Horas" },
           { label: "Días" },
           { label: "Semanas" },
           { label: "No empeoró" },
         ],
-        field: "healthWorsened",
       },
-      {
+      bodyPain: {
         title: "¿Tiene alguna dolencia en su cuerpo?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
-        field: "bodyPain",
+        description: '',
       },
-      {
+      mentalHealthAffected: {
         title: "¿Su salud mental está afectada?",
         active: false,
+        binaryOptions: true,
         selectedOption: null,
         showTextInput: true,
-        field: "mentalHealthAffected",
-        subquestions: [
-          {
-            selectedOption: null,
-            field: "mentalHealthAffectedDescription",
-          },
-        ],
+        description: '',
+        // mentalHealthAffectedDescription: ''
       },
-      {
+      energyStatus: {
         title: "Califique su estado de energía - Fatiga",
         active: false,
+        binaryOptions: false,
         selectedOption: null,
         showSlider: true,
-        field: "energyStatus",
+        description: '',
       },
-      {
+      feed: {
         title: "Califique su alimentación",
         active: false,
+        binaryOptions: false,
         selectedOption: null,
         showRowOptions: true,
+        description: '',
         options: [
           { label: "Nada saludable" },
           { label: "Poco saludable" },
           { label: "Saludable" },
           { label: "Muy saludable" },
         ],
-        field: "feed",
       },
-      {
+      hydrationStatus: {
         title: "Califique su hidratación diaria (todos los líquidos ingeridos)",
-        active: false,
+        active: true,
+        binaryOptions: false,
         selectedOption: null,
-        subquestions: [
-          {
-            title: "Poca ingesta < de 1.5 litros (menos de 5 vasos aprox.) ",
-            selectedOption: null,
-            field: "hydrationStatus",
-          },
-          {
-            title: "Normal 1.5 a 2 litros (5 a 8 vasos aprox.)",
-            selectedOption: null,
-            field: "hydrationStatus",
-          },
-          {
-            title: "Mucha ingesta > a 2.5 litros (> de 8 vasos aprox.)",
-            selectedOption: null,
-            field: "hydrationStatus",
-          },
+        description: '',
+        options: [
+          { label: "Poca ingesta < de 1.5 litros (menos de 5 vasos aprox.) " },
+          { label: "Normal 1.5 a 2 litros (5 a 8 vasos aprox.)" },
+          { label: "Mucha ingesta > a 2.5 litros (> de 8 vasos aprox.)" },
         ],
-        field: "hydrationStatus",
       },
-      {
+      urineStatus: {
         title: "Califique su estado de orina (diuresis)",
-        active: false,
+        active: true,
+        binaryOptions: false,
         selectedOption: null,
-        subquestions: [
-          {
-            title: "Orino normal (entre 500 ml y 1 litro al día)",
-            selectedOption: null,
-            field: "urineStatus",
-          },
-          {
-            title:
-              "He notado una disminución del 50% o menos de 1 litro al día",
-            selectedOption: null,
-            field: "urineStatus",
-          },
-          {
-            title: "Orino poco (menos de medio litro o 500 ml al día)",
-            selectedOption: null,
-            field: "urineStatus",
-          },
-          {
-            title: "Casi nada (menos de 1 vaso al día)",
-            selectedOption: null,
-            field: "urineStatus",
-          },
-          {
-            title: "Nada",
-            selectedOption: null,
-            field: "urineStatus",
-          },
+        description: '',
+        options: [
+          { label: "Orino normal (entre 500 ml y 1 litro al día)" },
+          { label: "He notado una disminución del 50% o menos de 1 litro al día" },
+          { label: "Orino poco (menos de medio litro o 500 ml al día)" },
+          { label: "Casi nada (menos de 1 vaso al día)" },
+          { label: "Nada" },
         ],
-        field: "urineStatus",
       },
-      {
+      exerciseStatus: {
         title: "Califique su estado de ejercicio físico",
-        active: false,
+        active: true,
+        binaryOptions: false,
         selectedOption: null,
-        subquestions: [
-          {
-            title:
-              "Ninguno: no puedo, no quiero, no recomendado por el médico, contraindicado.",
-            selectedOption: null,
-            field: "exerciseStatus",
-          },
-          {
-            title:
-              "Bajo: camino poco, realizo tareas domésticas, trabajo con poca actividad física. Camino menos de 10 mil pasos al día o menos de 7.5 km día.",
-            selectedOption: null,
-            field: "exerciseStatus",
-          },
-          {
-            title:
-              "Moderado: Camino más de 10 mil pasos o 7.5 km al día. Al menos 150 minutos de actividad física a la semana (caminar, trotar, nadar, yoga, baile, pesas, bicicleta, etc.)",
-            selectedOption: null,
-            field: "exerciseStatus",
-          },
-          {
-            title:
-              "Intenso: Más de 150 minutos a la semana de actividad intensa o más de 300 minutos de actividad moderada. (Deportista aficionado, bien entrenado o competidor)",
-            selectedOption: null,
-            field: "exerciseStatus",
-          },
+        description: '',
+        options: [
+          { label: "Ninguno: no puedo, no quiero, no recomendado por el médico, contraindicado." },
+          { label: "Bajo: camino poco, realizo tareas domésticas, trabajo con poca actividad física. Camino menos de 10 mil pasos al día o menos de 7.5 km día." },
+          { label: "Moderado: Camino más de 10 mil pasos o 7.5 km al día. Al menos 150 minutos de actividad física a la semana (caminar, trotar, nadar, yoga, baile, pesas, bicicleta, etc.)" },
+          { label: "Intenso: Más de 150 minutos a la semana de actividad intensa o más de 300 minutos de actividad moderada. (Deportista aficionado, bien entrenado o competidor)" },
         ],
-        field: "exerciseStatus",
       },
-
-      // Agrega más campos aquí según sea necesario
-    ],
-    vitalSigns: [],
+    },
+    vitalSigns: {
+      height: {
+        cat: "antrophometric",
+        id: 4,
+        key: "Talla",
+        label: "Estatura",
+        unit: "cm",
+        referenceValue: 180,
+      },
+      weight: {
+        cat: "antrophometric",
+        id: 5,
+        key: "Peso",
+        label: "Peso",
+        unit: "kg",
+        referenceValue: 76,
+      },
+      IMC: {
+        cat: "antrophometric",
+        key: "IMC",
+        id: 7,
+        label: "Índice de masa corporal",
+        unit: "kg/m2",
+        referenceValue: 24.69,
+      },
+      temperature: {
+        cat: "vitalSigns",
+        id: 1,
+        key: "Temperatura",
+        label: "Temperatura",
+        unit: "°C",
+        referenceValue: 37,
+      },
+      /* Abdominal_perimeter: {
+        cat: "antrophometric",
+        key: "Perimetro Abdominal",
+        label: "Perímetro abdominal",
+        unit: "cm",
+        referenceValue: "",
+      }, */
+      Heart_Rate: {
+        cat: "vitalSigns",
+        id: 7,
+        key: "Frecuencia Cardiaca",
+        label: "Frecuencia cardíaca",
+        unit: "lpm",
+        referenceValue: 80,
+      },
+      Systolic_Blood_Pressure: {
+        cat: "vitalSigns",
+        id: 2,
+        key: "Presion Arterial Sistolica",
+        label: "Presión arterial sistólica",
+        unit: "mmHg",
+        referenceValue: 120,
+      },
+      Diastolic_Blood_Pressure: {
+        cat: "vitalSigns",
+        id: 3,
+        key: "Presion Arterial Diastolica",
+        label: "Presión arterial diastólica",
+        unit: "mmHg",
+        referenceValue: 80,
+      },
+      Mean_arterial_pressure: {
+        cat: "vitalSigns",
+        key: "Presion Arterial Media",
+        label: "Presión arterial media",
+        unit: "mmHg",
+        referenceValue: "",
+      },
+      Breathing_frequency: {
+        cat: "vitalSigns",
+        id: 5,
+        key: "Frecuencia Respiratoria",
+        label: "Frecuencia respiratoria",
+        unit: "rpm",
+        referenceValue: 17,
+      },
+      Oxygen_saturation: {
+        cat: "vitalSigns",
+        id: 6,
+        key: "Saturacion de Oxigeno",
+        label: "Saturación de oxígeno",
+        unit: "%",
+        referenceValue: 80,
+      },
+    },
     bodySection: {
       selectedMuscles: [],
       isPain: false,
@@ -291,117 +296,17 @@ const initialState = {
       painFrequency: "",
       worstPain: "",
     },
-    estudios: {
-      abnormalGlycemia: {
-        title: 'Glicemia anormal',
-        file: '',
-        active: false,
-      },
-      lastAbnormalGlycemia: {
-        title: 'Última glicemia anormal',
-        file: '',
-        active: false,
-        selectedOption: [526, 589, 600]
-      },
-      physicalExamination: {
-        title: 'Examen físico',
-        file: '',
-        selectedOption: 1
-      },
-      laboratoryResults: {
-        title: 'Resultados de laboratorio',
-        file: '',
-        selectedOption: [
-          "https:cloudinary1",
-          "https:cloudinary2"
-        ],
-        laboratoryResultsDescription: {
-          title: 'Descripción resultados de laboratorio',
-          file: '',
-          selectedOption: [
-            "description1",
-            "description2"
-          ]
-        }
-      },
-      electrocardiogram: {
-        title: 'Electrocardiograma',
-        file: '',
-        selectedOption: "https:cloudinary",
-        electrocardiogramDescription: {
-          title: 'Descripción electrocardiograma',
-          file: '',
-          selectedOption: "decription electrocardiogram"
-        }
-      },
-      rxThorax: {
-        title: 'RX de Torax',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      echocardiogram: {
-        title: 'Ecocardiograma',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      walkTest: {
-        title: 'Test de caminata',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      respiratoryFunctional: {
-        title: 'Funcional respiratorio',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      tomographies: {
-        title: 'Tomografías',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      rightHeartCatheterization: {
-        title: 'Cateterismo cardiaco derecho',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      ccg: {
-        title: 'CCG (Coronariografia)',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      resonance: {
-        title: 'Resonancia',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      leftHeartCatheterization: {
-        title: 'Cateterismo cardiaco izquierdo',
-        file: '',
-        selectedOption: "https:cloudinary"
-      },
-      otherStudies: {
-        title: 'Otros estudios',
-        file: '',
-        selectedOption: [
-          "other study 1",
-          "other study 2"
-        ]
-      },
-      pendingStudies: {
-        title: 'Estudios pendientes',
-        file: '',
-        selectedOption: "No one is pending :) Good patient"
-      },
+    anamnesis: {
       consultationReason: {
-        title: 'Motivo de la consulta',
-        file: '',
-        selectedOption: "Dolor de cabeza :("
+        title: '¿Por qué solicitó la consulta?',
+        description: "Dolor de cabeza :("
       },
       importantSymptoms: {
         title: 'Síntomas importantes',
-        file: '',
-        selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
+        description: "Dolor de cabeza muy fuerte por 2 días :("
       },
+    },
+    tratamiento: {
       currentMedications: {
         title: 'Medicamentos actuales',
         file: '',
@@ -411,22 +316,6 @@ const initialState = {
           "medicamento3"
         ]
       },
-    },
-    anamnesis: {
-      consultationReason: {
-        title: '¿Por qué solicitó la consulta?',
-        selectedOption: "Dolor de cabeza :("
-      },
-      importantSymptoms: {
-        title: 'Síntomas importantes',
-        selectedOption: "Dolor de cabeza muy fuerte por 2 días :("
-      },
-    },
-    tratamiento: {
-      medicines: {
-        title: 'Medicamentos',
-        selectedOption: ''
-      }
     }
   },
 };
@@ -436,38 +325,48 @@ const preconsultaFormSlice = createSlice({
   initialState,
   reducers: {
     updateField(state, action) {
-      const { sectionIndex, field, value } = action.payload;
-      state.formData.questions[sectionIndex][field] = value;
+      const { key, field, value } = action.payload;
+      state.formData.questions[key][field] = value;
+    },
+
+    updateActive(state, action) {
+      const { question, active } = action.payload;
+      const currentSubquestions = state.formData.questions[question].subquestions;
+      if (!active && currentSubquestions) { // si decimos que no, entonces desactivamos y reseteamos los checkbox de las subpreguntas
+        state.formData.questions[question].active = active
+        Object.keys(currentSubquestions).map((subquestion, index) => {
+          state.formData.questions[question].subquestions[subquestion].selectedOption = null;
+        });
+      }
+      else state.formData.questions[question].active = active;
+    },
+    subquestionSelectedOption(state, action) {
+      const { question, subquestion, selectedOption } = action.payload;
+      state.formData.questions[question].subquestions[subquestion].selectedOption = selectedOption;
+    },
+    questionSelectedOption(state, action) {
+      const { question, selectedOption } = action.payload;
+      state.formData.questions[question].selectedOption = selectedOption;
+    },
+    updateDescription(state, action) {
+      const { question, description } = action.payload;
+      console.log({ question, description });
+      state.formData.questions[question].description = description;
+    },
+    updateVitalSign(state, action) {
+      const { vitalSign, value } = action.payload;
+      state.formData.vitalSigns[vitalSign].value = value;
+    },
+    updateAnamnesis(state, action) {
+      const { field, description } = action.payload;
+      console.log({ field, description });
+      state.formData.anamnesis[field].description = description;
     },
     updateSubquestion(state, action) {
       const { sectionIndex, subquestionIndex, field, value } = action.payload;
       state.formData.questions[sectionIndex].subquestions[subquestionIndex][
         field
       ] = value;
-    },
-    updateVitalSign(state, action) {
-      const { patientId, measureType, measure, schedulingId, key } =
-        action.payload;
-      const index = state.formData.vitalSigns.findIndex(
-        (sign) => sign.measureType === measureType
-      );
-      if (index !== -1) {
-        state.formData.vitalSigns[index] = {
-          patientId,
-          measureType,
-          measure,
-          schedulingId,
-          key,
-        };
-      } else {
-        state.formData.vitalSigns.push({
-          patientId,
-          measureType,
-          measure,
-          schedulingId,
-          key,
-        });
-      }
     },
     updateBodyField(state, action) {
       const { field, value } = action.payload;
@@ -488,8 +387,13 @@ const preconsultaFormSlice = createSlice({
 
 export const {
   updateField,
-  updateSubquestion,
+  updateActive,
+  subquestionSelectedOption,
+  questionSelectedOption,
+  updateDescription,
   updateVitalSign,
+  updateAnamnesis,
+  updateSubquestion,
   setFormData,
   resetForm,
   updateBodyField,

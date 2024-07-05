@@ -2,7 +2,6 @@
 
 import Elboton from "@/components/Buttons/Elboton";
 import InputDiagnostico from "@/components/consulta/inputDiagnostico";
-import InputConsulta from "@/components/consulta/inputconsulta";
 import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PreconsultaQuestion from "@/components/preconsulta/PreconsultaQuestion";
@@ -11,7 +10,12 @@ import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
-  updateField,
+  updateActive,
+  subquestionSelectedOption,
+  questionSelectedOption,
+  updateDescription,
+  updateVitalSign,
+  updateAnamnesis,
   updateFileUploaded,
   updateSubquestion,
 } from "@/redux/slices/user/preconsultaFormSlice";
@@ -21,6 +25,7 @@ import SignosVitales from "@/components/preconsulta/signosVitales";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import AnamnesisPreconsulta from "@/components/preconsulta/Anamnesis";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -28,157 +33,157 @@ export default function PreconsultaPte({ params }) {
   const token = Cookies.get('a');
   const patientId = Cookies.get('c');
   const [preConsultationQuestions, setPreConsultationQuestions] = useState(null);
-  const [estudios, setEstudios] = useState({});
+  const [tests, setTests] = useState({
+    abnormalGlycemia: {
+      title: 'Glicemia anormal',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    lastAbnormalGlycemia: {
+      title: 'Última glicemia anormal',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    physicalExamination: {
+      title: 'Examen físico',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    laboratoryResults: {
+      title: 'Resultados de laboratorio',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    electrocardiogram: {
+      title: 'Electrocardiograma',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    rxThorax: {
+      title: 'RX de Torax',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    echocardiogram: {
+      title: 'Ecocardiograma',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    walkTest: {
+      title: 'Test de caminata',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    respiratoryFunctional: {
+      title: 'Funcional respiratorio',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    tomographies: {
+      title: 'Tomografías',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    rightHeartCatheterization: {
+      title: 'Cateterismo cardiaco derecho',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    ccg: {
+      title: 'CCG (Coronariografia)',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    resonance: {
+      title: 'Resonancia',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    leftHeartCatheterization: {
+      title: 'Cateterismo cardiaco izquierdo',
+      file: "https:cloudinary",
+      description: '',
+      active: false,
+    },
+    otherStudies: {
+      title: 'Otros estudios',
+      description: ''
+    },
+    pendingStudies: {
+      title: 'Estudios pendientes',
+      description: "No one is pending :) Good patient"
+    },
+  },);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-  console.log(formData);
 
-  const handleQuestionChange = (sectionIndex, field, value) => {
-    dispatch(updateField({ sectionIndex, field, value }));
-  };
-  // console.log(useAppSelector((state) => state.preconsultaForm));
-  const handleSubquestionChange = (
-    sectionIndex,
-    subquestionIndex,
-    field,
-    value
-  ) => {
-    dispatch(
-      updateSubquestion({ sectionIndex, subquestionIndex, field, value })
-    );
+  const handleQuestionActive = (question, active) => {
+    dispatch(updateActive({ question, active })); // activamos o desactivamos las subpreguntas
   };
 
-  const handleUploadFile = (field, file) => {
-    const studies = estudios;
-    setEstudios({ ...studies, [field]: file });
-    console.log({ ...studies, [field]: file });
+  const handleSubquestionOption = (question, subquestion, selectedOption) => {
+    dispatch(subquestionSelectedOption({ question, subquestion, selectedOption })); // guardamos la opción seleccionada de la subpregunta
+  };
+
+  const handleQuestionOption = (question, selectedOption) => {
+    dispatch(questionSelectedOption({ question, selectedOption })); // guardamos la opción seleccionada
+  };
+
+  const handleDescription = (question, description) => {
+    dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
+  };
+
+  const handleVitalSign = (vitalSign, value) => {
+    dispatch(updateVitalSign({ vitalSign, value })); // actualizamos los signos vitales en el estado global
+  };
+
+  const handleAnamnesis = (field, description) => {
+    dispatch(updateAnamnesis({ field, description })); // actualizamos la descripción de la anamnesis en el estado global
+  };
+
+  const handleUploadTestFile = (test, file) => {
+    // almacenamos los archivos subidos, en un estado local ya que en Redux no son compatible
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], file: file } });
   }
 
+  const handleTestDescription = (test, testDescription) => {
+    // almacenamos la descripción del estudio
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], description: testDescription } });
+  };
+
   const methods = useForm();
-  // function transformFormData(formData) {
-  //   const transformedData = {
-  //     patient: 8, // Presumed static value; replace with dynamic data if necessary
-  //     appointmentSchedule: 4, // Presumed static value; replace as needed
-  //   };
-
-  //   // Iterate through the questions array within the formData object
-  //   formData.questions.forEach((question) => {
-  //     // Handle the main question fields based on 'active' status
-  //     if (question.field !== undefined) {
-  //       if (question.active && question.selectedOption !== null) {
-  //         transformedData[question.field] =
-  //           question.selectedOption === 0 ? false : true;
-  //       } else if (question.active && question.selectedOption === null) {
-  //         transformedData[question.field] = true;
-  //       } else {
-  //         transformedData[question.field] = false;
-  //       }
-  //     }
-
-  //     // Handle subquestions if any
-  //     question.subquestions?.forEach((subquestion) => {
-  //       if (subquestion.field !== undefined) {
-  //         if (question.active && subquestion.selectedOption !== null) {
-  //           // Assume that the subquestion's 'selectedOption' directly gives us the needed index or boolean value
-  //           transformedData[subquestion.field] = subquestion.selectedOption;
-  //         } else {
-  //           transformedData[subquestion.field] = false; // Set to false if parent question is not active or no option selected
-  //         }
-  //       }
-  //     });
-  //   });
-
-  //   // Return the transformed data which now includes fields set based on 'active' status and selected options
-  //   return transformedData;
-  // }
-  // const handleSelectOption = (index) => {
-  //   const newQuestionsData = [...questionsData];
-  //   newQuestionsData[index].selectedOption =
-  //     !newQuestionsData[index].selectedOption;
-  //   setQuestionsData(newQuestionsData);
-  // };
-
-  // const handleShowOptions = (title, value) => {
-  //   const newQuestionsData = [...questionsData];
-  //   const index = newQuestionsData.findIndex(
-  //     (question) => question.title === title
-  //   );
-  //   newQuestionsData[index].showOptions = value;
-  //   setQuestionsData(newQuestionsData);
-  // };
 
   const handleSubmit = async (event) => {
+    console.log({ ...formData, tests });
     event.preventDefault();
-    // Aquí puedes manejar el envío del formulario, por ejemplo, enviando los datos a una API
     try {
       if (!formData || !preConsultationQuestions) { // si esque no se cargaron las preguntas del formulario o el paciente no seleccionó nada
         console.error('No form data to submit');
         return;
       }
-      const formDataBody = {
-        patient: patientId,
-        appointmentSchedule: scheduleId,
-        // Questions
-        lackOfAir: preConsultationQuestions.lackOfAir.active,
-        lackOfAirAsAlways: false, // quedó obsoleto
-        lackOfAirIncremented: preConsultationQuestions.lackOfAir.subquestions[0].selectedOption,
-        lackOfAirClasification: preConsultationQuestions.lackOfAir.subquestions[1].selectedOption,
-        chestPainAtRest: preConsultationQuestions.chestPainAtRest.active,
-        chestPainOnExertion: preConsultationQuestions.chestPainOnExertion.active,
-        chestPainOnExertionAmount: preConsultationQuestions.chestPainOnExertion.selectedOption,
-        edemaPresence: preConsultationQuestions.edemaPresence.active,
-        edemaPresenceDescription: preConsultationQuestions.edemaPresence.selectedOption,
-        feelings: preConsultationQuestions.feelings.selectedOption,
-        healthChanges: preConsultationQuestions.healthChanges.active,
-        healthChangesDescription: preConsultationQuestions.healthChanges.text,
-        healthWorsened: preConsultationQuestions.healthWorsened.selectedOption,
-        bodyPain: preConsultationQuestions.bodyPain.active,
-        mentalHealthAffected: preConsultationQuestions.mentalHealthAffected.active,
-        mentalHealthAffectedDescription: preConsultationQuestions.mentalHealthAffected.text,
-        energyStatus: preConsultationQuestions.energyStatus.selectedOption,
-        feed: preConsultationQuestions.feed.selectedOption,
-        hydrationStatus: preConsultationQuestions.hydrationStatus.selectedOption,
-        urineStatus: preConsultationQuestions.urineStatus.selectedOption,
-        exerciseStatus: preConsultationQuestions.exerciseStatus.selectedOption,
-        abnormalGlycemia: false, // pendiente
-        lastAbnormalGlycemia: [526, 589, 600],
-        physicalExamination: 1,
-        laboratoryResults: [
-          "https:cloudinary1",
-          "https:cloudinary2"],
-        laboratoryResultsDescription: [
-          "description1",
-          "description2"],
-        electrocardiogram: "https:cloudinary",
-        electrocardiogramDescription: "decription electrocardiogram",
-        rxThorax: "https:cloudinary",
-        echocardiogram: "https:cloudinary",
-        walkTest: "https:cloudinary",
-        respiratoryFunctional: "https:cloudinary",
-        tomographies: "https:cloudinary",
-        rightHeartCatheterization: "https:cloudinary",
-        ccg: "https:cloudinary",
-        resonance: "https:cloudinary",
-        leftHeartCatheterization: "https:cloudinary",
-        otherStudies: [
-          "other study 1",
-          "other study 2"
-        ],
-        pendingStudies: "No one is pending :) Good patient",
-        consultationReason: "Dolor de cabeza :(",
-        importantSymptoms: "Dolor de cabeza muy fuerte por 2 días :(",
-        currentMedications: [
-          "medicamento1",
-          "medicamento2",
-          "medicamento3"
-        ],
-      }
-      console.log(formDataBody);
-      /* const response = await ApiSegimed.post(`/pre-consultation`, formDataBody, {
+      const response = await ApiSegimed.post(`/pre-consultation`, { ...formData, tests }, {
         headers: {
           token: token,
           'Content-Type': 'application/json'
         }
-      }); */
+      });
+      if (response) {
+        console.log(response);
+      }
     } catch (error) {
       console.error('Error fetching data', error);
     }
@@ -199,20 +204,12 @@ export default function PreconsultaPte({ params }) {
         console.error('Error fetching data', error);
       }
     }
-    const questionList = () => {
-      let object = {};
-      formData?.questions.forEach(question => {
-        object = { ...object, [question.field]: question };
-      });
-      setPreConsultationQuestions(object);
-    }
-    questionList();
     // getPreConsultation();
   }, []);
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-[50%]">
+      <div className="flex flex-col h-[50%] gap-10">
         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] ">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
@@ -229,37 +226,43 @@ export default function PreconsultaPte({ params }) {
             </p>
           </div>
         </div>
-        {formData.questions.map((section, sectionIndex) => (
+        {Object.keys(formData.questions).map((question, index) => (
           <PreconsultaQuestion
-            key={sectionIndex}
-            section={section}
-            sectionIndex={sectionIndex}
-            onQuestionChange={handleQuestionChange}
-            onSubquestionChange={handleSubquestionChange}
+            key={index}
+            question={question}
+            section={formData.questions[question]}
+            sectionIndex={index}
+            onQuestionActive={handleQuestionActive}
+            onSubquestionChange={handleSubquestionOption}
+            onQuestionChange={handleQuestionOption}
+            onDescriptionChange={handleDescription}
           />
         ))}
         <SignosVitales
           title={"Signos vitales"}
-          paciente={null}
           vitalSigns={formData?.vitalSigns}
+          onVitalSignChange={handleVitalSign}
           defaultOpen
         />
-        <InputCuerpoPre title={"Exploracion fisica"} defaultOpen />
-        {/* <InputFile title={"Estudios"} defaultOpen /> */}
-        {/* <InputConsulta
+        {/* <InputCuerpoPre title={"Exploracion fisica"} defaultOpen /> */}
+        <AnamnesisPreconsulta
           title={"Anamnesis"}
+          onAnamnesisChange={handleAnamnesis}
+          anamnesis={formData.anamnesis}
           defaultOpen
-        /> */}
+        />
         <InputFilePreconsultation
           title={"Estudios"}
-          onLoadFile={handleUploadFile}
+          onUploadFile={handleUploadTestFile}
+          onDescriptionChange={handleTestDescription}
+          tests={tests}
           defaultOpen
         />
-        <InputDiagnostico
+        {/* <InputDiagnostico
           title={"Tratamiento"}
           subtitle={["Medicamentos"]}
           defaultOpen
-        />
+        /> */}
         <button
           className="bg-[#0A6EAA] mt-4 w-1/5 mx-auto text-white text-lg font-bold rounded-lg px-2 py-4"
           onClick={handleSubmit}>
