@@ -18,6 +18,7 @@ import PtesActivos from "@/components/Graficos/dashboardDoc/ptesActivos";
 import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
+import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -132,7 +133,7 @@ export default function HomeDoc() {
           </div>
         </div>
       </div>
-      <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl my-5 flex flex-col">
+      <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl my-5  flex flex-col">
         <div className="flex justify-between p-5">
           <Elboton onPress={handlePreviousChart} nombre={"Anterior"} />
           <Elboton onPress={handleNextChart} nombre={"Siguiente"} />
@@ -140,13 +141,12 @@ export default function HomeDoc() {
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
         {/* <div className="flex-grow flex items-center justify-center " > */}
-          {charts[currentChart]}
+
+        {charts[currentChart]}
         {/* </div> */}
       </div>
       <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl mt-5">
-        <p className="text-2xl py-72 font-bold flex items-center justify-center">
-          sus proximas citas
-        </p>
+        <ProximasConsultas />
       </div>
     </div>
   );
