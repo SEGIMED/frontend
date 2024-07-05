@@ -17,7 +17,7 @@ import { setSelectedOption } from '@/redux/slices/doctor/formConsulta';
 
 export default function ClincalCuerpo({ title }) {
     const [selectedMuscles, setSelectedMuscles] = useState([]);
-    const [isPain, setIsPain] = useState(false); // Estado para manejar si hay dolor
+    const [isPain, setIsPain] = useState(true); // Estado para manejar si hay dolor
     const [selectedMuscleName, setSelectedMuscleName] = useState('');
     const [modelType, setModelType] = useState('anterior');
     const [painLevel, setPainLevel] = useState(1);
@@ -105,13 +105,12 @@ export default function ClincalCuerpo({ title }) {
             <div className='flex w-full justify-center '>
                 <div className='w-1/2 h-full items-center flex flex-col justify-center py-4'>
                     <div className=' items-center justify-center'>
-                        <ButtonNext options={["Masculino", "Femenino"]} name={"genero"} />
+                        <ButtonNext options={["Masculino", "Femenino"]} name={"genero"} disabled={true} selectedOptions={"Femenino"} />
                     </div>
                     <div>
                         <Model
                             data={selectedMuscles}
                             style={{ width: '20rem', padding: '3rem' }}
-                            onClick={handleClick}
                             type={modelType}
                         />
                     </div>
@@ -135,12 +134,13 @@ export default function ClincalCuerpo({ title }) {
                 <div className='items-center w-1/2 sticky top-0'>
                     <div className='flex  flex-col gap-3 py-4 '>
                         <div>
-                            <ButtonNext text={"¿Hay dolor?"} options={["Si", "No"]} handleSelection={handlePainSelection} name={"pain"} />
+                            <ButtonNext text={"¿Hay dolor?"} options={["Si", "No"]} handleSelection={handlePainSelection} name={"pain"} disabled={true} selectedOptions={"No"} />
+
                         </div>
                         {isPain && (
                             <>
                                 <div>
-                                    <ButtonNext text={"¿Desde hace cuánto tiempo tiene el dolor?"} options={["Horas", "Dias", "Semanas"]} name={"painTime"} />
+                                    <ButtonNext text={"¿Desde hace cuánto tiempo tiene el dolor?"} options={["Horas", "Dias", "Semanas"]} name={"painTime"} disabled={true} selectedOptions={"Horas"} />
                                 </div>
                                 <div className=" flex flex-col" >
                                     <div className="items-center space-x-2 flex">
@@ -152,10 +152,9 @@ export default function ClincalCuerpo({ title }) {
                                             showSteps={true}
                                             maxValue={10}
                                             minValue={1}
-                                            defaultValue={1}
+                                            value={5}
                                             className="max-w-md"
                                             showTooltip={true}
-                                            onChange={handleChange}
                                         />
                                         <span ><IconDolor2 /></span>
                                     </div>
@@ -174,19 +173,19 @@ export default function ClincalCuerpo({ title }) {
 
                                 </div>
                                 <div>
-                                    <DropNext text={"Tipo de dolor"} options={['Opresión', 'Punzante', 'Cólico (va y viene)', 'Quemante', 'Molestia', 'Eléctrico', 'Desgarro', 'Cansancio', 'Irritante', 'Pulsátil', 'Taladreante']} text2={"Seleccione tipo de dolor"} name={"painType"} />
+                                    <DropNext text={"Tipo de dolor"} options={['Opresión', 'Punzante', 'Cólico (va y viene)', 'Quemante', 'Molestia', 'Eléctrico', 'Desgarro', 'Cansancio', 'Irritante', 'Pulsátil', 'Taladreante']} text2={"Seleccione tipo de dolor"} name={"painType"} disabled={true} selectedOptions={'Taladreante'} />
                                 </div>
                                 <div>
-                                    <ButtonNext text={"¿Tomó analgésicos?"} options={["Si", "No"]} name={"analgesicos"} />
+                                    <ButtonNext text={"¿Tomó analgésicos?"} options={["Si", "No"]} disabled={true} selectedOptions={"No"} />
                                 </div>
                                 <div>
-                                    <ButtonNext text={"¿Calma con analgésicos?"} options={["Si", "No"]} name={"calmaAnalgesicos"} />
+                                    <ButtonNext text={"¿Calma con analgésicos?"} options={["Si", "No"]} disabled={true} selectedOptions={"No"} />
                                 </div>
                                 <div>
-                                    <DropNext text={"Frecuencia del dolor"} options={['De vez en cuando', 'Algunas veces', 'Intermitente', 'Muchas veces', 'Siempre']} text2={"Seleccione frecuencia"} name={"frecuencia"} />
+                                    <DropNext text={"Frecuencia del dolor"} options={['De vez en cuando', 'Algunas veces', 'Intermitente', 'Muchas veces', 'Siempre']} text2={"Seleccione frecuencia"} name={"frecuencia"} disabled={true} selectedOptions={'Siempre'} />
                                 </div>
                                 <div>
-                                    <ButtonNext text={"¿Es el peor dolor de su vida?"} options={["Si", "No"]} name={"peorDolor"} />
+                                    <ButtonNext text={"¿Es el peor dolor de su vida?"} options={["Si", "No"]} name={"peorDolor"} disabled={true} selectedOptions={"No"} />
                                 </div>
                             </>
                         )

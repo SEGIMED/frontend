@@ -11,14 +11,15 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name }) {
-  const [selectedOption, setSelectedOptionState] = useState("");
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions }) {
+  const opcionRecibida = selectedOptions ? selectedOptions : "";
+  const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const dispatch = useAppDispatch();
-  const { setValue, register } = useFormContext();
+  // const { setValue, register } = useFormContext();
   const handleSelectionChange = (key) => {
     const selectedOption = key;
     setSelectedOptionState(selectedOption);
-    setValue(name, selectedOption);
+    // setValue(name, selectedOption);
     dispatch(setSelectedOption({ name, option: selectedOption }));
   };
 
@@ -31,7 +32,7 @@ export default function DropNext({ text, options, text2, name }) {
             color: "#487FFA",
             width: "100px",
           }}>
-          <Button
+          {!disabled ? (<Button
             variant="bordered"
             className="capitalize"
             style={{
@@ -40,9 +41,21 @@ export default function DropNext({ text, options, text2, name }) {
               border: "2",
             }}>
             {selectedOption || text2}
-          </Button>
+          </Button>) : (<Button
+            variant="bordered"
+            className="capitalize"
+            disabled
+            style={{
+              color: "#487FFA",
+              borderColor: "#487FFA",
+              border: "2",
+            }}>
+            {selectedOption || text2}
+          </Button>)
+          }
+
         </DropdownTrigger>
-        <DropdownMenu
+        {!disabled ? (<DropdownMenu
           aria-label="Options menu"
           variant="flat"
           disallowEmptySelection
@@ -50,16 +63,17 @@ export default function DropNext({ text, options, text2, name }) {
           selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
           onSelectionChange={(keys) =>
             handleSelectionChange(Array.from(keys)[0])
-            
+
           }>
           {options?.map((option) => (
             <DropdownItem key={option} aria-label={option} >
               {option}
             </DropdownItem>
           ))}
-        </DropdownMenu>
+        </DropdownMenu>) : (null)}
+
       </Dropdown>
-      <input type="hidden" {...register(name)} value={selectedOption} />
+      {/* <input type="hidden" {...register(name)} value={selectedOption} /> */}
     </div>
   );
 }

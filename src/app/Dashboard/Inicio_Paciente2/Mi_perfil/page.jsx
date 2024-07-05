@@ -61,22 +61,22 @@ export default function HomePte() {
 
         router.push("/");
 
-        setTimeout(() => {
-            // Realizar la recarga de la página para limpiar todos los datos
-            window.location.reload(true);
-        }, 2000);
+        // setTimeout(() => {
+        //     // Realizar la recarga de la página para limpiar todos los datos
+        //     window.location.reload(true);
+        // }, 2000);
     };
 
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            const handleResize = () => {
-                setButtonSize(window.innerWidth <= 768 ? "md" : "lg");
-            };
-            handleResize();
-            window.addEventListener("resize", handleResize);
-            return () => window.removeEventListener("resize", handleResize);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (typeof window !== "undefined") {
+    //         const handleResize = () => {
+    //             setButtonSize(window.innerWidth <= 768 ? "md" : "lg");
+    //         };
+    //         handleResize();
+    //         window.addEventListener("resize", handleResize);
+    //         return () => window.removeEventListener("resize", handleResize);
+    //     }
+    // }, []);
 
     const {
         register,
