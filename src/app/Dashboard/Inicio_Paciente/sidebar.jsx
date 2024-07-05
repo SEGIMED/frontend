@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -16,6 +16,8 @@ import Cookies from "js-cookie";
 import { socket } from "@/utils/socketio";
 import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
+import { resetApp } from "@/redux/rootReducer";
+
 import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
 
 import rutas from "@/utils/rutas";
@@ -26,17 +28,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
-  
 
   const handleSearchChange = (e) => {
-
     dispatch(setSearchTerm1(e.target.value));
-    
   };
-
- 
-
-
 
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
@@ -44,6 +39,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
+
+  const router = useRouter(); // Use the useRouter hook
 
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
@@ -61,9 +58,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
     )
     : lastSegment;
 
-  
   const id = Cookies.get("c");
   const token = Cookies.get("a");
+  const rol = Cookies.get("b");
 
   const [latitud, setLatitud] = useState(null);
   const [longitud, setLongitud] = useState(null);
@@ -107,11 +104,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getSchedules = async (headers) => {
-    const userId = Number(id)
-    // const userId = 8
+    const userId = Number(id);
     try {
       const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
-     
+
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -126,7 +122,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
       headers
     );
     const response2 = await ApiSegimed.get(`/patient/${id}`, headers);
-    // const response1= await ApiSegimed.get("/patient-details?id=8", headers);
     const combinedData = {
       ...response1.data,
       ...response2.data,
@@ -177,9 +172,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
       lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
     };
     dispatch(adduser(combinedData));
-    // dispatch(adduser({ ...response1.data, ...response2.data, ...paciente }));
   };
-  // console.log(user)
+
   const getAllDoc = async (headers) => {
     const response = await ApiSegimed.get("/all-physicians", headers);
     if (response.data) {
@@ -188,6 +182,22 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   useEffect(() => {
+    if (rol !== "Paciente") {
+      Cookies.remove("a");
+      Cookies.remove("b");
+      Cookies.remove("c");
+
+      dispatch(resetApp());
+
+      router.push("/");
+
+      setTimeout(() => {
+        // Realizar la recarga de la página para limpiar todos los datos
+        window.location.reload(true);
+      }, 2000);
+      return;
+    }
+
     obtenerUbicacion();
     const idUser = Cookies.get("c");
 
@@ -200,7 +210,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         socket.emit("onJoin", { id: idUser });
       }
     }
-  }, []);
+  }, [rol]);
 
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-2 border-b-[#cecece] p-4">
@@ -229,13 +239,13 @@ export const SidePte = ({ search, toggleSidebar }) => {
       </div>
       {showSearch && (
         <div
-          className={`flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
+          className={`hidden md:flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar doctores"
             className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
-            value={searchTerm1 } 
+            value={searchTerm1}
           />
           <button>
             <Image src={busqueda} alt="" />
@@ -259,9 +269,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
         <button>
           <Image src={notificacion2} alt="" />
         </button>
-        {/* <button className=" rounded-xl w-12 h-12 flex justify-center items-center  border border-gray-400">
-                    <Image src={notificacion} alt="" />
-                </button> */}
       </div>
     </div>
   );

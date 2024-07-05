@@ -6,6 +6,9 @@ import { useFormContext } from "react-hook-form";
 
 import IconConsulta from "../icons/IconConsulta";
 import { useEffect, useState } from "react";
+import RomanToInt from "@/utils/romanToInt";
+import IdRiskCardiovascular from "@/utils/IdRiskCardiovascular";
+import IdRiskSurgical from "@/utils/idRiskSurgical";
 
 
 export default function InputConsulta({
@@ -21,6 +24,7 @@ export default function InputConsulta({
   preconsult,
   paciente,
   onRiskChange,
+  onRiskChange2,
   onGroupChange
 }) {
   const [valuesAmnesis, setValuesAmnesis] = useState([]);
@@ -40,20 +44,19 @@ export default function InputConsulta({
     setValuesAmnesis([preconsult?.consultationReason,preconsult?.healthChangesDescription ,preconsult?.importantSymptoms]);
   }, [preconsult]);
 
-  console.log(groupPatientPulmonaryHypertensionRisksButton);
   const handleOption = (sub) => {
     setRiskCardiovascularButton(sub);
-
+    if (onRiskChange) onRiskChange(IdRiskCardiovascular(sub));
   };
   const handleOption2 = (sub) => {
     setRiskSurgicalButton(sub);
-    
+    if (onRiskChange2)onRiskChange2(IdRiskSurgical(sub));
   };
   const handleGroupChange = (sub) => {
     setGroupPatientPulmonaryHypertensionButton(sub);
-    if (onGroupChange) onGroupChange(sub);
+    if (onGroupChange) onGroupChange(RomanToInt(sub));
   };
-  const { setValue, register } = useFormContext();
+  const { register } = useFormContext();
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
@@ -114,7 +117,6 @@ export default function InputConsulta({
                 </button >
                 
               ))}
-              <input type="hidden" {...register(sub)} value={riskSurgicalButton} />
             </div> 
             
           </div>

@@ -28,6 +28,22 @@ const PhotoModal = ({ isOpen, onClose }) => {
     setTempUrl(url);
   }, [url]);
 
+  useEffect(() => {
+    function onClose2(event) {
+
+        if (event.key === 'Escape') {
+            setTempUrl(url)
+            onClose();
+        }
+    }
+
+    if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+    
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+        window.removeEventListener("keydown", onClose2);
+    };
+    }, [onClose]);
 
   const handleClose = () => {
     setTempUrl(url); // Restablecer URL temporal al valor original
