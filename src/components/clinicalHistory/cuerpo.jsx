@@ -1,104 +1,48 @@
-"use client"
-import React, { useState, useRef } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import Model from 'react-body-highlighter';
-import { Slider, Button } from '@nextui-org/react';
+import { Slider } from '@nextui-org/react';
 import ButtonNext from '../consulta/button';
 import DropNext from '../consulta/dropdown';
-import IconConsulta from '../icons/IconConsulta';
-import Image from "next/image";
-import circleData from '@/components/images/circleData.png';
 import IconDolor from '../icons/IconDolor';
 import IconDolor2 from '../icons/IconDolor2';
 import { useAppDispatch } from '@/redux/hooks';
 import { setSelectedOption } from '@/redux/slices/doctor/formConsulta';
+import IconConsulta from '../icons/IconConsulta';
 
-
-
-
-export default function ClincalCuerpo({ title }) {
-    const [selectedMuscles, setSelectedMuscles] = useState([]);
+export default function ClincalCuerpo({ info }) {
     const [isPain, setIsPain] = useState(true); // Estado para manejar si hay dolor
-    const [selectedMuscleName, setSelectedMuscleName] = useState('');
     const [modelType, setModelType] = useState('anterior');
     const [painLevel, setPainLevel] = useState(1);
+    const [selectedMuscles, setSelectedMuscles] = useState([{ name: 'Musculo', muscles: [] }]);
 
     const dispatch = useAppDispatch();
 
-
-
-    const muscleTranslations = {
-        /* Back */
-        'trapezius': 'Trapecio',
-        'upper-back': 'Espalda Superior',
-        'lower-back': 'Espalda Inferior',
-
-        /* Chest */
-        'chest': 'Pecho',
-
-        /* Arms */
-        'biceps': 'Bíceps',
-        'triceps': 'Tríceps',
-        'forearm': 'Antebrazo',
-        'back-deltoids': 'Deltoides Posterior',
-        'front-deltoids': 'Deltoides Anterior',
-
-        /* Abs */
-        'abs': 'Abdominales',
-        'obliques': 'Oblicuos',
-
-        /* Legs */
-        'adductor': 'Aductores',
-        'hamstring': 'Isquiotibiales',
-        'quadriceps': 'Cuádriceps',
-        'abductors': 'Abductores',
-        'calves': 'Pantorrillas',
-        'gluteal': 'Glúteos',
-        'knees': 'Rodillas',
-        'right-soleus': 'Sóleo Derecho',
-        'left-soleus': 'Sóleo Izquierdo',
-
-
-        /* Head */
-        'head': 'Cabeza',
-        'neck': 'Cuello'
-    };
-
-
-    const handleClick = ({ muscle }) => {
-        setSelectedMuscles(prevMuscles => {
-            const existingData = prevMuscles.length > 0 ? prevMuscles[0] : { muscles: [] };
-            let updatedMuscles;
-
-            if (existingData.muscles.includes(muscle)) {
-                updatedMuscles = existingData.muscles.filter(m => m !== muscle);
-            } else {
-                updatedMuscles = [...existingData.muscles, muscle];
+    useEffect(() => {
+        // Función para obtener los nombres de músculos en inglés
+        const getMuscleNames = () => {
+            if (info && info.painMap && info.painMap.painAreas) {
+                const muscleData = info.painMap.painAreas.map(area => ({
+                    name: 'Musculo',
+                    muscles: [area.painArea.painAreaEnglish === "forearms" ? "forearm" : area.painArea.painAreaEnglish],
+                }));
+                setSelectedMuscles(muscleData);
+                console.log(info);
             }
+        };
 
-            // Si hay una traducción definida para el músculo, úsala; de lo contrario, usa el nombre original
-            const translatedMuscleName = muscleTranslations[muscle] || muscle;
-
-            dispatch(setSelectedOption({ name: "muscles", option: [...updatedMuscles.map(m => muscleTranslations[m] || m)] }));
-            setSelectedMuscleName(translatedMuscleName); // Establecer el nombre del músculo seleccionado
-            return [{ ...existingData, muscles: updatedMuscles }];
-        });
-    };
+        getMuscleNames();
+    }, [info]);
 
     const handlePainSelection = (selection) => {
         setIsPain(selection === 'Si');
     };
 
     const handleModelTypeChange = (type) => {
-        if (type === 'Frente')
-            setModelType("anterior")
-        else setModelType("posterior")
+        setModelType(type === 'Frente' ? 'anterior' : 'posterior');
     };
 
-
-    const handleChange = (value) => {
-        setPainLevel(value);
-        dispatch(setSelectedOption({ name: "painLevel", option: value }));
-    };
+    console.log(selectedMuscles);
 
     return (
         <div className="flex flex-col">
@@ -108,11 +52,11 @@ export default function ClincalCuerpo({ title }) {
                         <ButtonNext options={["Masculino", "Femenino"]} name={"genero"} disabled={true} selectedOptions={"Femenino"} />
                     </div>
                     <div>
-                        <Model
+                        {selectedMuscles.length > 0 ? <Model
                             data={selectedMuscles}
                             style={{ width: '20rem', padding: '3rem' }}
                             type={modelType}
-                        />
+                        /> : null}
                     </div>
                     <div className=' items-center justify-center'>
                         <ButtonNext
@@ -121,26 +65,33 @@ export default function ClincalCuerpo({ title }) {
                             name={"modelType"}
                         />
                     </div>
-                    {selectedMuscles.length > 0 && selectedMuscles[0].muscles.map((muscle, index) => (
-                        <div key={index} className="flex flex-col gap-2 w-full py-3 px-7 border-b border-b-[#cecece]">
-                            <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center" htmlFor={`muscle-note-${index}`}>
-                                <IconConsulta />
-                                {muscleTranslations[muscle]}
-                            </label>
-                            <textarea  {...register(muscleTranslations[muscle])} className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]" placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`} />
-                        </div>
-                    ))}
+                    {info.painMap.painAreas.length > 0 &&
+                        info.painMap.painAreas.map((muscle, index) => (
+                            <div
+                                key={index}
+                                className="flex flex-col gap-2 w-full py-3 px-7 ">
+                                <label
+                                    className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
+                                    htmlFor={`muscle-note-${index}`}>
+                                    <IconConsulta />
+                                    {muscle.painArea.painAreaSpanish}
+                                </label>
+                                <p className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6  border border-[#DCDBDB] rounded-lg px-4 py-1">
+                                    {muscle.painNotes}
+                                </p>
+
+                            </div>
+                        ))}
                 </div>
                 <div className='items-center w-1/2 sticky top-0'>
                     <div className='flex  flex-col gap-3 py-4 '>
                         <div>
                             <ButtonNext text={"¿Hay dolor?"} options={["Si", "No"]} handleSelection={handlePainSelection} name={"pain"} disabled={true} selectedOptions={"No"} />
-
                         </div>
                         {isPain && (
                             <>
                                 <div>
-                                    <ButtonNext text={"¿Desde hace cuánto tiempo tiene el dolor?"} options={["Horas", "Dias", "Semanas"]} name={"painTime"} disabled={true} selectedOptions={"Horas"} />
+                                    <ButtonNext text={"¿Desde hace cuánto tiempo tiene el dolor?"} options={["Horas", "Días", "Semanas"]} name={"painTime"} disabled={true} selectedOptions={info?.painMap.painDuration} />
                                 </div>
                                 <div className=" flex flex-col" >
                                     <div className="items-center space-x-2 flex">
@@ -152,7 +103,7 @@ export default function ClincalCuerpo({ title }) {
                                             showSteps={true}
                                             maxValue={10}
                                             minValue={1}
-                                            value={5}
+                                            value={info?.painMap.painScale}
                                             className="max-w-md"
                                             showTooltip={true}
                                         />
@@ -170,30 +121,27 @@ export default function ClincalCuerpo({ title }) {
                                         <span className='pl-5 pr-4 text-red-500'>9</span>
                                         <span className='pl-4 pr-4 text-red-500'>10</span>
                                     </div>
-
                                 </div>
                                 <div>
-                                    <DropNext text={"Tipo de dolor"} options={['Opresión', 'Punzante', 'Cólico (va y viene)', 'Quemante', 'Molestia', 'Eléctrico', 'Desgarro', 'Cansancio', 'Irritante', 'Pulsátil', 'Taladreante']} text2={"Seleccione tipo de dolor"} name={"painType"} disabled={true} selectedOptions={'Taladreante'} />
+                                    <DropNext text={"Tipo de dolor"} options={['Opresión', 'Punzante', 'Cólico (va y viene)', 'Quemante', 'Molestia', 'Eléctrico', 'Desgarro', 'Cansancio', 'Irritante', 'Pulsátil', 'Taladreante']} text2={"Seleccione tipo de dolor"} name={"painType"} disabled={true} selectedOptions={info?.painMap.painType} />
                                 </div>
                                 <div>
-                                    <ButtonNext text={"¿Tomó analgésicos?"} options={["Si", "No"]} disabled={true} selectedOptions={"No"} />
+                                    <ButtonNext text={"¿Tomó analgésicos?"} options={["Si", "No"]} disabled={true} selectedOptions={info?.painMap.isTakingAnalgesic} />
                                 </div>
                                 <div>
-                                    <ButtonNext text={"¿Calma con analgésicos?"} options={["Si", "No"]} disabled={true} selectedOptions={"No"} />
+                                    <ButtonNext text={"¿Calma con analgésicos?"} options={["Si", "No"]} disabled={true} selectedOptions={info?.painMap.doesAnalgesicWorks} />
                                 </div>
                                 <div>
-                                    <DropNext text={"Frecuencia del dolor"} options={['De vez en cuando', 'Algunas veces', 'Intermitente', 'Muchas veces', 'Siempre']} text2={"Seleccione frecuencia"} name={"frecuencia"} disabled={true} selectedOptions={'Siempre'} />
+                                    <DropNext text={"Frecuencia del dolor"} options={['De vez en cuando', 'Algunas veces', 'Intermitente', 'Muchas veces', 'Siempre']} text2={"Seleccione frecuencia"} name={"frecuencia"} disabled={true} selectedOptions={info?.painMap.painFrequency} />
                                 </div>
                                 <div>
-                                    <ButtonNext text={"¿Es el peor dolor de su vida?"} options={["Si", "No"]} name={"peorDolor"} disabled={true} selectedOptions={"No"} />
+                                    <ButtonNext text={"¿Es el peor dolor de su vida?"} options={["Si", "No"]} name={"peorDolor"} disabled={true} selectedOptions={info?.painMap.isWorstPainEver} />
                                 </div>
                             </>
-                        )
-                        }
-                    </div >
-                </div >
-            </div >
-
-        </div >
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
