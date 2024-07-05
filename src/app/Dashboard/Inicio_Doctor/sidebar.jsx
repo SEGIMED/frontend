@@ -19,6 +19,7 @@ import avatar from "@/utils/defaultAvatar";
 import { resetApp } from "@/redux/rootReducer";
 
 import { socket } from "@/utils/socketio";
+import { addAlarms } from "@/redux/slices/alarms/alarms";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -38,7 +39,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
 
   const dispatch = useAppDispatch();
-
+ 
   const router = useRouter(); // Use the useRouter hook
 
   const getUser = async (headers) => {
@@ -85,6 +86,28 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
+  
+  const getActives = async (headers) => {
+    
+      try {
+        
+        const response = await ApiSegimed.get("/alarms-by-patient", headers);
+        
+        const actives = response.data.filter(alarm => alarm.solved === false).length;
+        const inactives = response.data.filter(alarm => alarm.solved === true).length;
+        const data = { activeAlarms: Number(actives), inactiveAlarms: Number(inactives) }
+        // console.log(data)
+        dispatch( addAlarms (data)) ;
+       
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+  
+
+
+
   useEffect(() => {
     const token = Cookies.get("a");
     const idUser = Cookies.get("c");
@@ -110,11 +133,13 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
+      getActives({ headers: { token: token } })
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
+    
   }, []);
 
   return (
