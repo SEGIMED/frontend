@@ -25,7 +25,7 @@ export default function HomeDoc() {
     const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
 
     // Obtener pacientes del estado
-    const listaPacientes = useAppSelector((state) => state.allPatients.patients);
+    // const listaPacientes = useAppSelector((state) => state.allPatients.patients);
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
     useEffect(() => {
@@ -38,28 +38,25 @@ export default function HomeDoc() {
     );
 
     // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
-    const filteredPatients = listaPacientes?.filter(
-        (paciente) =>
-            scheduledConsultas.some((consulta) => consulta.patient === paciente.id) &&
-            (paciente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                paciente.lastname.toLowerCase().includes(searchTerm.toLowerCase())) &&
-            (riskFilter ? paciente.risk === riskFilter : true)
+    const filteredPatients = scheduledConsultas.filter(
+        (cita) =>
+            cita.patientUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            cita.patientUser.lastname.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
     // Asociar consultas a los pacientes
-    const patientsWithConsultas = filteredPatients.map((paciente) => {
-        const consulta = scheduledConsultas.find(
-            (consulta) =>
-                consulta.patient === paciente.id &&
-                consulta.typeOfMedicalConsultation === 1
-        );
-        return { ...paciente, consulta };
-    });
+    // const patientsWithConsultas = filteredPatients.map((paciente) => {
+    //     const consulta = scheduledConsultas.find(
+    //         (consulta) =>
+    //             consulta.patient === paciente.id &&
+    //             consulta.typeOfMedicalConsultation === 1
+    //     );
+    //     return { ...paciente, consulta };
+    // });
 
     // Ordenar pacientes si es necesario
     const sortedPatients = isSorted
-        ? [...patientsWithConsultas].sort((a, b) => a.name.localeCompare(b.name))
-        : patientsWithConsultas;
+        ? [...scheduledConsultas].sort((a, b) => a.name.localeCompare(b.name))
+        : scheduledConsultas;
 
     const handleSortClick = () => {
         setIsSorted(!isSorted);
@@ -73,8 +70,8 @@ export default function HomeDoc() {
         setIsFilterOpen(!isFilterOpen);
     };
 
-    if (listaPacientes.length === 0) {
-        if (sortedPatients.length === 0) {
+    if (consultas.length === 0) {
+        if (scheduledConsultas.length === 0) {
             return "No existen consultas registradas"
         }
         return <MensajeSkeleton />;
@@ -116,7 +113,7 @@ export default function HomeDoc() {
                 <div></div>
             </div>
             <div className="items-start justify-center w-full">
-                {scheduledConsultas?.map(paciente => (
+                {filteredPatients?.map(paciente => (
                     <PatientCardConsulta key={paciente.id} paciente={paciente} consulta={paciente.consulta} button={<OptPteHistorial id={paciente.patient}
                         ruta={`${rutas.Doctor}${rutas.Historial}/${paciente.patient}`} />} />
                 ))}
