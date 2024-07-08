@@ -245,7 +245,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       id: 5,
     },
   ];
-  // const isMobile = window.innerWidth <= 768;
+  const isMobile = window?.innerWidth <= 768;
 
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
@@ -255,7 +255,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
             <Link href={`${rutas.PacienteDash}2`}>
               <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
                 <IconRegresar />
-                <p>Regresar</p>
+                {!isMobile ? "Regresar" : null}
+
+
               </button>
             </Link>
           </div>
@@ -313,19 +315,23 @@ export const SidePte = ({ search, toggleSidebar }) => {
                 src: user?.avatar ? user.avatar : avatar,
               }}
               className="transition-transform"
-              description={user?.role === 3 ? "Paciente" : ""}
-              // description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
-              // name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
-              name={user ? `${user?.name} ${user?.lastname}` : ''}
+              // description={user?.role === 3 ? "Paciente" : ""}
+              description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
+              name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
+            // name={user ? `${user?.name} ${user?.lastname}` : ''}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="User Actions" variant="flat">
-            <DropdownItem key="inicio">
-              <Link href={`${rutas.PacienteDash}2`}>Inicio</Link>
+
+            <DropdownItem onPress={() => router.push(`${rutas.PacienteDash}2`)} key="inicio">
+              Inicio
             </DropdownItem>
-            <DropdownItem key="mi_perfil">
-              <Link href={`${rutas.PacienteDash}2${rutas.Mi_Perfil}`}>Mi perfil</Link>
+
+
+            <DropdownItem onPress={() => router.push(`${rutas.PacienteDash}2${rutas.Mi_Perfil}`)} key="mi_perfil">
+              Mi perfil
             </DropdownItem>
+
             <DropdownItem key="logout" onClick={handleLogout} color="danger">
               Cerrar sesión
             </DropdownItem>
@@ -367,6 +373,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
