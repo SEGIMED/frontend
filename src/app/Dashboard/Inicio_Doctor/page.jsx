@@ -23,7 +23,8 @@ export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
 
   const [currentChart, setCurrentChart] = useState(0);
-
+  const dataAlarms = useAppSelector((state) => state.alarms);
+  
   const handlePreviousChart = () => {
     setCurrentChart((prev) => (prev === 0 ? charts.length - 1 : prev - 1));
   };
@@ -46,7 +47,7 @@ export default function HomeDoc() {
   return (
     <div className="h-full flex flex-col p-10 bg-[#FAFAFC] overflow-y-scroll">
       <h2 className="text-2xl">
-        ¡Bienvenido {user.name} {user.lastname}!
+        ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>
 
       <div className="grid-cols-2 gap-2 grid lg:flex justify-between py-10">
@@ -116,16 +117,16 @@ export default function HomeDoc() {
           <div className="w-full bg-[#6DFFA7] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconInactiveUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">7</span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2"> {dataAlarms?.inactiveAlarms}</span>
               <IconArrowUp className="hidden md:block" />
             </div>
-            <p className="font-semibold text-center">Inactivos</p>
+            <p className="font-semibold text-center">Alarmas Inactivos</p>
           </div>
 
           <div className="w-full bg-[#58FFA0] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconAlarmUsers className="w-[42%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">1</span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2">{dataAlarms?.activeAlarms}</span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Alarmas Activas</p>

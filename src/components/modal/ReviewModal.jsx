@@ -66,9 +66,9 @@ export default function ReviewModal({ onClose, idDoc }) {
     
 
   return (
-    <div onClick={handleClickOutside} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50  ">
-      <div 
-      className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
+    <div onClick={handleClickOutside} 
+    className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50  ">
+      <div className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
           <span className="flex gap-4">
             <IconFatArrow />
