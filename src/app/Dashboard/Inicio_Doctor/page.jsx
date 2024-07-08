@@ -47,7 +47,7 @@ export default function HomeDoc() {
   return (
     <div className="h-full flex flex-col p-10 bg-[#FAFAFC] overflow-y-scroll">
       <h2 className="text-2xl">
-        ¡Bienvenido {user.name} {user.lastname}!
+        ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>
 
       <div className="grid-cols-2 gap-2 grid lg:flex justify-between py-10">
