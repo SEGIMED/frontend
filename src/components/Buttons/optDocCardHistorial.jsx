@@ -35,12 +35,12 @@ export default function OptDocCardHistorial({ id }) {
             <IconCorazonMini />
             Dejar review
           </li>
-          <Link href={`${rutas.PacienteDash}${rutas.Tratamientos}/${id}`}>
+          {/* <Link href={`${rutas.PacienteDash}${rutas.Tratamientos}/${id}`}>
             <li className="font-normal text-base leading-8 ml-6 flex items-center gap-2">
               <IconPersonalData />
               Ver Tratamiento
             </li>
-          </Link>
+          </Link> */}
         </ul>
       </details>
       {isReviewModalOpen && (
