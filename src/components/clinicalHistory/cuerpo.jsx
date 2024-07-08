@@ -16,8 +16,10 @@ export default function ClincalCuerpo({ info }) {
     const [painLevel, setPainLevel] = useState(1);
     const [selectedMuscles, setSelectedMuscles] = useState([{ name: 'Musculo', muscles: [] }]);
 
-    const dispatch = useAppDispatch();
 
+    const painArea = info.painMap
+    const painAreass = painArea.painAreas
+    console.log(info)
     useEffect(() => {
         // Función para obtener los nombres de músculos en inglés
         const getMuscleNames = () => {
@@ -27,7 +29,7 @@ export default function ClincalCuerpo({ info }) {
                     muscles: [area.painArea.painAreaEnglish === "forearms" ? "forearm" : area.painArea.painAreaEnglish],
                 }));
                 setSelectedMuscles(muscleData);
-                console.log(info);
+
             }
         };
 
@@ -42,7 +44,6 @@ export default function ClincalCuerpo({ info }) {
         setModelType(type === 'Frente' ? 'anterior' : 'posterior');
     };
 
-    console.log(selectedMuscles);
 
     return (
         <div className="flex flex-col">
@@ -52,11 +53,11 @@ export default function ClincalCuerpo({ info }) {
                         <ButtonNext options={["Masculino", "Femenino"]} name={"genero"} disabled={true} selectedOptions={"Femenino"} />
                     </div>
                     <div>
-                        {selectedMuscles.length > 0 ? <Model
+                        <Model
                             data={selectedMuscles}
                             style={{ width: '20rem', padding: '3rem' }}
                             type={modelType}
-                        /> : null}
+                        />
                     </div>
                     <div className=' items-center justify-center'>
                         <ButtonNext
@@ -65,7 +66,7 @@ export default function ClincalCuerpo({ info }) {
                             name={"modelType"}
                         />
                     </div>
-                    {info.painMap.painAreas.length > 0 &&
+                    {info?.painMap?.painAreas?.length > 0 &&
                         info.painMap.painAreas.map((muscle, index) => (
                             <div
                                 key={index}
@@ -86,7 +87,7 @@ export default function ClincalCuerpo({ info }) {
                 <div className='items-center w-1/2 sticky top-0'>
                     <div className='flex  flex-col gap-3 py-4 '>
                         <div>
-                            <ButtonNext text={"¿Hay dolor?"} options={["Si", "No"]} handleSelection={handlePainSelection} name={"pain"} disabled={true} selectedOptions={"No"} />
+                            <ButtonNext text={"¿Hay dolor?"} options={["Si", "No"]} handleSelection={handlePainSelection} name={"pain"} disabled={true} selectedOptions={info?.painMap.isTherePain} />
                         </div>
                         {isPain && (
                             <>
@@ -103,9 +104,11 @@ export default function ClincalCuerpo({ info }) {
                                             showSteps={true}
                                             maxValue={10}
                                             minValue={1}
-                                            value={info?.painMap.painScale}
+                                            value={info?.painMap?.painScale ? info.painMap.painScale : 0}
+
                                             className="max-w-md"
                                             showTooltip={true}
+                                            disabled
                                         />
                                         <span ><IconDolor2 /></span>
                                     </div>
