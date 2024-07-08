@@ -6,16 +6,12 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import IconPasswordClose from "@/components/icons/IconPasswordClose";
 import IconPasswordOpen from "@/components/icons/IconPasswordOpen";
-
-import Image from "next/image";
 
 import rutas from "@/utils/rutas";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import IconSend from "@/components/icons/IconSend";
-import { adduser } from "@/redux/slices/user/user";
 import IconRegister from "@/components/icons/IconRegister";
 import { FooterAcc } from "@/components/footer/footerAcc";
 import { NavBar } from "@/components/NavBar/navbar";
@@ -49,7 +45,7 @@ export default function Home() {
       // const result = await response.json();
       const response = await ApiSegimed.post("/user/login", postData);
       const result = response.data;
-     
+
       if (response.status !== 200) {
         throw new Error(result.error);
       }
@@ -75,7 +71,7 @@ export default function Home() {
         }
       }
     } catch (error) {
-      let errorMessage = error?.response?.data?.error
+      let errorMessage = error?.response?.data?.error;
 
       // Mostrar el error usando Swal si es un error de conexión
       if (error) {
@@ -85,7 +81,6 @@ export default function Home() {
           text: errorMessage ? errorMessage : error.message,
         });
       }
-     
     }
   };
 
@@ -145,8 +140,9 @@ export default function Home() {
                   id="userOrDni"
                   name="userOrDni"
                   placeholder="Ingrese su correo electrónico o DNI"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.userOrDni ? "border-red-500" : "border-gray-300"
-                    }`}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${
+                    errors.userOrDni ? "border-red-500" : "border-gray-300"
+                  }`}
                   {...register("userOrDni", {
                     required: true,
                     validate: (value) =>
@@ -170,8 +166,9 @@ export default function Home() {
                   id="password"
                   name="password"
                   placeholder="Ingrese su contraseña"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
-                    }`}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
                   {...register("password", { required: true })}
                 />
                 <div className="relative">
@@ -213,10 +210,11 @@ export default function Home() {
             <div className="text-center  flex justify-center">
               <button
                 type="submit"
-                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
-                  ? ""
-                  : "cursor-not-allowed opacity-50"
-                  }`}
+                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${
+                  Object.keys(errors).length === 0
+                    ? ""
+                    : "cursor-not-allowed opacity-50"
+                }`}
                 disabled={Object.keys(errors).length !== 0}>
                 Iniciar Sesión <IconSend className="m" />
               </button>
