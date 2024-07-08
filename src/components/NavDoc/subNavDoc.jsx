@@ -9,6 +9,7 @@ import IconSubNavbar from "../icons/IconSubNavbar";
 import IconRegresar from "../icons/iconRegresar";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
+import { useRouter } from "next/navigation";
 
 import {
   Dropdown,
@@ -27,10 +28,12 @@ export default function SubNavbar({ id }) {
   const getLinkClass = (routeLastSegment) =>
     `/${lastSegment}` === routeLastSegment
       ? "bg-gray-200" // Estilo para la pestaña activa
-      : " ";
+      : "cursor-pointer ";
+
+  const router = useRouter();
 
   return (
-    <div className="border-b border-b-[#cecece] flex flex-row-reverse md:flex-row justify-around items-center md:pr-6">
+    <div className="border-b border-b-[#cecece] flex  flex-row-reverse md:flex-row justify-around items-center md:pr-6">
       <Navbar
         className="flex justify-start items-center w-[86%] md:w-full"
         classNames={{
@@ -50,42 +53,60 @@ export default function SubNavbar({ id }) {
           wrapper: ["px-0"],
         }}>
         <NavbarContent className="gap-0 px-0 overflow-x-auto">
-          <NavbarItem className={getLinkClass(rutas.Datos)}>
-            <Link
-              className="flex items-center gap-2"
-              href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.Datos}`}
-              aria-current="page">
+          <NavbarItem
+            className={getLinkClass(rutas.Datos)}
+            onClick={() =>
+              router.push(
+                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.Datos}`
+              )
+            }>
+            <div className="flex items-center gap-2" aria-current="page">
               <IconClinicalHistory /> Datos del Paciente
-            </Link>
+            </div>
           </NavbarItem>
-          <NavbarItem className={getLinkClass(rutas.Consultas)}>
-            <Link
-              className="flex items-center gap-2"
-              href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Consultas}`}
-              aria-current="page">
+          <NavbarItem
+            className={getLinkClass(rutas.Consultas)}
+            onClick={() =>
+              router.push(
+                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Consultas}`
+              )
+            }>
+            <div className="flex items-center gap-2" aria-current="page">
               <IconSubNavbar /> Consultas
-            </Link>
+            </div>
           </NavbarItem>
-          <NavbarItem className={getLinkClass(rutas.Evoluciones)}>
-            <Link
-              className="flex items-center gap-2"
-              href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Evoluciones}`}>
+          <NavbarItem
+            className={getLinkClass(rutas.Evoluciones)}
+            onClick={() =>
+              router.push(
+                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Evoluciones}`
+              )
+            }>
+            <div className="flex items-center gap-2">
               <IconSubNavbar /> Evoluciones
-            </Link>
+            </div>
           </NavbarItem>
-          <NavbarItem className={getLinkClass(rutas.Anamnesis)}>
-            <Link
-              className="flex items-center gap-2"
-              href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Anamnesis}`}>
+          <NavbarItem
+            className={getLinkClass(rutas.Anamnesis)}
+            onClick={() =>
+              router.push(
+                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Anamnesis}`
+              )
+            }>
+            <div className="flex items-center gap-2">
               <IconSubNavbar /> Anamnesis
-            </Link>
+            </div>
           </NavbarItem>
-          <NavbarItem className={getLinkClass(rutas.Evaluacion)}>
-            <Link
-              className="flex items-center gap-2"
-              href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Evaluacion}`}>
+          <NavbarItem
+            className={getLinkClass(rutas.Evaluacion)}
+            onClick={() =>
+              router.push(
+                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Evaluacion}`
+              )
+            }>
+            <div className="flex items-center gap-2">
               <IconSubNavbar /> Autoevaluación
-            </Link>
+            </div>
           </NavbarItem>
           <NavbarItem className="flex items-center gap-2">
             <Dropdown>
@@ -109,34 +130,40 @@ export default function SubNavbar({ id }) {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem
-                  onClick={() => setOpenDetails(!openDetails)}
+                  onClick={() => {
+                    router.push(
+                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.ExamenFisico}`
+                    );
+                    setOpenDetails(!openDetails);
+                  }}
                   className={getLinkClass(rutas.ExamenFisico)}
                   key="new">
                   {" "}
-                  <Link
-                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.ExamenFisico}`}>
-                    Examen Fisico
-                  </Link>
+                  <div>Examen Fisico</div>
                 </DropdownItem>
                 <DropdownItem
-                  onClick={() => setOpenDetails(!openDetails)}
+                  onClick={() => {
+                    router.push(
+                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.SignosVitales}`
+                    );
+                    setOpenDetails(!openDetails);
+                  }}
                   className={getLinkClass(rutas.SignosVitales)}
                   key="copy">
                   {" "}
-                  <Link
-                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.SignosVitales}`}>
-                    Signos Vitales
-                  </Link>
+                  <div>Signos Vitales</div>
                 </DropdownItem>
                 <DropdownItem
-                  onClick={() => setOpenDetails(!openDetails)}
+                  onClick={() => {
+                    router.push(
+                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Diagnostico}`
+                    );
+                    setOpenDetails(!openDetails);
+                  }}
                   className={getLinkClass(rutas.Diagnostico)}
                   key="edit">
                   {" "}
-                  <Link
-                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Diagnostico}`}>
-                    Diagnosticos y tratamientos
-                  </Link>
+                  <div>Diagnosticos y tratamientos</div>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

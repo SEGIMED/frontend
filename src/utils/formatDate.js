@@ -16,5 +16,6 @@ export function extractHourMinutes(dateStr) {
   const [hours, minutes] = time.split(":");
 
   // Retornamos el formato deseado sin los segundos y con el período en minúsculas
-  return `${hours}:${minutes} ${period}`;
+  // return `${hours}:${minutes} ${period}`;
+  return `${hours}:${minutes}`;
 }
