@@ -1,99 +1,120 @@
-"use client";
+"use client"
 import React, { useState, useRef, useEffect } from "react";
 import Model from "react-body-highlighter";
 import { Slider, Button } from "@nextui-org/react";
-import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import ButtonNext from "../consulta/button";
+import ButtonNextPreconsultation from "./ButtonNext";
+import DropNextPreconsultation from "./DropDown";
 import IconConsulta from "../icons/IconConsulta";
+import Image from "next/image";
+import circleData from "@/components/images/circleData.png";
 import IconDolor from "../icons/IconDolor";
 import IconDolor2 from "../icons/IconDolor2";
-import DropNext from "../consulta/dropdown";
-import circleData from "../images/circleData.png";
-import { updateBodyField } from "@/redux/slices/user/preconsultaFormSlice";
+import { useFormContext } from "react-hook-form";
+import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
-const muscleTranslations = {
-  /* Back */
-  trapezius: "Trapecio",
-  "upper-back": "Espalda Superior",
-  "lower-back": "Espalda Inferior",
-
-  /* Chest */
-  chest: "Pecho",
-
-  /* Arms */
-  biceps: "Bíceps",
-  triceps: "Tríceps",
-  forearm: "Antebrazo",
-  "back-deltoids": "Deltoides Posterior",
-  "front-deltoids": "Deltoides Anterior",
-
-  /* Abs */
-  abs: "Abdominales",
-  obliques: "Oblicuos",
-
-  /* Legs */
-  adductor: "Aductores",
-  hamstring: "Isquiotibiales",
-  quadriceps: "Cuádriceps",
-  abductors: "Abductores",
-  calves: "Pantorrillas",
-  gluteal: "Glúteos",
-  knees: "Rodillas",
-  "right-soleus": "Sóleo Derecho",
-  "left-soleus": "Sóleo Izquierdo",
-
-  /* Head */
-  head: "Cabeza",
-  neck: "Cuello",
-};
-export default function InputCuerpoPre({ title, defaultOpen = false }) {
+export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = false }) {
   const dispatch = useAppDispatch();
-  const bodySection = useAppSelector(
-    (state) => state.preconsultaForm.formData.bodySection
-  );
+  const [selectedMuscles, setSelectedMuscles] = useState([]);
+  const [isPain, setIsPain] = useState(false); // Estado para manejar si hay dolor
+  const [selectedMuscleName, setSelectedMuscleName] = useState("");
+  const [modelType, setModelType] = useState("anterior");
+  const [painLevel, setPainLevel] = useState(1);
+
+  const { register } = useFormContext();
+
+  const muscleTranslations = {
+    /* Back */
+    trapezius: "Trapecio",
+    "upper-back": "Espalda Superior",
+    "lower-back": "Espalda Inferior",
+
+    /* Chest */
+    chest: "Pecho",
+
+    /* Arms */
+    biceps: "Bíceps",
+    triceps: "Tríceps",
+    forearm: "Antebrazo",
+    "back-deltoids": "Deltoides Posterior",
+    "front-deltoids": "Deltoides Anterior",
+
+    /* Abs */
+    abs: "Abdominales",
+    obliques: "Oblicuos",
+
+    /* Legs */
+    adductor: "Aductores",
+    hamstring: "Isquiotibiales",
+    quadriceps: "Cuádriceps",
+    abductors: "Abductores",
+    calves: "Pantorrillas",
+    gluteal: "Glúteos",
+    knees: "Rodillas",
+    "right-soleus": "Sóleo Derecho",
+    "left-soleus": "Sóleo Izquierdo",
+
+    /* Head */
+    head: "Cabeza",
+    neck: "Cuello",
+  };
+
+  useEffect(() => {
+    const colors = {
+      1: "text-green-500",
+      2: "text-green-500",
+      3: "text-green-500",
+      4: "text-green-500",
+      5: "text-orange-500",
+      6: "text-orange-500",
+      7: "text-orange-500",
+      8: "text-red-500",
+      9: "text-red-500",
+      10: "text-red-500",
+    };
+
+    const applyColors = () => {
+      const divs = document.querySelectorAll('.absolute[data-slot="mark"]');
+      divs.forEach((div) => {
+        const value = parseInt(div.textContent, 10);
+        div.className = `md:text-md text-xl absolute opacity-50 data-[in-range=true]:opacity-100 top-1/3 md:top-1/2 mt-1 -translate-x-1/2 translate-y-1/2 cursor-pointer transition-opacity motion-reduce:transition-none ${colors[value]}`;
+      });
+    };
+
+    // Retry applying colors after the component has mounted
+    const timeoutId = setTimeout(applyColors, 100);
+
+    return () => clearTimeout(timeoutId); // Cleanup on unmount
+  }, [isPain, painLevel]);
 
   const handleClick = ({ muscle }) => {
-    const existingData =
-      bodySection.selectedMuscles.length > 0
-        ? bodySection.selectedMuscles[0]
-        : { muscles: [] };
+    const prevMusc = [...selectedMuscles];
+    const existingData = prevMusc.length > 0 ? prevMusc[0] : { muscles: [] };
     let updatedMuscles;
-
     if (existingData.muscles.includes(muscle)) {
       updatedMuscles = existingData.muscles.filter((m) => m !== muscle);
     } else {
       updatedMuscles = [...existingData.muscles, muscle];
     }
-
-    dispatch(
-      updateBodyField({
-        field: "selectedMuscles",
-        value: [{ ...existingData, muscles: updatedMuscles }],
-      })
-    );
+    // Si hay una traducción definida para el músculo, úsala; de lo contrario, usa el nombre original
+    const translatedMuscleName = muscleTranslations[muscle] || muscle;
+    setSelectedMuscleName(translatedMuscleName); // Establecer el nombre del músculo seleccionado
+    setSelectedMuscles([{ ...existingData, muscles: updatedMuscles }]);
+    onBodyChange("muscles", [...updatedMuscles.map((m) => muscleTranslations[m] || m)]);
   };
 
   const handlePainSelection = (selection) => {
-    dispatch(updateBodyField({ field: "isPain", value: selection === "Si" }));
+    setIsPain(selection === "Si");
   };
 
   const handleModelTypeChange = (type) => {
-    dispatch(
-      updateBodyField({
-        field: "modelType",
-        value: type === "Frente" ? "anterior" : "posterior",
-      })
-    );
+    if (type === "Frente") setModelType("anterior");
+    else setModelType("posterior");
   };
 
   const handleChange = (value) => {
-    dispatch(updateBodyField({ field: "painLevel", value }));
-  };
-
-  const handleTextChange = (field, value) => {
-    console.log(field, value);
-    dispatch(updateBodyField({ field, value }));
+    setPainLevel(value);
+    onBodyChange("painLevel", value);
   };
 
   return (
@@ -110,7 +131,8 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
         <div className="flex md:flex-row flex-col w-full items-center md:items-start justify-center ">
           <div className="w-full md:w-1/2 h-full items-center flex flex-col justify-center py-4">
             <div className=" items-center justify-center">
-              <ButtonNext
+              <ButtonNextPreconsultation
+                onBodyChange={onBodyChange}
                 options={["Frente", "Dorso"]}
                 handleSelection={handleModelTypeChange}
                 name={"modelType"}
@@ -118,15 +140,15 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
             </div>
             <div>
               <Model
-                data={bodySection.selectedMuscles}
+                data={selectedMuscles}
                 style={{ width: "20rem", padding: "3rem" }}
                 onClick={handleClick}
-                type={bodySection.modelType}
+                type={modelType}
               />
             </div>
 
-            {bodySection.selectedMuscles.length > 0 &&
-              bodySection.selectedMuscles[0].muscles.map((muscle, index) => (
+            {selectedMuscles.length > 0 &&
+              selectedMuscles[0].muscles.map((muscle, index) => (
                 <div
                   key={index}
                   className="flex flex-col gap-2 w-full py-3 px-7 border-b border-b-[#cecece]">
@@ -137,13 +159,7 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
                     {muscleTranslations[muscle]}
                   </label>
                   <textarea
-                    value={bodySection[muscleTranslations[muscle]] || ""}
-                    onChange={(e) =>
-                      handleTextChange(
-                        muscleTranslations[muscle],
-                        e.target.value
-                      )
-                    }
+                    {...register(muscleTranslations[muscle])}
                     className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
                     placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`}
                   />
@@ -153,22 +169,21 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
           <div className="items-center w-full md:w-1/2 sticky top-0">
             <div className="flex items-center flex-col gap-3 py-4 ">
               <div>
-                <ButtonNext
+                <ButtonNextPreconsultation
+                  onBodyChange={onBodyChange}
                   text={"¿Hay dolor?"}
                   options={["Si", "No"]}
                   handleSelection={handlePainSelection}
                   name={"pain"}
                 />
               </div>
-              {bodySection.isPain && (
+              {isPain && (
                 <>
                   <div>
-                    <ButtonNext
+                    <ButtonNextPreconsultation
+                      onBodyChange={onBodyChange}
                       text={"¿Desde hace cuánto tiempo tiene el dolor?"}
                       options={["Horas", "Dias", "Semanas"]}
-                      handleSelection={(value) =>
-                        handleTextChange("painTime", value)
-                      }
                       name={"painTime"}
                     />
                   </div>
@@ -181,7 +196,7 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
                         aria-label="Nivel de dolor"
                         size="lg"
                         step={1}
-                        value={bodySection.painLevel}
+                        value={painLevel}
                         onChange={handleChange}
                         showSteps={true}
                         maxValue={10}
@@ -238,7 +253,8 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
                     </div>
                   </div>
                   <div>
-                    <DropNext
+                    <DropNextPreconsultation
+                      onBodyChange={onBodyChange}
                       text={"Tipo de dolor"}
                       options={[
                         "Opresión",
@@ -258,27 +274,24 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
                     />
                   </div>
                   <div>
-                    <ButtonNext
+                    <ButtonNextPreconsultation
+                      onBodyChange={onBodyChange}
                       text={"¿Tomó analgésicos?"}
                       options={["Si", "No"]}
-                      handleSelection={(value) =>
-                        handleTextChange("analgesics", value)
-                      }
                       name={"analgesicos"}
                     />
                   </div>
                   <div>
-                    <ButtonNext
+                    <ButtonNextPreconsultation
+                      onBodyChange={onBodyChange}
                       text={"¿Calma con analgésicos?"}
                       options={["Si", "No"]}
-                      handleSelection={(value) =>
-                        handleTextChange("calmWithAnalgesics", value)
-                      }
                       name={"calmaAnalgesicos"}
                     />
                   </div>
                   <div>
-                    <DropNext
+                    <DropNextPreconsultation
+                      onBodyChange={onBodyChange}
                       text={"Frecuencia del dolor"}
                       options={[
                         "De vez en cuando",
@@ -292,12 +305,10 @@ export default function InputCuerpoPre({ title, defaultOpen = false }) {
                     />
                   </div>
                   <div>
-                    <ButtonNext
+                    <ButtonNextPreconsultation
+                      onBodyChange={onBodyChange}
                       text={"¿Es el peor dolor de su vida?"}
                       options={["Si", "No"]}
-                      handleSelection={(value) =>
-                        handleTextChange("worstPain", value)
-                      }
                       name={"peorDolor"}
                     />
                   </div>

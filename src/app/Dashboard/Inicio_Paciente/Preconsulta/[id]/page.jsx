@@ -1,7 +1,6 @@
 "use client";
 
 import Elboton from "@/components/Buttons/Elboton";
-import InputDiagnostico from "@/components/consulta/inputDiagnostico";
 import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PreconsultaQuestion from "@/components/preconsulta/PreconsultaQuestion";
@@ -16,8 +15,8 @@ import {
   updateDescription,
   updateVitalSign,
   updateAnamnesis,
-  updateFileUploaded,
-  updateSubquestion,
+  updateTratamiento,
+  updateBodyPainLevel,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -26,13 +25,13 @@ import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import AnamnesisPreconsulta from "@/components/preconsulta/Anamnesis";
+import TratamientoPreconsulta from "@/components/preconsulta/Tratamiento";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
   const scheduleId = params.id
   const token = Cookies.get('a');
   const patientId = Cookies.get('c');
-  const [preConsultationQuestions, setPreConsultationQuestions] = useState(null);
   const [tests, setTests] = useState({
     abnormalGlycemia: {
       title: 'Glicemia anormal',
@@ -165,13 +164,21 @@ export default function PreconsultaPte({ params }) {
     setTests({ ...studies, [test]: { ...studies[test], description: testDescription } });
   };
 
+  const handleTratamientoDescription = (field, item, description) => {
+    dispatch(updateTratamiento({ field, item, description })); // almacenamos los distintos tratamientos en el estado global
+  };
+
+  const handleBodyChange = (name, value) => {
+    dispatch(updateBodyPainLevel({ name, option: value }));
+  };
+
   const methods = useForm();
 
   const handleSubmit = async (event) => {
-    console.log({ ...formData, tests });
-    event.preventDefault();
+    console.log({ ...formData, patient: patientId, appointmentSchedule: scheduleId, tests });
+    /* event.preventDefault();
     try {
-      if (!formData || !preConsultationQuestions) { // si esque no se cargaron las preguntas del formulario o el paciente no seleccionó nada
+      if (!formData) { // si esque no se cargaron las preguntas del formulario o el paciente no seleccionó nada
         console.error('No form data to submit');
         return;
       }
@@ -186,7 +193,7 @@ export default function PreconsultaPte({ params }) {
       }
     } catch (error) {
       console.error('Error fetching data', error);
-    }
+    } */
   };
 
   useEffect(() => {
@@ -209,7 +216,7 @@ export default function PreconsultaPte({ params }) {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-[50%] gap-10">
+      <div className="flex flex-col h-[50%] gap-5">
         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] ">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
@@ -244,11 +251,9 @@ export default function PreconsultaPte({ params }) {
           onVitalSignChange={handleVitalSign}
           defaultOpen
         />
-        {/* <InputCuerpoPre title={"Exploracion fisica"} defaultOpen /> */}
-        <AnamnesisPreconsulta
-          title={"Anamnesis"}
-          onAnamnesisChange={handleAnamnesis}
-          anamnesis={formData.anamnesis}
+        <InputCuerpoPre
+          title={"Exploracion fisica"}
+          onBodyChange={handleBodyChange}
           defaultOpen
         />
         <InputFilePreconsultation
@@ -258,11 +263,18 @@ export default function PreconsultaPte({ params }) {
           tests={tests}
           defaultOpen
         />
-        {/* <InputDiagnostico
-          title={"Tratamiento"}
-          subtitle={["Medicamentos"]}
+        <AnamnesisPreconsulta
+          title={"Anamnesis"}
+          onAnamnesisChange={handleAnamnesis}
+          anamnesis={formData.anamnesis}
           defaultOpen
-        /> */}
+        />
+        <TratamientoPreconsulta
+          title={"Tratamiento"}
+          onTratamientoChange={handleTratamientoDescription}
+          tratamiento={formData.tratamiento}
+          defaultOpen
+        />
         <button
           className="bg-[#0A6EAA] mt-4 w-1/5 mx-auto text-white text-lg font-bold rounded-lg px-2 py-4"
           onClick={handleSubmit}>

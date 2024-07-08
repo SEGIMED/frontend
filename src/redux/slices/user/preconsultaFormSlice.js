@@ -286,15 +286,7 @@ const initialState = {
       },
     },
     bodySection: {
-      selectedMuscles: [],
-      isPain: false,
-      painLevel: 1,
-      painTime: "",
-      painType: "",
-      analgesics: "",
-      calmWithAnalgesics: "",
-      painFrequency: "",
-      worstPain: "",
+      selectedOptions: {},
     },
     anamnesis: {
       consultationReason: {
@@ -309,12 +301,11 @@ const initialState = {
     tratamiento: {
       currentMedications: {
         title: 'Medicamentos actuales',
+        placeholder: 'Escriba el medicamento',
         file: '',
-        selectedOption: [
-          "medicamento1",
-          "medicamento2",
-          "medicamento3"
-        ]
+        selectedOptions: {
+          item0: '',
+        }
       },
     }
   },
@@ -359,22 +350,25 @@ const preconsultaFormSlice = createSlice({
     },
     updateAnamnesis(state, action) {
       const { field, description } = action.payload;
-      console.log({ field, description });
       state.formData.anamnesis[field].description = description;
+    },
+    updateFileUploaded(state, action) {
+      const { field, file } = action.payload;
+      state.formData.estudios[field].file = file;
+    },
+    updateTratamiento(state, action) {
+      const { field, item, description } = action.payload;
+      state.formData.tratamiento[field].selectedOptions[item] = description;
+    },
+    updateBodyPainLevel: (state, action) => {
+      const { name, option } = action.payload;
+      state.formData.bodySection.selectedOptions[name] = option;
     },
     updateSubquestion(state, action) {
       const { sectionIndex, subquestionIndex, field, value } = action.payload;
       state.formData.questions[sectionIndex].subquestions[subquestionIndex][
         field
       ] = value;
-    },
-    updateBodyField(state, action) {
-      const { field, value } = action.payload;
-      state.formData.bodySection[field] = value;
-    },
-    updateFileUploaded(state, action) {
-      const { field, file } = action.payload;
-      state.formData.estudios[field].file = file;
     },
     setFormData(state, action) {
       state.formData = action.payload;
@@ -393,10 +387,11 @@ export const {
   updateDescription,
   updateVitalSign,
   updateAnamnesis,
+  updateTratamiento,
+  updateBodyPainLevel,
   updateSubquestion,
   setFormData,
   resetForm,
-  updateBodyField,
   updateFileUploaded
 } = preconsultaFormSlice.actions;
 export default preconsultaFormSlice.reducer;
