@@ -18,6 +18,7 @@ import PtesActivos from "@/components/Graficos/dashboardDoc/ptesActivos";
 import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
+import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -34,7 +35,7 @@ export default function HomeDoc() {
   };
 
   const charts = [
-    <div key={0} className="flex-grow flex items-center justify-center h-100%">
+    <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart />
     </div>,
     <div key={1} className="flex-grow flex items-center justify-center h-100% ">
@@ -96,7 +97,7 @@ export default function HomeDoc() {
         </div>
 
         <div className="grid-cols-2 gap-2 grid lg:py-5 lg:flex justify-between">
-          <div className="w-full bg-[#C9FFE2] flex flex-col justify-around gap-3 px-3 md:px-8 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#875CF2] flex flex-col justify-around gap-3 px-3 md:px-8 py-5 text-white text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconNewUsers className="w-[40%] md:w-12" />
               <span className="text-6xl md:text-7xl font-semibold ml-2">6</span>
@@ -105,7 +106,7 @@ export default function HomeDoc() {
             <p className="font-semibold text-center">Nuevos</p>
           </div>
 
-          <div className="w-full bg-[#A9FFCC] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#64D594] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconActiveUsers className="w-[40%] md:w-12" />
               <span className="text-6xl md:text-7xl font-semibold ml-2">4</span>
@@ -114,7 +115,7 @@ export default function HomeDoc() {
             <p className="font-semibold text-center">Activos</p>
           </div>
 
-          <div className="w-full bg-[#6DFFA7] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconInactiveUsers className="w-[40%] md:w-12" />
               <span className="text-6xl md:text-7xl font-semibold ml-2"> {dataAlarms?.inactiveAlarms}</span>
@@ -123,7 +124,7 @@ export default function HomeDoc() {
             <p className="font-semibold text-center">Alarmas Inactivos</p>
           </div>
 
-          <div className="w-full bg-[#58FFA0] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconAlarmUsers className="w-[42%] md:w-12" />
               <span className="text-6xl md:text-7xl font-semibold ml-2">{dataAlarms?.activeAlarms}</span>
@@ -133,21 +134,21 @@ export default function HomeDoc() {
           </div>
         </div>
       </div>
-      <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl my-5 flex flex-col">
-        <div className="flex justify-between p-5">
+      <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl my-5  flex flex-col">
+        <div className="flex justify-between items-center p-5">
           <Elboton onPress={handlePreviousChart} nombre={"Anterior"} />
+          <span className="text-lg leading-6" >Pacientes nuevos en los últimos 7 días</span>
           <Elboton onPress={handleNextChart} nombre={"Siguiente"} />
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
         {/* <div className="flex-grow flex items-center justify-center " > */}
-          {charts[currentChart]}
+
+        {charts[currentChart]}
         {/* </div> */}
       </div>
       <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl mt-5">
-        <p className="text-2xl py-72 font-bold flex items-center justify-center">
-          sus proximas citas
-        </p>
+        <ProximasConsultas />
       </div>
     </div>
   );
