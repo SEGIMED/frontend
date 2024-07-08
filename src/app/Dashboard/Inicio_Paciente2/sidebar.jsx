@@ -41,6 +41,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   console.log(lastSegment);
 
+  const [isMobile, setIsMobile] = useState(false)
+
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
 
@@ -203,7 +205,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
   useEffect(() => {
     obtenerUbicacion();
     const idUser = Cookies.get("c");
-
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth <= 768);
+    }
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
@@ -245,7 +249,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
       id: 5,
     },
   ];
-  const isMobile = window?.innerWidth <= 768;
 
   return (
     <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
