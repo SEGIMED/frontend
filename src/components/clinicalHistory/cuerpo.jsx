@@ -16,10 +16,6 @@ export default function ClincalCuerpo({ info }) {
     const [painLevel, setPainLevel] = useState(1);
     const [selectedMuscles, setSelectedMuscles] = useState([{ name: 'Musculo', muscles: [] }]);
 
-
-    const painArea = info.painMap
-    const painAreass = painArea.painAreas
-    console.log(info)
     useEffect(() => {
         // Función para obtener los nombres de músculos en inglés
         const getMuscleNames = () => {
