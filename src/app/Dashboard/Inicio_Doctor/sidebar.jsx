@@ -20,6 +20,7 @@ import { resetApp } from "@/redux/rootReducer";
 
 import { socket } from "@/utils/socketio";
 import { addAlarms } from "@/redux/slices/alarms/alarms";
+import { addActivePtes } from "@/redux/slices/activePtes/activePtes";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -87,7 +88,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
   
-  const getActives = async (headers) => {
+  const getActivesAlarms = async (headers) => {
     
       try {
         
@@ -99,6 +100,18 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         // console.log(data)
         dispatch( addAlarms (data)) ;
        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const getActivesPacientes = async (headers) => {
+      try {
+        
+        const response = await ApiSegimed.get("/statistics-patient-activity", headers);
+        
+        dispatch ( addActivePtes(response.data))
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -133,7 +146,8 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      getActives({ headers: { token: token } })
+      getActivesAlarms({ headers: { token: token } })
+      getActivesPacientes({ headers: { token: token } })
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });

@@ -24,6 +24,7 @@ export default function HomeDoc() {
 
   const [currentChart, setCurrentChart] = useState(0);
   const dataAlarms = useAppSelector((state) => state.alarms);
+  const dataPtesGrafic= useAppSelector(state => state.activePtes)
   
   const handlePreviousChart = () => {
     setCurrentChart((prev) => (prev === 0 ? charts.length - 1 : prev - 1));
@@ -32,7 +33,7 @@ export default function HomeDoc() {
   const handleNextChart = () => {
     setCurrentChart((prev) => (prev === charts.length - 1 ? 0 : prev + 1));
   };
-
+  
   const charts = [
     <div key={0} className="flex-grow flex items-center justify-center h-100%">
       <BarChart />
@@ -108,7 +109,7 @@ export default function HomeDoc() {
           <div className="w-full bg-[#A9FFCC] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconActiveUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">4</span>
+              <span className="text-6xl md:text-7xl font-semibold ml-2">{dataPtesGrafic?.activePatients}</span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Activos</p>
