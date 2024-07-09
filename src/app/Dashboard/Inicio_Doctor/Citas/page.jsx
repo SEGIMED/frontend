@@ -11,6 +11,9 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
+
 
 dayjs.locale("es");
 
@@ -20,7 +23,10 @@ export default function Citas() {
   const router = useRouter();
 
   const [date, setDate] = useState(new Date());
+  const [dateSelected, setDateSelected] = useState();
   const [view, setView] = useState("month");
+  // const [events, setEvents] = useState()
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getSchedules = async (headers) => {
     try {
@@ -34,12 +40,39 @@ export default function Citas() {
     }
   };
 
+
+
   useEffect(() => {
     const token = Cookies.get("a");
     if (token) {
       getSchedules({ headers: { token: token } });
     }
   }, [dispatch]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // const handleSelectSlot = useCallback(
+  //   ({ start, end }) => {
+  //     const title = window.prompt('New Event Name')
+  //     setIsModalOpen(true);
+  //     if (title) {
+  //       setEvents((prev) => [...prev, { start, end, title }])
+  //     }
+  //   },
+  //   [setEvents]
+  // )
+
+
+
+  const handleSelectSlot = ({ start, end }) => {
+    setDateSelected(start);
+    setIsModalOpen(true);
+
+  }
+
+  const userId = Cookies.get("c");
 
   const shedules = useAppSelector((state) => state.schedules);
 
@@ -59,6 +92,9 @@ export default function Citas() {
   }
 
   const events = mapSchedules(shedules);
+
+
+
 
   const handleNavigation = (newDate, action) => {
     switch (action) {
@@ -202,6 +238,8 @@ export default function Citas() {
           onView={handleViewChange}
           onNavigate={handleNavigation}
           date={date}
+          onSelectSlot={handleSelectSlot}
+          selectable
           dayPropGetter={dayStyle}
 
           components={{
@@ -210,6 +248,12 @@ export default function Citas() {
           firstDay={1}
         />
       </div>
+      < ModalConsultationCalendar
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        physician={userId}
+        dateSelect={dateSelected}
+      />
     </div>
   );
 }
