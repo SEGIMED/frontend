@@ -79,7 +79,7 @@ export default function HomeDoc() {
   console.log(scheduledConsultas);
 
   return (
-    <div className="h-full text-[#686868] w-full flex flex-col">
+    <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
         {/* <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
@@ -96,8 +96,8 @@ export default function HomeDoc() {
           </button>
         </Link>
         <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
-          <button className="flex px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
-            <IconFolder />
+          <button className="flex px-6 py-1 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+            <IconFolder className="h-6" />
             <p className="text-start text-[#487FFA] font-bold text-base leading-5">
               Pasadas
             </p>
@@ -111,7 +111,7 @@ export default function HomeDoc() {
                 /> */}
         <div></div>
       </div>
-      <div className="items-start justify-center w-full overflow-y-auto">
+      <div className="items-start justify-center w-full md:overflow-y-auto">
         {filteredPatients?.map((paciente) => (
           <PatientCardConsulta
             key={paciente.id}

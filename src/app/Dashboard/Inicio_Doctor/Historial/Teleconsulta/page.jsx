@@ -93,7 +93,7 @@ export default function HomeDoc() {
         </button>
         <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
           <button className="flex px-2 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
-            <IconFolder />
+            <IconFolder className="h-6" />
             <p className="text-start text-[#487FFA] font-bold text-base leading-5">
               Pasadas
             </p>
