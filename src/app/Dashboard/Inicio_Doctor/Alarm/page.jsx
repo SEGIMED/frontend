@@ -56,8 +56,8 @@ export default function HomeDoc() {
   }, []);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
+    <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white static md:sticky top-0 z-20 md:z-50">
         {/* <Ordenar /> */}
         <h1 className="font-bold">Listado de Alarmas</h1>
         <Link href={`${rutas.Doctor}${rutas.Alarm}${rutas.resueltas}`}>
@@ -66,7 +66,7 @@ export default function HomeDoc() {
           </button>
         </Link>
       </div>
-      <div className="grid grid-cols-5 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white sticky top-14 z-10 md:z-4">
+      <div className="grid grid-cols-5 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4">
         <p className="font-bold text-[#5F5F5F]">Prioridad</p>
         <p className="font-bold text-[#5F5F5F]">Paciente</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
@@ -79,7 +79,7 @@ export default function HomeDoc() {
           <p className="font-bold text-[#5F5F5F] block md:hidden"> Opciones</p>
         </div>
       </div>
-      <div className="overflow-auto h-full">
+      <div className="md:overflow-auto h-full">
         <TableAlarm pacientes={activeAlarms} />
       </div>
     </div>

@@ -8,6 +8,16 @@ export const metadata = {
   description: "Segimed aplicación de telemedicina para médicos y pacientes",
 };
 
+export async function generateViewport() {
+  return {
+    width: "device-width",
+    height: "device-height",
+    initialScale: 1.0,
+    minimumScale: 1.0,
+    targetDensityDpi: "device-dpi",
+  };
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

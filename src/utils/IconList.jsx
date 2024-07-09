@@ -325,7 +325,7 @@ export default function IconList() {
       ),
       name: "IconFinish",
     },
-    { component: <IconFolder />, name: "IconFolder" },
+    { component: <IconFolder className="h-6" />, name: "IconFolder" },
     { component: <IconFundarHP />, name: "IconFundarHP" },
     { component: <IconGaleno />, name: "IconGaleno" },
     { component: <IconGeolocation />, name: "IconGeolocation" },
