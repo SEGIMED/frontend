@@ -16,13 +16,16 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       screens: {
+        xs: "359px",
         "2xl": "1540px",
       },
       colors: {
         primary: "#0070f3",
         secondary: "#ff4081",
         bluePrimary: "#487FFA",
+        greenPrimary: "#70C247",
         textPrimary: "#808080",
+        textSubtitle: "#686868",
       },
       darkMode: "class",
     },

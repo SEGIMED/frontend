@@ -18,11 +18,13 @@ import PtesActivos from "@/components/Graficos/dashboardDoc/ptesActivos";
 import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
+import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
 
   const [currentChart, setCurrentChart] = useState(0);
+  const dataAlarms = useAppSelector((state) => state.alarms);
 
   const handlePreviousChart = () => {
     setCurrentChart((prev) => (prev === 0 ? charts.length - 1 : prev - 1));
@@ -33,7 +35,7 @@ export default function HomeDoc() {
   };
 
   const charts = [
-    <div key={0} className="flex-grow flex items-center justify-center h-100%">
+    <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart />
     </div>,
     <div key={1} className="flex-grow flex items-center justify-center h-100% ">
@@ -44,46 +46,55 @@ export default function HomeDoc() {
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
   return (
-    <div className="h-full flex flex-col p-10 bg-[#FAFAFC] overflow-y-scroll">
+    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-hidden md:overflow-y-scroll">
       <h2 className="text-2xl">
-        ¡Bienvenido {user.name} {user.lastname}!
+        ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>
 
-      <div className="grid-cols-2 gap-2 grid lg:flex justify-between py-10">
-        <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
-          <div className=" bg-gradient-to-br w-[100%] from-[#729EFF] via-[#2060ED] to-[#729EFF] flex justify-center items-center gap-3 text-white text-xl rounded-3xl lg:w-60 h-24">
+      <div className="grid-cols-2 gap-4 grid lg:flex w-full">
+        <Link
+          href={`${rutas.Doctor}${rutas.Pacientes}`}
+          className="w-full md:w-1/4">
+          <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconAdminButtons className="w-[25%] md:w-12" />
-            <div className="text-[16px] flex flex-col">
-              {/* <span>Nuevo</span> */}
-              <span>Pacientes</span>
-            </div>
+            <span className="text-[16px] lg:text-2xl font-semibold">
+              Pacientes
+            </span>
           </div>
         </Link>
 
-        <Link href={`${rutas.Doctor}${rutas.Citas}`}>
-          <div className=" bg-gradient-to-br w-[100%] from-[#729EFF] via-[#2060ED] to-[#729EFF] flex justify-center items-center gap-3 text-white text-xl rounded-3xl lg:w-60 h-24">
+        <Link
+          href={`${rutas.Doctor}${rutas.Citas}`}
+          className="w-full md:w-1/4">
+          <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconDashAgenda className="w-[25%] md:w-14" />
-            <div className="text-[16px] lg:text-lg flex flex-col items-center">
-              <span>Mi</span>
-              <span>Agenda</span>
-            </div>
-          </div>
-        </Link>
-
-        <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-          <div className=" bg-gradient-to-br w-[100%] from-[#729EFF] via-[#2060ED] to-[#729EFF] flex justify-center items-center gap-3 text-white text-xl rounded-3xl lg:w-60 h-24">
-            <IconDashAgenda className="w-[25%] md:w-14" />
-            <div className="text-[16px] lg:text-lg flex flex-col items-center">
+            <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
               <span>Agenda</span>
               <span>General</span>
             </div>
           </div>
         </Link>
 
-        <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-          <div className=" bg-gradient-to-br w-[100%] from-[#729EFF] via-[#2060ED] to-[#729EFF] flex justify-center items-center gap-3 text-white text-xl rounded-3xl lg:w-60 h-24">
+        <Link
+          href={`${rutas.Doctor}${rutas.Historial}`}
+          className="w-full md:w-1/4">
+          <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
+            <IconDashAgenda className="w-[25%] md:w-14" />
+            <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
+              <span>Ordenes</span>
+              <span>Medicas</span>
+            </div>
+          </div>
+        </Link>
+
+        <Link
+          href={`${rutas.Doctor}${rutas.Historial}`}
+          className="w-full md:w-1/4">
+          <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconHomeCitas className="w-[20%] md:w-12" />
-            <span className="text-[16px] lg:text-lg">Pendientes</span>
+            <span className="text-[16px] lg:text-2xl font-semibold">
+              Pendientes
+            </span>
           </div>
         </Link>
       </div>
@@ -94,60 +105,68 @@ export default function HomeDoc() {
           Pacientes
         </div>
 
-        <div className="grid-cols-2 gap-2 grid lg:py-5 lg:flex justify-between">
-          <div className="w-full bg-[#C9FFE2] flex flex-col justify-around gap-3 px-3 md:px-8 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+        <div className="grid-cols-2 gap-4 grid lg:py-5 lg:flex">
+          <div className="w-full bg-[#875CF2] flex flex-col justify-around gap-3 px-3 md:px-8 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
-              <IconNewUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">6</span>
+              <IconNewUsers className="w-[40%] md:w-12" color="white" />
+              <span className="text-4xl xs:text-6xl md:text-7xl font-semibold ml-2">
+                6
+              </span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Nuevos</p>
           </div>
 
-          <div className="w-full bg-[#A9FFCC] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#64D594] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
-              <IconActiveUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">4</span>
+              <IconActiveUsers className="w-[40%] md:w-12" color="white" />
+              <span className="text-4xl xs:text-6xl md:text-7xl font-semibold ml-2">
+                4
+              </span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Activos</p>
           </div>
 
-          <div className="w-full bg-[#6DFFA7] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
-              <IconInactiveUsers className="w-[40%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">7</span>
+              <IconInactiveUsers className="w-[40%] md:w-12" color="white" />
+              <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
+                {dataAlarms?.inactiveAlarms}
+              </span>
               <IconArrowUp className="hidden md:block" />
             </div>
-            <p className="font-semibold text-center">Inactivos</p>
+            <p className="font-semibold text-center">Alarmas Inactivos</p>
           </div>
 
-          <div className="w-full bg-[#58FFA0] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-[#487FFA] text-xl rounded-3xl lg:w-60 h-40">
+          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-center gap-2">
-              <IconAlarmUsers className="w-[42%] md:w-12" />
-              <span className="text-6xl md:text-7xl font-semibold ml-2">1</span>
+              <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
+              <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
+                {dataAlarms?.activeAlarms}
+              </span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-center">Alarmas Activas</p>
           </div>
         </div>
       </div>
-      <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl my-5 flex flex-col">
-        <div className="flex justify-between p-5">
+      <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl flex flex-col">
+        <div className="flex justify-between items-center p-2 xs:p-5">
           <Elboton onPress={handlePreviousChart} nombre={"Anterior"} />
+          <span className="text-sm xs:text-lg text-center leading-6">
+            Pacientes nuevos en los últimos 7 días
+          </span>
           <Elboton onPress={handleNextChart} nombre={"Siguiente"} />
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
         {/* <div className="flex-grow flex items-center justify-center " > */}
-          {charts[currentChart]}
+
+        {charts[currentChart]}
         {/* </div> */}
       </div>
-      <div className="h-full w-full bg-white border border-[#DCDBDB] rounded-2xl mt-5">
-        <p className="text-2xl py-72 font-bold flex items-center justify-center">
-          sus proximas citas
-        </p>
-      </div>
+      <ProximasConsultas />
     </div>
   );
 }
