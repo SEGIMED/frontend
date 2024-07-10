@@ -11,8 +11,8 @@ import rutas from "@/utils/rutas";
 
 export default function ProximasConsultasInfo({ info }) {
   return (
-    <div className="flex items-center px-2 xs:px-4 md:px-6 md:py-4 py-2 justify-between">
-      <div className="flex items-center w-2/3 md:w-[35%]">
+    <div className="flex items-center px-2 xs:px-4 md:px-6 md:py-4 py-2 justify-between border-b border-[#DCDBDB]">
+      <div className="flex items-center w-2/3 md:w-[35%] ">
         <div className="w-full md:w-1/2 flex">
           <Avatars avatar1={info?.patientUser?.avatar} />
           <p className="h-10 flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
@@ -24,7 +24,7 @@ export default function ProximasConsultasInfo({ info }) {
           {LastLogin(info?.scheduledStartTimestamp)}
         </p>
       </div>
-      <div className="flex space-x-1 md:space-x-4 ">
+      <div className="flex space-x-1 md:space-x-4  ">
         <Link href={`${rutas.Doctor}${rutas.Historial}/${info.patient}`}>
           <button className="flex rounded-lg items-center px-4 xs:px-6 py-2 font-bold text-sm leading-5 bg-bluePrimary text-white gap-1 ">
             <IconOptions color="#FFFFFF" />
