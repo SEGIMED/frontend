@@ -24,8 +24,11 @@ export default function ButtonNext({ text, options, handleSelection, name, disab
 
     return (
         <div>
-            <div className="font-bold mb-2">{text}</div>
-            <div className="flex space-x-4">
+            <div className='flex items-center justify-center'>
+                <div className="font-bold mb-2 ">{text}</div>
+
+            </div>
+            <div className="flex justify-center space-x-4">
                 {options?.map((opcion, index) => (
                     <Button
                         variant="bordered"
