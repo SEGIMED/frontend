@@ -12,13 +12,14 @@ export default function InputDiagnostico({
   title,
   subtitle,
   subtitle2,
+  subtitle3,
   defaultOpen = false,
 }) {
   const { register } = useFormContext();
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex px-6 py-2 border gap-2 md:gap-1 items-center cursor-pointer justify-center">
+        <summary className="flex items-center justify-center gap-2 px-6 py-2 border cursor-pointer md:gap-1">
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
@@ -41,6 +42,20 @@ export default function InputDiagnostico({
             />
           </div>
         ))}
+        {subtitle3 ? (
+          <div
+            className="flex flex-col gap-2 px-6 py-4 md:py-2 border-b border-b-[#cecece]">
+            <label className="text-start  py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
+              <IconCurrentRouteNav className="w-3" />
+              {subtitle3}
+            </label>
+            <input
+              className="w-full md:w-1/2 h-auto text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-2 md:py-1 outline-[#a8a8a8]"
+              placeholder={`Escribe el ${subtitle3} `}
+              {...register(subtitle3)}
+            />
+          </div>
+        ) : null}
         {subtitle?.map((sub, index) => (
           <div
             key={index}
