@@ -9,11 +9,26 @@ import riesgoVerde from "@/components/images/riesgoVerde.png";
 import Avatars from "../avatar/avatarChat";
 
 export default function PatientCard({ paciente, button, consulta }) {
+  
   const getRandomColor = () => {
     const colors = [riesgoRojo, riesgoAmarillo, riesgoVerde];
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
+
+  // const realColor= ({paciente})=>{
+  //   const risk = paciente?.patientPulmonaryHypertensionRisks?.risk
+  //   switch (risk) {
+  //     case "Bajo":
+  //     return riesgoVerde;
+  //     case "Moderado":
+  //     return riesgoAmarillo;
+  //     case "Alto":
+  //     return riesgoRojo;
+  //     default:
+  //     return null;
+  //   }
+  // }
 
   return (
     <div className="flex justify-between w-full border-b border-b-[#cecece] px-6 py-2 items-center">

@@ -11,20 +11,22 @@ export default function PtesActivos() {
       try {
         const token = Cookies.get("a");
         const response = await ApiSegimed.get("/statistics-patient-activity", { headers: { 'token': token } });
- 
+        
         setDataActives(response.data);
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     getActives();
+    
   }, []);
 
   const data = {
     labels: ['Activos', 'Inactivos'],
     datasets: [{
-      
+      data: [dataActives.activePatients, dataActives.inactivePatients],
       backgroundColor: [
         '#70C247', // Verde para activos
         '#487FFA', // Celeste para inactivos
@@ -43,7 +45,7 @@ export default function PtesActivos() {
               position: 'bottom', 
               labels: {
                 usePointStyle: true, 
-                padding: 100, // Ajustamos el padding a 100
+                padding: 100, 
               }
             }
           }
