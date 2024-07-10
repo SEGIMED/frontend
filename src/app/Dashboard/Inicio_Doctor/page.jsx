@@ -19,6 +19,7 @@ import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
 import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
+import Citas from "./Citas/page";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -165,6 +166,10 @@ export default function HomeDoc() {
 
         {charts[currentChart]}
         {/* </div> */}
+      </div>
+      <div className="h-fit w-full  border border-[#DCDBDB] rounded-2xl ">
+
+        <Citas />
       </div>
       <ProximasConsultas />
     </div>
