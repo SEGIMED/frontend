@@ -38,8 +38,8 @@ export default function SignosVitales({ pacientes, subtitle }) {
                     month: "numeric",
                   })}
                 </div>
-                <div className="text-[#FF8300] hidden md:block">
-                  {paciente.HTP}
+                <div className="text-[#5F5F5F] hidden md:block">
+                  {paciente.HTP || "Sin asignar"}
                 </div>
                 <div className="text-[#5F5F5F]">
                   {paciente?.attendancePlace?.alias}

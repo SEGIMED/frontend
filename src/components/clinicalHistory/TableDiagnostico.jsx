@@ -39,8 +39,8 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
                     month: "numeric",
                   })}
                 </div>
-                <div className="text-[#FF8300] hidden md:block">
-                  {paciente.HTP}
+                <div className="text-[#5F5F5F] hidden md:block">
+                  {paciente.HTP || "Sin asignar"}
                 </div>
                 <div className="text-[#5F5F5F]">
                   {paciente?.attendancePlace?.alias}
@@ -55,7 +55,7 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
                 </div>
               </div>
             </summary>
-            <div className="md:p-5 p-2 ">
+            <div className="md:p-4 p-2 bg-[#f5f4f4] ">
               <InputInfo2
                 title="Diagnósticos"
                 info={paciente.diagnostics}

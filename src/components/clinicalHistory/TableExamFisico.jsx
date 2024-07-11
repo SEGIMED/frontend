@@ -26,7 +26,7 @@ export default function ExamFisico({ pacientes, subtitle }) {
             onToggle={() => toggleDetail(index)}>
             <summary className="flex items-center cursor-pointer">
               <div className="grid text-center grid-cols-4 md:text-left md:grid-cols-7 items-center border-b border-b-[#cecece] py-2 bg-white z-10">
-                <div className=" justify-center hidden md:flex">
+                <div className="justify-center hidden md:flex">
                   <IconConsulta />
                 </div>
                 <div className="text-[#5F5F5F] hidden md:block">
@@ -38,8 +38,8 @@ export default function ExamFisico({ pacientes, subtitle }) {
                     month: "numeric",
                   })}
                 </div>
-                <div className="text-[#FF8300] hidden md:block">
-                  {paciente.HTP}
+                <div className="text-[#5F5F5F] hidden md:block">
+                  {paciente.HTP || "Sin asignar"}
                 </div>
                 <div className="text-[#5F5F5F]">
                   {paciente?.attendancePlace?.alias}

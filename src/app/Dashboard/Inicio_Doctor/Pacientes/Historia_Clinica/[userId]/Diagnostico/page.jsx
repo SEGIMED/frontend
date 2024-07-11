@@ -52,7 +52,7 @@ export default function HomeDoc() {
         <p className="font-bold text-[#5F5F5F] hidden md:block"></p>
         <p className="font-bold hidden md:block">Hora</p>
         <p className="font-bold">Fecha</p>
-        <p className="font-bold hidden md:block">Grupo HT1P</p>
+        <p className="font-bold hidden md:block">Grupo HTP</p>
         <p className="font-bold">Centro de atencion</p>
         <p className="font-bold ">Motivo de consulta</p>
         <p className="font-bold"></p>

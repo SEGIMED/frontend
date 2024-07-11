@@ -49,7 +49,6 @@ export default function HomeDoc() {
       </div>
       <div className="grid text-center md:text-left grid-cols-4 text-[#5F5F5F] md:grid-cols-7 items-center border-b border-b-[#cecece] md:pl-2 md:pr-6 py-2 bg-white z-10">
         <p className="font-bold text-[#5F5F5F] hidden md:block"></p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block"></p>
         <p className="font-bold hidden md:block">Hora</p>
         <p className="font-bold">Fecha</p>
         <p className="font-bold hidden md:block">Grupo HTP</p>
