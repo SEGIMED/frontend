@@ -18,7 +18,7 @@ export default function PreconsultaSubquestion({
         subquestion.options?.length > 0 ? "flex-col" : "flex-row"
       } `}>
       <div className="self-start flex md:flex-row w-full md:w-[40%] gap-2 items-center">
-        <IconCircle />
+        <IconCircle className="w-3" />
         <p className="text-[#686868] font-medium text-base leading-4">
           {subquestion.title}
         </p>
