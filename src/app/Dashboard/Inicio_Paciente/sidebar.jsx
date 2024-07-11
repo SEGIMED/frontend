@@ -40,6 +40,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
+  const lastSegmentText = pathname
+    .substring(pathname.lastIndexOf("/") + 1)
+    .replace(/_/g, " ");
+
   const router = useRouter(); // Use the useRouter hook
 
   const avatar =
@@ -235,7 +239,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
       <div className="flex justify-center items-center gap-2">
         <Image src={ruteActual} alt="" />
-        <p className="">{segmentToShow}</p>
+        <p className="">{lastSegmentText} | Segimed</p>
       </div>
       {showSearch && (
         <div
