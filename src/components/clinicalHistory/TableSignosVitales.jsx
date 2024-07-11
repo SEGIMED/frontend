@@ -54,7 +54,7 @@ export default function SignosVitales({ pacientes, subtitle }) {
                 </div>
               </div>
             </summary>
-            <div className="">
+            <div className="bg-[#FBFBFB]">
               {paciente.anthropometricDetails
                 ? paciente.anthropometricDetails.map((detail, detailIndex) => (
                     <div key={detailIndex}>

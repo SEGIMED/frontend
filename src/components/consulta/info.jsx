@@ -15,7 +15,7 @@ export default function DataPatient({ info, title }) {
           />
           {title}
         </label>
-        <span className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1 h-[34px]">
+        <span className="w-1/2 text-start text-[#5F5F5F] bg-white font-normal text-base leading-6  border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1 h-[34px]">
           {info}
         </span>
       </div>
