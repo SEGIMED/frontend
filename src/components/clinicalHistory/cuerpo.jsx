@@ -22,10 +22,10 @@ export default function ClincalCuerpo({ info }) {
             if (info && info.painMap && info.painMap.painAreas) {
                 const muscleData = info.painMap.painAreas.map(area => ({
                     name: 'Musculo',
-                    muscles: [area.painArea.painAreaEnglish === "forearms" ? "forearm" : area.painArea.painAreaEnglish],
+                    muscles: area.painArea?.painAreaEnglish ? [area.painArea.painAreaEnglish] : [],
                 }));
                 setSelectedMuscles(muscleData);
-
+                console.log(muscleData);
             }
         };
 

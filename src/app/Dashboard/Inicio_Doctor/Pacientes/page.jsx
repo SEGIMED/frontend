@@ -19,6 +19,7 @@ import avatar from "@/utils/defaultAvatar";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed.js";
 
+
 export default function HomeDoc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSorted, setIsSorted] = useState(false);
@@ -145,7 +146,12 @@ export default function HomeDoc() {
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 bg-white sticky top-0 z-10">
         <div></div>
         <h1 className="font-bold">Listado de pacientes</h1>
-        <div></div>
+        <div> <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
+          {/* <IconMensajeBoton className="w-6 h-6" /> */}
+          <p className="hidden md:block text-white font-bold">
+            Favoritos
+          </p>
+        </button></div>
       </div>
 
       <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
