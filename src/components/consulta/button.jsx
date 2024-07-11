@@ -34,11 +34,12 @@ export default function ButtonNext({
     }
   };
 
-<<<<<<< HEAD
   return (
     <div>
-      <div className="font-bold mb-2">{text}</div>
-      <div className="flex gap-4">
+      <div className="flex items-center justify-center">
+        <div className="font-bold mb-2 ">{text}</div>
+      </div>
+      <div className="flex justify-center space-x-4">
         {options?.map((opcion, index) => (
           <Button
             variant="bordered"
@@ -57,32 +58,4 @@ export default function ButtonNext({
       </div>
     </div>
   );
-=======
-    return (
-        <div>
-            <div className='flex items-center justify-center'>
-                <div className="font-bold mb-2 ">{text}</div>
-
-            </div>
-            <div className="flex justify-center space-x-4">
-                {options?.map((opcion, index) => (
-                    <Button
-                        variant="bordered"
-                        key={index}
-                        style={{
-                            backgroundColor: selectedOption === opcion ? '#487FFA' : 'white',
-                            color: selectedOption === opcion ? 'white' : '#487FFA',
-                            borderColor: "#487FFA",
-                            border: '2px solid #487FFA'
-                        }}
-                        onClick={() => handleClick(opcion)}
-                        disabled={disabled}
-                    >
-                        {opcion}
-                    </Button>
-                ))}
-            </div>
-        </div>
-    );
->>>>>>> origin/develop
 }
