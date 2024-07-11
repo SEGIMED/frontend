@@ -23,7 +23,7 @@ export default function Evoluciones({ pacientes }) {
             open={openDetails[index]}
             onToggle={() => toggleDetail(index)}>
             <summary className="flex items-center cursor-pointer ">
-              <div className="grid grid-cols-4 md:grid-cols-7 px-2 gap-1 items-center border-b border-t border-b-[#cecece] border-t-[#cecece] md:pr-6 py-2 bg-white w-full h-fit">
+              <div className="grid grid-cols-4 md:grid-cols-7 text-center md:text-left px-2 gap-1 items-center border-b border-t border-b-[#cecece] border-t-[#cecece] md:pr-6 py-2 bg-white w-full h-fit">
                 <div className="justify-center hidden md:flex">
                   <IconConsulta />
                 </div>
