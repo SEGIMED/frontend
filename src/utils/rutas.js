@@ -3,6 +3,8 @@
 const Doctor = "/Dashboard/Inicio_Doctor"
 const PacienteDash = "/Dashboard/Inicio_Paciente"
 const Admin = "/Dashboard/Inicio_Admin"
+const PacienteDash2 = "/Dashboard/Inicio_Paciente2"
+
 
 const Alarm = "/Alarm"
 const Citas = "/Citas"
@@ -42,6 +44,7 @@ const rutas = {
     resueltas,
     Doctor,
     PacienteDash,
+    PacienteDash2,
     Admin,
     Alarm,
     Citas,

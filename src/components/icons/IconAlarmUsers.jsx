@@ -1,4 +1,4 @@
-const IconAlarmUsers = ({ className }) => {
+const IconAlarmUsers = ({ className, color }) => {
   return (
     <svg
       className={className}
@@ -24,7 +24,7 @@ const IconAlarmUsers = ({ className }) => {
         cx="27.000000"
         cy="27.000000"
         r="26.000002"
-        stroke="#487FFA"
+        stroke={color || "#487FFA"}
         strokeOpacity="1.000000"
         strokeWidth="2.000000"
       />
@@ -54,7 +54,7 @@ const IconAlarmUsers = ({ className }) => {
         <path
           id="path"
           d="M21.33 31.66L21.33 26C21.33 24.43 21.88 23.09 22.99 21.99C24.09 20.88 25.43 20.33 26.99 20.33C28.56 20.33 29.9 20.88 31 21.99C32.11 23.09 32.66 24.43 32.66 26L32.66 31.66"
-          stroke="#487FFA"
+          stroke={color || "#487FFA"}
           strokeOpacity="1.000000"
           strokeWidth="2.500000"
           strokeLinejoin="round"
@@ -70,7 +70,7 @@ const IconAlarmUsers = ({ className }) => {
         <path
           id="path"
           d="M14.25 26L15.66 26M27 13.25L27 14.66M38.33 26L39.75 26M17.93 16.93L18.92 17.92M36.06 16.93L35.07 17.92"
-          stroke="#487FFA"
+          stroke={color || "#487FFA"}
           strokeOpacity="1.000000"
           strokeWidth="2.500000"
           strokeLinejoin="round"
@@ -85,7 +85,7 @@ const IconAlarmUsers = ({ className }) => {
         <path
           id="path"
           d="M19.91 31.66L34.08 31.66C35.02 31.66 35.5 32.13 35.5 33.08L35.5 35.91C35.5 36.86 35.02 37.33 34.08 37.33L19.91 37.33C18.97 37.33 18.5 36.86 18.5 35.91L18.5 33.08C18.5 32.13 18.97 31.66 19.91 31.66Z"
-          stroke="#487FFA"
+          stroke={color || "#487FFA"}
           strokeOpacity="1.000000"
           strokeWidth="2.500000"
           strokeLinejoin="round"

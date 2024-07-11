@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-full md:h-screen w-screen overflow-y-scroll md:overflow-y-hidden ">
       {/* Barra de navegación */}
       <NavDoctor isOpen={isOpen} toggleSidebar={toggleSidebar} />
 

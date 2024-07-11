@@ -251,7 +251,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   ];
 
   return (
-    <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
+    <div className=" flex  items-center justify-between h-[12%] w-full  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
       <div className="flex justify-center items-center gap-2">
         {lastSegment !== "Inicio_Paciente2" ? (
           <div>
