@@ -23,6 +23,7 @@ import IconOut from "@/components/icons/iconOut";
 import { socket } from "@/utils/socketio";
 import { resetApp } from "@/redux/rootReducer";
 import { useRouter } from "next/navigation";
+import { PathnameShow } from "@/components/pathname/path";
 
 // Definir opciones para el select de sexo
 const sexoOptions = [
@@ -45,6 +46,7 @@ export default function HomePte() {
         second: "2-digit",
         hour12: false,
     };
+    const lastSegmentTextToShow = PathnameShow()
 
     const [buttonSize, setButtonSize] = useState("lg");
 
@@ -139,6 +141,7 @@ export default function HomePte() {
     console.log(errors);
     return (
         <div className="h-full overflow-y-scroll flex flex-col">
+            <title>{lastSegmentTextToShow}</title>
             <div
                 className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"
                     } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
