@@ -27,7 +27,6 @@ export default function DetallePaciente() {
       headers
     );
     // const response = await ApiSegimed.get("/patient-details?id=8", headers);
-    console.log(response.data);
     setUser(response.data);
   };
   useEffect(() => {
