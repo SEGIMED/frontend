@@ -18,6 +18,9 @@ import config from "@/components/localData/localdata";
 import avatar from "@/utils/defaultAvatar";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed.js";
+import IconFavoriteBlue from "@/components/icons/IconFavoriteBlue.jsx";
+import IconFavoriteYellow from "@/components/icons/IconFavoriteyellow.jsx";
+
 
 
 export default function HomeDoc() {
@@ -26,6 +29,7 @@ export default function HomeDoc() {
   const [riskFilter, setRiskFilter] = useState("");
   const [showFavorites, setShowFavorites] = useState(false);
   const [patients, setPatients] = useState([]);
+  const [patientsFavorites, setPatientsFavorites] = useState([]);
   const [pagination, setPagination] = useState({
     totalUsers: 0,
     totalPages: 0,
@@ -36,10 +40,11 @@ export default function HomeDoc() {
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const userId = config.c;
   const dispatch = useAppDispatch();
+  const token = Cookies.get("a");
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patients?page=${pagination.currentPage}&limit=7`,
+      `/patients?page=${pagination.currentPage}&limit=9`,
       headers
     );
     if (response.data) {
@@ -49,7 +54,33 @@ export default function HomeDoc() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
+      console.log(pacientesFormateados);
       setPatients(pacientesFormateados);
+      setPagination((prev) => ({
+        ...prev,
+        totalUsers: response.data.totalUsers,
+        totalPages: response.data.totalPages,
+      }));
+    }
+  };
+
+  const getFavorites = async (headers) => {
+    const userId = Cookies.get("c")
+    const response = await ApiSegimed.get(
+      // `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
+      `/get-physician-favorite-patient?physicianId=${userId}`,
+      headers
+    );
+    if (response.data) {
+      const pacientesFormateados = response.data.map((paciente) => {
+        // const pacientesFormateados = response.data.user.map((paciente) => {
+        const fechaFormateada = new Date(paciente.lastLogin)
+          .toLocaleString()
+          .replace(/\,/g, " -");
+        return { ...paciente, lastLogin: fechaFormateada };
+      });
+      console.log(pacientesFormateados);
+      setPatientsFavorites(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
         totalUsers: response.data.totalUsers,
@@ -101,8 +132,11 @@ export default function HomeDoc() {
   };
 
   const handleFavoriteClick = () => {
+    getFavorites({ headers: { token: token } }).catch(console.error);
     setShowFavorites(!showFavorites);
-    setOpenOptionsPatientId(null);
+    handlePageChange(1)
+    dispatch(setSearchTerm(""));
+    // setOpenOptionsPatientId(null);
     setIsFilterOpen(false);
   };
 
@@ -143,22 +177,30 @@ export default function HomeDoc() {
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 bg-white sticky top-0 z-10">
-        <div></div>
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 h-16 bg-white sticky top-0 z-10">
+        <div>
+          <button
+            onClick={handleFavoriteClick}
+            className={`${showFavorites ? "bg-bluePrimary text-white" : "bg-white text-bluePrimary border border-bluePrimary"
+              } py-2 px-4 items-center flex rounded-lg gap-2 w-full transition duration-300 ease-in-out`}
+
+          >
+            {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
+            <p className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"} font-bold`}>
+              Favoritos
+            </p>
+          </button>
+        </div>
         <h1 className="font-bold">Listado de pacientes</h1>
-        <div> <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
-          {/* <IconMensajeBoton className="w-6 h-6" /> */}
-          <p className="hidden md:block text-white font-bold">
-            Favoritos
-          </p>
-        </button></div>
+        <div></div>
       </div>
 
       <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
-            className="w-full flex justify-between items-center border-b border-b-[#cecece]  px-3 md:pl-10 pr-6 py-2">
+            className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2"
+          >
             <div className="flex gap-2 md:gap-4 items-center justify-start">
               <Image src={getRandomColor()} alt="Punto de color" />
               <div className="flex justify-center items-center">
@@ -186,14 +228,16 @@ export default function HomeDoc() {
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60"
+        >
           <IconPrev /> Anterior
         </button>
         <p>{pagination.currentPage}</p>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60"
+        >
           Siguiente
           <IconNext />
         </button>
