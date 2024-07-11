@@ -192,8 +192,8 @@ export default function HomeDoc() {
       <form>
         {edit ? (
           <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-            <label className="w-full flex items-center justify-start gap-3 font-medium">
-              <IconCircle />
+            <label className="w-full flex  justify-start gap-3 font-medium">
+              <IconCircle className="w-3" />
               Foto de perfil
             </label>
 
@@ -207,8 +207,8 @@ export default function HomeDoc() {
           </div>
         ) : null}
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Nombre:
           </label>
           {edit ? (
@@ -238,8 +238,8 @@ export default function HomeDoc() {
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Apellido
           </label>
           {edit ? (
@@ -275,7 +275,7 @@ export default function HomeDoc() {
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Especialidades:
           </label>
           {edit ? (
@@ -323,8 +323,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Nacionalidad:
           </label>
           {edit ? (
@@ -352,8 +352,8 @@ export default function HomeDoc() {
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Pais:
           </label>
           {edit ? (
@@ -384,8 +384,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Ciudad:
           </label>
           {edit ? (
@@ -416,8 +416,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Matricula Nacional:
           </label>
           {edit ? (
@@ -442,8 +442,8 @@ export default function HomeDoc() {
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Matricula Provincial:
           </label>
           {edit ? (
@@ -469,8 +469,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Lugar de Atención (Nombre):
           </label>
           {edit ? (
@@ -495,8 +495,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Lugar de Atención (Link de Maps):
           </label>
           {edit ? (
@@ -522,8 +522,8 @@ export default function HomeDoc() {
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Direccion de Atención:
           </label>
           {edit ? (
@@ -550,8 +550,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Numero de pacientes en seguimiento:
           </label>
           <span className="w-full text-start px-6 py-2">
@@ -560,8 +560,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Calificacion en la Atencion:
           </label>
           <span className="w-full text-start px-6 py-2">
@@ -570,8 +570,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Correo electronico:
           </label>
           {edit ? (
@@ -598,8 +598,8 @@ export default function HomeDoc() {
         </div>
 
         <div className="flex items-center justify-between border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex items-center justify-start gap-3 font-medium py-2">
-            <IconCircle />
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-3" />
             Numero de contacto:
           </label>
           {edit ? (
