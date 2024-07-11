@@ -106,7 +106,7 @@ export default function SignosVitalesInfo({
           <div
             key={detailIndex}
             className="flex justify-start items-center gap-2 px-3 border-b border-b-[#cecece] md:pr-10">
-            <label className="flex  w-2/3 md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">
+            <label className="flex w-2/3 md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">
               <Image
                 src={circleData}
                 alt="circulo informacion"
