@@ -32,7 +32,10 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
 
   return (
     <div>
-      <div className="mb-2 font-bold">{text}</div>
+      <div className='flex items-center justify-center'>
+        <div className="font-bold mb-2 ">{text}</div>
+
+      </div>
       <Dropdown className="emptyContent">
         <DropdownTrigger
           style={{
