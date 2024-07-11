@@ -51,11 +51,11 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
         isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
       } md:flex`}>
       <div className="h-full rounded-b-xl w-[60%] px-4 md:w-72 md:px-6 md:border-r-2 md:border-[#cecece] py-4 bg-white  flex flex-col justify-between shadow-lg md:shadow-none">
-        <div className="flex flex-col justify-center gap-2 sm:gap-5 ">
+        <div className="flex flex-col justify-center gap-3 sm:gap-5 ">
           <Link href={`${rutas.Doctor}`} className="block">
             <LogoSegimed className="w-40 md:w-full" />
           </Link>
-          <ul className="flex flex-col gap-1 xs:gap-2 md:gap-4">
+          <ul className="flex flex-col gap-1 xs:gap-3 md:gap-4">
             <Link
               onClick={toggleSidebar}
               href={rutas.Doctor}
