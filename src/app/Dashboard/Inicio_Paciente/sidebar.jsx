@@ -54,8 +54,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -106,7 +106,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getSchedules = async (headers) => {
     const userId = Number(id);
     try {
-      const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
+      const response = await ApiSegimed.get(
+        `/schedules?patientId=${userId}`,
+        headers
+      );
 
       if (response.data) {
         dispatch(addSchedules(response.data));
@@ -234,7 +237,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       </div>
 
       <div className="flex justify-center items-center gap-2">
-        <Image src={ruteActual} alt="" />
+        <Image src={ruteActual} alt="" className="hidden md:block" />
         <p className="">{segmentToShow}</p>
       </div>
       {showSearch && (

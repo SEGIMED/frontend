@@ -24,7 +24,6 @@ import { addAlarms } from "@/redux/slices/alarms/alarms";
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
 
-
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
 
   // reemplazar pathname por adjustedPathname
@@ -39,15 +38,13 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
 
   const dispatch = useAppDispatch();
- 
+
   const router = useRouter(); // Use the useRouter hook
 
   const getUser = async (headers) => {
     const id = Cookies.get("c");
     const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
-
-
 
     if (response.data) {
       dispatch(adduser(response.data));
@@ -86,27 +83,26 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
-  
   const getActives = async (headers) => {
-    
-      try {
-        
-        const response = await ApiSegimed.get("/alarms-by-patient", headers);
-        
-        const actives = response.data.filter(alarm => alarm.solved === false).length;
-        const inactives = response.data.filter(alarm => alarm.solved === true).length;
-        const data = { activeAlarms: Number(actives), inactiveAlarms: Number(inactives) }
-        // console.log(data)
-        dispatch( addAlarms (data)) ;
-       
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-  
+    try {
+      const response = await ApiSegimed.get("/alarms-by-patient", headers);
 
-
+      const actives = response.data.filter(
+        (alarm) => alarm.solved === false
+      ).length;
+      const inactives = response.data.filter(
+        (alarm) => alarm.solved === true
+      ).length;
+      const data = {
+        activeAlarms: Number(actives),
+        inactiveAlarms: Number(inactives),
+      };
+      // console.log(data)
+      dispatch(addAlarms(data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     const token = Cookies.get("a");
@@ -133,13 +129,12 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      getActives({ headers: { token: token } })
+      getActives({ headers: { token: token } });
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
-    
   }, []);
 
   return (
@@ -163,7 +158,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex justify-center items-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="w-4" />
+        <IconCurrentRouteNav className="w-4 hidden md:block" />
         {lastSegment === "Inicio_Doctor" ? (
           <p>Inicio</p>
         ) : lastSegment === "Mi_perfil" ? (
@@ -199,8 +194,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         <div className="w-12 h-12 flex justify-center items-center">
           <img
             src={user?.avatar !== null ? user.avatar : avatar}
-
-
             alt=""
             className="w-12 h-12 object-cover rounded-3xl "
           />
