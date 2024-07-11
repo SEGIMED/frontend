@@ -42,7 +42,7 @@ export default function HomeDoc() {
     <div className="h-full w-full flex flex-col">
       <div className="w-full flex justify-between px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
         <Ordenar />
-        <p className="text-[#686868] font-semibold text-base leading-6">
+        <p className="text-[#686868] font-semibold text-xl md:text-base leading-6">
           Anamnesis
         </p>
         <FiltrarPacientes />
