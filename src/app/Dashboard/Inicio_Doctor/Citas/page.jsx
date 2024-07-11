@@ -11,6 +11,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { useRouter } from "next/navigation";
+import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
 
 dayjs.locale("es");
 
@@ -20,7 +21,9 @@ export default function Citas() {
   const router = useRouter();
 
   const [date, setDate] = useState(new Date());
+  const [dateSelected, setDateSelected] = useState();
   const [view, setView] = useState("month");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getSchedules = async (headers) => {
     try {
@@ -40,6 +43,27 @@ export default function Citas() {
       getSchedules({ headers: { token: token } });
     }
   }, [dispatch]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  // const eventStyle = (event) => ({
+  //     style:{
+  //         backgroundColor: event.color,
+  //         // border: "#5F5F5F 2px solid",
+  //         color: "#5F5F5F",
+  //         fontWeight: "bold",
+  //         boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)"
+
+  //     },
+  // })
+
+  const handleSelectSlot = ({ start, end }) => {
+    setDateSelected(start);
+    setIsModalOpen(true);
+  };
+
+  const userId = Cookies.get("c");
 
   const shedules = useAppSelector((state) => state.schedules);
 
@@ -80,17 +104,6 @@ export default function Citas() {
   const handleViewChange = (newView) => {
     setView(newView);
   };
-
-  // const eventStyle = (event) => ({
-  //     style:{
-  //         backgroundColor: event.color,
-  //         // border: "#5F5F5F 2px solid",
-  //         color: "#5F5F5F",
-  //         fontWeight: "bold",
-  //         boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)"
-
-  //     },
-  // })
 
   const dayStyle = (date) => {
     const today = dayjs().startOf("day");
@@ -184,8 +197,8 @@ export default function Citas() {
   };
 
   return (
-    <div className=" h-full flex flex-col items-center bg-[#FAFAFC]">
-      <div className="h-full w-full md:px-10 py-5">
+    <div className=" flex flex-col items-center bg-[#FAFAFC] rounded-2xl h-screen" >
+      <div className="h-[90%] w-full md:px-10 py-5">
         <Calendar
           localizer={localizer}
           events={events}
@@ -195,13 +208,22 @@ export default function Citas() {
           onView={handleViewChange}
           onNavigate={handleNavigation}
           date={date}
+          onSelectSlot={handleSelectSlot}
+          selectable
           dayPropGetter={dayStyle}
           components={{
             toolbar: CustomToolbar,
           }}
           firstDay={1}
+          style={{ height: '100%', width: '100%' }} // Aseguramos que ocupe todo el espacio
         />
       </div>
+      <ModalConsultationCalendar
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        physician={userId}
+        dateSelect={dateSelected}
+      />
     </div>
   );
 }

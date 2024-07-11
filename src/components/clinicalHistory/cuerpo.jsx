@@ -43,20 +43,16 @@ export default function ClincalCuerpo({ info }) {
     setModelType(type === "Frente" ? "anterior" : "posterior");
   };
 
-  console.log(selectedMuscles);
-
   return (
     <div className="flex flex-col">
       <div className="flex md:flex-row flex-col w-full items-center md:items-start justify-center ">
         <div className="w-full md:w-1/2 h-full items-center flex flex-col justify-center py-2">
           <div>
-            {selectedMuscles.length > 0 ? (
-              <Model
-                data={selectedMuscles}
-                style={{ width: "20rem", padding: "3rem" }}
-                type={modelType}
-              />
-            ) : null}
+            <Model
+              data={selectedMuscles}
+              style={{ width: "20rem", padding: "3rem" }}
+              type={modelType}
+            />
           </div>
           <div className=" items-center justify-center">
             <ButtonNext
