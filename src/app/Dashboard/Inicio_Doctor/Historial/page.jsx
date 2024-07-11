@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import PatientCardConsulta from "@/components/card/PatientCardConsulta";
+import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -62,6 +63,8 @@ export default function HomeDoc() {
     setIsSorted(!isSorted);
   };
 
+  const lastSegmentTextToShow = PathnameShow()
+
   const handleRiskFilterClick = (risk) => {
     setRiskFilter(risk);
   };
@@ -80,6 +83,7 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
+      <title>{lastSegmentTextToShow}</title>
       <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
         {/* <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"

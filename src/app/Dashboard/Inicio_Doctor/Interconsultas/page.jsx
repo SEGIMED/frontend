@@ -8,9 +8,11 @@ import { useForm } from "react-hook-form";
 import InputInterconsulta from "@/components/interconsulta/texto";
 import BotonInterconsulta from "@/components/interconsulta/botones";
 import IconCheckRedBoton from "@/components/icons/IconCheckRed";
+import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomeDoc() {
     const token = Cookies.get("a");
+    const lastSegmentTextToShow = PathnameShow()
 
     const [catalog, setCatalog] = useState([]);
     const [allDoctors, setAllDoctors] = useState([]);
@@ -122,6 +124,7 @@ export default function HomeDoc() {
     };
     return (
         <div className="h-full flex flex-col">
+            <title>{lastSegmentTextToShow}</title>
             <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
                 <div></div>
                 <h1 className="font-bold">Solicitar interconsulta</h1>

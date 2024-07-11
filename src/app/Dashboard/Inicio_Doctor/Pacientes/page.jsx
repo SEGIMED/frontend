@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed.js";
 import IconFavoriteBlue from "@/components/icons/IconFavoriteBlue.jsx";
 import IconFavoriteYellow from "@/components/icons/IconFavoriteyellow.jsx";
+import { PathnameShow } from "@/components/pathname/path";
 
 
 
@@ -41,6 +42,7 @@ export default function HomeDoc() {
   const userId = config.c;
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
+  const lastSegmentTextToShow = PathnameShow()
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
@@ -177,6 +179,7 @@ export default function HomeDoc() {
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
+      <title>{lastSegmentTextToShow}</title>
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 h-16 bg-white sticky top-0 z-10">
         <div>
           <button
