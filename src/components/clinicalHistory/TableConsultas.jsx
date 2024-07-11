@@ -5,6 +5,9 @@ import IconAlarmGreen from "../icons/iconAlarmGreen";
 import IconAlarmYellow from "../icons/IconAlarmYellow";
 import IconAlarmRed from "../icons/iconAlarmRed";
 import IconConsulta from "../icons/IconConsulta";
+import rutas from "@/utils/rutas";
+import Link from "next/link";
+import IconOptions from "../icons/IconOptions";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority.toLowerCase()) {
@@ -20,7 +23,7 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-const handleStatus = (id) => {};
+const handleStatus = (id) => { };
 
 export default function TableConsultas({ consultas }) {
   return (
@@ -48,7 +51,16 @@ export default function TableConsultas({ consultas }) {
           <div className="text-[#5F5F5F] hidden md:block">
             {paciente?.chiefComplaint}
           </div>
-          <AlarmButtonDoc id={paciente.id} handleStatus={handleStatus} />
+
+          <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
+            <button className="flex rounded-lg items-center px-4 xs:px-6 py-2 font-bold text-sm leading-5 bg-bluePrimary text-white gap-1 ">
+              <IconOptions color="#FFFFFF" />
+              <p className="hidden md:block">Ver consulta</p>
+            </button>
+          </Link>
+
+
+
         </div>
       ))}
     </div>
