@@ -24,8 +24,12 @@ export default function TableTurnos ({consultas}){
                 <span className="text-[#5F5F5F]">
                 {Hora(consulta?.scheduledStartTimestamp)}
                 </span>
+              
                 <div className="text-[#5F5F5F]">
                   {consulta?.physicianThatAttend?.name} {consulta?.physicianThatAttend?.lastname}
+                </div>
+                <div className="text-[#5F5F5F] "> 
+                {consulta?.typeOfMedicalConsultation === 1 ? "Presencial" : "Teleconsulta"}
                 </div>
                 <div className="text-[#5F5F5F] hidden md:block ">
                 {consulta?.healthCenter === 1 ? "Centro Gallegos" : consulta?.healthCenter}
@@ -34,9 +38,7 @@ export default function TableTurnos ({consultas}){
                 <div className="text-[#5F5F5F] hidden md:block">
                   {consulta?.reasonForConsultation}
                 </div>
-                <div className="text-[#5F5F5F] "> 
-                {consulta?.typeOfMedicalConsultation === 1 ? "Presencial" : "Teleconsulta"}
-                </div>
+                
                 <div>
                 <TurnosButton idDoc={consulta.physician}/>
                 </div>

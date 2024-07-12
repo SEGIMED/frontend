@@ -20,9 +20,10 @@ export default function MisTurnosPte() {
         "Fecha",
         "Hora",
         "Medico",
+        "Atencion",
         "Centro de atencion",
         "Motivo de consulta",
-        "Atencion"
+        
     ];
     
     
