@@ -7,6 +7,9 @@ import IconConsulta from "../icons/IconConsulta";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
 import { useFormContext } from "react-hook-form";
+import DropNext from "./dropdown";
+import AutocompleteDiagnostico from "./AutocompleteDiagnostico";
+
 
 export default function InputDiagnostico({
   title,
@@ -16,6 +19,7 @@ export default function InputDiagnostico({
   defaultOpen = false,
 }) {
   const { register } = useFormContext();
+  
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
@@ -49,10 +53,11 @@ export default function InputDiagnostico({
               <IconCurrentRouteNav className="w-3" />
               {subtitle3}
             </label>
-            <input
-              className="w-full md:w-1/2 h-auto text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-2 md:py-1 outline-[#a8a8a8]"
-              placeholder={`Escribe el ${subtitle3} `}
-              {...register(subtitle3)}
+            <AutocompleteDiagnostico
+              key="autocomplete-diagnostico"
+              options={['Losartan', 'Ácido Fenofíbrico']}
+              text2={`Escribe el ${subtitle3}`}
+              name={"selectDrug"}
             />
           </div>
         ) : null}

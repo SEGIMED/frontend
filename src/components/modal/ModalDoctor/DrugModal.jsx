@@ -14,7 +14,9 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 
-const DrugModal = ({ isOpen, onClose, doctorId, patientId }) => {
+const DrugModal = ({ isOpen, onClose }) => {
+  const doctorId=22
+  const patientId=8
   const {
     register,
     handleSubmit,
