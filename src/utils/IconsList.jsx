@@ -225,7 +225,7 @@ export default function IconList() {
       ),
       name: "IconCheckBoton",
     },
-    { component: <IconCircle />, name: "IconCircle" },
+    { component: <IconCircle className="w-3" />, name: "IconCircle" },
     { component: <IconCirculacionPulmonar />, name: "IconCirculacionPulmonar" },
     { component: <IconClinicalHistory />, name: "IconClinicalHistory" },
     { component: <IconClock />, name: "IconClock" },

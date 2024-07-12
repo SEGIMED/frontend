@@ -19,12 +19,16 @@ import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
 import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
+import Citas from "./Citas/page";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
 
   const [currentChart, setCurrentChart] = useState(0);
   const dataAlarms = useAppSelector((state) => state.alarms);
+  const dataPtesGrafic= useAppSelector(state => state.activePtes)
+  
+  console.log(dataPtesGrafic)
 
   const handlePreviousChart = () => {
     setCurrentChart((prev) => (prev === 0 ? charts.length - 1 : prev - 1));
@@ -33,7 +37,7 @@ export default function HomeDoc() {
   const handleNextChart = () => {
     setCurrentChart((prev) => (prev === charts.length - 1 ? 0 : prev + 1));
   };
-
+  
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart />
@@ -121,7 +125,7 @@ export default function HomeDoc() {
             <div className="h-full w-full flex items-center justify-center gap-2">
               <IconActiveUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-6xl md:text-7xl font-semibold ml-2">
-                4
+                {dataPtesGrafic?.activePatients}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
@@ -165,6 +169,10 @@ export default function HomeDoc() {
 
         {charts[currentChart]}
         {/* </div> */}
+      </div>
+      <div className="h-fit w-full  border border-[#DCDBDB] rounded-2xl ">
+
+        <Citas />
       </div>
       <ProximasConsultas />
     </div>

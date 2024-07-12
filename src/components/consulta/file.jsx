@@ -5,12 +5,12 @@ import { useAppDispatch } from '@/redux/hooks';
 
 import IconCurrentRouteNav from '../icons/IconCurrentRouteNav';
 import IconDownload from '../icons/IconDownload';
+import BotonPreconsulta from '../Buttons/BotonPreconsulta';
 
-const FileUpload = ({ label , Link, Links}) => {
+const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, Link, Links }) => {
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("");
     const fileInputRef = useRef(null);
-    const dispatch = useAppDispatch();
 
     const handleButtonClick = (e) => {
         e.preventDefault(); // Previene el comportamiento predeterminado
@@ -20,9 +20,14 @@ const FileUpload = ({ label , Link, Links}) => {
     const handleOnChange = (e) => {
         try {
             if (e.target.files.length) {
-                const selectedFile = e.target.files[0];
+                const selectedFile = e.target.files[0].name;
                 setFile(selectedFile);
-                console.log({ msj: 'documento cargado con éxito', selectedFile });
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    onUploadFile(test, event.target.result);
+                };
+                reader.readAsDataURL(file);
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);
@@ -31,50 +36,83 @@ const FileUpload = ({ label , Link, Links}) => {
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
+        onDescriptionChange(test, e.target.value);
     };
 
     const handleDeleteFile = () => {
         setFile(null);
         setDescription("");
+        onUploadFile(test, null);
     };
 
     return (
         <div className="p-6 mb-4">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
-                <IconCurrentRouteNav className="w-4" />{label}
+                <IconCurrentRouteNav className="w-4" />
+                {label}
             </div>
-            <div className="flex flex-row gap-3">
-                <button
-                    className="flex items-center justify-center gap-3 py-2 px-6 border-2 border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
-                    onClick={handleButtonClick}
-                >
-                    <IconUpload /> Adjuntar archivo/informe 
-                </button>
-                
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ display: 'none' }}
-                    onChange={handleOnChange}
-                    accept="application/pdf, image/*"
+            {(data.binaryOptions && !data.file) && <div
+                className='py-2 md:py-0 flex justify-evenly md:gap-3'>
+                <BotonPreconsulta
+                    label="Sí"
+                    onClick={() => onTestActive(test, true)}
+                    active={data.active}
                 />
-                 
-            </div>
+                <BotonPreconsulta
+                    label="No"
+                    onClick={() => onTestActive(test, false)}
+                    active={!data.active}
+                />
+            </div>}
+            {test === 'lastAbnormalGlycemia' &&
+                <input
+                    type="text"
+                    className="w-[20%] md:w-[8%] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 md:px-4 py-1"
+                    onChange={(e) => onTestSelectedOption(test, [Number(e.target.value)])}
+                />
+            }
+            {(test !== 'pendingStudies' && test !== 'lastAbnormalGlycemia' && test !== 'abnormalGlycemia') &&
+                <div className="flex flex-row gap-3">
+                    <button
+                        className="flex items-center justify-center gap-3 py-2 px-6 border-2 border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
+                        onClick={handleButtonClick}>
+                        <IconUpload />
+                        Adjuntar archivo/informe
+                    </button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={handleOnChange}
+                        accept="application/pdf, image/*"
+                    />
+                </div>
+            }
+            {test === 'pendingStudies' &&
+                <div>
+                    <textarea
+                        className="w-full p-2 mt-2 border rounded"
+                        placeholder="Describa el informe"
+                        value={description}
+                        onChange={handleDescriptionChange}
+                    />
+                </div>
+            }
             {Link && <a href={Link} className='mt-4"'>
-                    <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
+                <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
                     {Link}
-                    </div>
-                </a>}
-                {Links?.map((sub, index) => (
-                    <a href={sub} key={index} >
+                </div>
+            </a>}
+            {Links?.map((sub, index) => (
+                <a href={sub} key={index} >
                     <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
-                    {sub}
+                        {sub}
                     </div>
-                </a>))} 
+                </a>))}
             {file && (
                 <div className="mt-4">
                     <div className="flex items-center gap-4">
-                        <span>{file.name}</span>
+                        <span>{file}</span>
                         <button onClick={handleDeleteFile}>
                             <IconUpload className="w-4 text-red-500" />
                         </button>

@@ -3,6 +3,8 @@
 const Doctor = "/Dashboard/Inicio_Doctor"
 const PacienteDash = "/Dashboard/Inicio_Paciente"
 const Admin = "/Dashboard/Inicio_Admin"
+const PacienteDash2 = "/Dashboard/Inicio_Paciente2"
+
 
 const Alarm = "/Alarm"
 const Citas = "/Citas"
@@ -29,6 +31,8 @@ const Teleconsulta = "/Teleconsulta"
 const SignosVitales = "/Signos_Vitales"
 const ExamenFisico = "/Examen_Fisico"
 const Diagnostico = "/Diagnostico"
+const Mis_turnos="/Mis_turnos"
+const Pasadas="/Pasadas"
 
 
 const rutas = {
@@ -42,6 +46,7 @@ const rutas = {
     resueltas,
     Doctor,
     PacienteDash,
+    PacienteDash2,
     Admin,
     Alarm,
     Citas,
@@ -59,7 +64,9 @@ const rutas = {
     Tratamientos,
     Configuracion,
     Preconsulta,
-    Teleconsulta
+    Teleconsulta,
+    Mis_turnos,
+    Pasadas
 };
 
 export default rutas

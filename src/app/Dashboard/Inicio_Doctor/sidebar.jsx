@@ -20,10 +20,10 @@ import { resetApp } from "@/redux/rootReducer";
 
 import { socket } from "@/utils/socketio";
 import { addAlarms } from "@/redux/slices/alarms/alarms";
+import { addActivePtes } from "@/redux/slices/activePtes/activePtes";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
-
 
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
 
@@ -38,16 +38,19 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
   const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
 
+  const lastSegmentText = pathname
+    .substring(pathname.lastIndexOf("/") + 1)
+    .replace(/_/g, " ");
+
   const dispatch = useAppDispatch();
- 
+
+
   const router = useRouter(); // Use the useRouter hook
 
   const getUser = async (headers) => {
     const id = Cookies.get("c");
     const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
-
-
 
     if (response.data) {
       dispatch(adduser(response.data));
@@ -86,8 +89,29 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
-  
   const getActives = async (headers) => {
+    try {
+      const response = await ApiSegimed.get("/alarms-by-patient", headers);
+
+      const actives = response.data.filter(
+        (alarm) => alarm.solved === false
+      ).length;
+      const inactives = response.data.filter(
+        (alarm) => alarm.solved === true
+      ).length;
+      const data = {
+        activeAlarms: Number(actives),
+        inactiveAlarms: Number(inactives),
+      };
+      // console.log(data)
+      dispatch(addAlarms(data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  
+  const getActivesAlarms = async (headers) => {
     
       try {
         
@@ -99,6 +123,18 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         // console.log(data)
         dispatch( addAlarms (data)) ;
        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const getActivesPacientes = async (headers) => {
+      try {
+        
+        const response = await ApiSegimed.get("/statistics-patient-activity", headers);
+        
+        dispatch ( addActivePtes(response.data))
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -133,13 +169,14 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      getActives({ headers: { token: token } })
+      getActivesAlarms({ headers: { token: token } })
+      getActivesPacientes({ headers: { token: token } })
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
-    
+
   }, []);
 
   return (
@@ -163,21 +200,21 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex justify-center items-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="w-4" />
+        <IconCurrentRouteNav className="w-4 hidden md:block" />
         {lastSegment === "Inicio_Doctor" ? (
-          <p>Inicio</p>
+          <p>Inicio | Segimed</p>
         ) : lastSegment === "Mi_perfil" ? (
-          <p>Mi Perfil</p>
+          <p>Mi Perfil | Segimed</p>
         ) : lastSegment === "Citas" ? (
-          <p>Mi Agenda</p>
+          <p>Mi Agenda | Segimed</p>
         ) : lastSegment === "Soporte_tecnico" ? (
-          <p>Soporte Técnico</p>
+          <p>Soporte Técnico | Segimed</p>
         ) : IsEvent ? (
-          <p>Evento</p>
+          <p>Evento | Segimed</p>
         ) : IsMessage ? (
-          <p>Mensaje</p>
+          <p>Mensaje | Segimed</p>
         ) : (
-          <p>{lastSegment}</p>
+          <p>{lastSegmentText}  | Segimed</p>
         )}
       </div>
       {showSearch && (
@@ -199,8 +236,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         <div className="w-12 h-12 flex justify-center items-center">
           <img
             src={user?.avatar !== null ? user.avatar : avatar}
-
-
             alt=""
             className="w-12 h-12 object-cover rounded-3xl "
           />
@@ -213,13 +248,13 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           <span className="text-start text-[#808080]">Médico</span>
         </div>
 
-        <button>
+        {/* <button>
           <IconNotificationsNav
             className=" w-12"
             circle="#E73F3F"
             campaign="#B2B2B2"
           />
-        </button>
+        </button> */}
       </div>
     </div>
   );

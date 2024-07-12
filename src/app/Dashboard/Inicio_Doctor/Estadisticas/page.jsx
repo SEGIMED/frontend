@@ -6,6 +6,7 @@ import {
   GenreChart,
   GooglePieChart,
 } from "@/components/Graficos/Genero/genreChart";
+import { PathnameShow } from "@/components/pathname/path";
 
 import IconAlertas from "@/components/icons/IconAlertas";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
@@ -17,6 +18,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
 export default function Estadisticas() {
+  const lastSegmentTextToShow = PathnameShow()
   const dispatch = useAppDispatch();
 
   const getEstadisticas = async (headers) => {
@@ -47,6 +49,7 @@ export default function Estadisticas() {
 
   return (
     <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
+      <title>{lastSegmentTextToShow}</title>
       <div className="w-full flex-col md:flex-row flex items-center justify-center gap-4 md:gap-10">
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
@@ -108,11 +111,11 @@ export default function Estadisticas() {
               {/* <IconTorta className="w-full"/> */}
               {is3D ? <GooglePieChart /> : <GenreChart />}
               <div className="flex justify-center mt-4">
-              <Elboton
-                onPress={toggleChartType}
-                size={"sm"}
-                nombre={is3D ? "Normal" : "3D"}
-              />
+                <Elboton
+                  onPress={toggleChartType}
+                  size={"sm"}
+                  nombre={is3D ? "Normal" : "3D"}
+                />
               </div>
               {/* <button onClick={toggleChartType}>Mostrar {is3D ? 'Normal' : '3D'}</button> */}
             </div>

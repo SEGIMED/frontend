@@ -42,12 +42,12 @@ export default function HomeDoc() {
     <div className="h-full w-full flex flex-col">
       <div className="w-full flex justify-between px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
         <Ordenar />
-        <p className="text-[#686868] font-semibold text-base leading-6">
+        <p className="text-[#686868] font-semibold text-xl md:text-base leading-6">
           Evoluciones
         </p>
         <FiltrarPacientes />
       </div>
-      <div className="grid grid-cols-4 md:grid-cols-7 items-center border-b border-b-[#cecece] p-2 bg-white z-10">
+      <div className="grid text-center md:text-left grid-cols-4 md:grid-cols-7 items-center border-b border-b-[#cecece] py-2 bg-white z-10">
         <p className="font-bold text-[#5F5F5F] hidden md:block"></p>
         <p className="font-bold text-[#5F5F5F] hidden md:block">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
