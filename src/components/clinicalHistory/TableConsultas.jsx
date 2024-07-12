@@ -5,6 +5,9 @@ import IconAlarmGreen from "../icons/iconAlarmGreen";
 import IconAlarmYellow from "../icons/IconAlarmYellow";
 import IconAlarmRed from "../icons/iconAlarmRed";
 import IconConsulta from "../icons/IconConsulta";
+import rutas from "@/utils/rutas";
+import Link from "next/link";
+import IconOptions from "../icons/IconOptions";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority.toLowerCase()) {
@@ -20,36 +23,46 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-const handleStatus = (id) => {};
+const handleStatus = (id) => { };
 
 export default function TableConsultas({ consultas }) {
   return (
     <div className="h-full flex flex-col">
-      <div className="">
-        {consultas?.map((paciente, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-7 items-center border-b border-b-[#cecece] pr-6 py-2 bg-white w-full h-fit ">
-            <div className="flex justify-center">
-              <IconConsulta />
-            </div>
-            <div className="text-[#5F5F5F]">
-              {new Date(paciente.timestamp).toLocaleDateString()}
-            </div>
-            <div className="text-[#5F5F5F]">
-              {new Date(paciente.timestamp).toLocaleTimeString()}
-            </div>
-            <div className="text-[#FF8300]">{paciente?.medicalSpecialty}</div>
-            <div className="text-[#5F5F5F]">
-              {paciente?.attendancePlace?.alias}
-            </div>
-            <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
-            <div className="text-[#5F5F5F] justify-center">
-              <AlarmButtonDoc id={paciente.id} handleStatus={handleStatus} />
-            </div>
+      {consultas?.map((paciente, index) => (
+        <div
+          key={index}
+          className="text-center md:text-left xs:gap-2 grid grid-cols-4 md:grid-cols-7 items-center border-b border-b-[#cecece] md:px-2 py-2 bg-white w-full h-fit ">
+          <div className="justify-center w-1/2 hidden md:flex">
+            <IconConsulta />
           </div>
-        ))}
-      </div>
+          <div className="text-[#5F5F5F]">
+            {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+              day: "2-digit",
+              month: "2-digit",
+            })}
+          </div>
+          <div className="text-[#5F5F5F] hidden md:block">
+            {new Date(paciente.timestamp).toLocaleTimeString()}
+          </div>
+          <p className="text-[#FF8300] ">{paciente?.medicalSpecialty}</p>
+          <div className="text-[#5F5F5F]">
+            {paciente?.attendancePlace?.alias}
+          </div>
+          <div className="text-[#5F5F5F] hidden md:block">
+            {paciente?.chiefComplaint}
+          </div>
+
+          <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
+            <button className="flex rounded-lg items-center px-4 xs:px-6 py-2 font-bold text-sm leading-5 bg-bluePrimary text-white gap-1 ">
+              <IconOptions color="#FFFFFF" />
+              <p className="hidden md:block">Ver consulta</p>
+            </button>
+          </Link>
+
+
+
+        </div>
+      ))}
     </div>
   );
 }

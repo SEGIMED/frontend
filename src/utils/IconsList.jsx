@@ -138,155 +138,403 @@ import ImTestimony3 from "@/components/icons/ImTestimony3";
 import ImTestimony4 from "@/components/icons/ImTestimony4";
 import LostPassword from "@/components/icons/password";
 export default function IconList() {
-    const icons = [
-        { component: <IconAccion />, name: "IconAccion" },
-        { component: <IconActiveUsers className="w-6"/>, name: "IconActiveUsers" },
-        { component: <div className="bg-black"><IconAdd /></div>, name: "IconAdd" },
-        { component: <IconAddPast />, name: "IconAddPast" },
-        { component: <IconAlarm className="w-6"/>, name: "IconAlarm" },
-        { component: <IconAlarmNotSelected className="bg-black"/>, name: "IconAlarmNotSelected" },
-        { component: <IconAlarmBlue />, name: "IconAlarmBlue" },
-        { component: <div className="bg-black"><IconAlarmDash color={"white"}/></div>, name: "IconAlarmDash" },
-        { component: <IconAlarmGreen />, name: "IconAlarmGreen" },
-        { component: <IconAlarmRed />, name: "IconAlarmRed" },
-        { component: <div className="bg-black"><IconAlarmSelected /></div>, name: "IconAlarmSelected" },
-        { component: <IconAlarmUsers className="w-20"/>, name: "IconAlarmUsers" },
-        { component: <IconAlarmYellow />, name: "IconAlarmYellow" },
-        { component: <IconAlertas className="w-6"/>, name: "IconAlertas" },
-        { component: <IconAlphabetic />, name: "IconAlphabetic" },
-        { component: <IconAppStore />, name: "IconAppStore" },
-        { component: <IconArrowDetailDown />, name: "IconArrowDetailDown" },
-        { component: <IconArrowDetailUp />, name: "IconArrowDetailUp" },
-        { component: <IconArrowLeft iconColor={"black"} />, name: "IconArrowLeft" },
-        { component: <IconArrowNext className="w-20"/>, name: "IconArrowNext" },
-        { component: <div className="bg-black"><IconArrowNextConsult /></div>, name: "IconArrowNextConsult" },
-        { component: <IconArrowPrev className="w-20"/>, name: "IconArrowPrev" },
-        { component: <div className="bg-black"><IconArrowRight /></div>, name: "IconArrowRight" },
-        { component: <IconArrowUp />, name: "IconArrowUp" },
-        { component: <IconCaduceo className="w-20"/>, name: "IconCaduceo" },
-        { component: <IconCalendar className="w-20"/>, name: "IconCalendar" },
-        { component: <IconCalendarNav className="w-20" color={"black"}/>, name: "IconCalendarNav" },
-        { component: <div className="bg-black"><IconCamera /></div>, name: "IconCamera" },
-        { component: <IconCenterAtenttion />, name: "IconCenterAtenttion" },
-        { component: <IconCentroGallego />, name: "IconCentroGallego" },
-        { component: <div className="bg-black"><IconCheckBoton className="w-20"/></div>, name: "IconCheckBoton" },
-        { component: <IconCircle />, name: "IconCircle" },
-        { component: <IconCirculacionPulmonar />, name: "IconCirculacionPulmonar" },
-        { component: <IconClinicalHistory />, name: "IconClinicalHistory" },
-        { component: <IconClock />, name: "IconClock" },
-        { component: <IconClose className="w-20"/>, name: "IconClose" },
-        { component: <IconCloseBoton className="w-20"/>, name: "IconCloseBoton" },
-        { component: <IconConfig color={"black"}/>, name: "IconConfig" },
-        { component: <IconConsulta />, name: "IconConsulta" },
-        { component: <div className="bg-black"><IconConsultation /></div>, name: "IconConsultation" },
-        { component: <IconCopyright />, name: "IconCopyright" },
-        { component: <IconCorazonMini />, name: "IconCorazonMini" },
-        { component: <IconCube className="w-20" iconColor={"black"}/>, name: "IconCube" },
-        { component: <IconCurrentRouteNav className="w-20"/>, name: "IconCurrentRouteNav" },
-        { component: <IconAdminButtons className="w-20"/>, name: "IconAdminButtons" },
-        { component: <IconDashAgenda className="w-20"/>, name: "IconDashAgenda" },
-        { component: <IconDashHomeCitas />, name: "IconDashHomeCitas" },
-        { component: <IconHomeConsultas />, name: "IconHomeConsultas" },
-        { component: <IconData />, name: "IconData" },
-        { component: <IconDate />, name: "IconDate" },
-        { component: <IconDay />, name: "IconDay" },
-        { component: <IconDelete />, name: "IconDelete" },
-        { component: <IconDoctor color={"black"}/>, name: "IconDoctor" },
-        { component: <IconDoctorNav color={"black"}/>, name: "IconDoctorNav" },
-        { component: <IconDolor />, name: "IconDolor" },
-        { component: <IconDolor2 />, name: "IconDolor2" },
-        { component: <div className="bg-black"><IconDown /></div>, name: "IconDown" },
-        { component: <div className="bg-black"><IconDownload /></div>, name: "IconDownload" },
-        { component: <div className="bg-black"><IconEdit /></div>, name: "IconEdit" },
-        { component: <div className="bg-black"><IconEditar /></div>, name: "IconEditar" },
-        { component: <div className="bg-black"><IconEnter className="w-20"/></div>, name: "IconEnter" },
-        { component: <Estadistica color={"black"}/>, name: "Estadistica" },
-        { component: <IconFacebook />, name: "IconFacebook" },
-        { component: <IconFatArrow />, name: "IconFatArrow" },
-        { component: <div className="bg-black"><IconFilter /></div>, name: "IconFilter" },
-        { component: <div className="bg-black"><IconFinish /></div>, name: "IconFinish" },
-        { component: <IconFolder />, name: "IconFolder" },
-        { component: <IconFundarHP />, name: "IconFundarHP" },
-        { component: <IconGaleno />, name: "IconGaleno" },
-        { component: <IconGeolocation />, name: "IconGeolocation" },
-        { component: <div className="bg-black"><IconGuardar /></div>, name: "IconGuardar" },
-        { component: <IconHeadLanding />, name: "IconHeadLanding" },
-        { component: <div className="bg-black"><IconHeart /></div>, name: "IconHeart" },
-        { component: <IconHooter />, name: "IconHooter" },
-        { component: <IconIg />, name: "IconIg" },
-        { component: <IconInactiveUsers className="w-20" />, name: "IconInactiveUsers" },
-        { component: <IconInfo />, name: "IconInfo" },
-        { component: <Interconsulta color={"black"}/>, name: "Interconsulta" },
-        { component: <div className="bg-black"><IconKeep className="w-20"/></div>, name: "IconKeep" },
-        { component: <IconLive />, name: "IconLive" },
-        { component: <IconMail />, name: "IconMail" },
-        { component: <IconMapa className="w-20"/>, name: "IconMapa" },
-        { component: <IconMarkMap />, name: "IconMarkMap" },
-        { component: <div className="bg-black"><IconMas /></div>, name: "IconMas" },
-        { component: <div className="bg-black"><IconMensajeBoton /></div>, name: "IconMensajeBoton" },
-        { component: <IconMessage className="w-20"/>, name: "IconMessage" },
-        { component: <IconMessagePatient />, name: "IconMessagePatient" },
-        { component: <IconMessages />, name: "IconMessages" },
-        { component: <div className="bg-black"><IconMicrophone /></div>, name: "IconMicrophone" },
-        { component: <div className="bg-black"><IconMiniArrowNext /></div>, name: "IconMiniArrowNext" },
-        { component: <IconMiniCalendar />, name: "IconMiniCalendar" },
-        { component: <IconMoreInfo />, name: "IconMoreInfo" },
-        { component: <IconNewUsers className="w-20"/>, name: "IconNewUsers" },
-        { component: <IconNext />, name: "IconNext" },
-        { component: <IconNoInfo />, name: "IconNoInfo" },
-        { component: <IconNotificationsNav />, name: "IconNotificationsNav" },
-        { component: <IconOptions color={"black"}/>, name: "IconOptions" },
-        { component: <div className="bg-black"><IconOrder /></div>, name: "IconOrder" },
-        { component: <div className="bg-black"><IconOut /></div>, name: "IconOut" },
-        { component: <IconPasswordClose />, name: "IconPasswordClose" },
-        { component: <IconPasswordOpen />, name: "IconPasswordOpen" },
-        { component: <IconPatientNav className="w-20" color={"black"}/>, name: "IconPatientNav" },
-        { component: <IconPersonalData />, name: "IconPersonalData" },
-        { component: <IconPhone color={"black"}/>, name: "IconPhone" },
-        { component: <IconPlatform />, name: "IconPlatform" },
-        { component: <IconPlayStore />, name: "IconPlayStore" },
-        { component: <IconPreConsulta color={"black"} />, name: "IconPreConsulta" },
-        { component: <IconPrev />, name: "IconPrev" },
-        { component: <IconReasonQuerie />, name: "IconReasonQuerie" },
-        { component: <IconRegister />, name: "IconRegister" },
-        { component: <div className="bg-black"><IconRegresar /></div>, name: "IconRegresar" },
-        { component: <IconRobotRegister className="w-20"/>, name: "IconRobotRegister" },
-        { component: <div className="bg-black"><IconSend /></div>, name: "IconSend" },
-        { component: <div className="bg-black"><IconSendArrow /></div>, name: "IconSendArrow" },
-        { component: <div className="bg-black"><IconSendMensaje /></div>, name: "IconSendMensaje" },
-        { component: <SoporteTecnico color={"black"}/>, name: "SoporteTecnico" },
-        { component: <IconStar className="w-20"/>, name: "IconStar" },
-        { component: <IconTStar2 className="w-20" color={"black"}/>, name: "IconTStar2" },
-        { component: <div className="bg-black"><IconTStar3 className="w-20"/></div>, name: "IconTStar3" },
-        { component: <IconSubNavbar />, name: "IconSubNavbar" },
-        { component: <IconSuggestionsNav className="w-20" color={"black"}/>, name: "IconSuggestionsNav" },
-        { component: <IconTablillaEstrella />, name: "IconTablillaEstrella" },
-        { component: <IconTablillaTilde />, name: "IconTablillaTilde" },
-        { component: <iconTiktok className="w-20"/>, name: "iconTiktok" },
-        { component: <IconTorta className="w-20"/>, name: "IconTorta" },
-        { component: <IconTratamiento />, name: "IconTratamiento" },
-        { component: <IconTypeQueries />, name: "IconTypeQueries" },
-        { component: <IconTypeRisk iconColor={"black"}/>, name: "IconTypeRisk" },
-        { component: <div className="bg-black"><IconUpload /></div>, name: "IconUpload" },
-        { component: <IconUser  color={"black"}/>, name: "IconUser" },
-        { component: <IconVerify className="w-20"/>, name: "IconVerify" },
-        { component: <IconX />, name: "IconX" },
-        { component: <IconYoutube />, name: "IconYoutube" },
-        { component: <ImTestimony1 />, name: "ImTestimony1" },
-        { component: <ImTestimony2 />, name: "ImTestimony2" },
-        { component: <ImTestimony3 />, name: "ImTestimony3" },
-        { component: <ImTestimony4 />, name: "ImTestimony4" },
-        { component: <LostPassword />, name: "LostPassword" }
-    ];
-
-    return (
-        <div className="">
-            {icons.map((icon, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ marginRight: '8px', fontSize: '24px' }}>{icon.component}</div>
-                    <div>{icon.name}</div>
-                </div>
-            ))}
+  const icons = [
+    { component: <IconAccion />, name: "IconAccion" },
+    { component: <IconActiveUsers className="w-6" />, name: "IconActiveUsers" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconAdd />
         </div>
-    );
+      ),
+      name: "IconAdd",
+    },
+    { component: <IconAddPast />, name: "IconAddPast" },
+    { component: <IconAlarm className="w-6" />, name: "IconAlarm" },
+    {
+      component: <IconAlarmNotSelected className="bg-black" />,
+      name: "IconAlarmNotSelected",
+    },
+    { component: <IconAlarmBlue />, name: "IconAlarmBlue" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconAlarmDash color={"white"} />
+        </div>
+      ),
+      name: "IconAlarmDash",
+    },
+    { component: <IconAlarmGreen />, name: "IconAlarmGreen" },
+    { component: <IconAlarmRed />, name: "IconAlarmRed" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconAlarmSelected />
+        </div>
+      ),
+      name: "IconAlarmSelected",
+    },
+    { component: <IconAlarmUsers className="w-20" />, name: "IconAlarmUsers" },
+    { component: <IconAlarmYellow />, name: "IconAlarmYellow" },
+    { component: <IconAlertas className="w-6" />, name: "IconAlertas" },
+    { component: <IconAlphabetic />, name: "IconAlphabetic" },
+    { component: <IconAppStore />, name: "IconAppStore" },
+    { component: <IconArrowDetailDown />, name: "IconArrowDetailDown" },
+    { component: <IconArrowDetailUp />, name: "IconArrowDetailUp" },
+    { component: <IconArrowLeft iconColor={"black"} />, name: "IconArrowLeft" },
+    { component: <IconArrowNext className="w-20" />, name: "IconArrowNext" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconArrowNextConsult />
+        </div>
+      ),
+      name: "IconArrowNextConsult",
+    },
+    { component: <IconArrowPrev className="w-20" />, name: "IconArrowPrev" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconArrowRight />
+        </div>
+      ),
+      name: "IconArrowRight",
+    },
+    { component: <IconArrowUp />, name: "IconArrowUp" },
+    { component: <IconCaduceo className="w-20" />, name: "IconCaduceo" },
+    { component: <IconCalendar className="w-20" />, name: "IconCalendar" },
+    {
+      component: <IconCalendarNav className="w-20" color={"black"} />,
+      name: "IconCalendarNav",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconCamera />
+        </div>
+      ),
+      name: "IconCamera",
+    },
+    { component: <IconCenterAtenttion />, name: "IconCenterAtenttion" },
+    { component: <IconCentroGallego />, name: "IconCentroGallego" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconCheckBoton className="w-20" />
+        </div>
+      ),
+      name: "IconCheckBoton",
+    },
+    { component: <IconCircle className="w-3" />, name: "IconCircle" },
+    { component: <IconCirculacionPulmonar />, name: "IconCirculacionPulmonar" },
+    { component: <IconClinicalHistory />, name: "IconClinicalHistory" },
+    { component: <IconClock />, name: "IconClock" },
+    { component: <IconClose className="w-20" />, name: "IconClose" },
+    { component: <IconCloseBoton className="w-20" />, name: "IconCloseBoton" },
+    { component: <IconConfig color={"black"} />, name: "IconConfig" },
+    { component: <IconConsulta />, name: "IconConsulta" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconConsultation />
+        </div>
+      ),
+      name: "IconConsultation",
+    },
+    { component: <IconCopyright />, name: "IconCopyright" },
+    { component: <IconCorazonMini />, name: "IconCorazonMini" },
+    {
+      component: <IconCube className="w-20" iconColor={"black"} />,
+      name: "IconCube",
+    },
+    {
+      component: <IconCurrentRouteNav className="w-20" />,
+      name: "IconCurrentRouteNav",
+    },
+    {
+      component: <IconAdminButtons className="w-20" />,
+      name: "IconAdminButtons",
+    },
+    { component: <IconDashAgenda className="w-20" />, name: "IconDashAgenda" },
+    { component: <IconDashHomeCitas />, name: "IconDashHomeCitas" },
+    { component: <IconHomeConsultas />, name: "IconHomeConsultas" },
+    { component: <IconData />, name: "IconData" },
+    { component: <IconDate />, name: "IconDate" },
+    { component: <IconDay />, name: "IconDay" },
+    { component: <IconDelete />, name: "IconDelete" },
+    { component: <IconDoctor color={"black"} />, name: "IconDoctor" },
+    { component: <IconDoctorNav color={"black"} />, name: "IconDoctorNav" },
+    { component: <IconDolor />, name: "IconDolor" },
+    { component: <IconDolor2 />, name: "IconDolor2" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconDown />
+        </div>
+      ),
+      name: "IconDown",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconDownload />
+        </div>
+      ),
+      name: "IconDownload",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconEdit />
+        </div>
+      ),
+      name: "IconEdit",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconEditar />
+        </div>
+      ),
+      name: "IconEditar",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconEnter className="w-20" />
+        </div>
+      ),
+      name: "IconEnter",
+    },
+    { component: <Estadistica color={"black"} />, name: "Estadistica" },
+    { component: <IconFacebook />, name: "IconFacebook" },
+    { component: <IconFatArrow />, name: "IconFatArrow" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconFilter />
+        </div>
+      ),
+      name: "IconFilter",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconFinish />
+        </div>
+      ),
+      name: "IconFinish",
+    },
+    { component: <IconFolder className="h-6" />, name: "IconFolder" },
+    { component: <IconFundarHP />, name: "IconFundarHP" },
+    { component: <IconGaleno />, name: "IconGaleno" },
+    { component: <IconGeolocation />, name: "IconGeolocation" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconGuardar />
+        </div>
+      ),
+      name: "IconGuardar",
+    },
+    { component: <IconHeadLanding />, name: "IconHeadLanding" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconHeart />
+        </div>
+      ),
+      name: "IconHeart",
+    },
+    { component: <IconHooter />, name: "IconHooter" },
+    { component: <IconIg />, name: "IconIg" },
+    {
+      component: <IconInactiveUsers className="w-20" />,
+      name: "IconInactiveUsers",
+    },
+    { component: <IconInfo />, name: "IconInfo" },
+    { component: <Interconsulta color={"black"} />, name: "Interconsulta" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconKeep className="w-20" />
+        </div>
+      ),
+      name: "IconKeep",
+    },
+    { component: <IconLive />, name: "IconLive" },
+    { component: <IconMail />, name: "IconMail" },
+    { component: <IconMapa className="w-20" />, name: "IconMapa" },
+    { component: <IconMarkMap />, name: "IconMarkMap" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconMas />
+        </div>
+      ),
+      name: "IconMas",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconMensajeBoton />
+        </div>
+      ),
+      name: "IconMensajeBoton",
+    },
+    { component: <IconMessage className="w-20" />, name: "IconMessage" },
+    { component: <IconMessagePatient />, name: "IconMessagePatient" },
+    { component: <IconMessages />, name: "IconMessages" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconMicrophone />
+        </div>
+      ),
+      name: "IconMicrophone",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconMiniArrowNext />
+        </div>
+      ),
+      name: "IconMiniArrowNext",
+    },
+    { component: <IconMiniCalendar />, name: "IconMiniCalendar" },
+    { component: <IconMoreInfo />, name: "IconMoreInfo" },
+    { component: <IconNewUsers className="w-20" />, name: "IconNewUsers" },
+    { component: <IconNext />, name: "IconNext" },
+    { component: <IconNoInfo />, name: "IconNoInfo" },
+    { component: <IconNotificationsNav />, name: "IconNotificationsNav" },
+    { component: <IconOptions color={"black"} />, name: "IconOptions" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconOrder />
+        </div>
+      ),
+      name: "IconOrder",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconOut />
+        </div>
+      ),
+      name: "IconOut",
+    },
+    { component: <IconPasswordClose />, name: "IconPasswordClose" },
+    { component: <IconPasswordOpen />, name: "IconPasswordOpen" },
+    {
+      component: <IconPatientNav className="w-20" color={"black"} />,
+      name: "IconPatientNav",
+    },
+    { component: <IconPersonalData />, name: "IconPersonalData" },
+    { component: <IconPhone color={"black"} />, name: "IconPhone" },
+    { component: <IconPlatform />, name: "IconPlatform" },
+    { component: <IconPlayStore />, name: "IconPlayStore" },
+    { component: <IconPreConsulta color={"black"} />, name: "IconPreConsulta" },
+    { component: <IconPrev />, name: "IconPrev" },
+    { component: <IconReasonQuerie />, name: "IconReasonQuerie" },
+    { component: <IconRegister />, name: "IconRegister" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconRegresar />
+        </div>
+      ),
+      name: "IconRegresar",
+    },
+    {
+      component: <IconRobotRegister className="w-20" />,
+      name: "IconRobotRegister",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconSend />
+        </div>
+      ),
+      name: "IconSend",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconSendArrow />
+        </div>
+      ),
+      name: "IconSendArrow",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconSendMensaje />
+        </div>
+      ),
+      name: "IconSendMensaje",
+    },
+    { component: <SoporteTecnico color={"black"} />, name: "SoporteTecnico" },
+    { component: <IconStar className="w-20" />, name: "IconStar" },
+    {
+      component: <IconTStar2 className="w-20" color={"black"} />,
+      name: "IconTStar2",
+    },
+    {
+      component: (
+        <div className="bg-black">
+          <IconTStar3 className="w-20" />
+        </div>
+      ),
+      name: "IconTStar3",
+    },
+    { component: <IconSubNavbar />, name: "IconSubNavbar" },
+    {
+      component: <IconSuggestionsNav className="w-20" color={"black"} />,
+      name: "IconSuggestionsNav",
+    },
+    { component: <IconTablillaEstrella />, name: "IconTablillaEstrella" },
+    { component: <IconTablillaTilde />, name: "IconTablillaTilde" },
+    { component: <iconTiktok className="w-20" />, name: "iconTiktok" },
+    { component: <IconTorta className="w-20" />, name: "IconTorta" },
+    { component: <IconTratamiento />, name: "IconTratamiento" },
+    { component: <IconTypeQueries />, name: "IconTypeQueries" },
+    { component: <IconTypeRisk iconColor={"black"} />, name: "IconTypeRisk" },
+    {
+      component: (
+        <div className="bg-black">
+          <IconUpload />
+        </div>
+      ),
+      name: "IconUpload",
+    },
+    { component: <IconUser color={"black"} />, name: "IconUser" },
+    { component: <IconVerify className="w-20" />, name: "IconVerify" },
+    { component: <IconX />, name: "IconX" },
+    { component: <IconYoutube />, name: "IconYoutube" },
+    { component: <ImTestimony1 />, name: "ImTestimony1" },
+    { component: <ImTestimony2 />, name: "ImTestimony2" },
+    { component: <ImTestimony3 />, name: "ImTestimony3" },
+    { component: <ImTestimony4 />, name: "ImTestimony4" },
+    { component: <LostPassword />, name: "LostPassword" },
+  ];
+
+  return (
+    <div className="">
+      {icons.map((icon, index) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "8px",
+          }}>
+          <div style={{ marginRight: "8px", fontSize: "24px" }}>
+            {icon.component}
+          </div>
+          <div>{icon.name}</div>
+        </div>
+      ))}
+    </div>
+  );
 }

@@ -41,6 +41,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   console.log(lastSegment);
 
+  const [isMobile, setIsMobile] = useState(false)
+
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
 
@@ -203,7 +205,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
   useEffect(() => {
     obtenerUbicacion();
     const idUser = Cookies.get("c");
-
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth <= 768);
+    }
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
@@ -245,17 +249,18 @@ export const SidePte = ({ search, toggleSidebar }) => {
       id: 5,
     },
   ];
-  // const isMobile = window.innerWidth <= 768;
 
   return (
-    <div className=" flex  items-center justify-between h-[12%]  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
+    <div className=" flex  items-center justify-between h-[12%] w-full  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
       <div className="flex justify-center items-center gap-2">
         {lastSegment !== "Inicio_Paciente2" ? (
           <div>
             <Link href={`${rutas.PacienteDash}2`}>
               <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
                 <IconRegresar />
-                <p>Regresar</p>
+                {!isMobile ? "Regresar" : null}
+
+
               </button>
             </Link>
           </div>
@@ -313,19 +318,23 @@ export const SidePte = ({ search, toggleSidebar }) => {
                 src: user?.avatar ? user.avatar : avatar,
               }}
               className="transition-transform"
-              description={user?.role === 3 ? "Paciente" : ""}
-              // description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
-              // name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
-              name={user ? `${user?.name} ${user?.lastname}` : ''}
+              // description={user?.role === 3 ? "Paciente" : ""}
+              description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
+              name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
+            // name={user ? `${user?.name} ${user?.lastname}` : ''}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="User Actions" variant="flat">
-            <DropdownItem key="inicio">
-              <Link href={`${rutas.PacienteDash}2`}>Inicio</Link>
+
+            <DropdownItem onPress={() => router.push(`${rutas.PacienteDash}2`)} key="inicio">
+              Inicio
             </DropdownItem>
-            <DropdownItem key="mi_perfil">
-              <Link href={`${rutas.PacienteDash}2${rutas.Mi_Perfil}`}>Mi perfil</Link>
+
+
+            <DropdownItem onPress={() => router.push(`${rutas.PacienteDash}2${rutas.Mi_Perfil}`)} key="mi_perfil">
+              Mi perfil
             </DropdownItem>
+
             <DropdownItem key="logout" onClick={handleLogout} color="danger">
               Cerrar sesión
             </DropdownItem>
@@ -367,6 +376,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };

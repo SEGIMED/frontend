@@ -11,6 +11,8 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { useRouter } from "next/navigation";
+import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
+import { PathnameShow } from "@/components/pathname/path";
 
 dayjs.locale("es");
 
@@ -18,9 +20,12 @@ export default function Citas() {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const lastSegmentTextToShow = PathnameShow()
 
   const [date, setDate] = useState(new Date());
+  const [dateSelected, setDateSelected] = useState();
   const [view, setView] = useState("month");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getSchedules = async (headers) => {
     try {
@@ -40,6 +45,27 @@ export default function Citas() {
       getSchedules({ headers: { token: token } });
     }
   }, [dispatch]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  // const eventStyle = (event) => ({
+  //     style:{
+  //         backgroundColor: event.color,
+  //         // border: "#5F5F5F 2px solid",
+  //         color: "#5F5F5F",
+  //         fontWeight: "bold",
+  //         boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)"
+
+  //     },
+  // })
+
+  const handleSelectSlot = ({ start, end }) => {
+    setDateSelected(start);
+    setIsModalOpen(true);
+  };
+
+  const userId = Cookies.get("c");
 
   const shedules = useAppSelector((state) => state.schedules);
 
@@ -81,19 +107,6 @@ export default function Citas() {
     setView(newView);
   };
 
-
-
-  // const eventStyle = (event) => ({
-  //     style:{
-  //         backgroundColor: event.color,
-  //         // border: "#5F5F5F 2px solid",
-  //         color: "#5F5F5F",
-  //         fontWeight: "bold",
-  //         boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.1)"
-
-  //     },
-  // })
-
   const dayStyle = (date) => {
     const today = dayjs().startOf("day");
     const currentDay = dayjs(date).startOf("day");
@@ -127,58 +140,54 @@ export default function Citas() {
 
     return (
       <div className="flex flex-col mb-2 rounded-xl gap-2">
+        <title>{lastSegmentTextToShow}</title>
         <div className="flex justify-between items-center bg-white rounded-lg p-2">
-          <div className="space-x-4">
+          <div className="space-x-1 md:space-x-4">
             <button
-              className="bg-[#487FFA] text-white font-bold py-2 px-4 rounded-xl"
-              onClick={() => onNavigate("PREV")}
-            >
+              className="bg-[#487FFA] text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
+              onClick={() => onNavigate("PREV")}>
               Anterior
             </button>
           </div>
-          <div className="space-x-4 hidden md:block">
+          <div className="space-x-1 md:space-x-4">
             <button
               className={clsx(
-                "border border-[#DCDBDB] font-bold py-2 px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
+                "border  border-[#DCDBDB] font-bold text-sm md:text-base py-2 px-2 md:px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
                 {
                   "bg-[#70C247] text-white": view === "month",
                   "bg-[#FAFAFC] text-[#5F5F5F]": view !== "month",
                 }
               )}
-              onClick={() => onView("month")}
-            >
+              onClick={() => onView("month")}>
               Mes
             </button>
             <button
               className={clsx(
-                "border border-[#DCDBDB] font-bold py-2 px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
+                "border border-[#DCDBDB] font-bold text-sm md:text-base py-2 px-2 md:px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
                 {
                   "bg-[#70C247] text-white": view === "week",
                   "bg-[#FAFAFC] text-[#5F5F5F]": view !== "week",
                 }
               )}
-              onClick={() => onView("week")}
-            >
+              onClick={() => onView("week")}>
               Semana
             </button>
             <button
               className={clsx(
-                "border border-[#DCDBDB] font-bold py-2 px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
+                "border border-[#DCDBDB] font-bold py-2 text-sm md:text-base px-2 md:px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
                 {
                   "bg-[#70C247] text-white": view === "day",
                   "bg-[#FAFAFC] text-[#5F5F5F]": view !== "day",
                 }
               )}
-              onClick={() => onView("day")}
-            >
+              onClick={() => onView("day")}>
               Día
             </button>
           </div>
           <div>
             <button
-              className="bg-[#487FFA] text-white font-bold py-2 px-4 rounded-xl"
-              onClick={() => onNavigate("NEXT")}
-            >
+              className="bg-[#487FFA] text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
+              onClick={() => onNavigate("NEXT")}>
               Siguiente
             </button>
           </div>
@@ -191,8 +200,8 @@ export default function Citas() {
   };
 
   return (
-    <div className=" h-full flex flex-col items-center bg-[#FAFAFC]">
-      <div className="h-full w-full md:px-10 py-5">
+    <div className=" flex flex-col items-center bg-[#FAFAFC] rounded-2xl h-screen" >
+      <div className="h-[90%] w-full md:px-10 py-5">
         <Calendar
           localizer={localizer}
           events={events}
@@ -202,14 +211,22 @@ export default function Citas() {
           onView={handleViewChange}
           onNavigate={handleNavigation}
           date={date}
+          onSelectSlot={handleSelectSlot}
+          selectable
           dayPropGetter={dayStyle}
-
           components={{
             toolbar: CustomToolbar,
           }}
           firstDay={1}
+          style={{ height: '100%', width: '100%' }} // Aseguramos que ocupe todo el espacio
         />
       </div>
+      <ModalConsultationCalendar
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        physician={userId}
+        dateSelect={dateSelected}
+      />
     </div>
   );
 }

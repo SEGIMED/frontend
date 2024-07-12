@@ -20,22 +20,19 @@ export default function PatientCardConsulta({ paciente, button, consulta }) {
   const getStatusTextAndColor = (status) => {
     switch (status) {
       case 1: // Agendada
-        return { text: 'Agendada', color: 'text-[#686868]' }; // Color normal
+        return { text: "Agendada", color: "text-[#686868]" }; // Color normal
       case 2: // Atendida
-        return { text: 'Atendida', color: 'text-green-500' }; // Verde
+        return { text: "Atendida", color: "text-green-500" }; // Verde
       case 3: // Cancelada
-        return { text: 'Cancelada', color: 'text-red-500' }; // Rojo
+        return { text: "Cancelada", color: "text-red-500" }; // Rojo
       case 4: // No atendida
-        return { text: 'No atendida', color: 'text-red-500' }; // Rojo
+        return { text: "No atendida", color: "text-red-500" }; // Rojo
       default:
-        return { text: 'Desconocido', color: 'text-[#686868]' }; // Color por defecto
+        return { text: "Desconocido", color: "text-[#686868]" }; // Color por defecto
     }
   };
 
   const status = getStatusTextAndColor(paciente?.schedulingStatus);
-
-
-
   return (
     <div className="w-full border-b border-b-[#cecece] md:px-6 py-2 items-center pl-4">
       <div className="md:w-full md:flex grid grid-cols-3 md:grid-cols-6 gap-1 md:gap-4 items-center">

@@ -10,16 +10,14 @@ export default function PreconsultaSubquestion({
 }) {
   return (
     <div
-      className={`flex md:flex-row px-4 md:pl-20 py-4 ${section.options?.length > 0 ? "flex-col" : "flex-row"
+      className={`flex md:flex-row px-4 md:pl-20 py-4 ${subquestion.options?.length > 0 ? "flex-col" : "flex-row"
         } `}>
-      {section.title &&
-        <div className="self-start flex md:flex-row w-full md:w-[40%] gap-2 items-center">
-          <IconCircle />
-          <p className="text-[#686868] font-medium text-base leading-4">
-            {section.title}
-          </p>
-        </div>
-      }
+      <div className="self-start flex md:flex-row w-full md:w-[40%] gap-2 items-center">
+        <IconCircle className="w-3" />
+        <p className="text-[#686868] font-medium text-base leading-4">
+          {subquestion.title}
+        </p>
+      </div>
       <div
         className={`${section.options?.length > 0
           ? "grid grid-cols-2 p-4 w-[100%] md:w-[100%]  md:p-0"

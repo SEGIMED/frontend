@@ -13,116 +13,127 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import PatientCardConsulta from "@/components/card/PatientCardConsulta";
+import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomeDoc() {
-    const dispatch = useAppDispatch();
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [riskFilter, setRiskFilter] = useState("");
-    const [isSorted, setIsSorted] = useState(false);
+  const dispatch = useAppDispatch();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [riskFilter, setRiskFilter] = useState("");
+  const [isSorted, setIsSorted] = useState(false);
 
-    // Obtener consultas del estado
-    const consultas = useAppSelector((state) => state.schedules);
-    const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
+  // Obtener consultas del estado
+  const consultas = useAppSelector((state) => state.schedules);
+  const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
 
-    // Obtener pacientes del estado
-    const listaPacientes = useAppSelector((state) => state.allPatients.patients);
-    const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+  // Obtener pacientes del estado
+  // const listaPacientes = useAppSelector((state) => state.allPatients.patients);
+  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
-    useEffect(() => {
-        dispatch(setSearchTerm(""));
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(setSearchTerm(""));
+  }, [dispatch]);
 
-    // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
-    const scheduledConsultas = consultas.filter(
-        (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
-    );
+  // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
+  const scheduledConsultas = consultas.filter(
+    (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
+  );
 
-    // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
-    const filteredPatients = listaPacientes?.filter(
-        (paciente) =>
-            scheduledConsultas.some((consulta) => consulta.patient === paciente.id) &&
-            (paciente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                paciente.lastname.toLowerCase().includes(searchTerm.toLowerCase())) &&
-            (riskFilter ? paciente.risk === riskFilter : true)
-    );
+  // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
+  const filteredPatients = scheduledConsultas.filter(
+    (cita) =>
+      cita.patientUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cita.patientUser.lastname.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  // Asociar consultas a los pacientes
+  // const patientsWithConsultas = filteredPatients.map((paciente) => {
+  //     const consulta = scheduledConsultas.find(
+  //         (consulta) =>
+  //             consulta.patient === paciente.id &&
+  //             consulta.typeOfMedicalConsultation === 1
+  //     );
+  //     return { ...paciente, consulta };
+  // });
 
-    // Asociar consultas a los pacientes
-    const patientsWithConsultas = filteredPatients.map((paciente) => {
-        const consulta = scheduledConsultas.find(
-            (consulta) =>
-                consulta.patient === paciente.id &&
-                consulta.typeOfMedicalConsultation === 1
-        );
-        return { ...paciente, consulta };
-    });
+  // Ordenar pacientes si es necesario
+  const sortedPatients = isSorted
+    ? [...scheduledConsultas].sort((a, b) => a.name.localeCompare(b.name))
+    : scheduledConsultas;
 
-    // Ordenar pacientes si es necesario
-    const sortedPatients = isSorted
-        ? [...patientsWithConsultas].sort((a, b) => a.name.localeCompare(b.name))
-        : patientsWithConsultas;
+  const handleSortClick = () => {
+    setIsSorted(!isSorted);
+  };
 
-    const handleSortClick = () => {
-        setIsSorted(!isSorted);
-    };
+  const lastSegmentTextToShow = PathnameShow()
 
-    const handleRiskFilterClick = (risk) => {
-        setRiskFilter(risk);
-    };
+  const handleRiskFilterClick = (risk) => {
+    setRiskFilter(risk);
+  };
 
-    const toggleFilterMenu = () => {
-        setIsFilterOpen(!isFilterOpen);
-    };
+  const toggleFilterMenu = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
 
-    if (listaPacientes.length === 0) {
-        if (sortedPatients.length === 0) {
-            return "No existen consultas registradas"
-        }
-        return <MensajeSkeleton />;
-
+  if (consultas.length === 0) {
+    if (scheduledConsultas.length === 0) {
+      return "No existen consultas registradas";
     }
-    console.log(scheduledConsultas)
+    return <MensajeSkeleton />;
+  }
+  console.log(scheduledConsultas);
 
-    return (
-        <div className="h-full text-[#686868] w-full flex flex-col">
-            <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
-                {/* <button
+  return (
+    <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
+      <title>{lastSegmentTextToShow}</title>
+      <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
+        {/* <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
                     onClick={handleSortClick}>
                     <p className="text-start text-white font-bold text-base leading-5">Ordenar</p>
                     <IconOrder />
                 </button> */}
-                <div></div>
-                <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
-                    <button className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
-                        <p className="text-start text-white font-bold text-base leading-5">
-                            Teleconsultas
-                        </p>
-                    </button>
-                </Link>
-                <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
-                    <button className="flex px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
-                        <IconFolder />
-                        <p className="text-start text-[#487FFA] font-bold text-base leading-5">
-                            Pasadas
-                        </p>
-                    </button>
-                </Link>
-                {/* <FiltroDocPacientes
+
+
+        <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
+          <button className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
+            <p className="text-start text-white font-bold text-base leading-5">
+              Teleconsultas
+            </p>
+          </button>
+        </Link>
+        <h1 className="font-bold">Consultas</h1>
+        <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
+          <button className="flex px-6 py-1 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+            <IconFolder className="h-6" />
+            <p className="text-start text-[#487FFA] font-bold text-base leading-5">
+              Pasadas
+            </p>
+          </button>
+        </Link>
+        {/* <FiltroDocPacientes
                     onClickSort={handleSortClick}
                     onClickFilter={handleRiskFilterClick}
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}
                 /> */}
-                <div></div>
-            </div>
-            <div className="items-start justify-center w-full">
-                {scheduledConsultas?.map(paciente => (
-                    <PatientCardConsulta key={paciente.id} paciente={paciente} consulta={paciente.consulta} button={<OptPteHistorial id={paciente.patient}
-                        ruta={`${rutas.Doctor}${rutas.Historial}/${paciente.patient}`} />} />
-                ))}
-            </div>
-        </div>
-    );
+
+      </div>
+      <div className="items-start justify-center w-full md:overflow-y-auto">
+        {filteredPatients?.map((paciente) => (
+          <PatientCardConsulta
+            key={paciente.id}
+            paciente={paciente}
+            consulta={paciente.consulta}
+            button={
+              <OptPteHistorial
+                id={paciente.patient}
+                ruta={`${rutas.Doctor}${rutas.Historial}/${paciente.patient}`}
+              />
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 // {filteredPatients?.map(paciente => (
