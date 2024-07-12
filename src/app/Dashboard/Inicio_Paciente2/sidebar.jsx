@@ -106,8 +106,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const getSchedules = async (headers) => {
     try {
-      // const response = await ApiSegimed.get(`/schedules?patientId=${id}`, headers);
-      const response = await ApiSegimed.get(`/schedules?patientId=22`, headers);
+      const response = await ApiSegimed.get(`/schedules?patientId=${id}`, headers);
+    
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
