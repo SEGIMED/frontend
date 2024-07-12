@@ -6,6 +6,7 @@ import rutas from "@/utils/rutas";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { PathnameShow } from "@/components/pathname/path";
 
 const getHighestPriority = (priorities) => {
   if (priorities.includes("Alta")) return "Alta";
@@ -24,6 +25,7 @@ const formatAlarms = (alarms) => {
 
 export default function HomeDoc() {
   const [activeAlarms, setActiveAlarms] = useState([]);
+  const lastSegmentTextToShow = PathnameShow()
 
   const getAlarms = async (headers) => {
     try {
@@ -57,6 +59,7 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
+      <title>{lastSegmentTextToShow}</title>
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white static md:sticky top-0 z-20 md:z-50">
         {/* <Ordenar /> */}
         <h1 className="font-bold">Listado de Alarmas</h1>

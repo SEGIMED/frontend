@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { useRouter } from "next/navigation";
 import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
+import { PathnameShow } from "@/components/pathname/path";
 
 dayjs.locale("es");
 
@@ -19,6 +20,7 @@ export default function Citas() {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const lastSegmentTextToShow = PathnameShow()
 
   const [date, setDate] = useState(new Date());
   const [dateSelected, setDateSelected] = useState();
@@ -138,6 +140,7 @@ export default function Citas() {
 
     return (
       <div className="flex flex-col mb-2 rounded-xl gap-2">
+        <title>{lastSegmentTextToShow}</title>
         <div className="flex justify-between items-center bg-white rounded-lg p-2">
           <div className="space-x-1 md:space-x-4">
             <button

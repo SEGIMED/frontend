@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { socket } from "@/utils/socketio";
 import rutas from "@/utils/rutas";
-
+import { PathnameShow } from "@/components/pathname/path";
 import ruteActual from "@/components/images/ruteActual.png";
 
 import mensaje from "@/components/images/mensaje.png";
@@ -30,6 +30,7 @@ export default function MensajesDoc() {
   const [reload, setReload] = useState(false);
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
+  const lastSegmentTextToShow = PathnameShow()
 
   useEffect(() => {
     // if (!socket.isConnected()) {
@@ -82,6 +83,7 @@ export default function MensajesDoc() {
         <div
           key={chat._id}
           className="flex h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center">
+          <title>{lastSegmentTextToShow}</title>
           <div className="flex gap-4 w-[65%] md:w-[80%]">
             <div className="w-12 h-12 flex justify-center items-center">
               {handleImg(
