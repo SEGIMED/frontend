@@ -209,7 +209,7 @@ const DetallePaciente = (id) => {
       historyOfPresentIllness: "Paciente con Diagnóstico de HAP idiopática, con variables de alto riesgo.FRCV: flutter auricular, Insuficiencia cardiaca Fevi 76%. Múltiples internaciones por insuficiencia Cardiaca Derecha. Internación reciente por infusión súbita por treprostinil con efectos adversos asociados. Internacion 06/02/24 - 13/02/24 por hiponatremia severa sintomatica Na 106, hipocalcemia, infeccion de piel y partes blandas MSI. Acude el día de hoy a control.", /// enfermedad actual
       reviewOfSystems: "Disnea a 500mts", /// revision por sistemas o sintomas
       treatmentPlan: "Paciente con diagnostico de hipertensión arterial pulmonar idiopática, con variables de alto riesgo. Dilatación severa de cavidades derechas, remodelado negativo de las mismas. Continua con signos de insuficiencia cardíaca actuales y hemodinamia de alto riesgo (PAD 19 mm HG, IC 1,57 l/min/mt, IVS 23, Sat AP 54%).Continua con diuretico, actualmente con triple esquema de tratamiento especifico, se aumentara dosis de acuerdo a tolerancia.", /// plan de tratamiento
-      pendingDiagnosticTest : "test caminata 6 minutos y ETT", // test pendientes
+      pendingDiagnosticTest : "test caminata 6 minutos y  ", // test pendientes
       alarmPattern: data["Pauta de alarma"], // patron de alarma
      
     })
