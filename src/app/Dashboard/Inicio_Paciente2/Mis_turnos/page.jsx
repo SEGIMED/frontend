@@ -1,23 +1,28 @@
 "use client"
-import { useRouter } from "next/navigation";
-import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
+import { useRouter} from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
+import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder2";
 import TableTurnos from "@/components/misTurnos/TableTurnos";
+import rutas from "@/utils/rutas";
+import IconFolderButton from "@/components/icons/iconFolderButton";
+
 
 export default function MisTurnosPte() {
+    
     const consulta = useAppSelector(state => state.schedules);
     const router = useRouter();
-    
+ 
     
     const filterConsultas = consulta.filter(cons => cons.scheduling_status === 1);
 
-  
     
     return (
         <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
             <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white static md:sticky top-0 z-20 md:z-50">
-                <ButtonBlancoBorde text={"Ordenar"}  />
-                <ButtonBlancoBorde text={"Pasadas"} />
+                <ButtonBlancoBorde text={"Ordenar"} />
+               
+                <ButtonBlancoBorde iconLeft={<IconFolderButton color="#487FFA"/>}text={"Pasadas"} funcion={() => {router.push(`${rutas.PacienteDash2}${rutas.Mis_turnos}${rutas.Pasadas}`)}} />
+                
             </div>
             <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4">
                 <div className="flex">

@@ -1,10 +1,12 @@
+"use client"
+
 import IconTablillaTilde from "../icons/iconTablillaTilde";
-import { extractHourMinutes } from "@/utils/formatDate";
-import { extractMonthDay } from "@/utils/formatDate";
 import {Hora, Fecha} from "@/utils/NormaliceFechayHora";
 import TurnosButton from "./buttonTurnos";
 
+
 export default function TableTurnos ({consultas}){
+   
     return (
         <div className="flex flex-col">
           
@@ -35,7 +37,7 @@ export default function TableTurnos ({consultas}){
                 {consulta?.typeOfMedicalConsultation === 1 ? "Presencial" : "Teleconsulta"}
                 </div>
                 <div>
-                <TurnosButton/>
+                <TurnosButton idDoc={consulta.physician}/>
                 </div>
                 
               </div>
