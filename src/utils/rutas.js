@@ -31,6 +31,8 @@ const Teleconsulta = "/Teleconsulta"
 const SignosVitales = "/Signos_Vitales"
 const ExamenFisico = "/Examen_Fisico"
 const Diagnostico = "/Diagnostico"
+const Mis_turnos="/Mis_turnos"
+const Pasadas="/Pasadas"
 
 
 const rutas = {
@@ -62,7 +64,9 @@ const rutas = {
     Tratamientos,
     Configuracion,
     Preconsulta,
-    Teleconsulta
+    Teleconsulta,
+    Mis_turnos,
+    Pasadas
 };
 
 export default rutas
