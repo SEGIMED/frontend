@@ -78,7 +78,7 @@ export default function HomeDocAll() {
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
-      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+      <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
         {/* <button 
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]" 
                     onClick={handleSortClick}>
@@ -86,6 +86,7 @@ export default function HomeDocAll() {
                     <IconOrder />
                 </button> */}
         <div></div>
+        <h1 className="font-bold">Consultas pasadas</h1>
         <Link href={`${rutas.Doctor}${rutas.Historial}`}>
           <button className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
             <IconRegresar />
@@ -100,7 +101,7 @@ export default function HomeDocAll() {
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}                
                 /> */}
-        <div></div>
+
       </div>
       <div className="flex flex-col items-start justify-center w-full md:overflow-y-auto">
         {scheduledConsultas?.map((paciente) => (

@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import PatientCardConsulta from "@/components/card/PatientCardConsulta";
+import IconRegresar from "@/components/icons/iconRegresar";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -82,7 +83,7 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col">
-      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+      <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
         <button
           className="flex px-2 md:px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
           onClick={handleSortClick}>
@@ -91,20 +92,29 @@ export default function HomeDoc() {
           </p>
           <IconOrder />
         </button>
-        <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
+        <h1 className="font-bold">Teleconsultas</h1>
+        {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
           <button className="flex px-2 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
             <IconFolder className="h-6" />
             <p className="text-start text-[#487FFA] font-bold text-base leading-5">
               Pasadas
             </p>
           </button>
-        </Link>
-        <FiltroDocPacientes
+        </Link> */}
+        {/* <FiltroDocPacientes
           onClickSort={handleSortClick}
           onClickFilter={handleRiskFilterClick}
           isOpen={isFilterOpen}
           toggleMenu={toggleFilterMenu}
-        />
+        /> */}
+        <Link href={`${rutas.Doctor}${rutas.Historial}`}>
+          <button className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
+            <IconRegresar />
+            <p className="text-start text-white font-bold text-base leading-5">
+              Regresar
+            </p>
+          </button>
+        </Link>
       </div>
       <div className="flex flex-col items-start justify-center w-full">
         {sortedPatients?.map((paciente) => (

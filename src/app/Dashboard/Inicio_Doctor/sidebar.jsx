@@ -38,7 +38,12 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
   const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
 
+  const lastSegmentText = pathname
+    .substring(pathname.lastIndexOf("/") + 1)
+    .replace(/_/g, " ");
+
   const dispatch = useAppDispatch();
+
 
   const router = useRouter(); // Use the useRouter hook
 
@@ -171,6 +176,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         socket.emit("onJoin", { id: idUser });
       }
     }
+
   }, []);
 
   return (
@@ -196,19 +202,19 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       <div className="flex justify-center items-center gap-4 text-lg font-semibold">
         <IconCurrentRouteNav className="w-4 hidden md:block" />
         {lastSegment === "Inicio_Doctor" ? (
-          <p>Inicio</p>
+          <p>Inicio | Segimed</p>
         ) : lastSegment === "Mi_perfil" ? (
-          <p>Mi Perfil</p>
+          <p>Mi Perfil | Segimed</p>
         ) : lastSegment === "Citas" ? (
-          <p>Mi Agenda</p>
+          <p>Mi Agenda | Segimed</p>
         ) : lastSegment === "Soporte_tecnico" ? (
-          <p>Soporte Técnico</p>
+          <p>Soporte Técnico | Segimed</p>
         ) : IsEvent ? (
-          <p>Evento</p>
+          <p>Evento | Segimed</p>
         ) : IsMessage ? (
-          <p>Mensaje</p>
+          <p>Mensaje | Segimed</p>
         ) : (
-          <p>{lastSegment}</p>
+          <p>{lastSegmentText}  | Segimed</p>
         )}
       </div>
       {showSearch && (
@@ -242,13 +248,13 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           <span className="text-start text-[#808080]">Médico</span>
         </div>
 
-        <button>
+        {/* <button>
           <IconNotificationsNav
             className=" w-12"
             circle="#E73F3F"
             campaign="#B2B2B2"
           />
-        </button>
+        </button> */}
       </div>
     </div>
   );

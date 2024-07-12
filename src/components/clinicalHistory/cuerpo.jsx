@@ -24,11 +24,12 @@ export default function ClincalCuerpo({ info }) {
     // Función para obtener los nombres de músculos en inglés
     const getMuscleNames = () => {
       if (info && info.painMap && info.painMap.painAreas) {
-        const muscleData = info.painMap.painAreas.map((area) => ({
-          name: "Musculo",
-          muscles: [area.painArea?.painAreaEnglish],
+        const muscleData = info.painMap.painAreas.map(area => ({
+          name: 'Musculo',
+          muscles: area.painArea?.painAreaEnglish ? [area.painArea.painAreaEnglish] : [],
         }));
         setSelectedMuscles(muscleData);
+        console.log(muscleData);
       }
     };
 

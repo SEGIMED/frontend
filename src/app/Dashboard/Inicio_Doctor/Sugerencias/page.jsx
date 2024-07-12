@@ -7,10 +7,13 @@ import sendIconSugerencias from "@/components/images/sendIconSugerencias.png";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
   const [content, setContent] = useState("");
+
+  const lastSegmentTextToShow = PathnameShow()
 
   const sugerencia = async () => {
     const token = Cookies.get("a");
@@ -51,6 +54,7 @@ export default function HomePte() {
 
   return (
     <div className="w-full flex flex-col">
+      <title>{lastSegmentTextToShow}</title>
       <div className="flex flex-col items-center justify-start md:m-auto w-full px-4 md:px-40">
         <div className="pt-4 md:pt-10">
           <p className="text-center text-[#333333] font-semibold text-2xl leading-7 mb-7">
