@@ -16,35 +16,35 @@ import PatientCardConsulta from "@/components/card/PatientCardConsulta";
 import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomeDoc() {
-  const dispatch = useAppDispatch();
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [riskFilter, setRiskFilter] = useState("");
-  const [isSorted, setIsSorted] = useState(false);
+    const dispatch = useAppDispatch();
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [riskFilter, setRiskFilter] = useState("");
+    const [isSorted, setIsSorted] = useState(false);
 
-  // Obtener consultas del estado
-  const consultas = useAppSelector((state) => state.schedules);
-  const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
+    // Obtener consultas del estado
+    const consultas = useAppSelector((state) => state.schedules);
+    const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
 
-  // Obtener pacientes del estado
+    // Obtener pacientes del estado
   // const listaPacientes = useAppSelector((state) => state.allPatients.patients);
-  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+    const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
-  useEffect(() => {
-    dispatch(setSearchTerm(""));
-  }, [dispatch]);
+    useEffect(() => {
+        dispatch(setSearchTerm(""));
+    }, [dispatch]);
 
-  // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
-  const scheduledConsultas = consultas.filter(
-    (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
-  );
+    // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
+    const scheduledConsultas = consultas.filter(
+        (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
+    );
 
-  // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
+    // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
   const filteredPatients = scheduledConsultas.filter(
     (cita) =>
       cita.patientUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cita.patientUser.lastname.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  // Asociar consultas a los pacientes
+    );
+    // Asociar consultas a los pacientes
   // const patientsWithConsultas = filteredPatients.map((paciente) => {
   //     const consulta = scheduledConsultas.find(
   //         (consulta) =>
@@ -54,8 +54,8 @@ export default function HomeDoc() {
   //     return { ...paciente, consulta };
   // });
 
-  // Ordenar pacientes si es necesario
-  const sortedPatients = isSorted
+    // Ordenar pacientes si es necesario
+    const sortedPatients = isSorted
     ? [...scheduledConsultas].sort((a, b) => a.name.localeCompare(b.name))
     : scheduledConsultas;
 
@@ -65,23 +65,23 @@ export default function HomeDoc() {
 
   const lastSegmentTextToShow = PathnameShow()
 
-  const handleRiskFilterClick = (risk) => {
-    setRiskFilter(risk);
-  };
+    const handleRiskFilterClick = (risk) => {
+        setRiskFilter(risk);
+    };
 
-  const toggleFilterMenu = () => {
-    setIsFilterOpen(!isFilterOpen);
-  };
+    const toggleFilterMenu = () => {
+        setIsFilterOpen(!isFilterOpen);
+    };
 
   if (consultas.length === 0) {
     if (scheduledConsultas.length === 0) {
       return "No existen consultas registradas";
+        }
+        return <MensajeSkeleton />;
     }
-    return <MensajeSkeleton />;
-  }
   console.log(scheduledConsultas);
 
-  return (
+    return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
       <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
@@ -104,12 +104,12 @@ export default function HomeDoc() {
         <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
           <button className="flex px-6 py-1 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
             <IconFolder className="h-6" />
-            <p className="text-start text-[#487FFA] font-bold text-base leading-5">
-              Pasadas
-            </p>
-          </button>
-        </Link>
-        {/* <FiltroDocPacientes
+                        <p className="text-start text-[#487FFA] font-bold text-base leading-5">
+                            Pasadas
+                        </p>
+                    </button>
+                </Link>
+                {/* <FiltroDocPacientes
                     onClickSort={handleSortClick}
                     onClickFilter={handleRiskFilterClick}
                     isOpen={isFilterOpen}
@@ -130,10 +130,10 @@ export default function HomeDoc() {
               />
             }
           />
-        ))}
-      </div>
-    </div>
-  );
+                ))}
+            </div>
+        </div>
+    );
 }
 
 // {filteredPatients?.map(paciente => (

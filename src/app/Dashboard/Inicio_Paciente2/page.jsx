@@ -13,7 +13,7 @@ import rutas from "@/utils/rutas";
 const Buttons = [
   {
     name: "Mis Turnos",
-    path: "/historial",
+    path: "/Mis_turnos",
     icon: IconTurnos,
     backgroundColor: "bg-[#487FFA]",
   },
