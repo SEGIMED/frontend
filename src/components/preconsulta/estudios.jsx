@@ -5,9 +5,7 @@ import circleData from "@/components/images/circleData.png";
 import FileUpload from "@/components/consulta/file";
 import { useAppSelector } from "@/redux/hooks";
 
-export default function InputFilePreconsultation({ title, defaultOpen = false }) {
-    const formData = useAppSelector((state) => state.preconsultaForm.formData);
-
+export default function InputFilePreconsultation({ tests, title, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, defaultOpen = false }) {
     return (
         <div className="flex flex-col">
             <details open={defaultOpen}>
@@ -19,8 +17,8 @@ export default function InputFilePreconsultation({ title, defaultOpen = false })
                         </p>
                     </div>
                 </summary>
-                {Object.keys(formData.estudios).map((key, index) => (
-                    <FileUpload key={index} label={formData.estudios[key].title} />
+                {Object.keys(tests).map((test, index) => (
+                    <FileUpload key={index} data={tests[test]} onTestSelectedOption={onTestSelectedOption} onTestActive={onTestActive} onUploadFile={onUploadFile} onDescriptionChange={onDescriptionChange} test={test} label={tests[test].title} />
                 ))}
             </details>
         </div>
