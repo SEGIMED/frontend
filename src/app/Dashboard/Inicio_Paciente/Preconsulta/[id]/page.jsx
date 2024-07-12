@@ -35,91 +35,92 @@ export default function PreconsultaPte({ params }) {
   const [tests, setTests] = useState({
     abnormalGlycemia: {
       title: 'Glicemia anormal',
-      file: "https:cloudinary",
+      binaryOptions: true,
       description: '',
       active: false,
     },
     lastAbnormalGlycemia: {
       title: 'Última glicemia anormal',
-      file: "https:cloudinary",
+      selectedOption: null,
       description: '',
       active: false,
     },
     physicalExamination: {
       title: 'Examen físico',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     laboratoryResults: {
       title: 'Resultados de laboratorio',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     electrocardiogram: {
       title: 'Electrocardiograma',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     rxThorax: {
       title: 'RX de Torax',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     echocardiogram: {
       title: 'Ecocardiograma',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     walkTest: {
       title: 'Test de caminata',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     respiratoryFunctional: {
       title: 'Funcional respiratorio',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     tomographies: {
       title: 'Tomografías',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     rightHeartCatheterization: {
       title: 'Cateterismo cardiaco derecho',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     ccg: {
       title: 'CCG (Coronariografia)',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     resonance: {
       title: 'Resonancia',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     leftHeartCatheterization: {
       title: 'Cateterismo cardiaco izquierdo',
-      file: "https:cloudinary",
+      file: null,
       description: '',
       active: false,
     },
     otherStudies: {
       title: 'Otros estudios',
-      description: ''
+      file: null,
+      description: '',
     },
     pendingStudies: {
       title: 'Estudios pendientes',
@@ -145,7 +146,7 @@ export default function PreconsultaPte({ params }) {
   };
 
   const handleVitalSign = (vitalSign, value) => {
-    dispatch(updateVitalSign({ vitalSign, value })); // actualizamos los signos vitales en el estado global
+    dispatch(updateVitalSign({ vitalSign, value, patientId, schedulingId: Number(scheduleId) })); // actualizamos los signos vitales en el estado global
   };
 
   const handleAnamnesis = (field, description) => {
@@ -164,6 +165,17 @@ export default function PreconsultaPte({ params }) {
     setTests({ ...studies, [test]: { ...studies[test], description: testDescription } });
   };
 
+  const handleTestActive = (test, active) => {
+    // para los campos binarios
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], active: active } });
+  };
+
+  const handleTestSelectedOption = (test, value) => {
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], selectedOption: value } });
+  };
+
   const handleTratamientoDescription = (field, item, description) => {
     dispatch(updateTratamiento({ field, item, description })); // almacenamos los distintos tratamientos en el estado global
   };
@@ -175,14 +187,80 @@ export default function PreconsultaPte({ params }) {
   const methods = useForm();
 
   const handleSubmit = async (event) => {
-    console.log({ ...formData, patient: patientId, appointmentSchedule: scheduleId, tests });
-    /* event.preventDefault();
+    event.preventDefault();
+    const bodyOBJFormat = {
+      painOwnerId: patientId,
+      schedulingId: Number(scheduleId),
+      medicalEventId: null,
+      isTherePain: formData.bodySection.selectedOptions.pain,
+      painDurationId: formData.bodySection.selectedOptions.painTime,
+      painScaleId: formData.bodySection.selectedOptions.painLevel,
+      painTypeId: formData.bodySection.selectedOptions.painType,
+      painAreas: formData.bodySection.selectedOptions.painAreas,
+      painFrequencyId: formData.bodySection.selectedOptions.frecuencia,
+      isTakingAnalgesic: formData.bodySection.selectedOptions.analgesicos,
+      doesAnalgesicWorks: formData.bodySection.selectedOptions.calmaAnalgesicos,
+      isWorstPainEver: formData.bodySection.selectedOptions.peorDolor,
+    }
+    const bodyForm = {
+      patient: patientId,
+      appointmentSchedule: Number(scheduleId),
+      // Questions
+      lackOfAir: formData.questions.lackOfAir.active,
+      lackOfAirIncremented: formData.questions.lackOfAir.subquestions.lackOfAirIncremented.selectedOption,
+      lackOfAirClasification: formData.questions.lackOfAir.subquestions.lackOfAirClasification.selectedOption,
+      chestPainAtRest: formData.questions.chestPainAtRest.active,
+      chestPainOnExertion: formData.questions.chestPainOnExertion.active,
+      chestPainOnExertionAmount: formData.questions.chestPainOnExertion.subquestions.chestPainOnExertionAmount.selectedOption,
+      edemaPresence: formData.questions.edemaPresence.active,
+      edemaPresenceDescription: formData.questions.edemaPresence.subquestions.edemaPresenceDescription.selectedOption,
+      feelings: formData.questions.feelings.selectedOption,
+      healthChanges: formData.questions.healthChanges.active,
+      healthChangesDescription: formData.questions.healthChanges.description,
+      healthWorsened: formData.questions.healthWorsened.selectedOption,
+      mentalHealthAffected: formData.questions.mentalHealthAffected.active,
+      mentalHealthAffectedDescription: formData.questions.mentalHealthAffected.description,
+      energyStatus: formData.questions.energyStatus.selectedOption,
+      feed: formData.questions.feed.selectedOption,
+      hydrationStatus: formData.questions.hydrationStatus.selectedOption,
+      urineStatus: formData.questions.urineStatus.selectedOption,
+      exerciseStatus: formData.questions.exerciseStatus.selectedOption,
+      // Estudios
+      abnormalGlycemia: tests.abnormalGlycemia.active,
+      lastAbnormalGlycemia: tests.lastAbnormalGlycemia.selectedOption,
+      physicalExamination: tests.physicalExamination.file,
+      laboratoryResults: tests.laboratoryResults.file,
+      laboratoryResultsDescription: tests.laboratoryResults.description,
+      electrocardiogram: tests.electrocardiogram.file,
+      electrocardiogramDescription: tests.electrocardiogram.description,
+      rxThorax: tests.rxThorax.file,
+      echocardiogram: tests.echocardiogram.file,
+      walkTest: tests.walkTest.file,
+      respiratoryFunctional: tests.respiratoryFunctional.file,
+      tomographies: tests.tomographies.file,
+      rightHeartCatheterization: tests.rightHeartCatheterization.file,
+      ccg: tests.ccg.file,
+      resonance: tests.resonance.file,
+      leftHeartCatheterization: tests.leftHeartCatheterization.file,
+      otherStudies: tests.otherStudies.file,
+      pendingStudies: tests.pendingStudies.description,
+      // Anamnesis
+      consultationReason: formData.anamnesis.consultationReason.description,
+      importantSymptoms: formData.anamnesis.importantSymptoms.description,
+      // Tratamiento
+      currentMedications: Object.values(formData.tratamiento.currentMedications.selectedOptions),
+      // Signos vitales
+      vitalSignsToCreate: Object.values(formData.vitalSigns),
+      // painRecordsToCreate
+      painRecordsToCreate: [bodyOBJFormat],
+    };
+    console.log(bodyForm);
     try {
-      if (!formData) { // si esque no se cargaron las preguntas del formulario o el paciente no seleccionó nada
+      if (!bodyForm) {
         console.error('No form data to submit');
         return;
       }
-      const response = await ApiSegimed.post(`/pre-consultation`, { ...formData, tests }, {
+      const response = await ApiSegimed.post(`/pre-consultation`, bodyForm, {
         headers: {
           token: token,
           'Content-Type': 'application/json'
@@ -193,7 +271,7 @@ export default function PreconsultaPte({ params }) {
       }
     } catch (error) {
       console.error('Error fetching data', error);
-    } */
+    }
   };
 
   useEffect(() => {
@@ -260,6 +338,8 @@ export default function PreconsultaPte({ params }) {
           title={"Estudios"}
           onUploadFile={handleUploadTestFile}
           onDescriptionChange={handleTestDescription}
+          onTestActive={handleTestActive}
+          onTestSelectedOption={handleTestSelectedOption}
           tests={tests}
           defaultOpen
         />

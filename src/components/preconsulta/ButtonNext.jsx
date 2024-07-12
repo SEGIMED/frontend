@@ -5,7 +5,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
     const opcionRecibida = selectedOptions ? selectedOptions : "";
     const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
 
-    const handleClick = (option) => {
+    const handleClick = (option, index) => {
         setSelectedOptionState(option);
         onBodyChange(name, option);
         if (handleSelection) {
@@ -28,7 +28,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
                                 borderColor: "#487FFA",
                                 border: '2px solid #487FFA'  // Asegura que el borde tenga un valor válido
                             }}
-                            onClick={() => handleClick(opcion)}
+                            onClick={() => handleClick(opcion, index)}
                         >
                             {opcion}
                         </Button>

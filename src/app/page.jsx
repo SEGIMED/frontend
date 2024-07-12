@@ -49,7 +49,7 @@ export default function Home() {
       // const result = await response.json();
       const response = await ApiSegimed.post("/user/login", postData);
       const result = response.data;
-     
+
       if (response.status !== 200) {
         throw new Error(result.error);
       }
@@ -85,7 +85,7 @@ export default function Home() {
           text: errorMessage ? errorMessage : error.message,
         });
       }
-     
+
     }
   };
 

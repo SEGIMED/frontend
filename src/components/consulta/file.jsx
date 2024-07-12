@@ -5,8 +5,9 @@ import { useAppDispatch } from '@/redux/hooks';
 
 import IconCurrentRouteNav from '../icons/IconCurrentRouteNav';
 import IconDownload from '../icons/IconDownload';
+import BotonPreconsulta from '../Buttons/BotonPreconsulta';
 
-const FileUpload = ({ label, test, onUploadFile, onDescriptionChange, Link, Links }) => {
+const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, Link, Links }) => {
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("");
     const fileInputRef = useRef(null);
@@ -19,9 +20,14 @@ const FileUpload = ({ label, test, onUploadFile, onDescriptionChange, Link, Link
     const handleOnChange = (e) => {
         try {
             if (e.target.files.length) {
-                const selectedFile = e.target.files[0];
+                const selectedFile = e.target.files[0].name;
                 setFile(selectedFile);
-                onUploadFile(test, selectedFile);
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    onUploadFile(test, event.target.result);
+                };
+                reader.readAsDataURL(file);
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);
@@ -36,7 +42,7 @@ const FileUpload = ({ label, test, onUploadFile, onDescriptionChange, Link, Link
     const handleDeleteFile = () => {
         setFile(null);
         setDescription("");
-        onUploadFile(test, '');
+        onUploadFile(test, null);
     };
 
     return (
@@ -45,7 +51,27 @@ const FileUpload = ({ label, test, onUploadFile, onDescriptionChange, Link, Link
                 <IconCurrentRouteNav className="w-4" />
                 {label}
             </div>
-            {test !== 'pendingStudies' &&
+            {(data.binaryOptions && !data.file) && <div
+                className='py-2 md:py-0 flex justify-evenly md:gap-3'>
+                <BotonPreconsulta
+                    label="Sí"
+                    onClick={() => onTestActive(test, true)}
+                    active={data.active}
+                />
+                <BotonPreconsulta
+                    label="No"
+                    onClick={() => onTestActive(test, false)}
+                    active={!data.active}
+                />
+            </div>}
+            {test === 'lastAbnormalGlycemia' &&
+                <input
+                    type="text"
+                    className="w-[20%] md:w-[8%] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 md:px-4 py-1"
+                    onChange={(e) => onTestSelectedOption(test, [Number(e.target.value)])}
+                />
+            }
+            {(test !== 'pendingStudies') &&
                 <div className="flex flex-row gap-3">
                     <button
                         className="flex items-center justify-center gap-3 py-2 px-6 border-2 border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
@@ -86,7 +112,7 @@ const FileUpload = ({ label, test, onUploadFile, onDescriptionChange, Link, Link
             {file && (
                 <div className="mt-4">
                     <div className="flex items-center gap-4">
-                        <span>{file.name}</span>
+                        <span>{file}</span>
                         <button onClick={handleDeleteFile}>
                             <IconUpload className="w-4 text-red-500" />
                         </button>

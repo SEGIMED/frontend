@@ -86,7 +86,7 @@ const initialState = {
         title: "¿Cómo se encuentra el día de hoy?",
         active: false,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 1,
         showRowOptions: true,
         description: '',
         options: [
@@ -109,7 +109,7 @@ const initialState = {
         title: "Siente que su salud se ha empeorado en las últimas:",
         active: false,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 3,
         showRowOptions: true,
         description: '',
         options: [
@@ -139,7 +139,7 @@ const initialState = {
         title: "Califique su estado de energía - Fatiga",
         active: false,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 1,
         showSlider: true,
         description: '',
       },
@@ -147,7 +147,7 @@ const initialState = {
         title: "Califique su alimentación",
         active: false,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 2,
         showRowOptions: true,
         description: '',
         options: [
@@ -161,7 +161,7 @@ const initialState = {
         title: "Califique su hidratación diaria (todos los líquidos ingeridos)",
         active: true,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 2,
         description: '',
         options: [
           { label: "Poca ingesta < de 1.5 litros (menos de 5 vasos aprox.) " },
@@ -173,7 +173,7 @@ const initialState = {
         title: "Califique su estado de orina (diuresis)",
         active: true,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 4,
         description: '',
         options: [
           { label: "Orino normal (entre 500 ml y 1 litro al día)" },
@@ -187,7 +187,7 @@ const initialState = {
         title: "Califique su estado de ejercicio físico",
         active: true,
         binaryOptions: false,
-        selectedOption: null,
+        selectedOption: 2,
         description: '',
         options: [
           { label: "Ninguno: no puedo, no quiero, no recomendado por el médico, contraindicado." },
@@ -200,7 +200,8 @@ const initialState = {
     vitalSigns: {
       height: {
         cat: "antrophometric",
-        id: 4,
+        medicalEventId: null,
+        measureType: 4,
         key: "Talla",
         label: "Estatura",
         unit: "cm",
@@ -208,7 +209,8 @@ const initialState = {
       },
       weight: {
         cat: "antrophometric",
-        id: 5,
+        medicalEventId: null,
+        measureType: 5,
         key: "Peso",
         label: "Peso",
         unit: "kg",
@@ -217,14 +219,16 @@ const initialState = {
       IMC: {
         cat: "antrophometric",
         key: "IMC",
-        id: 7,
+        medicalEventId: null,
+        measureType: 7,
         label: "Índice de masa corporal",
         unit: "kg/m2",
         referenceValue: 24.69,
       },
       temperature: {
         cat: "vitalSigns",
-        id: 1,
+        medicalEventId: null,
+        measureType: 1,
         key: "Temperatura",
         label: "Temperatura",
         unit: "°C",
@@ -239,7 +243,8 @@ const initialState = {
       }, */
       Heart_Rate: {
         cat: "vitalSigns",
-        id: 7,
+        medicalEventId: null,
+        measureType: 7,
         key: "Frecuencia Cardiaca",
         label: "Frecuencia cardíaca",
         unit: "lpm",
@@ -247,7 +252,8 @@ const initialState = {
       },
       Systolic_Blood_Pressure: {
         cat: "vitalSigns",
-        id: 2,
+        medicalEventId: null,
+        measureType: 2,
         key: "Presion Arterial Sistolica",
         label: "Presión arterial sistólica",
         unit: "mmHg",
@@ -255,22 +261,24 @@ const initialState = {
       },
       Diastolic_Blood_Pressure: {
         cat: "vitalSigns",
-        id: 3,
+        medicalEventId: null,
+        measureType: 3,
         key: "Presion Arterial Diastolica",
         label: "Presión arterial diastólica",
         unit: "mmHg",
         referenceValue: 80,
       },
-      Mean_arterial_pressure: {
-        cat: "vitalSigns",
-        key: "Presion Arterial Media",
-        label: "Presión arterial media",
-        unit: "mmHg",
-        referenceValue: "",
-      },
+      // Mean_arterial_pressure: {
+      //   cat: "vitalSigns",
+      //   key: "Presion Arterial Media",
+      //   label: "Presión arterial media",
+      //   unit: "mmHg",
+      //   referenceValue: "",
+      // },
       Breathing_frequency: {
         cat: "vitalSigns",
-        id: 5,
+        medicalEventId: null,
+        measureType: 5,
         key: "Frecuencia Respiratoria",
         label: "Frecuencia respiratoria",
         unit: "rpm",
@@ -278,7 +286,8 @@ const initialState = {
       },
       Oxygen_saturation: {
         cat: "vitalSigns",
-        id: 6,
+        medicalEventId: null,
+        measureType: 6,
         key: "Saturacion de Oxigeno",
         label: "Saturación de oxígeno",
         unit: "%",
@@ -286,7 +295,20 @@ const initialState = {
       },
     },
     bodySection: {
-      selectedOptions: {},
+      selectedOptions: {
+        isTherePain: null,
+        painDuration: null,
+        painScale: null,
+        painType: null,
+        painAreas: null,
+        painFrequency: null,
+        isTakingAnalgesic: null,
+        doesAnalgesicWorks: null,
+        isWorstPainEver: null,
+        painOwner: null,
+        scheduling: null,
+        medicalEvent: null,
+      },
     },
     anamnesis: {
       consultationReason: {
@@ -345,8 +367,10 @@ const preconsultaFormSlice = createSlice({
       state.formData.questions[question].description = description;
     },
     updateVitalSign(state, action) {
-      const { vitalSign, value } = action.payload;
-      state.formData.vitalSigns[vitalSign].value = value;
+      const { vitalSign, value, patientId, schedulingId } = action.payload;
+      state.formData.vitalSigns[vitalSign].measure = value;
+      state.formData.vitalSigns[vitalSign].patientId = patientId;
+      state.formData.vitalSigns[vitalSign].schedulingId = schedulingId;
     },
     updateAnamnesis(state, action) {
       const { field, description } = action.payload;

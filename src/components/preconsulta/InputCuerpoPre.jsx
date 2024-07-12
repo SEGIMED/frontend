@@ -100,7 +100,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
     const translatedMuscleName = muscleTranslations[muscle] || muscle;
     setSelectedMuscleName(translatedMuscleName); // Establecer el nombre del músculo seleccionado
     setSelectedMuscles([{ ...existingData, muscles: updatedMuscles }]);
-    onBodyChange("muscles", [...updatedMuscles.map((m) => muscleTranslations[m] || m)]);
+    onBodyChange("painAreas", [...updatedMuscles.map((m) => muscleTranslations[m] || m)]);
   };
 
   const handlePainSelection = (selection) => {
