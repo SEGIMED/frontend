@@ -21,6 +21,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed.js";
 import IconFavoriteBlue from "@/components/icons/IconFavoriteBlue.jsx";
 import IconFavoriteYellow from "@/components/icons/IconFavoriteyellow.jsx";
 import { PathnameShow } from "@/components/pathname/path";
+import realColor from "@/utils/realColor.js";
 
 
 
@@ -176,7 +177,7 @@ export default function HomeDoc() {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-
+  console.log("esto es pacientes",sortedPatients)
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
@@ -201,28 +202,28 @@ export default function HomeDoc() {
       <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
-            key={paciente.id}
+            key={paciente?.id}
             className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2"
           >
             <div className="flex gap-2 md:gap-4 items-center justify-start">
-              <Image src={getRandomColor()} alt="Punto de color" />
+              <Image src={realColor(paciente=paciente?.patientPulmonaryHypertensionRisks?.risk)} alt="Punto de color" />
               <div className="flex justify-center items-center">
                 <img
-                  src={paciente?.avatar !== null ? paciente.avatar : avatar}
-                  alt={paciente.name}
+                  src={paciente?.avatar !== null ? paciente?.avatar : avatar}
+                  alt={paciente?.name}
                   className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
                 />
               </div>
               <p className="text-base">
-                {paciente.name} {paciente.lastname}
+                {paciente?.name} {paciente?.lastname}
               </p>
             </div>
             <OpcionesDocPacientes
               paciente={paciente}
-              onConsultationClick={() => openModal(paciente.id)}
+              onConsultationClick={() => openModal(paciente?.id)}
               onToggleFavorite={handleToggleFavorite}
-              isOpen={openOptionsPatientId === paciente.id}
-              toggleOptions={() => toggleOptionMenu(paciente.id)}
+              isOpen={openOptionsPatientId === paciente?.id}
+              toggleOptions={() => toggleOptionMenu(paciente?.id)}
             />
           </div>
         ))}

@@ -57,7 +57,7 @@ export default function ReviewModal({ onClose, idDoc }) {
           },
         }
       );
-      if (response.status === 200 || 201){
+      if (response.status === 200 || response.status === 201){
       onClose();
       Swal.fire({
         title: "Review enviada con exito!",

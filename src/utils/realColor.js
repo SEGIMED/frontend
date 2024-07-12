@@ -8,8 +8,9 @@ import riesgoVerde from "@/components/images/riesgoVerde.png";
 
 
 
-export default function realColor ({paciente}) {
-    const risk = paciente?.patientPulmonaryHypertensionRisks?.risk
+export default function realColor (paciente) {
+    const risk = paciente
+    console.log(paciente)
     switch (risk) {
       case "Bajo":
       return riesgoVerde;

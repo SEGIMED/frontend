@@ -3,7 +3,8 @@ export const Hora= (param)=>{
     return hora
 }
 
-export const Fecha= (param)=>{
-    const fecha = new Date(param).toLocaleDateString('es-ES')
-    return fecha
+export const Fecha = (param) => {
+    const options = { year: '2-digit', month: 'numeric', day: 'numeric' };
+    const fecha = new Date(param).toLocaleDateString('es-ES', options);
+    return fecha;
 }

@@ -18,7 +18,7 @@ export default function TableTurnos ({consultas}){
                   <span className="hidden md:block ">
                   <IconTablillaTilde/>
                   </span>
-                  <p>{Fecha(consulta?.scheduledStartTimestamp)}</p>
+                  <p className="ml-4">{Fecha(consulta?.scheduledStartTimestamp)}</p>
                 </div>
                 <span className="text-[#5F5F5F]">
                 {Hora(consulta?.scheduledStartTimestamp)}
