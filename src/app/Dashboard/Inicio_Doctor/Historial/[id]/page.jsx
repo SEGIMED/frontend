@@ -202,6 +202,17 @@ const DetallePaciente = (id) => {
       quantityTherapy: 10,
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
+    setMedicalEvent({        
+      physicianComments: data["Evolucion de la enfermedad"], ///evolucion
+      schedulingId: 54, /// el id del agendamiento
+      chiefComplaint: "Remitido por Medicina Interna por hipertension Pulmonar",// motivo de consulta
+      historyOfPresentIllness: "Paciente con Diagnóstico de HAP idiopática, con variables de alto riesgo.FRCV: flutter auricular, Insuficiencia cardiaca Fevi 76%. Múltiples internaciones por insuficiencia Cardiaca Derecha. Internación reciente por infusión súbita por treprostinil con efectos adversos asociados. Internacion 06/02/24 - 13/02/24 por hiponatremia severa sintomatica Na 106, hipocalcemia, infeccion de piel y partes blandas MSI. Acude el día de hoy a control.", /// enfermedad actual
+      reviewOfSystems: "Disnea a 500mts", /// revision por sistemas o sintomas
+      treatmentPlan: "Paciente con diagnostico de hipertensión arterial pulmonar idiopática, con variables de alto riesgo. Dilatación severa de cavidades derechas, remodelado negativo de las mismas. Continua con signos de insuficiencia cardíaca actuales y hemodinamia de alto riesgo (PAD 19 mm HG, IC 1,57 l/min/mt, IVS 23, Sat AP 54%).Continua con diuretico, actualmente con triple esquema de tratamiento especifico, se aumentara dosis de acuerdo a tolerancia.", /// plan de tratamiento
+      pendingDiagnosticTest : "test caminata 6 minutos y  ", // test pendientes
+      alarmPattern: data["Pauta de alarma"], // patron de alarma
+     
+    })
   };
 
   useEffect(() => {
@@ -217,6 +228,7 @@ const DetallePaciente = (id) => {
             { headers: { token: token } }
           ),
         ]);
+        console.log(response2.data[0]);
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
       } catch (error) {
@@ -319,10 +331,22 @@ const DetallePaciente = (id) => {
     const response2 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, {
       headers: { token: token },
     });
-    console.log(response2);
 
+
+    const response3 = await ApiSegimed.post(`/medical-event/create-event`, diagnostic, {
+      headers: { token: token },
+    });
+
+
+    console.log(response2);
+    console.log(response3);
     //pautas de alarma
     if (/*response1.status === 200 && */ response2.status === 200) {
+      const data = await ApiSegimed.patch(
+        `/patient-diagnostic/${idSchedule}`,{schedulingStatus:2},{
+          headers: { token: token },
+        }
+      )
       setLoading(false);
       Swal.fire({
         icon: "success",
@@ -417,7 +441,8 @@ const DetallePaciente = (id) => {
                 "Tratamientos no farmacológicos",
                 "Pauta de alarma",
               ]}
-              subtitle2={["Diagnostico", "Medicamentos", "Procedimientos"]}
+              subtitle2={["Diagnostico","Procedimientos"]}
+              subtitle3={"Medicamentos"}
             />
           </form>
         ) : (

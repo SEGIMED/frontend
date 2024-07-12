@@ -51,8 +51,8 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                 <IconCurrentRouteNav className="w-4" />
                 {label}
             </div>
-            {(data.binaryOptions && !data.file) && <div
-                className='py-2 md:py-0 flex justify-evenly md:gap-3'>
+            {(data?.binaryOptions && !data.file) && <div
+                className='flex py-2 md:py-0 justify-evenly md:gap-3'>
                 <BotonPreconsulta
                     label="Sí"
                     onClick={() => onTestActive(test, true)}
