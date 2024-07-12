@@ -14,9 +14,11 @@ import { useForm } from "react-hook-form";
 import InputInterconsulta from "@/components/interconsulta/texto";
 import BotonInterconsulta from "@/components/interconsulta/botones";
 import IconCheckRedBoton from "@/components/icons/IconCheckRed";
+import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
+  const lastSegmentTextToShow = PathnameShow()
 
   const [catalog, setCatalog] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
@@ -130,7 +132,7 @@ export default function HomeDoc() {
   };
   return (
     <div className="h-full flex flex-col">
-      <title>Solicitar interconsulta</title>
+      <title>{lastSegmentTextToShow}</title>
       <div className="flex items-center justify-between border-b border-b-[#cecece] px-4 py-2  bg-white sticky top-0 z-20 md:z-50">
         <h1 className="font-bold w-1/3 md:w-3/4 text-center">
           Solicitar interconsulta

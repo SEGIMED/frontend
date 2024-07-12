@@ -55,7 +55,7 @@ export default function HomeDoc() {
         <p className="font-bold text-[#5F5F5F] hidden md:block">
           Motivo de consulta
         </p>
-        <p className="font-bold text-[#5F5F5F] block md:hidden">Opciones</p>
+        <p className="font-bold text-[#5F5F5F] block md:hidden"> Ver consulta</p>
       </div>
       {consultas.length === 0 ? (
         <p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">

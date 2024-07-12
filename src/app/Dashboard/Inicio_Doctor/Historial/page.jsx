@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import PatientCardConsulta from "@/components/card/PatientCardConsulta";
+import { PathnameShow } from "@/components/pathname/path";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -62,6 +63,8 @@ export default function HomeDoc() {
     setIsSorted(!isSorted);
   };
 
+  const lastSegmentTextToShow = PathnameShow()
+
   const handleRiskFilterClick = (risk) => {
     setRiskFilter(risk);
   };
@@ -80,14 +83,16 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
-      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+      <title>{lastSegmentTextToShow}</title>
+      <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
         {/* <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
                     onClick={handleSortClick}>
                     <p className="text-start text-white font-bold text-base leading-5">Ordenar</p>
                     <IconOrder />
                 </button> */}
-        <div></div>
+
+
         <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
           <button className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
             <p className="text-start text-white font-bold text-base leading-5">
@@ -95,6 +100,7 @@ export default function HomeDoc() {
             </p>
           </button>
         </Link>
+        <h1 className="font-bold">Consultas</h1>
         <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
           <button className="flex px-6 py-1 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
             <IconFolder className="h-6" />
@@ -109,7 +115,7 @@ export default function HomeDoc() {
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}
                 /> */}
-        <div></div>
+
       </div>
       <div className="items-start justify-center w-full md:overflow-y-auto">
         {filteredPatients?.map((paciente) => (

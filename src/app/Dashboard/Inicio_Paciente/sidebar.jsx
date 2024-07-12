@@ -40,6 +40,10 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
 
+  const lastSegmentText = pathname
+    .substring(pathname.lastIndexOf("/") + 1)
+    .replace(/_/g, " ");
+
   const router = useRouter(); // Use the useRouter hook
 
   const avatar =
@@ -54,8 +58,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");

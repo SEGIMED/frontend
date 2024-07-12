@@ -1,4 +1,3 @@
-"use client";
 import SubNavbar from "@/components/NavDoc/subNavDoc";
 
 export default function RootLayout({ children, params }) {
