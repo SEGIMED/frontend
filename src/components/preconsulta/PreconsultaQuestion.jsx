@@ -15,7 +15,7 @@ const SimpleQuestionBox = ({ question, title, index, selectedOption, onQuestionC
   return (
     <div className="flex md:flex-row px-4 md:pl-20 py-4 flex-col">
       <div className="self-start flex md:flex-row w-full md:w-[40%] gap-2 items-center">
-        <IconCircle />
+        <IconCircle className="w-3" />
         <p className="text-[#686868] font-medium text-base leading-4">
           {title}
         </p>
