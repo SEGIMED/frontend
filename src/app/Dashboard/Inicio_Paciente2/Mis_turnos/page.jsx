@@ -1,11 +1,11 @@
 "use client"
 import { useRouter} from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
-import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder2";
+import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import TableTurnos from "@/components/misTurnos/TableTurnos";
 import rutas from "@/utils/rutas";
 import IconFolderButton from "@/components/icons/iconFolderButton";
-import MisTurnos from "@/components/misTurnos/misTurnos";
+import Table from "@/components/misTurnos/Table";
 
 
 export default function MisTurnosPte() {
@@ -15,6 +15,14 @@ export default function MisTurnosPte() {
  
     
     const filterConsultas = consulta.filter(cons => cons.scheduling_status === 1);
+    const columnNames = [
+        "Fecha",
+        "Hora",
+        "Medico",
+        "Centro de atencion",
+        "Motivo de consulta",
+        "Atencion"
+    ];
 
     
     return (
@@ -25,7 +33,7 @@ export default function MisTurnosPte() {
                 <ButtonBlancoBorde iconLeft={<IconFolderButton color="#487FFA"/>}text={"Pasadas"} funcion={() => {router.push(`${rutas.PacienteDash2}${rutas.Mis_turnos}${rutas.Pasadas}`)}} />
                 
             </div>
-            <MisTurnos/>
+            <Table columnNames={columnNames} colum={5} />
             <div className="md:overflow-auto h-full">
                 <TableTurnos consultas={filterConsultas} />
             </div>

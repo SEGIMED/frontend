@@ -6,11 +6,12 @@ import TurnosButton from "./buttonTurnos";
 
 
 export default function TableTurnos ({consultas}){
-   
+    
     return (
         <div className="flex flex-col">
           
             {consultas?.map((consulta, index) => (
+                
               <div
                 key={index}
                 className="grid md:grid-cols-7 grid-cols-5 items-center border-b border-b-[#cecece] md:pr-6 py-2 md:px-2 bg-white w-full h-14 text-center md:text-start">
@@ -18,7 +19,7 @@ export default function TableTurnos ({consultas}){
                   <span className="hidden md:block ">
                   <IconTablillaTilde/>
                   </span>
-                  <p className="ml-4">{Fecha(consulta?.scheduledStartTimestamp)}</p>
+                  <p className="ml-2">{Fecha(consulta?.scheduledStartTimestamp)}</p>
                 </div>
                 <span className="text-[#5F5F5F]">
                 {Hora(consulta?.scheduledStartTimestamp)}

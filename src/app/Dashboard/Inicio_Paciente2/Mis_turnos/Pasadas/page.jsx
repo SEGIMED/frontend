@@ -1,13 +1,13 @@
 "use client"
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
-import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder2";
+import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import TableTurnos from "@/components/misTurnos/TableTurnos";
-import ButtonBlueStandar from "@/components/Buttons/ButtonBlueStandar2";
+import ButtonBlueStandar from "@/components/Buttons/ButtonBlue Standar";
 import rutas from "@/utils/rutas";
 import IconFolderButton from "@/components/icons/iconFolderButton";
 import { use, useEffect } from "react";
-import MisTurnos from "@/components/misTurnos/misTurnos";
+import MisTurnos from "@/components/misTurnos/Table";
 import IconOrder from "@/components/icons/IconOrder";
 
 
