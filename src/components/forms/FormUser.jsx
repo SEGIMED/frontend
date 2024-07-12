@@ -23,7 +23,7 @@ export const FormUser = ({ formData, setFormData }) => {
             const updatedData = { ...formData, ...data };
             setFormData(updatedData);
             // setUpdatedData(updatedData);
-
+            
             const response = await ApiSegimed.post('/user/register-user', updatedData);
             
             const user= response.data;
@@ -33,8 +33,7 @@ export const FormUser = ({ formData, setFormData }) => {
             reset();
             
         } catch (error) {
-            console.error('Error al enviar los datos:', error);
-
+            
             if (error) {
                 Swal.fire({
                   icon: "error",
