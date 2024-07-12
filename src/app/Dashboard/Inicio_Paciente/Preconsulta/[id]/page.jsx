@@ -217,7 +217,7 @@ export default function PreconsultaPte({ params }) {
       isWorstPainEver: formData.bodySection.selectedOptions.peorDolor,
     };
     const bodyForm = {
-      patient: patientId,
+      patient: Number(patientId),
       appointmentSchedule: Number(scheduleId),
       // Questions
       lackOfAir: formData.questions.lackOfAir.active,
