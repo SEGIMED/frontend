@@ -71,7 +71,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                     onChange={(e) => onTestSelectedOption(test, [Number(e.target.value)])}
                 />
             }
-            {(test !== 'pendingStudies') &&
+            {(test !== 'pendingStudies' && test !== 'lastAbnormalGlycemia' && test !== 'abnormalGlycemia') &&
                 <div className="flex flex-row gap-3">
                     <button
                         className="flex items-center justify-center gap-3 py-2 px-6 border-2 border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
