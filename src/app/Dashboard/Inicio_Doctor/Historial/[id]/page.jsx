@@ -228,6 +228,7 @@ const DetallePaciente = (id) => {
             { headers: { token: token } }
           ),
         ]);
+        console.log(response2.data[0]);
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
       } catch (error) {
