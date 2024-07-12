@@ -130,40 +130,34 @@ export default function SubNavbar({ id }) {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem
-                  onClick={() => {
-                    router.push(
-                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.ExamenFisico}`
-                    );
-                    setOpenDetails(!openDetails);
-                  }}
                   className={getLinkClass(rutas.ExamenFisico)}
                   key="new">
-                  {" "}
-                  <div>Examen Fisico</div>
+                  <Link
+                    className="w-full"
+                    onClick={() => setOpenDetails(!openDetails)}
+                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.ExamenFisico}`}>
+                    <p>Examen Fisico</p>
+                  </Link>
                 </DropdownItem>
                 <DropdownItem
-                  onClick={() => {
-                    router.push(
-                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.SignosVitales}`
-                    );
-                    setOpenDetails(!openDetails);
-                  }}
                   className={getLinkClass(rutas.SignosVitales)}
                   key="copy">
-                  {" "}
-                  <div>Signos Vitales</div>
+                  <Link
+                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.SignosVitales}`}
+                    onClick={() => setOpenDetails(!openDetails)}
+                    className="w-full">
+                    <p>Signos Vitales</p>
+                  </Link>
                 </DropdownItem>
                 <DropdownItem
-                  onClick={() => {
-                    router.push(
-                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Diagnostico}`
-                    );
-                    setOpenDetails(!openDetails);
-                  }}
                   className={getLinkClass(rutas.Diagnostico)}
                   key="edit">
-                  {" "}
-                  <div>Diagnosticos y tratamientos</div>
+                  <Link
+                    onClick={() => setOpenDetails(!openDetails)}
+                    className="w-full"
+                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.Diagnostico}`}>
+                    <p>Diagnosticos y tratamientos</p>
+                  </Link>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

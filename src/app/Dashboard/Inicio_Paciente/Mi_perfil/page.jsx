@@ -161,7 +161,7 @@ export default function HomePte() {
         {edit && (
           <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
             <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-              <IconCircle />
+              <IconCircle className="w-3" />
               Foto de perfil
             </label>
             <div className="w-1/2 h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
@@ -176,7 +176,7 @@ export default function HomePte() {
         )}
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Nombre:
           </label>
           {edit ? (
@@ -207,7 +207,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Apellido:
           </label>
           {edit ? (
@@ -242,7 +242,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Edad:
           </label>
           <span className="w-1/2 text-start px-6 py-2">
@@ -251,7 +251,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Sexo:
           </label>
           {edit ? (
@@ -286,7 +286,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Fecha de nacimiento:
           </label>
           {edit ? (
@@ -315,7 +315,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Teléfono de contacto:
           </label>
           {edit ? (
@@ -356,7 +356,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Teléfono de contacto de Emergencia:
           </label>
           {edit ? (
@@ -399,7 +399,7 @@ export default function HomePte() {
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
           <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle />
+            <IconCircle className="w-3" />
             Dirección:
           </label>
           {edit ? (
@@ -436,7 +436,7 @@ export default function HomePte() {
       </form>
       <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
         <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-          <IconCircle />
+          <IconCircle className="w-3" />
           Última conexión:
         </label>
         <span className="w-1/2 text-start px-6 py-2">
