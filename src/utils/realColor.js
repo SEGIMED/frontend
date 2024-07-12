@@ -1,25 +1,18 @@
-"use client";
-import React from "react";
+import IconRisk from "@/components/icons/iconRisk";
 
-
-import riesgoRojo from "@/components/images/riesgoRojo.png";
-import riesgoAmarillo from "@/components/images/riesgoAmarillo.png";
-import riesgoVerde from "@/components/images/riesgoVerde.png";
-
-
-
-export default function realColor (paciente) {
-    const risk = paciente
-    console.log(paciente)
-    switch (risk) {
-      case "Bajo":
-      return riesgoVerde;
-      case "Moderado":
-      return riesgoAmarillo;
-      case "Alto":
-      return riesgoRojo;
-      default:
-      return undefined;
+export default function RealColorRisk({ risk }) {
+    if (!risk) {
+        return <IconRisk color="gray" />;
     }
 
-  }
+    switch (risk) {
+        case "Bajo":
+            return <IconRisk color="#70C247" />;
+        case "Moderado":
+            return <IconRisk color="#F5E400" />;
+        case "Alto":
+            return <IconRisk color="#E73F3F" />;
+        default:
+            return <IconRisk color="lightGray" />;
+    }
+}
