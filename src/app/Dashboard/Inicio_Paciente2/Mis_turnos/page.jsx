@@ -33,10 +33,16 @@ export default function MisTurnosPte() {
                 <ButtonBlancoBorde iconLeft={<IconFolderButton color="#487FFA"/>}text={"Pasadas"} funcion={() => {router.push(`${rutas.PacienteDash2}${rutas.Mis_turnos}${rutas.Pasadas}`)}} />
                 
             </div>
-            <Table columnNames={columnNames} colum={5} />
-            <div className="md:overflow-auto h-full">
-                <TableTurnos consultas={filterConsultas} />
-            </div>
+            {filterConsultas.length === 0 ? (
+                <h1 className="text-center mt-4">No hay consultas</h1>
+            ) : (
+                <>
+                    <Table columnNames={columnNames} colum={5} />
+                    <div className="md:overflow-auto h-full">
+                        <TableTurnos consultas={filterConsultas} />
+                    </div>
+                </>
+            )}
         </div>
     );
 }
