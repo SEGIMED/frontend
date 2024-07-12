@@ -30,7 +30,7 @@ const Chat = [
       "No me acuerdo mi contraseña No me acuerdo mi contraseñaNo me acuerdo mi contraseñaNo me acuerdo mi contraseña",
   },
   {
-    id: 4,
+    id: 54,
     sender: "user",
     name: "Santiago Baglivo",
     message:

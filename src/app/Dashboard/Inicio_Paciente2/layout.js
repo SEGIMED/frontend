@@ -16,6 +16,7 @@ export default function RootLayout({ children }) {
         {/* Contenido principal */}
         <div className="h-[88%] w-full">{children}</div>
       </div>
+
       <SegiBot />
     </div>
   );
