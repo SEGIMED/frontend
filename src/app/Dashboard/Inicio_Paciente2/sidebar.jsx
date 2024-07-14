@@ -127,11 +127,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
       ...response1.data,
       ...response2.data,
       anthropometricDetails:
-        response1.data.anthropometricDetails.length > 0
+        response1.data.anthropometricDetails?.length > 0
           ? response1.data.anthropometricDetails
           : paciente.anthropometricDetails || [],
       vitalSigns:
-        response1.data.vitalSigns.length > 0
+        response1.data.vitalSigns?.length > 0
           ? response1.data.vitalSigns
           : paciente.vitalSigns || [],
       sociodemographicDetails:
@@ -140,19 +140,19 @@ export const SidePte = ({ search, toggleSidebar }) => {
         {},
       backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
       patientPulmonaryHypertensionGroups:
-        response1.data.patientPulmonaryHypertensionGroups.length > 0
+        response1.data.patientPulmonaryHypertensionGroups?.length > 0
           ? response1.data.patientPulmonaryHypertensionGroups
           : paciente.patientPulmonaryHypertensionGroups || {},
       patientPulmonaryHypertensionRisks:
-        response1.data.patientPulmonaryHypertensionRisks.length > 0
+        response1.data.patientPulmonaryHypertensionRisks?.length > 0
           ? response1.data.patientPulmonaryHypertensionRisks
           : paciente.patientPulmonaryHypertensionRisks || {},
       patientCardiovascularRisks:
-        response1.data.patientCardiovascularRisks.length > 0
+        response1.data.patientCardiovascularRisks?.length > 0
           ? response1.data.patientCardiovascularRisks
           : paciente.patientCardiovascularRisks || {},
       patientSurgicalRisks:
-        response1.data.patientSurgicalRisks.length > 0
+        response1.data.patientSurgicalRisks?.length > 0
           ? response1.data.patientSurgicalRisks
           : paciente.patientSurgicalRisks || {},
       lastMedicalEventDate:
