@@ -10,7 +10,10 @@ import Segimed from "@/components/images/segimed.png";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { setSearchTerm, toggleFavorite } from "@/redux/slices/doctor/allPatients";
+import {
+  setSearchTerm,
+  toggleFavorite,
+} from "@/redux/slices/doctor/allPatients";
 import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
 import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPacientes.jsx";
 import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
@@ -24,8 +27,6 @@ import { PathnameShow } from "@/components/pathname/path";
 import realColor from "@/utils/realColor.js";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
-
-
 
 export default function HomeDoc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function HomeDoc() {
   const userId = config.c;
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
-  const lastSegmentTextToShow = PathnameShow()
+  const lastSegmentTextToShow = PathnameShow();
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
@@ -59,7 +60,7 @@ export default function HomeDoc() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-      
+
       setPatients(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -70,7 +71,7 @@ export default function HomeDoc() {
   };
 
   const getFavorites = async (headers) => {
-    const userId = Cookies.get("c")
+    const userId = Cookies.get("c");
     const response = await ApiSegimed.get(
       // `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
       `/get-physician-favorite-patient?physicianId=${userId}`,
@@ -139,7 +140,7 @@ export default function HomeDoc() {
   const handleFavoriteClick = () => {
     getFavorites({ headers: { token: token } }).catch(console.error);
     setShowFavorites(!showFavorites);
-    handlePageChange(1)
+    handlePageChange(1);
     dispatch(setSearchTerm(""));
     // setOpenOptionsPatientId(null);
     setIsFilterOpen(false);
@@ -179,20 +180,24 @@ export default function HomeDoc() {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-  console.log("esto es pacientes",sortedPatients)
+  console.log("esto es pacientes", sortedPatients);
   return (
-    <div className="flex flex-col h-full overflow-y-auto">
+    <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 h-16 bg-white sticky top-0 z-10">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
         <div>
           <button
             onClick={handleFavoriteClick}
-            className={`${showFavorites ? "bg-bluePrimary text-white" : "bg-white text-bluePrimary border border-bluePrimary"
-              } py-2 px-4 items-center flex rounded-lg gap-2 w-full transition duration-300 ease-in-out`}
-
-          >
+            className={`${
+              showFavorites
+                ? "bg-bluePrimary text-white"
+                : "bg-white text-bluePrimary border border-bluePrimary"
+            } py-2 px-4 items-center flex rounded-lg gap-2 w-full transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
-            <p className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"} font-bold`}>
+            <p
+              className={`hidden md:block ${
+                showFavorites ? "text-white" : "text-bluePrimary"
+              } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -201,19 +206,20 @@ export default function HomeDoc() {
         <div></div>
       </div>
 
-      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
+      <div className="items-start justify-center w-full bg-[#FAFAFC] h-[75%] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
-            className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2"
-          >
+            className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2">
             <div className="flex gap-2 md:gap-4 items-center justify-start">
-            {paciente.patientPulmonaryHypertensionRisks?.risk ? (
-            <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
+              {paciente.patientPulmonaryHypertensionRisks?.risk ? (
+                <RealColorRisk
+                  risk={paciente.patientPulmonaryHypertensionRisks.risk}
+                />
               ) : (
-            <IconRisk color="lightGray" />
-            )}
-            
+                <IconRisk color="lightGray" />
+              )}
+
               <div className="flex justify-center items-center">
                 <img
                   src={paciente?.avatar !== null ? paciente.avatar : avatar}
@@ -235,20 +241,18 @@ export default function HomeDoc() {
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
+      <div className="flex justify-center items-center gap-5  bg-[#FAFAFC] font-bold h-[15%]">
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60"
-        >
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
         <p>{pagination.currentPage}</p>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60"
-        >
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
           Siguiente
           <IconNext />
         </button>
