@@ -45,7 +45,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const [isMobile, setIsMobile] = useState(false)
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   const closeModal = () => {
@@ -116,7 +116,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getSchedules = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/schedules?patientId=${id}`, headers);
-    
+
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -217,6 +217,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
     if (typeof window !== 'undefined') {
       setIsMobile(window.innerWidth <= 768);
     }
+    if (isModalOpen) { router.push(`${rutas.PacienteDash}2`); }
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
