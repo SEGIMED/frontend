@@ -4,7 +4,7 @@ import defaultAvatar from "@/utils/defaultAvatar";
 
 export default function AvatarDashPte({ avatar1 }) {
   const avatarSrc = avatar1 || defaultAvatar;
-  console.log(avatar1)
+  
   return (
     <div className="flex gap-4 items-center">
       <Avatar
