@@ -46,19 +46,21 @@ const ModalBoarding = ({ isOpen, onClose }) => {
         }
     }, [index]);
 
+
     const Modals = [
-        <Bienvenida />,
-        <Hipertension handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Genero handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Nacimiento handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Domicilio handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <CentroDetAtención handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <ViveSolo handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <DispElectronicos handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <UsoCelular handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Doctor handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Final handleDisabled={handleDisabled} state={formStateGlobal} />
+        <Bienvenida key="bienvenida" />,
+        <Hipertension key="hipertension" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Genero key="genero" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Nacimiento key="nacimiento" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Domicilio key="domicilio" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <ViveSolo key="vive_solo" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <DispElectronicos key="disp_electronicos" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <UsoCelular key="uso_celular" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Doctor key="doctor" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
     ];
+
 
     const handleNext = () => {
         if (index < Modals.length - 1) {
