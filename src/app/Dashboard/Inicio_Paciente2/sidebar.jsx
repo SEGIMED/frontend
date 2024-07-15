@@ -24,6 +24,8 @@ import avatar from "@/utils/defaultAvatar";
 import { resetApp } from "@/redux/rootReducer";
 import { useRouter } from "next/navigation";
 
+import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
+
 import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
 
 export const SidePte = ({ search, toggleSidebar }) => {
@@ -42,6 +44,13 @@ export const SidePte = ({ search, toggleSidebar }) => {
   console.log(lastSegment);
 
   const [isMobile, setIsMobile] = useState(false)
+
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
@@ -376,6 +385,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
           )}
         </div>
       </div>
+      <ModalBoarding
+        isOpen={isModalOpen}
+        onClose={closeModal}
+
+      />
     </div >
   );
 };

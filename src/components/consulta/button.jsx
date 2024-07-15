@@ -10,7 +10,7 @@ export default function ButtonNext({
   name,
   disabled,
   selectedOptions,
-  type
+  type, handleDisabled
 }) {
   // Define the initial state based on selectedOptions
   const opcionRecibida =
@@ -29,6 +29,7 @@ export default function ButtonNext({
 
   const handleClick = (option) => {
     setSelectedOptionState(option);
+    if (handleDisabled) { handleDisabled() }
     const selectedIndex = options.findIndex(opt => opt === option);
     if (type) {
       dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
