@@ -16,6 +16,9 @@ import { useAppSelector } from "@/redux/hooks";
 import Cookies from "js-cookie";
 import { mapBoolean, mapPainAreas } from "@/utils/MapeoCuerpo";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import rutas from "@/utils/rutas";
 
 export default function CuerpoPatient() {
     const [selectedMuscles, setSelectedMuscles] = useState([]);
@@ -24,6 +27,8 @@ export default function CuerpoPatient() {
     const [modelType, setModelType] = useState("anterior");
     const [painLevel, setPainLevel] = useState(1);
 
+
+    const router = useRouter();
     const dispatch = useAppDispatch();
 
     const formStateGlobal = useAppSelector((state) => state.formSlice.selectedOptions);
@@ -83,9 +88,32 @@ export default function CuerpoPatient() {
 
         console.log(dataSendFinal)
         try {
-            const response = await ApiSegimed.post(`/patient-diagnostic`, dataSendFinal, {
+            const response = await ApiSegimed.post(`/patient-new-pain-map`, dataSendFinal, {
                 headers: { token: token },
             });
+            let timerInterval;
+            await Swal.fire({
+                title: "Autoevaluacion enviada con exito!",
+
+                icon: "success",
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log("I was closed by the timer");
+                }
+            });
+            router.push(`${rutas.PacienteDash}2`);
+
         }
         catch (error) {
             console.log(error)
@@ -346,7 +374,7 @@ export default function CuerpoPatient() {
                                                 "Siempre",
                                             ]}
                                             text2={"Seleccione frecuencia"}
-                                            name={"painFrecuencyId"}
+                                            name={"painFrequencyId"}
                                             type={true}
                                         />
                                     </div>
@@ -362,7 +390,16 @@ export default function CuerpoPatient() {
                         </div>
                     </div>
                 </div>
-                <button type="submit">Enviar autoevaluacion</button>
+                <div className="w-full flex justify-center p-5">
+                    <button type="submit" className="bg-greenPrimary py-2 px-4 items-center justify-center  flex rounded-lg gap-2 w-fit">
+
+                        <p className="block text-white font-bold">
+                            Enviar autoevaluacion
+                        </p>
+                    </button>
+                </div>
+
+
             </form>
         </div>
     );
