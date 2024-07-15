@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions }) {
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type }) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const dispatch = useAppDispatch();
@@ -24,17 +24,21 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
   }, [selectedOptions]);
 
   const handleSelectionChange = (key) => {
-    const selectedOption = key;
-    setSelectedOptionState(selectedOption);
+    const selectedIndex = options.findIndex(option => option === key);
+    console.log(selectedIndex);
+    setSelectedOptionState(key);
     // setValue(name, selectedOption);
-    dispatch(setSelectedOption({ name, option: selectedOption }));
+    if (type) {
+      dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
+    } else {
+      dispatch(setSelectedOption({ name, option: key }));
+    }
   };
 
   return (
     <div>
       <div className='flex items-center justify-center'>
         <div className="font-bold mb-2 ">{text}</div>
-
       </div>
       <Dropdown className="emptyContent">
         <DropdownTrigger
@@ -77,7 +81,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
             onSelectionChange={(keys) =>
               handleSelectionChange(Array.from(keys)[0])
             }>
-            {options?.map((option) => (
+            {options?.map((option, index) => (
               <DropdownItem key={option} aria-label={option}>
                 {option}
               </DropdownItem>
