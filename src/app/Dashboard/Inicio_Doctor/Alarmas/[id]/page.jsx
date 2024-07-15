@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import IconOrder from "@/components/icons/IconOrder";
 import IconConsulta from "@/components/icons/IconConsulta";
-import IconCircle from "@/components/icons/IconCircle";
 import AlarmBox from "@/components/alarm/AlarmBox";
 import {
   gravedad,
@@ -32,7 +30,7 @@ import rutas from "@/utils/rutas";
 import { useRouter } from "next/navigation";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
-import Swal from "sweetalert2";
+
 
 
 
