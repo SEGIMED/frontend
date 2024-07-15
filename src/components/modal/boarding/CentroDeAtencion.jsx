@@ -3,7 +3,7 @@ import React from "react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 import DropNext from "@/components/consulta/dropdown";
 
-export default function CentroDetAtención({ handleDisabled }) {
+export default function CentroDetAtención({ handleDisabled, state }) {
 
     const options = [
         "Centro gallego",
@@ -27,6 +27,7 @@ export default function CentroDetAtención({ handleDisabled }) {
             </p>
 
             <DropNext
+                selectedOptions={state.AtencionCentro2}
                 handleDisabled={handleDisabled}
                 type={true}
                 options={options}

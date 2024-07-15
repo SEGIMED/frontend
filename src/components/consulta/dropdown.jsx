@@ -20,6 +20,8 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
   useEffect(() => {
     if (selectedOptions) {
       setSelectedOptionState(selectedOptions);
+      if (handleDisabled)
+        handleDisabled();
     }
   }, [selectedOptions]);
 
@@ -32,6 +34,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
     // setValue(name, selectedOption);
     if (type) {
       dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
+      dispatch(setSelectedOption({ name: `${name}2`, option: key }));
     } else {
       dispatch(setSelectedOption({ name, option: key }));
     }

@@ -16,6 +16,19 @@ import Doctor from "../boarding/Doctor";
 import { useAppSelector } from "@/redux/hooks";
 import { mapBoolean } from "@/utils/MapeoCuerpo";
 
+const ProgressBar = ({ steps, currentIndex }) => {
+    return (
+        <div className="flex justify-center space-x-2">
+            {steps.map((step, index) => (
+                <div
+                    key={index}
+                    className={`h-1 w-5 md:w-8 ${index <= currentIndex ? "bg-bluePrimary" : "bg-gray-300"}`}
+                />
+            ))}
+        </div>
+    );
+};
+
 const ModalBoarding = ({ isOpen, onClose }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
@@ -35,16 +48,16 @@ const ModalBoarding = ({ isOpen, onClose }) => {
 
     const Modals = [
         <Bienvenida />,
-        <Hipertension handleDisabled={handleDisabled} />,
-        <Genero handleDisabled={handleDisabled} />,
-        <Nacimiento handleDisabled={handleDisabled} />,
-        <Domicilio handleDisabled={handleDisabled} />,
-        <CentroDetAtención handleDisabled={handleDisabled} />,
-        <Doctor handleDisabled={handleDisabled} />,
-        <ViveSolo handleDisabled={handleDisabled} />,
-        <DispElectronicos handleDisabled={handleDisabled} />,
-        <UsoCelular handleDisabled={handleDisabled} />,
-        <Final handleDisabled={handleDisabled} />
+        <Hipertension handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Genero handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Nacimiento handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Domicilio handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <CentroDetAtención handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <ViveSolo handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <DispElectronicos handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <UsoCelular handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Doctor handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Final handleDisabled={handleDisabled} state={formStateGlobal} />
     ];
 
     const handleNext = () => {
@@ -70,28 +83,32 @@ const ModalBoarding = ({ isOpen, onClose }) => {
     return isOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
             <div className="fixed inset-0 bg-black opacity-50"></div>
-            <div className="relative z-50 bg-white rounded-lg w-[90%] md:w-[45rem] h-[33rem] flex flex-col justify-between items-center gap-5 ">
+            <div className="relative z-50 bg-white rounded-lg w-[90%] md:w-[48rem] h-[33rem] flex flex-col items-center gap-5 ">
                 <div className="w-full border-b border-b-[#DCDBDB] p-4 flex gap-3">
                     <IconCurrentRouteNav className={'w-4'} />
                     <p className="font-medium text-base leading-6 ">¡Te damos la bienvenida, <span className="text-bluePrimary">{user?.name}!</span></p>
                 </div>
-                <div className="px-8 py-5">
-                    {Modals[index]}
+                <ProgressBar steps={Modals} currentIndex={index} />
+                <div className="flex flex-col items-center gap-5 justify-center h-full ">
+                    <div className="px-8 py-5">
+                        {Modals[index]}
+                    </div>
+                    <div className="flex gap-2 px-8 pb-5 pt-5">
+                        <button
+                            disabled={index === 0}
+                            onClick={handlePrev}
+                            className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-fit disabled:bg-gray-400">
+                            <p className="block text-white font-bold">Regresar</p>
+                        </button>
+                        <button
+                            disabled={disabled}
+                            onClick={handleNext}
+                            className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-fit disabled:bg-gray-400">
+                            <p className="block text-white font-bold">Continuar</p>
+                        </button>
+                    </div>
                 </div>
-                <div className="flex gap-2 px-8 pb-5">
-                    <button
-                        disabled={index === 0}
-                        onClick={handlePrev}
-                        className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-fit disabled:bg-gray-400">
-                        <p className="block text-white font-bold">Regresar</p>
-                    </button>
-                    <button
-                        disabled={disabled}
-                        onClick={handleNext}
-                        className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-fit disabled:bg-gray-400">
-                        <p className="block text-white font-bold">Continuar</p>
-                    </button>
-                </div>
+
             </div>
         </div>
     ) : null;

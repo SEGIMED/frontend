@@ -1,9 +1,14 @@
 import ButtonNext from "@/components/consulta/button";
 import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import { useEffect } from "react";
 
-export default function Nacimiento({ handleDisabled }) {
+export default function Nacimiento({ handleDisabled, state }) {
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (state.date) { handleDisabled() }
+    }, [state]);
 
     const handleSelect = (event) => {
         const date = event.target.value;
@@ -18,6 +23,7 @@ export default function Nacimiento({ handleDisabled }) {
             </p>
             <div className="flex flex-row md:flex-col w-full justify-between gap-2">
                 <input
+                    defaultValue={state.date}
                     onChange={handleSelect}
                     id="date"
                     type="date"
