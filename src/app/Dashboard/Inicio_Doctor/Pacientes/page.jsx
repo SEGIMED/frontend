@@ -198,6 +198,12 @@ export default function HomeDoc() {
               Favoritos
             </p>
           </button>
+          {/* <FiltrosPaciente
+              isOpen={isFilterOpen}
+              toggleMenu={toggleFilterMenu}
+              onClickSort={handleSortClick}
+          />
+          <Ordenar /> */}
         </div>
         <h1 className="font-bold">Listado de pacientes</h1>
         <div></div>
