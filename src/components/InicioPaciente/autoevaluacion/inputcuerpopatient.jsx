@@ -88,9 +88,9 @@ export default function CuerpoPatient() {
 
         console.log(dataSendFinal)
         try {
-            // const response = await ApiSegimed.post(`/patient-new-pain-map`, dataSendFinal, {
-            //     headers: { token: token },
-            // });
+            const response = await ApiSegimed.post(`/patient-new-pain-map`, dataSendFinal, {
+                headers: { token: token },
+            });
             let timerInterval;
             await Swal.fire({
                 title: "Autoevaluacion enviada con exito!",
