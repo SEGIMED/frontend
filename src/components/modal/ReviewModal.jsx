@@ -39,24 +39,16 @@ export default function ReviewModal({ onClose, idDoc }) {
 
     const payload = {
       physicianId: Number(idDoc),
-      reviewScore: rating,
+      reviewsScore: Number(rating),
       comments: comments,
-      patientId: Number(myId),
+      // patientId: Number(myId),
     };
 
     const token = Cookies.get("a");
 
     try {
-      const response = await ApiSegimed.post(
-        `/physician-review/${idDoc}`,
-        payload,
-        {
-          headers: {
-            token: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await ApiSegimed.post(`/physician-review/${idDoc}`,payload,{ headers: { token: token } });
+
       if (response.status === 200 || response.status === 201){
       onClose();
       Swal.fire({

@@ -10,25 +10,33 @@ export default function ButtonNext({
   name,
   disabled,
   selectedOptions,
+  type, handleDisabled
 }) {
   // Define the initial state based on selectedOptions
   const opcionRecibida =
     selectedOptions === true
       ? "Si"
       : selectedOptions === false
-      ? "No"
-      : selectedOptions;
+        ? "No"
+        : selectedOptions;
 
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     setSelectedOptionState(opcionRecibida);
+    if (selectedOptions) { handleDisabled() }
   }, [selectedOptions]);
 
   const handleClick = (option) => {
     setSelectedOptionState(option);
-    dispatch(setSelectedOption({ name, option }));
+    if (handleDisabled) { handleDisabled() }
+    const selectedIndex = options.findIndex(opt => opt === option);
+    if (type) {
+      dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
+    } else {
+      dispatch(setSelectedOption({ name, option }));
+    }
     if (handleSelection) {
       handleSelection(option);
     }

@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions }) {
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled }) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const dispatch = useAppDispatch();
@@ -20,21 +20,30 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
   useEffect(() => {
     if (selectedOptions) {
       setSelectedOptionState(selectedOptions);
+      if (handleDisabled)
+        handleDisabled();
     }
   }, [selectedOptions]);
 
   const handleSelectionChange = (key) => {
-    const selectedOption = key;
-    setSelectedOptionState(selectedOption);
-    setValue(name, selectedOption);
-    dispatch(setSelectedOption({ name, option: selectedOption }));
+    const selectedIndex = options.findIndex(option => option === key);
+    console.log(selectedIndex);
+    setSelectedOptionState(key);
+
+    if (handleDisabled) { handleDisabled() }
+    // setValue(name, selectedOption);
+    if (type) {
+      dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
+      dispatch(setSelectedOption({ name: `${name}2`, option: key }));
+    } else {
+      dispatch(setSelectedOption({ name, option: key }));
+    }
   };
 
   return (
     <div>
       <div className='flex items-center justify-center'>
         <div className="mb-2 font-bold ">{text}</div>
-
       </div>
       <Dropdown className="emptyContent">
         <DropdownTrigger
@@ -77,7 +86,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
             onSelectionChange={(keys) =>
               handleSelectionChange(Array.from(keys)[0])
             }>
-            {options?.map((option) => (
+            {options?.map((option, index) => (
               <DropdownItem key={option} aria-label={option}>
                 {option}
               </DropdownItem>

@@ -136,6 +136,7 @@ const AlarmSelector = () => {
           categoryIndex={0}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Falta de aire"}
@@ -143,6 +144,7 @@ const AlarmSelector = () => {
           categoryIndex={1}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Dolor de pecho"}
@@ -150,6 +152,7 @@ const AlarmSelector = () => {
           categoryIndex={2}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Malestar grave"}
@@ -157,6 +160,7 @@ const AlarmSelector = () => {
           categoryIndex={3}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"El peor dolor de su vida"}
@@ -164,6 +168,7 @@ const AlarmSelector = () => {
           categoryIndex={4}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Perdida de la conciencia/ Sistema nerológico"}
@@ -171,6 +176,7 @@ const AlarmSelector = () => {
           categoryIndex={5}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Hinchazón y Edemas"}
@@ -178,6 +184,7 @@ const AlarmSelector = () => {
           categoryIndex={6}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Fiebre-infecciones"}
@@ -185,6 +192,7 @@ const AlarmSelector = () => {
           categoryIndex={7}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Sistema digestivo (Diarrea / vomitos / dolor)"}
@@ -192,6 +200,7 @@ const AlarmSelector = () => {
           categoryIndex={8}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Debilidad, palidez, orina"}
@@ -199,6 +208,7 @@ const AlarmSelector = () => {
           categoryIndex={9}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Tos / expectoración"}
@@ -206,6 +216,7 @@ const AlarmSelector = () => {
           categoryIndex={10}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={
@@ -215,6 +226,7 @@ const AlarmSelector = () => {
           categoryIndex={11}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Alergias"}
@@ -222,6 +234,7 @@ const AlarmSelector = () => {
           categoryIndex={12}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"No come, intolerancia a alimentos"}
@@ -229,6 +242,7 @@ const AlarmSelector = () => {
           categoryIndex={13}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Pauta de alarma de medicos"}
@@ -236,6 +250,7 @@ const AlarmSelector = () => {
           categoryIndex={14}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"AYUDA-AUXILIO"}
@@ -243,6 +258,7 @@ const AlarmSelector = () => {
           categoryIndex={15}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"internación / guardia / urgencia"}
@@ -250,6 +266,7 @@ const AlarmSelector = () => {
           categoryIndex={16}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Convulsiones"}
@@ -257,6 +274,7 @@ const AlarmSelector = () => {
           categoryIndex={17}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Peligro de vida"}
@@ -264,6 +282,7 @@ const AlarmSelector = () => {
           categoryIndex={18}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
         <AlarmBox
           title={"Accidentes"}
@@ -271,6 +290,7 @@ const AlarmSelector = () => {
           categoryIndex={19}
           selectedAlarms={selectedAlarms}
           handleSelect={handleSelect}
+          isDisabled={false}
         />
       </div>
     </form>
