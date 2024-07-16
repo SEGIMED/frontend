@@ -22,6 +22,7 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import IdDrug from "@/utils/IdDrug";
 
 const DetallePaciente = (id) => {
   const [loading, setLoading] = useState(false);
@@ -43,13 +44,11 @@ const DetallePaciente = (id) => {
   const [selectedRisk, setSelectedRisk] = useState();
   const [selectedRisk2, setSelectedRisk2] = useState();
   const [selectedGroup, setSelectedGroup] = useState();
-
+  const [medicalEvent, setMedicalEvent] = useState();
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const router = useRouter();
-  console.log(selectedGroup);
-  console.log(selectedRisk2);
-  console.log(selectedGroup);
+  console.log(preconsult);
   const onSubmit = (data) => {
     console.log(data);
     setCardiovascularRisk({
@@ -104,7 +103,7 @@ const DetallePaciente = (id) => {
           : data["Vacunas"],
     });
     setPreconsultPhysical({
-      preconsultationId: preconsult.id,
+      preconsultationId: preconsult?.id,
       patient: Number(userId),
       appointmentSchedule: 4,
       bodyPain: false,
@@ -192,8 +191,8 @@ const DetallePaciente = (id) => {
       diseaseId: 3,
       diagnosticNotes: data["Diagnostico"],
       medicalEventId: 5,
-      drugId: 1,
-      prescribedDose: data["Medicamentos"],
+      drugId: data["selectDrug"] ? IdDrug(data["selectDrug"]) : null,
+      prescribedDose: "",
       quantityDrug: 60,
       medicalProcedureId: 4,
       //diagnosticNotes: data["Procedimientos"],
@@ -228,7 +227,7 @@ const DetallePaciente = (id) => {
             { headers: { token: token } }
           ),
         ]);
-        console.log(response2.data[0]);
+
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
       } catch (error) {
@@ -308,7 +307,7 @@ const DetallePaciente = (id) => {
     else{
       const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
       console.log(data);
-    }
+    } // funciona mal hasta en el postman
 
     let response1;
     if(physicalExamination?.description === ""){
@@ -316,7 +315,7 @@ const DetallePaciente = (id) => {
     }else {
     response1 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`,physicalExamination, {headers: { token: token },})
     }
-    console.log(response1);
+    console.log(response1); // funciona mal en el formulario
 
     if(preconsult?.length === 0){
       const data = await ApiSegimed.post(`/pre-consultation`,preconsultPhysical, {headers: { token: token },})
@@ -325,28 +324,28 @@ const DetallePaciente = (id) => {
     else{
       const data = await ApiSegimed.patch(`/update-pre-consultation`,preconsultPhysical, {headers: { token: token },})
       console.log(data.data);
-    }
-*/
+    } // hay q esperar que modifiquen el patch de la preconsulta
+*/ 
+
 
     const response2 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, {
       headers: { token: token },
+ 
     });
+  
 
-
-    const response3 = await ApiSegimed.post(`/medical-event/create-event`, diagnostic, {
+    /*const response3 = await ApiSegimed.post(`/medical-event/create-event`, diagnostic, {
       headers: { token: token },
     });
+    */ // hay q esperar que la preconsulta traiga el id
 
 
-    console.log(response2);
-    console.log(response3);
-    //pautas de alarma
     if (/*response1.status === 200 && */ response2.status === 200) {
-      const data = await ApiSegimed.patch(
+      /*const data = await ApiSegimed.patch(
         `/patient-diagnostic/${idSchedule}`,{schedulingStatus:2},{
           headers: { token: token },
         }
-      )
+      )*/ //cambia es estatus de la consulta --- hay q esperar que la preconsulta traiga el id
       setLoading(false);
       Swal.fire({
         icon: "success",
@@ -456,7 +455,7 @@ const DetallePaciente = (id) => {
             icon={<IconGuardar />}
             onPress={handleSave}
             size={"lg"}
-            className={"bg-green-500 w-60 text-sm font-bold"}
+            className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
         </div>
       </div>

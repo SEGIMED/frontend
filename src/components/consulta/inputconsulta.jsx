@@ -37,25 +37,23 @@ export default function InputConsulta({
 
   useEffect(() => {
     if (
-      paciente?.patientCardiovascularRisks &&
-      paciente?.patientCardiovascularRisks.length > 0
+      paciente?.patientCardiovascularRisks?.risk
     ) {
       setRiskCardiovascularButton(
-        paciente?.patientCardiovascularRisks[0]?.risk
+        paciente?.patientCardiovascularRisks?.risk
+        
       );
     }
     if (
-      paciente?.patientSurgicalRisks &&
-      paciente?.patientSurgicalRisks.length > 0
+      paciente?.patientSurgicalRisks?.risk
     ) {
-      setRiskSurgicalButton(paciente?.patientSurgicalRisks[0]?.risk);
+      setRiskSurgicalButton(paciente?.patientSurgicalRisks?.risk);
     }
     if (
-      paciente?.patientPulmonaryHypertensionGroups &&
-      paciente?.patientPulmonaryHypertensionGroups.length > 0
+      paciente?.patientPulmonaryHypertensionGroups?.group
     )
       setGroupPatientPulmonaryHypertensionButton(
-        paciente?.patientPulmonaryHypertensionGroups[0]?.group
+        paciente?.patientPulmonaryHypertensionGroups?.group
       );
     setValuesBackground([
       paciente?.backgrounds?.surgicalBackground,
@@ -72,7 +70,7 @@ export default function InputConsulta({
   useEffect(() => {
     setValuesAmnesis([
       preconsult?.consultationReason,
-      preconsult?.healthChangesDescription,
+      "",
       preconsult?.importantSymptoms,
     ]);
   }, [preconsult]);

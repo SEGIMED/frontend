@@ -9,6 +9,8 @@ import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 import { useFormContext } from "react-hook-form";
 import DropNext from "./dropdown";
 import AutocompleteDiagnostico from "./AutocompleteDiagnostico";
+import DrugModal from "../modal/ModalDoctor/DrugModal";
+import { useState } from "react";
 
 
 export default function InputDiagnostico({
@@ -19,7 +21,13 @@ export default function InputDiagnostico({
   defaultOpen = false,
 }) {
   const { register } = useFormContext();
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setIsModalOpen(true);
+  };
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
@@ -58,7 +66,9 @@ export default function InputDiagnostico({
               options={['Losartan', 'Ácido Fenofíbrico']}
               text2={`Escribe el ${subtitle3}`}
               name={"selectDrug"}
-            />
+              onOptionSelect={handleOptionSelect}
+              />
+              <DrugModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} options={['Losartan', 'Ácido Fenofíbrico']} selectedOption={selectedOption}/>
           </div>
         ) : null}
         {subtitle?.map((sub, index) => (
