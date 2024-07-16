@@ -25,9 +25,8 @@ import realColor from "@/utils/realColor.js";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
 
-
-
 export default function HomeDoc() {
+  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSorted, setIsSorted] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
@@ -49,7 +48,7 @@ export default function HomeDoc() {
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patients?page=${pagination.currentPage}&limit=9`,
+      `/patients?page=${pagination.currentPage}&limit=9&name=${searchTerm}`,
       headers
     );
     if (response.data) {
@@ -59,7 +58,7 @@ export default function HomeDoc() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-      
+
       setPatients(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -69,16 +68,21 @@ export default function HomeDoc() {
     }
   };
 
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: 1,
+    }));
+  }, [searchTerm]);
+
   const getFavorites = async (headers) => {
     const userId = Cookies.get("c")
     const response = await ApiSegimed.get(
-      // `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
       `/get-physician-favorite-patient?physicianId=${userId}`,
       headers
     );
     if (response.data) {
       const pacientesFormateados = response.data.map((paciente) => {
-        // const pacientesFormateados = response.data.user.map((paciente) => {
         const fechaFormateada = new Date(paciente.lastLogin)
           .toLocaleString()
           .replace(/\,/g, " -");
@@ -98,17 +102,15 @@ export default function HomeDoc() {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
 
-  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+
 
   useEffect(() => {
     const token = Cookies.get("a");
     getPatients({ headers: { token: token } }).catch(console.error);
-  }, [pagination.currentPage]);
+  }, [pagination.currentPage, searchTerm]);
 
   const filteredPatients = patients?.filter(
     (paciente) =>
-      (paciente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        paciente.lastname.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (riskFilter ? paciente.risk === riskFilter : true)
   );
 
@@ -141,7 +143,6 @@ export default function HomeDoc() {
     setShowFavorites(!showFavorites);
     handlePageChange(1)
     dispatch(setSearchTerm(""));
-    // setOpenOptionsPatientId(null);
     setIsFilterOpen(false);
   };
 
@@ -179,7 +180,7 @@ export default function HomeDoc() {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-  console.log("esto es pacientes",sortedPatients)
+
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
@@ -201,19 +202,18 @@ export default function HomeDoc() {
         <div></div>
       </div>
 
-      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
+      <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
         {sortedPatients?.map((paciente) => (
           <div
             key={paciente.id}
             className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2"
           >
             <div className="flex gap-2 md:gap-4 items-center justify-start">
-            {paciente.patientPulmonaryHypertensionRisks?.risk ? (
-            <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
+              {paciente.patientPulmonaryHypertensionRisks?.risk ? (
+                <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
               ) : (
-            <IconRisk color="lightGray" />
-            )}
-            
+                <IconRisk color="lightGray" />
+              )}
               <div className="flex justify-center items-center">
                 <img
                   src={paciente?.avatar !== null ? paciente.avatar : avatar}
@@ -235,7 +235,7 @@ export default function HomeDoc() {
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
+      <div className="flex justify-center items-center gap-5 pb-10 pt-5 bg-[#FAFAFC] font-bold">
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
@@ -243,7 +243,7 @@ export default function HomeDoc() {
         >
           <IconPrev /> Anterior
         </button>
-        <p>{pagination.currentPage}</p>
+        <p>{pagination.currentPage} de {pagination.totalPages} </p>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
