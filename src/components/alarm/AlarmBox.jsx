@@ -7,6 +7,7 @@ export default function AlarmBox({
   categoryIndex,
   selectedAlarms,
   handleSelect,
+  isDisabled
 }) {
   return (
     <div className="flex flex-col items-center justify-center w-full mt-4">
@@ -45,7 +46,7 @@ export default function AlarmBox({
           return (
             <div
               key={index}
-              onClick={() => handleSelect(categoryIndex, index)}
+              onClick={() =>!isDisabled && handleSelect(categoryIndex, index)}
               className={`p-4 cursor-pointer transition-all duration-300 ease-in-out rounded-lg ${appliedClass}`}>
               <h3
                 className={`flex font-bold mb-2 items-center justify-center gap-2 ${
