@@ -27,13 +27,13 @@ const AlarmButtonDoc = ({ id, handleStatus }) => {
             </button>
           </Link>
         </li>
-        {/* <li >
+        <li >
                     <Link href={`${rutas.Doctor}${rutas.Alarm}/${id}`}>
                     <button className=" w-full flex items-center justify-center gap-2 font-medium text-sm cursor-pointer " >
                         <IconTablillaTilde /> Ver Detalle
                     </button>
                     </Link>
-                </li> */}
+                </li>
       </ul>
     </details>
   );
