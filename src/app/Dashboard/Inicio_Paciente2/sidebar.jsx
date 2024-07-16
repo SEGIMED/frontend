@@ -45,7 +45,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const [isMobile, setIsMobile] = useState(false)
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   const closeModal = () => {
