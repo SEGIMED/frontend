@@ -44,7 +44,7 @@ export default function HomeDoc() {
   const userId = config.c;
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
-  const lastSegmentTextToShow = PathnameShow()
+  const lastSegmentTextToShow = PathnameShow();
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
@@ -76,19 +76,18 @@ export default function HomeDoc() {
   }, [searchTerm]);
 
   const getFavorites = async (headers) => {
-    const userId = Cookies.get("c")
     const response = await ApiSegimed.get(
-      `/get-physician-favorite-patient?physicianId=${userId}`,
+      `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
       headers
     );
     if (response.data) {
-      const pacientesFormateados = response.data.map((paciente) => {
+      const pacientesFormateados = response.data.user.map((paciente) => {
         const fechaFormateada = new Date(paciente.lastLogin)
           .toLocaleString()
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-      console.log(pacientesFormateados);
+
       setPatientsFavorites(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -99,20 +98,18 @@ export default function HomeDoc() {
   };
 
   useEffect(() => {
+    if (!showFavorites) {
+      getPatients({ headers: { token: token } }).catch(console.error);
+    } else {
+      getFavorites({ headers: { token: token } }).catch(console.error);
+    }
+  }, [showFavorites, pagination.currentPage, searchTerm]);
+
+  useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
 
-
-
-  useEffect(() => {
-    const token = Cookies.get("a");
-    getPatients({ headers: { token: token } }).catch(console.error);
-  }, [pagination.currentPage, searchTerm]);
-
-  const filteredPatients = patients?.filter(
-    (paciente) =>
-      (riskFilter ? paciente.risk === riskFilter : true)
-  );
+  const filteredPatients = showFavorites ? patientsFavorites : patients;
 
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
@@ -138,12 +135,23 @@ export default function HomeDoc() {
     setRiskFilter(risk);
   };
 
-  const handleFavoriteClick = () => {
-    getFavorites({ headers: { token: token } }).catch(console.error);
-    setShowFavorites(!showFavorites);
-    handlePageChange(1)
-    dispatch(setSearchTerm(""));
-    setIsFilterOpen(false);
+  const handleFavoriteClick = async () => {
+    try {
+      setShowFavorites(!showFavorites);
+      dispatch(setSearchTerm(""));
+      setIsFilterOpen(false);
+
+      if (!showFavorites) {
+        await getFavorites({ headers: { token: token } });
+      } else {
+        await getPatients({ headers: { token: token } });
+      }
+
+      // Reiniciar a la primera página después de cambiar entre favoritos y todos los pacientes
+      handlePageChange(1);
+    } catch (error) {
+      console.error("Error al cargar favoritos:", error);
+    }
   };
 
   const handleToggleFavorite = (patientId) => {
@@ -175,12 +183,6 @@ export default function HomeDoc() {
     return <div>Loading...</div>;
   }
 
-  const getRandomColor = () => {
-    const colors = [riesgoRojo, riesgoAmarillo, riesgoVerde];
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    return colors[randomIndex];
-  };
-
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
@@ -190,7 +192,6 @@ export default function HomeDoc() {
             onClick={handleFavoriteClick}
             className={`${showFavorites ? "bg-bluePrimary text-white" : "bg-white text-bluePrimary border border-bluePrimary"
               } py-2 px-4 items-center flex rounded-lg gap-2 w-full transition duration-300 ease-in-out`}
-
           >
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"} font-bold`}>
@@ -203,7 +204,7 @@ export default function HomeDoc() {
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
-        {sortedPatients?.map((paciente) => (
+        {sortedPatients.length > 0 ? (sortedPatients.map((paciente) => (
           <div
             key={paciente.id}
             className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2"
@@ -233,7 +234,9 @@ export default function HomeDoc() {
               toggleOptions={() => toggleOptionMenu(paciente.id)}
             />
           </div>
-        ))}
+        ))) : <p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">
+          No hay pacientes encontrados
+        </p>}
       </div>
       <div className="flex justify-center items-center gap-5 pb-10 pt-5 bg-[#FAFAFC] font-bold">
         <button
