@@ -25,9 +25,8 @@ import realColor from "@/utils/realColor.js";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
 
-
-
 export default function HomeDoc() {
+  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSorted, setIsSorted] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
@@ -45,11 +44,11 @@ export default function HomeDoc() {
   const userId = config.c;
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
-  const lastSegmentTextToShow = PathnameShow()
+  const lastSegmentTextToShow = PathnameShow();
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patients?page=${pagination.currentPage}&limit=9`,
+      `/patients?page=${pagination.currentPage}&limit=9&name=${searchTerm}`,
       headers
     );
     if (response.data) {
@@ -59,7 +58,7 @@ export default function HomeDoc() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-      
+
       setPatients(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -69,22 +68,26 @@ export default function HomeDoc() {
     }
   };
 
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: 1,
+    }));
+  }, [searchTerm]);
+
   const getFavorites = async (headers) => {
-    const userId = Cookies.get("c")
     const response = await ApiSegimed.get(
-      // `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
-      `/get-physician-favorite-patient?physicianId=${userId}`,
+      `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
       headers
     );
     if (response.data) {
-      const pacientesFormateados = response.data.map((paciente) => {
-        // const pacientesFormateados = response.data.user.map((paciente) => {
+      const pacientesFormateados = response.data.user.map((paciente) => {
         const fechaFormateada = new Date(paciente.lastLogin)
           .toLocaleString()
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-      console.log(pacientesFormateados);
+
       setPatientsFavorites(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -95,22 +98,18 @@ export default function HomeDoc() {
   };
 
   useEffect(() => {
+    if (!showFavorites) {
+      getPatients({ headers: { token: token } }).catch(console.error);
+    } else {
+      getFavorites({ headers: { token: token } }).catch(console.error);
+    }
+  }, [showFavorites, pagination.currentPage, searchTerm]);
+
+  useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
 
-  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
-
-  useEffect(() => {
-    const token = Cookies.get("a");
-    getPatients({ headers: { token: token } }).catch(console.error);
-  }, [pagination.currentPage]);
-
-  const filteredPatients = patients?.filter(
-    (paciente) =>
-      (paciente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        paciente.lastname.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (riskFilter ? paciente.risk === riskFilter : true)
-  );
+  const filteredPatients = showFavorites ? patientsFavorites : patients;
 
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
@@ -136,13 +135,23 @@ export default function HomeDoc() {
     setRiskFilter(risk);
   };
 
-  const handleFavoriteClick = () => {
-    getFavorites({ headers: { token: token } }).catch(console.error);
-    setShowFavorites(!showFavorites);
-    handlePageChange(1)
-    dispatch(setSearchTerm(""));
-    // setOpenOptionsPatientId(null);
-    setIsFilterOpen(false);
+  const handleFavoriteClick = async () => {
+    try {
+      setShowFavorites(!showFavorites);
+      dispatch(setSearchTerm(""));
+      setIsFilterOpen(false);
+
+      if (!showFavorites) {
+        await getFavorites({ headers: { token: token } });
+      } else {
+        await getPatients({ headers: { token: token } });
+      }
+
+      // Reiniciar a la primera página después de cambiar entre favoritos y todos los pacientes
+      handlePageChange(1);
+    } catch (error) {
+      console.error("Error al cargar favoritos:", error);
+    }
   };
 
   const handleToggleFavorite = (patientId) => {
@@ -174,12 +183,6 @@ export default function HomeDoc() {
     return <div>Loading...</div>;
   }
 
-  const getRandomColor = () => {
-    const colors = [riesgoRojo, riesgoAmarillo, riesgoVerde];
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    return colors[randomIndex];
-  };
-  console.log("esto es pacientes",sortedPatients)
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
@@ -189,31 +192,35 @@ export default function HomeDoc() {
             onClick={handleFavoriteClick}
             className={`${showFavorites ? "bg-bluePrimary text-white" : "bg-white text-bluePrimary border border-bluePrimary"
               } py-2 px-4 items-center flex rounded-lg gap-2 w-full transition duration-300 ease-in-out`}
-
           >
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"} font-bold`}>
               Favoritos
             </p>
           </button>
+          {/* <FiltrosPaciente
+              isOpen={isFilterOpen}
+              toggleMenu={toggleFilterMenu}
+              onClickSort={handleSortClick}
+          />
+          <Ordenar /> */}
         </div>
         <h1 className="font-bold">Listado de pacientes</h1>
         <div></div>
       </div>
 
-      <div className="items-start justify-center w-full bg-[#FAFAFC] overflow-y-auto">
-        {sortedPatients?.map((paciente) => (
+      <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
+        {sortedPatients.length > 0 ? (sortedPatients.map((paciente) => (
           <div
             key={paciente.id}
             className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2"
           >
             <div className="flex gap-2 md:gap-4 items-center justify-start">
-            {paciente.patientPulmonaryHypertensionRisks?.risk ? (
-            <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
+              {paciente.patientPulmonaryHypertensionRisks?.risk ? (
+                <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
               ) : (
-            <IconRisk color="lightGray" />
-            )}
-            
+                <IconRisk color="lightGray" />
+              )}
               <div className="flex justify-center items-center">
                 <img
                   src={paciente?.avatar !== null ? paciente.avatar : avatar}
@@ -233,9 +240,11 @@ export default function HomeDoc() {
               toggleOptions={() => toggleOptionMenu(paciente.id)}
             />
           </div>
-        ))}
+        ))) : <p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">
+          No hay pacientes encontrados
+        </p>}
       </div>
-      <div className="flex justify-center items-center gap-5 p-10 bg-[#FAFAFC] font-bold">
+      <div className="flex justify-center items-center gap-5 pb-10 pt-5 bg-[#FAFAFC] font-bold">
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
@@ -243,7 +252,7 @@ export default function HomeDoc() {
         >
           <IconPrev /> Anterior
         </button>
-        <p>{pagination.currentPage}</p>
+        <p>{pagination.currentPage} de {pagination.totalPages} </p>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
