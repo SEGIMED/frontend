@@ -520,18 +520,10 @@ export default function IconList() {
   ];
 
   return (
-    <div className="">
+    <div className="grid grid-cols-4 gap-4 p-4">
       {icons.map((icon, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "8px",
-          }}>
-          <div style={{ marginRight: "8px", fontSize: "24px" }}>
-            {icon.component}
-          </div>
+        <div key={index} className="flex flex-col items-center">
+          <div className="text-2xl mb-2">{icon.component}</div>
           <div>{icon.name}</div>
         </div>
       ))}

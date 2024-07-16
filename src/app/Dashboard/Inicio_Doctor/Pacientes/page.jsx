@@ -1,13 +1,10 @@
 "use client";
 
-import IconStar2 from "@/components/icons/IconStar2";
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
 import riesgoRojo from "@/components/images/riesgoRojo.png";
 import riesgoAmarillo from "@/components/images/riesgoAmarillo.png";
 import riesgoVerde from "@/components/images/riesgoVerde.png";
-import Segimed from "@/components/images/segimed.png";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import {
@@ -24,9 +21,10 @@ import { ApiSegimed } from "@/Api/ApiSegimed.js";
 import IconFavoriteBlue from "@/components/icons/IconFavoriteBlue.jsx";
 import IconFavoriteYellow from "@/components/icons/IconFavoriteyellow.jsx";
 import { PathnameShow } from "@/components/pathname/path";
-import realColor from "@/utils/realColor.js";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
+import IconAddPatient from "@/components/icons/IconAddPatient.jsx";
+import FiltrarPacientes from "@/components/Buttons/FiltrarPacientes.jsx";
 
 export default function HomeDoc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -184,15 +182,27 @@ export default function HomeDoc() {
   return (
     <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-10 pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
-        <div>
+      <div className="flex items-center justify-between border-b border-b-[#cecece] px-1 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
+        <div className="flex gap-2 md:gap-4">
+          {/* Se comenta por falta de funcionalidad */}
+          {/* <button
+            className={
+              "bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2 w-fit transition duration-300 ease-in-out"
+            }>
+            <IconAddPatient className="w-6" />
+            <p
+              className={`hidden md:block
+                text-white font-bold`}>
+              Agregar Paciente
+            </p>
+          </button> */}
           <button
             onClick={handleFavoriteClick}
             className={`${
               showFavorites
                 ? "bg-bluePrimary text-white"
-                : "bg-white text-bluePrimary border border-bluePrimary"
-            } py-2 px-4 items-center flex rounded-lg gap-2 w-full transition duration-300 ease-in-out`}>
+                : "bg-white text-bluePrimary  border-bluePrimary"
+            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
               className={`hidden md:block ${
@@ -202,8 +212,10 @@ export default function HomeDoc() {
             </p>
           </button>
         </div>
-        <h1 className="font-bold">Listado de pacientes</h1>
-        <div></div>
+        <h1 className="font-bold text-center md:text-start">
+          Listado de pacientes
+        </h1>
+        <FiltrarPacientes />
       </div>
 
       <div className="items-start justify-center w-full bg-[#FAFAFC] h-[75%] overflow-y-auto">
@@ -211,7 +223,7 @@ export default function HomeDoc() {
           <div
             key={paciente.id}
             className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:pl-10 pr-6 py-2">
-            <div className="flex gap-2 md:gap-4 items-center justify-start">
+            <div className="flex gap-2 md:gap-4 items-center justify-start w-[70%]">
               {paciente.patientPulmonaryHypertensionRisks?.risk ? (
                 <RealColorRisk
                   risk={paciente.patientPulmonaryHypertensionRisks.risk}
@@ -231,13 +243,23 @@ export default function HomeDoc() {
                 {paciente.name} {paciente.lastname}
               </p>
             </div>
-            <OpcionesDocPacientes
-              paciente={paciente}
-              onConsultationClick={() => openModal(paciente.id)}
-              onToggleFavorite={handleToggleFavorite}
-              isOpen={openOptionsPatientId === paciente.id}
-              toggleOptions={() => toggleOptionMenu(paciente.id)}
-            />
+            <div className="flex justify-end md:justify-between w-[30%] items-center">
+              <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden md:block">
+                <div className="text-sm md:text-base text-bluePrimary flex gap-1">
+                  <p className="hidden md:block">Grupo HTP:</p>
+                  <p className="font-bold">
+                    {paciente.patientPulmonaryHypertensionRisks?.group || "-"}
+                  </p>
+                </div>
+              </div>
+              <OpcionesDocPacientes
+                paciente={paciente}
+                onConsultationClick={() => openModal(paciente.id)}
+                onToggleFavorite={handleToggleFavorite}
+                isOpen={openOptionsPatientId === paciente.id}
+                toggleOptions={() => toggleOptionMenu(paciente.id)}
+              />
+            </div>
           </div>
         ))}
       </div>
