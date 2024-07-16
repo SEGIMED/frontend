@@ -24,6 +24,8 @@ import avatar from "@/utils/defaultAvatar";
 import { resetApp } from "@/redux/rootReducer";
 import { useRouter } from "next/navigation";
 
+import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
+
 import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
 
 export const SidePte = ({ search, toggleSidebar }) => {
@@ -42,6 +44,13 @@ export const SidePte = ({ search, toggleSidebar }) => {
   console.log(lastSegment);
 
   const [isMobile, setIsMobile] = useState(false)
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const avatar =
     "https://psicoaroha.es/wp-content/uploads/2021/12/perfil-empty.png";
@@ -107,7 +116,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getSchedules = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/schedules?patientId=${id}`, headers);
-    
+
       if (response.data) {
         dispatch(addSchedules(response.data));
       }
@@ -127,11 +136,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
       ...response1.data,
       ...response2.data,
       anthropometricDetails:
-        response1.data.anthropometricDetails.length > 0
+        response1.data.anthropometricDetails?.length > 0
           ? response1.data.anthropometricDetails
           : paciente.anthropometricDetails || [],
       vitalSigns:
-        response1.data.vitalSigns.length > 0
+        response1.data.vitalSigns?.length > 0
           ? response1.data.vitalSigns
           : paciente.vitalSigns || [],
       sociodemographicDetails:
@@ -140,19 +149,19 @@ export const SidePte = ({ search, toggleSidebar }) => {
         {},
       backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
       patientPulmonaryHypertensionGroups:
-        response1.data.patientPulmonaryHypertensionGroups.length > 0
+        response1.data.patientPulmonaryHypertensionGroups?.length > 0
           ? response1.data.patientPulmonaryHypertensionGroups
           : paciente.patientPulmonaryHypertensionGroups || {},
       patientPulmonaryHypertensionRisks:
-        response1.data.patientPulmonaryHypertensionRisks.length > 0
+        response1.data.patientPulmonaryHypertensionRisks?.length > 0
           ? response1.data.patientPulmonaryHypertensionRisks
           : paciente.patientPulmonaryHypertensionRisks || {},
       patientCardiovascularRisks:
-        response1.data.patientCardiovascularRisks.length > 0
+        response1.data.patientCardiovascularRisks?.length > 0
           ? response1.data.patientCardiovascularRisks
           : paciente.patientCardiovascularRisks || {},
       patientSurgicalRisks:
-        response1.data.patientSurgicalRisks.length > 0
+        response1.data.patientSurgicalRisks?.length > 0
           ? response1.data.patientSurgicalRisks
           : paciente.patientSurgicalRisks || {},
       lastMedicalEventDate:
@@ -208,6 +217,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
     if (typeof window !== 'undefined') {
       setIsMobile(window.innerWidth <= 768);
     }
+    if (isModalOpen) { router.push(`${rutas.PacienteDash}2`); }
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
@@ -376,6 +386,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
           )}
         </div>
       </div>
+      <ModalBoarding
+        isOpen={isModalOpen}
+        onClose={closeModal}
+
+      />
     </div >
   );
 };
