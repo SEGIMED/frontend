@@ -77,7 +77,7 @@ export default function HomeDocAll() {
                 label="Más"
                 categories={[
                   {
-                    title: "Acciones",
+                    title: "Información",
                     items: [
                       {
                         label: "Dejar Review",
