@@ -134,9 +134,6 @@ export default function OpcionesDocPacientes({
           </div>
         </ul>
       )}
-      {showModal && (
-        <MapModalPte onClose={() => setShowModal(false)} patient={paciente} />
-      )}
     </div>
   );
 }

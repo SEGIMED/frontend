@@ -14,14 +14,19 @@ import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
 import FiltrosPaciente from "@/components/Buttons/FiltrosPaciente";
 import Ordenar from "@/components/Buttons/Ordenar";
-
-
+import MenuDropDown from "@/components/dropDown/MenuDropDown";
+import IconMiniCalendar from "@/components/icons/IconMiniCalendar";
+import IconPersonalData from "@/components/icons/IconPersonalData";
+import IconMessages from "@/components/icons/IconMessages";
+import rutas from "@/utils/rutas";
 
 export default function DoctoresPte() {
   const doctores = useAppSelector((state) => state.doctores.doctores);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.doctores.doctores.length === 0);
+  const isLoading = useAppSelector(
+    (state) => state.doctores.doctores.length === 0
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -42,7 +47,10 @@ export default function DoctoresPte() {
 
   const getAllDoc = async (headers) => {
     try {
-      const response = await ApiSegimed.get(`/all-physicians?page=${pagination.currentPage}&limit=7`, headers);
+      const response = await ApiSegimed.get(
+        `/all-physicians?page=${pagination.currentPage}&limit=7`,
+        headers
+      );
       if (response.data) {
         console.log(response.data);
         setDoctors(response.data.user);
@@ -121,8 +129,6 @@ export default function DoctoresPte() {
     return <MensajeSkeleton />;
   }
 
-
-
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6">
@@ -141,10 +147,40 @@ export default function DoctoresPte() {
             key={doctor.id}
             doctor={doctor}
             button={
-              <OpcionesDocCard
-                id={doctor.id}
-                onDetailClick={handleViewDetail}
-                onConsultationClick={() => handleConsultationClick(doctor.id)}
+              // <OpcionesDocCard
+              //   id={doctor.id}
+              //   onDetailClick={handleViewDetail}
+              //   onConsultationClick={() => handleConsultationClick(doctor.id)}
+              // />
+              <MenuDropDown
+                label="Opciones"
+                categories={[
+                  {
+                    title: "Acciones",
+                    items: [
+                      {
+                        label: "Solicitar Consulta",
+                        icon: <IconMiniCalendar />,
+                        onClick: () => handleConsultationClick(doctor.id),
+                      },
+                    ],
+                  },
+                  {
+                    title: "Información",
+                    items: [
+                      {
+                        label: "Ver Detalles",
+                        icon: <IconPersonalData />,
+                        onClick: () => handleViewDetail(doctor.id),
+                      },
+                      {
+                        label: "Ver Mensajes",
+                        icon: <IconMessages />,
+                        href: `${rutas.PacienteDash}${rutas.Mensajes}`,
+                      },
+                    ],
+                  },
+                ]}
               />
             }
           />

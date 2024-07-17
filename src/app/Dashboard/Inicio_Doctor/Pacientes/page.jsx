@@ -25,9 +25,22 @@ import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
 import IconAddPatient from "@/components/icons/IconAddPatient.jsx";
 import FiltrarPacientes from "@/components/Buttons/FiltrarPacientes.jsx";
+import MenuDropDown from "@/components/dropDown/MenuDropDown.jsx";
+import IconMiniCalendar from "@/components/icons/IconMiniCalendar.jsx";
+import IconClinicalHistory from "@/components/icons/IconClinicalHistory.jsx";
+import rutas from "@/utils/rutas.js";
+import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
+import IconMessages from "@/components/icons/IconMessages.jsx";
+import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
+import MapModalPte from "@/components/modal/MapModalPte.jsx";
+import IconTStar2 from "@/components/icons/IconStar2.jsx";
+import IconAccion from "@/components/icons/IconAccion.jsx";
+import IconInfo from "@/components/icons/IconInfo.jsx";
 
 export default function HomeDoc() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(false);
   const [isSorted, setIsSorted] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
   const [showFavorites, setShowFavorites] = useState(false);
@@ -169,6 +182,10 @@ export default function HomeDoc() {
     }
   };
 
+  const handleGeolocationClick = (patient) => {
+    setSelectedPatient(patient);
+    setShowMapModal(true);
+  };
   if (userId === null) {
     return <div>Loading...</div>;
   }
@@ -252,12 +269,57 @@ export default function HomeDoc() {
                   </p>
                 </div>
               </div>
-              <OpcionesDocPacientes
+              {/* <OpcionesDocPacientes
                 paciente={paciente}
                 onConsultationClick={() => openModal(paciente.id)}
                 onToggleFavorite={handleToggleFavorite}
                 isOpen={openOptionsPatientId === paciente.id}
                 toggleOptions={() => toggleOptionMenu(paciente.id)}
+              /> */}
+              <MenuDropDown
+                label="Opciones"
+                categories={[
+                  {
+                    title: "Acciones",
+                    items: [
+                      {
+                        label: "Agendar Consulta",
+                        onClick: () => openModal(paciente.id),
+                        icon: <IconMiniCalendar />,
+                      },
+                    ],
+                  },
+                  {
+                    title: "Información",
+                    items: [
+                      {
+                        label: "Ver Historia Clínica",
+                        href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
+                        icon: <IconClinicalHistory />,
+                      },
+                      {
+                        label: "Ver datos Personales",
+                        href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
+                        icon: <IconPersonalData />,
+                      },
+                      {
+                        label: "Ver antiguas consultas",
+                        href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
+                        icon: <IconClinicalHistory />,
+                      },
+                      {
+                        label: "Ver Mensajes",
+                        href: `${rutas.Doctor}${rutas.Mensajes}`,
+                        icon: <IconMessages />,
+                      },
+                      {
+                        label: "Ver Geolocalización",
+                        onClick: () => handleGeolocationClick(paciente),
+                        icon: <IconGeolocation />,
+                      },
+                    ],
+                  },
+                ]}
               />
             </div>
           </div>
@@ -279,6 +341,12 @@ export default function HomeDoc() {
           <IconNext />
         </button>
       </div>
+      {showMapModal && selectedPatient && (
+        <MapModalPte
+          onClose={() => setShowMapModal(false)}
+          patient={selectedPatient}
+        />
+      )}
       <ModalConsultation
         isOpen={isModalOpen}
         onClose={closeModal}
