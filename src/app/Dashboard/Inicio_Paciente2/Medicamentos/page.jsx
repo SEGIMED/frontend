@@ -16,16 +16,16 @@ export default function Medicamentos() {
                 <div className="flex border-b border-b-[#cecece]">
 
 
-                    <div className="w-[5%]  hidden md:flex"></div>
-                    <div className="grid md:grid-cols-6 grid-cols-4 items-center   md:pr-6 py-2 md:px-2 bg-white w-[100%] md:w-[70%] font-normal text-base leading-4 min-h-14 text-center md:text-start">
+                    <div className="w-[5%] bg-white  hidden md:flex"></div>
+                    <div className="grid md:grid-cols-6 grid-cols-3 items-center px-2  md:pr-6 py-2 md:px-2 bg-white w-[100%] md:w-[70%] font-normal text-base leading-4 min-h-14 text-start md:text-start">
                         <p>Nombre</p>
                         <p>Dosis</p>
-                        <p className="hidden md:block">Vía</p>
-                        <p>Médico</p>
+                        <p >Vía</p>
+                        <p className="hidden md:block">Médico</p>
                         <p className="hidden md:block">Modificado por</p>
-                        <p>Fecha de Inicio</p>
+                        <p className="hidden md:block">Fecha de Inicio</p>
                     </div>
-                    <div className="  md:w-[25%]"></div>
+                    <div className=" bg-white  md:w-[25%]"></div>
                 </div>
                 {prescriptions?.map((prescription, index) => (
                     <MedicamentosTable key={index} medicamento={prescription} />

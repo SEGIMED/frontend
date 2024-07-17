@@ -8,16 +8,16 @@ export default function MedicamentosTable({ medicamento }) {
     return (
         <div className="h-full text-[#686868] w-[100%]">
             <div className="flex border-b border-b-[#cecece]  border-t border-t-[#cecece] px-2">
-                <div className="w-[5%] items-center justify-center hidden md:flex">         <IconMedicamento /></div>
-                <div className="grid md:grid-cols-6 grid-cols-4 items-center  md:pr-6 py-2 md:px-2 bg-white w-[100%]  md:w-[70%] min-h-14 text-center  font-medium md:font-semibold text-sm md:text-base leading-6 text-bluePrimary md:text-start">
+                <div className="w-[5%] bg-white  items-center justify-center hidden md:flex">         <IconMedicamento /></div>
+                <div className="grid md:grid-cols-6 grid-cols-3 items-center  md:pr-6 py-2 md:px-2 bg-white w-[100%]  md:w-[70%] min-h-14 text-start  font-medium md:font-semibold text-sm md:text-base leading-6 text-bluePrimary md:text-start">
                     <p >{medicamento.name}</p>
                     <p>{medicamento.dose}</p>
-                    <p className="hidden md:block" >{medicamento.route}</p>
-                    <p>{medicamento.doctor}</p>
+                    <p  >{medicamento.route}</p>
+                    <p className="hidden md:block">{medicamento.doctor}</p>
                     <p className="hidden md:block">{medicamento.modifiedBy}</p>
-                    <p >{medicamento.startDate}</p>
+                    <p className="hidden md:block" >{medicamento.startDate}</p>
                 </div>
-                <div className="w-[25%] hidden md:flex gap-5 items-center justify-around">
+                <div className="w-[25%] bg-white hidden md:flex gap-5 items-center justify-around">
                     <div>
                         <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
                             <IconSolicitar />
@@ -37,9 +37,12 @@ export default function MedicamentosTable({ medicamento }) {
                     </div>
                 </div>
             </div>
-            <div className="flex w-[100%] px-10 py-5 gap-5 bg-[#fafafc]">
-                <TextoMedicament description={medicamento.instructions} label={"Indicaciones:"} />
-                <TextoMedicament description={medicamento.observations} label={"Observaciones:"} />
+            <div className=" flex-col md:flex-row md:flex w-[100%] px-10 py-5 gap-5 space-y-4 bg-[#fafafc]">
+                <TextoMedicament className={"md:hidden block"} size={"12"} description={medicamento.doctor} label={"Médico:"} />
+                <TextoMedicament className={"md:hidden block"} size={"12"} description={medicamento.startDate} label={"Fecha de Inicio:"} />
+                <TextoMedicament className={"md:hidden block"} size={"12"} description={medicamento.modifiedBy} label={"Modificado por poraciones:"} />
+                <TextoMedicament description={medicamento.instructions} size={"24"} label={"Indicaciones:"} />
+                <TextoMedicament description={medicamento.observations} size={"24"} label={"Observaciones:"} />
             </div>
             <div className="flex gap-5 md:hidden justify-center py-5">
 
