@@ -77,7 +77,7 @@ const AlarmSelector = () => {
           title: "Alarma creada con éxito",
           text: "Un profesional se pondrá en contacto a la brevedad",
         });
-        router.push("/Dashboard/Inicio_Paciente/Alarm");
+        router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
       } else {
         throw new Error("Ha ocurrido un error al crear la alarma");
       }

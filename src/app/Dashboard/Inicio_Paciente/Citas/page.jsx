@@ -18,13 +18,14 @@ export default function Citas() {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const userId= Cookies.get("c")
 
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState("month");
 
   const getSchedules = async (headers) => {
     try {
-      const response = await ApiSegimed.get("/schedules", headers);
+      const response = await ApiSegimed.get( `/schedules?patientId=${userId}`, headers);
 
       if (response.data) {
         dispatch(addSchedules(response.data));
@@ -45,8 +46,9 @@ export default function Citas() {
 
   function mapSchedules(appointments) {
     const myID = Number(Cookies.get("c"));
+    console.log(appointments)
     const citas = appointments
-      .filter((appointment) => appointment.patient === myID)
+      .filter((appointment) => appointment.patient === myID && appointment.schedulingStatus === 1)
       .map((appointment, index) => ({
         id: appointment.id,
         start: dayjs(appointment.scheduledStartTimestamp).toDate(),
