@@ -62,7 +62,7 @@ export default function HomeDoc() {
 
  
   return (
-    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-scroll">
+    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-hidden md:overflow-y-scroll">
       <h2 className="text-2xl">
         ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>
@@ -169,11 +169,11 @@ export default function HomeDoc() {
       </div>
       <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl flex flex-col">
         <div className="flex justify-between items-center p-2 xs:p-5">
-          <Elboton onPress={handlePreviousChartTitle} nombre={"Anterior"} />
-          <span className="text-sm xs:text-lg text-center leading-6 w-screen  h-fit">
-           {titles[currentTitle]}
+          <Elboton onPress={handleNextChartTitle} nombre={"Anterior"} />
+          <span className="text-sm xs:text-lg text-center leading-6">
+            {titles[currentTitle]}
           </span>
-          <Elboton onPress={handleNextChartTitle} nombre={"Siguiente"} />
+          <Elboton onPress={handlePreviousChartTitle}  nombre={"Siguiente"} />
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
