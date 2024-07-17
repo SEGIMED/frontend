@@ -61,7 +61,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                 <BotonPreconsulta
                     label="No"
                     onClick={() => onTestActive(test, false)}
-                    active={!data.active}
+                    active={data.active}
                 />
             </div>}
             {test === 'lastAbnormalGlycemia' &&

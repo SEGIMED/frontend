@@ -8,15 +8,19 @@ import {
     Button,
 } from "@nextui-org/react";
 
-export default function DropNextPreconsultation({ text, onBodyChange, options, text2, name, disabled, selectedOptions }) {
-    const opcionRecibida = selectedOptions ? selectedOptions : "";
-    const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+export default function DropNextPreconsultation({ text, onBodyChange, options, text2, name, disabled }) {
+    const [selectedOption, setSelectedOptionState] = useState('');
+    const [selectedTextOption, setSelectedTextOption] = useState('');
     // const { setValue, register } = useFormContext();
     const handleSelectionChange = (key) => {
         const selectedOption = key;
         setSelectedOptionState(selectedOption);
         // setValue(name, selectedOption);
-        onBodyChange(name, selectedOption);
+        onBodyChange(name, Number(key));
+        const selectText = options.find(item => {
+            return item.value === Number(key);
+        });
+        if (selectText) setSelectedTextOption(selectText.text)
     };
 
     return (
@@ -36,7 +40,7 @@ export default function DropNextPreconsultation({ text, onBodyChange, options, t
                             borderColor: "#487FFA",
                             border: "2",
                         }}>
-                        {selectedOption || text2}
+                        {selectedTextOption || text2}
                     </Button>) : (<Button
                         variant="bordered"
                         className="capitalize"
@@ -46,7 +50,7 @@ export default function DropNextPreconsultation({ text, onBodyChange, options, t
                             borderColor: "#487FFA",
                             border: "2",
                         }}>
-                        {selectedOption || text2}
+                        {selectedTextOption || text2}
                     </Button>)
                     }
 
@@ -62,8 +66,8 @@ export default function DropNextPreconsultation({ text, onBodyChange, options, t
 
                     }>
                     {options?.map((option) => (
-                        <DropdownItem key={option} aria-label={option} >
-                            {option}
+                        <DropdownItem key={option.value} aria-label={option.text} >
+                            {option.text}
                         </DropdownItem>
                     ))}
                 </DropdownMenu>) : (null)}
