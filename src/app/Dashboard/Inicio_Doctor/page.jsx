@@ -25,19 +25,29 @@ export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
 
   const [currentChart, setCurrentChart] = useState(0);
+  const [currentTitle,setCurrentTitle] = useState(0);
   const dataAlarms = useAppSelector((state) => state.alarms);
   const dataPtesGrafic= useAppSelector(state => state.activePtes)
   
-  console.log(dataPtesGrafic)
-
-  const handlePreviousChart = () => {
-    setCurrentChart((prev) => (prev === 0 ? charts.length - 1 : prev - 1));
-  };
-
-  const handleNextChart = () => {
-    setCurrentChart((prev) => (prev === charts.length - 1 ? 0 : prev + 1));
-  };
   
+
+  const handlePreviousChartTitle = () => {
+    setCurrentChart((prev) => (prev === 0 ? titles.length - 1 : prev - 1));
+    setCurrentTitle((prev) => (prev === 0 ? titles.length - 1 : prev - 1));
+  };
+
+  const handleNextChartTitle = () => {
+    setCurrentChart((prev) => (prev === titles.length - 1 ? 0 : prev + 1));
+    setCurrentTitle((prev) => (prev === titles.length - 1 ? 0 : prev + 1));
+  };
+  const titles= [
+    <div>
+  <p class="hidden md:block">Pacientes nuevos en los últimos 7 días</p>
+  <p class="block md:hidden">Ultimos 7 días</p>
+  </div>,
+    <p>Actividad</p>,
+    <p>Alarmas</p>
+  ]
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart />
@@ -47,8 +57,10 @@ export default function HomeDoc() {
     </div>,
     <div key={2} className="flex-grow flex items-center justify-center h-100% ">
       <Alarmas />
-    </div>,
+    </div>
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
+
+ 
   return (
     <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-scroll">
       <h2 className="text-2xl">
@@ -157,11 +169,11 @@ export default function HomeDoc() {
       </div>
       <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl flex flex-col">
         <div className="flex justify-between items-center p-2 xs:p-5">
-          <Elboton onPress={handlePreviousChart} nombre={"Anterior"} />
-          <span className="text-sm xs:text-lg text-center leading-6">
-            Pacientes nuevos en los últimos 7 días
+          <Elboton onPress={handlePreviousChartTitle} nombre={"Anterior"} />
+          <span className="text-sm xs:text-lg text-center leading-6 w-screen  h-fit">
+           {titles[currentTitle]}
           </span>
-          <Elboton onPress={handleNextChart} nombre={"Siguiente"} />
+          <Elboton onPress={handleNextChartTitle} nombre={"Siguiente"} />
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>

@@ -18,7 +18,7 @@ export const GenreChart = () => {
       try {
         const token = Cookies.get("a");
         const response = await ApiSegimed.get("/statistics-genre", { headers: { 'token': token } });
-        console.log("esto es 2d", response.data)
+        
         setDataGenre(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
