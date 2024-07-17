@@ -80,7 +80,7 @@ export default function HomeDocAll() {
                     title: "Acciones",
                     items: [
                       {
-                        label: "Ver Historial",
+                        label: "Dejar Review",
                         icon: <IconCorazonMini />,
                         onClick: () => handleReviewModal(doc.id),
                       },
