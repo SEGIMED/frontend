@@ -35,10 +35,10 @@ export default function ProximasConsultas() {
     }
   }, [consultas]);
 
-  console.log(nextFiveConsultas)
+  
 
   return (
-    <div className="h-full w-full bg-[#FAFAFC] rounded-2xl border pb-2 border-[#DCDBDB]  ">
+    <div className="h-full w-full bg-[#FFFF] rounded-2xl border pb-2 border-[#DCDBDB]  ">
       <div className="flex items-center justify-between px-4 py-2 border-b border-[#DCDBDB]">
         <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center ">
           <IconCurrentRouteNav className={"w-4"} />

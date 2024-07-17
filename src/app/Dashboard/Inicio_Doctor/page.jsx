@@ -42,8 +42,8 @@ export default function HomeDoc() {
   };
   const titles= [
     <div>
-  <p class="hidden md:block">Pacientes nuevos en los últimos 7 días</p>
-  <p class="block md:hidden">Ultimos 7 días</p>
+  <p className="hidden md:block">Pacientes nuevos en los últimos 7 días</p>
+  <p className="block md:hidden">Ultimos 7 días</p>
   </div>,
     <p>Actividad</p>,
     <p>Alarmas</p>
