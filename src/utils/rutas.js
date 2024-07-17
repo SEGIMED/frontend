@@ -6,7 +6,7 @@ const Admin = "/Dashboard/Inicio_Admin"
 const PacienteDash2 = "/Dashboard/Inicio_Paciente2"
 
 
-const Alarm = "/Alarm"
+const Alarm = "/Alarmas"
 const Citas = "/Citas"
 const Consultas = "/Consultas"
 const Estadisticas = "/Estadisticas"

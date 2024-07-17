@@ -29,98 +29,98 @@ import TratamientoPreconsulta from "@/components/preconsulta/Tratamiento";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
-  const scheduleId = params.id
-  const token = Cookies.get('a');
-  const patientId = Cookies.get('c');
+  const scheduleId = params.id;
+  const token = Cookies.get("a");
+  const patientId = Cookies.get("c");
   const [tests, setTests] = useState({
     abnormalGlycemia: {
-      title: 'Glicemia anormal',
+      title: "Glicemia anormal",
       binaryOptions: true,
       description: '',
       active: null,
     },
     lastAbnormalGlycemia: {
-      title: 'Última glicemia anormal',
+      title: "Última glicemia anormal",
       selectedOption: null,
       description: '',
       active: null,
     },
     laboratoryResults: {
-      title: 'Resultados de laboratorio',
+      title: "Resultados de laboratorio",
       file: null,
       description: '',
       active: null,
     },
     electrocardiogram: {
-      title: 'Electrocardiograma',
+      title: "Electrocardiograma",
       file: null,
       description: '',
       active: null,
     },
     rxThorax: {
-      title: 'RX de Torax',
+      title: "RX de Torax",
       file: null,
       description: '',
       active: null,
     },
     echocardiogram: {
-      title: 'Ecocardiograma',
+      title: "Ecocardiograma",
       file: null,
       description: '',
       active: null,
     },
     walkTest: {
-      title: 'Test de caminata',
+      title: "Test de caminata",
       file: null,
       description: '',
       active: null,
     },
     respiratoryFunctional: {
-      title: 'Funcional respiratorio',
+      title: "Funcional respiratorio",
       file: null,
       description: '',
       active: null,
     },
     tomographies: {
-      title: 'Tomografías',
+      title: "Tomografías",
       file: null,
       description: '',
       active: null,
     },
     rightHeartCatheterization: {
-      title: 'Cateterismo cardiaco derecho',
+      title: "Cateterismo cardiaco derecho",
       file: null,
       description: '',
       active: null,
     },
     ccg: {
-      title: 'CCG (Coronariografia)',
+      title: "CCG (Coronariografia)",
       file: null,
       description: '',
       active: null,
     },
     resonance: {
-      title: 'Resonancia',
+      title: "Resonancia",
       file: null,
       description: '',
       active: null,
     },
     leftHeartCatheterization: {
-      title: 'Cateterismo cardiaco izquierdo',
+      title: "Cateterismo cardiaco izquierdo",
       file: null,
       description: '',
       active: null,
     },
     otherStudies: {
-      title: 'Otros estudios',
+      title: "Otros estudios",
       file: null,
-      description: '',
+      description: "",
     },
     pendingStudies: {
-      title: 'Estudios pendientes',
-      description: "No one is pending :) Good patient"
+      title: "Estudios pendientes",
+      description: "No one is pending :) Good patient",
     },
-  },);
+  });
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
   const handleQuestionActive = (question, active) => {
@@ -128,7 +128,9 @@ export default function PreconsultaPte({ params }) {
   };
 
   const handleSubquestionOption = (question, subquestion, selectedOption) => {
-    dispatch(subquestionSelectedOption({ question, subquestion, selectedOption })); // guardamos la opción seleccionada de la subpregunta
+    dispatch(
+      subquestionSelectedOption({ question, subquestion, selectedOption })
+    ); // guardamos la opción seleccionada de la subpregunta
   };
 
   const handleQuestionOption = (question, selectedOption) => {
@@ -151,12 +153,15 @@ export default function PreconsultaPte({ params }) {
     // almacenamos los archivos subidos, en un estado local ya que en Redux no son compatible
     const studies = tests;
     setTests({ ...studies, [test]: { ...studies[test], file: file } });
-  }
+  };
 
   const handleTestDescription = (test, testDescription) => {
     // almacenamos la descripción del estudio
     const studies = tests;
-    setTests({ ...studies, [test]: { ...studies[test], description: testDescription } });
+    setTests({
+      ...studies,
+      [test]: { ...studies[test], description: testDescription },
+    });
   };
 
   const handleTestActive = (test, active) => {
@@ -167,7 +172,10 @@ export default function PreconsultaPte({ params }) {
 
   const handleTestSelectedOption = (test, value) => {
     const studies = tests;
-    setTests({ ...studies, [test]: { ...studies[test], selectedOption: value } });
+    setTests({
+      ...studies,
+      [test]: { ...studies[test], selectedOption: value },
+    });
   };
 
   const handleTratamientoDescription = (field, item, description) => {
@@ -202,19 +210,28 @@ export default function PreconsultaPte({ params }) {
       appointmentSchedule: Number(scheduleId),
       // Questions
       lackOfAir: formData.questions.lackOfAir.active,
-      lackOfAirIncremented: formData.questions.lackOfAir.subquestions.lackOfAirIncremented.selectedOption,
-      lackOfAirClasification: formData.questions.lackOfAir.subquestions.lackOfAirClasification.selectedOption,
+      lackOfAirIncremented:
+        formData.questions.lackOfAir.subquestions.lackOfAirIncremented
+          .selectedOption,
+      lackOfAirClasification:
+        formData.questions.lackOfAir.subquestions.lackOfAirClasification
+          .selectedOption,
       chestPainAtRest: formData.questions.chestPainAtRest.active,
       chestPainOnExertion: formData.questions.chestPainOnExertion.active,
-      chestPainOnExertionAmount: formData.questions.chestPainOnExertion.subquestions.chestPainOnExertionAmount.selectedOption,
+      chestPainOnExertionAmount:
+        formData.questions.chestPainOnExertion.subquestions
+          .chestPainOnExertionAmount.selectedOption,
       edemaPresence: formData.questions.edemaPresence.active,
-      edemaPresenceDescription: formData.questions.edemaPresence.subquestions.edemaPresenceDescription.selectedOption,
+      edemaPresenceDescription:
+        formData.questions.edemaPresence.subquestions.edemaPresenceDescription
+          .selectedOption,
       feelings: formData.questions.feelings.selectedOption,
       healthChanges: formData.questions.healthChanges.active,
       healthChangesDescription: formData.questions.healthChanges.description,
       healthWorsened: formData.questions.healthWorsened.selectedOption,
       mentalHealthAffected: formData.questions.mentalHealthAffected.active,
-      mentalHealthAffectedDescription: formData.questions.mentalHealthAffected.description,
+      mentalHealthAffectedDescription:
+        formData.questions.mentalHealthAffected.description,
       energyStatus: formData.questions.energyStatus.selectedOption,
       feed: formData.questions.feed.selectedOption,
       hydrationStatus: formData.questions.hydrationStatus.selectedOption,
@@ -252,44 +269,47 @@ export default function PreconsultaPte({ params }) {
     console.log(bodyForm);
     try {
       if (!bodyForm) {
-        console.error('No form data to submit');
+        console.error("No form data to submit");
         return;
       }
       const response = await ApiSegimed.post(`/pre-consultation`, bodyForm, {
         headers: {
           token: token,
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       });
       if (response) {
         console.log(response.data);
       }
     } catch (error) {
-      console.error('Error fetching data', error);
+      console.error("Error fetching data", error);
     }
   };
 
   useEffect(() => {
     const getPreConsultation = async () => {
       try {
-        const res = await ApiSegimed.get(`/get-all-pateint-preconsultation?patientId=${patientId}`, {
-          headers: {
-            token: token,
+        const res = await ApiSegimed.get(
+          `/get-all-pateint-preconsultation?patientId=${patientId}`,
+          {
+            headers: {
+              token: token,
+            },
           }
-        });
+        );
         if (res) {
           console.log({ preConsultationLength: res.data.length });
         }
       } catch (error) {
-        console.error('Error fetching data', error);
+        console.error("Error fetching data", error);
       }
-    }
+    };
     // getPreConsultation();
   }, []);
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-[50%] gap-5">
+      <div className="flex flex-col h-full overflow-y-auto gap-5">
         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] ">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
