@@ -35,86 +35,80 @@ export default function PreconsultaPte({ params }) {
     abnormalGlycemia: {
       title: "Glicemia anormal",
       binaryOptions: true,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     lastAbnormalGlycemia: {
       title: "Última glicemia anormal",
       selectedOption: null,
-      description: "",
-      active: false,
-    },
-    physicalExamination: {
-      title: "Examen físico",
-      file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     laboratoryResults: {
       title: "Resultados de laboratorio",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     electrocardiogram: {
       title: "Electrocardiograma",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     rxThorax: {
       title: "RX de Torax",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     echocardiogram: {
       title: "Ecocardiograma",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     walkTest: {
       title: "Test de caminata",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     respiratoryFunctional: {
       title: "Funcional respiratorio",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     tomographies: {
       title: "Tomografías",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     rightHeartCatheterization: {
       title: "Cateterismo cardiaco derecho",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     ccg: {
       title: "CCG (Coronariografia)",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     resonance: {
       title: "Resonancia",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     leftHeartCatheterization: {
       title: "Cateterismo cardiaco izquierdo",
       file: null,
-      description: "",
-      active: false,
+      description: '',
+      active: null,
     },
     otherStudies: {
       title: "Otros estudios",
@@ -147,14 +141,7 @@ export default function PreconsultaPte({ params }) {
   };
 
   const handleVitalSign = (vitalSign, value) => {
-    dispatch(
-      updateVitalSign({
-        vitalSign,
-        value,
-        patientId,
-        schedulingId: Number(scheduleId),
-      })
-    ); // actualizamos los signos vitales en el estado global
+    dispatch(updateVitalSign({ vitalSign, value, number: Number(patientId), schedulingId: Number(scheduleId) })); // actualizamos los signos vitales en el estado global
   };
 
   const handleAnamnesis = (field, description) => {
@@ -203,19 +190,19 @@ export default function PreconsultaPte({ params }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const bodyOBJFormat = {
-      painOwnerId: patientId,
+      painOwnerId: Number(patientId),
       schedulingId: Number(scheduleId),
       medicalEventId: null,
-      isTherePain: formData.bodySection.selectedOptions.pain,
-      painDurationId: formData.bodySection.selectedOptions.painTime,
-      painScaleId: formData.bodySection.selectedOptions.painLevel,
-      painTypeId: formData.bodySection.selectedOptions.painType,
-      painAreas: formData.bodySection.selectedOptions.painAreas,
-      painFrequencyId: formData.bodySection.selectedOptions.frecuencia,
-      isTakingAnalgesic: formData.bodySection.selectedOptions.analgesicos,
-      doesAnalgesicWorks: formData.bodySection.selectedOptions.calmaAnalgesicos,
-      isWorstPainEver: formData.bodySection.selectedOptions.peorDolor,
-    };
+      isTherePain: formData.bodySection.isTherePain,
+      painDurationId: formData.bodySection.painDuration,
+      painScaleId: formData.bodySection.painScale,
+      painTypeId: formData.bodySection.painType,
+      painAreas: formData.bodySection.painAreas ? Object.values(formData.bodySection.painAreas) : null,
+      painFrequencyId: formData.bodySection.painFrequency,
+      isTakingAnalgesic: formData.bodySection.isTakingAnalgesic,
+      doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks,
+      isWorstPainEver: formData.bodySection.isWorstPainEver,
+    }
     const bodyForm = {
       patient: Number(patientId),
       appointmentSchedule: Number(scheduleId),
@@ -251,7 +238,7 @@ export default function PreconsultaPte({ params }) {
       // Estudios
       abnormalGlycemia: tests.abnormalGlycemia.active,
       lastAbnormalGlycemia: tests.lastAbnormalGlycemia.selectedOption,
-      physicalExamination: tests.physicalExamination.file,
+      // physicalExamination: tests.physicalExamination.file,
       laboratoryResults: tests.laboratoryResults.file,
       laboratoryResultsDescription: tests.laboratoryResults.description,
       electrocardiogram: tests.electrocardiogram.file,
@@ -271,9 +258,7 @@ export default function PreconsultaPte({ params }) {
       consultationReason: formData.anamnesis.consultationReason.description,
       importantSymptoms: formData.anamnesis.importantSymptoms.description,
       // Tratamiento
-      currentMedications: Object.values(
-        formData.tratamiento.currentMedications.selectedOptions
-      ),
+      currentMedications: formData.tratamiento.currentMedications?.selectedOptions ? Object.values(formData.tratamiento.currentMedications.selectedOptions) : null,
       // Signos vitales
       vitalSignsToCreate: Object.values(formData.vitalSigns),
       // painRecordsToCreate
@@ -292,7 +277,7 @@ export default function PreconsultaPte({ params }) {
         },
       });
       if (response) {
-        console.log(response);
+        console.log(response.data);
       }
     } catch (error) {
       console.error("Error fetching data", error);
