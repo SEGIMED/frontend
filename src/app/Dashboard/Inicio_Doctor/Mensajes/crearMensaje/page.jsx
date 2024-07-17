@@ -52,9 +52,12 @@ export default function DoctoresPte() {
     <div className="h-full w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
         <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder />} />
-        <Link href={`${rutas.Doctor}${rutas.Mensajes}`}>
-          <Elboton nombre={"Regresar"} size={"lg"} icon={<IconRegresar />} />
-        </Link>
+        <Elboton
+          href={`${rutas.Doctor}${rutas.Mensajes}`}
+          nombre={"Regresar"}
+          size={"lg"}
+          icon={<IconRegresar />}
+        />
       </div>
       <div className=" items-start w-full md:overflow-y-auto ">
         {sortedPatients?.map((paciente) => (
@@ -62,14 +65,13 @@ export default function DoctoresPte() {
             key={paciente.id}
             paciente={paciente}
             button={
-              <Link href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}>
-                <Elboton
-                  nombre={"Enviar Mensaje"}
-                  icon={<IconMensajeBoton />}
-                  size={"md"}
-                  onPress={crearChat(paciente.id)}
-                />
-              </Link>
+              <Elboton
+                href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}
+                nombre={"Enviar Mensaje"}
+                icon={<IconMensajeBoton />}
+                size={"md"}
+                onPress={crearChat(paciente.id)}
+              />
             }
           />
         ))}
