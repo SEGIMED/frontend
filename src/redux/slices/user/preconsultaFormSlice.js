@@ -159,7 +159,7 @@ const initialState = {
       },
       hydrationStatus: {
         title: "Califique su hidratación diaria (todos los líquidos ingeridos)",
-        active: null,
+        active: true,
         binaryOptions: false,
         selectedOption: null,
         description: '',
@@ -171,7 +171,7 @@ const initialState = {
       },
       urineStatus: {
         title: "Califique su estado de orina (diuresis)",
-        active: null,
+        active: true,
         binaryOptions: false,
         selectedOption: null,
         description: '',
@@ -185,7 +185,7 @@ const initialState = {
       },
       exerciseStatus: {
         title: "Califique su estado de ejercicio físico",
-        active: null,
+        active: true,
         binaryOptions: false,
         selectedOption: null,
         description: '',
