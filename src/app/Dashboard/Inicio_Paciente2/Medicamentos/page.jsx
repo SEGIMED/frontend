@@ -27,8 +27,8 @@ export default function Medicamentos() {
                     </div>
                     <div className="  md:w-[25%]"></div>
                 </div>
-                {prescriptions?.map((prescription) => (
-                    <MedicamentosTable medicamento={prescription} />
+                {prescriptions?.map((prescription, index) => (
+                    <MedicamentosTable key={index} medicamento={prescription} />
                 ))}
                 <div>
 
