@@ -21,7 +21,6 @@ import IconMessages from "@/components/icons/IconMessages";
 import rutas from "@/utils/rutas";
 
 export default function DoctoresPte() {
-  const doctores = useAppSelector((state) => state.doctores.doctores);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(
@@ -41,18 +40,19 @@ export default function DoctoresPte() {
     currentPage: 1,
   });
 
+  const token = Cookies.get("a");
+
   useEffect(() => {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
-  const getAllDoc = async (headers) => {
+  const fetchDoctors = async (searchTerm = "") => {
     try {
       const response = await ApiSegimed.get(
-        `/all-physicians?page=${pagination.currentPage}&limit=7`,
-        headers
+        `/all-physicians?page=${pagination.currentPage}&limit=7&name=${searchTerm}`,
+        { headers: { token: token } }
       );
       if (response.data) {
-        console.log(response.data);
         setDoctors(response.data.user);
         setPagination((prev) => ({
           ...prev,
@@ -66,30 +66,29 @@ export default function DoctoresPte() {
   };
 
   useEffect(() => {
-    const token = Cookies.get("a");
     if (token) {
-      getAllDoc({ headers: { token: token } });
+      fetchDoctors();
     }
-  }, [pagination.currentPage]);
+  }, [pagination.currentPage, token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchDoctors(searchTerm1);
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
+    }
+  }, [searchTerm1, token]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
-      setPagination(() => ({
-        ...pagination,
+      setPagination((prev) => ({
+        ...prev,
         currentPage: newPage,
       }));
     }
   };
-
-  const filteredDoctor = doctores?.filter(
-    (doc) =>
-      doc.name.toLowerCase().includes(searchTerm1.toLowerCase()) ||
-      doc.lastname.toLowerCase().includes(searchTerm1.toLowerCase())
-  );
-
-  const sortedDoctor = isSorted
-    ? [...filteredDoctor].sort((a, b) => a.name.localeCompare(b.name))
-    : filteredDoctor;
 
   const handleViewDetail = (doctorId) => {
     setIsDetailModalOpen(true);
@@ -132,12 +131,6 @@ export default function DoctoresPte() {
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6">
-        {/* <FiltrosPaciente
-              isOpen={isFilterOpen}
-              toggleMenu={toggleFilterMenu}
-              onClickSort={handleSortClick}
-          />
-          <Ordenar /> */}
         <div className="text-xl font-bold">Lista de Doctores</div>
         <div></div>
       </div>
@@ -193,7 +186,9 @@ export default function DoctoresPte() {
           className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
-        <p>{pagination.currentPage}</p>
+        <p>
+          {pagination.currentPage} de {pagination.totalPages}
+        </p>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}

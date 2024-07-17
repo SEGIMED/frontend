@@ -54,15 +54,15 @@ export default function PatientCardConsulta({ paciente, button, consulta }) {
             <IconRisk color="lightGray" />
           )}
           <Avatars avatar1={paciente?.patientUser?.avatar} />
-          <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 w-24 md:w-fit">
+          <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 w-[70px] md:w-fit line-clamp-2">
             {paciente?.patientUser?.name} {paciente?.patientUser?.lastname}
           </p>
         </div>
 
-        <p className="text-center text-[#686868] font-normal text-sm md:text-base leading-6 w-36 md:w-[25%] hidden md:block">
+        <p className="text-center text-[#686868] font-normal text-sm md:text-base leading-6 w-32 md:w-[25%] hidden md:block">
           {paciente?.reasonForConsultation}
         </p>
-        <p className="text-center text-[#686868] font-normal text-sm md:text-base leading-6 w-36 md:w-[25%] ">
+        <p className="text-center text-[#686868] font-normal text-sm md:text-base leading-6 w-32 md:w-[25%] ">
           {LastLogin(paciente?.scheduledStartTimestamp)}
         </p>
         <p
