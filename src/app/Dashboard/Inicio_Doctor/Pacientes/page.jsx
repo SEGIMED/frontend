@@ -240,7 +240,7 @@ export default function HomeDoc() {
             <div
               key={paciente.id}
               className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
-              <div className="flex gap-2 md:gap-4 items-center justify-start w-[70%]">
+              <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
                 {paciente.patientPulmonaryHypertensionRisks?.risk ? (
                   <RealColorRisk
                     risk={paciente.patientPulmonaryHypertensionRisks.risk}
@@ -260,8 +260,8 @@ export default function HomeDoc() {
                   {paciente.name} {paciente.lastname}
                 </p>
               </div>
-              <div className="flex justify-end md:justify-between w-[30%] items-center">
-                <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden md:block">
+              <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
+                <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
                   <div className="text-sm md:text-base text-bluePrimary flex gap-1">
                     <p className="hidden md:block">Grupo HTP:</p>
                     <p className="font-bold">

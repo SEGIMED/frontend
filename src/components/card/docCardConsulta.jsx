@@ -26,7 +26,7 @@ export default function DoctorCardConsulta({ doctor, button, consulta }) {
 
   return (
     <div className="flex justify-between w-full border-b border-b-[#cecece] px-2 md:px-6 py-2 items-center">
-      <div className="flex gap-1 md:gap-3 items-center w-[85%]">
+      <div className="flex gap-1 md:gap-3 items-center w-[90%]">
         <div className="flex gap-2 w-[40%] md:w-[20%] items-center">
           <div className="w-10 h-10 flex justify-center items-center">
             <Avatars

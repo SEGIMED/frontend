@@ -73,8 +73,10 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
               <DropdownSection
                 key={categoryIndex}
                 title={category.title}
-                className="text-md font-bold"
-                showDivider>
+                classNames={{
+                  heading: "text-sm font-bold",
+                }}
+                showDivider={categoryIndex < categories.length - 1}>
                 {category.items.map((item, itemIndex) => (
                   <DropdownItem key={itemIndex}>
                     {item.href && (

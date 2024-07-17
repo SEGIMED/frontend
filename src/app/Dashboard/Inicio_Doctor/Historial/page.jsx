@@ -145,7 +145,7 @@ export default function HomeDoc() {
                       {
                         label: "Ver consultas",
                         icon: <IconPersonalData />,
-                        href: `${rutas.Doctor}${rutas.Alarm}/${paciente.id}`,
+                        href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
                       },
                     ],
                   },
