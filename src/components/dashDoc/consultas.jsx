@@ -8,11 +8,20 @@ import IconOptions from "../icons/IconOptions";
 import IconMensajeBoton from "../icons/IconMensajeBoton";
 import Link from "next/link";
 import rutas from "@/utils/rutas";
+import IconRisk from "../icons/iconRisk";
+import RealColorRisk from "@/utils/realColor";
 
 export default function ProximasConsultasInfo({ info }) {
   return (
     <div className="flex items-center px-2 xs:px-4 md:px-6 md:py-4 py-2 justify-between border-b border-[#DCDBDB]">
       <div className="flex items-center w-2/3 md:w-[35%] ">
+      <span className="mr-2"> {info.patientPulmonaryHypertensionRisks?.risk ? (
+                <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
+              ) : (
+                <IconRisk color="lightGray" />
+              )}
+              </span>
+     
         <div className="w-full md:w-1/2 flex">
           <Avatars avatar1={info?.patientUser?.avatar} />
           <p className="h-10 flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">

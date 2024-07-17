@@ -50,7 +50,7 @@ export default function HomeDoc() {
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
   return (
-    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-hidden md:overflow-y-scroll">
+    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-scroll">
       <h2 className="text-2xl">
         ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>

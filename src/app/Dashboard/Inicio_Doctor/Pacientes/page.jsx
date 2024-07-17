@@ -24,6 +24,7 @@ import { PathnameShow } from "@/components/pathname/path";
 import realColor from "@/utils/realColor.js";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
+import Ordenar from "@/components/Buttons/Ordenar.jsx";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -202,11 +203,13 @@ export default function HomeDoc() {
               isOpen={isFilterOpen}
               toggleMenu={toggleFilterMenu}
               onClickSort={handleSortClick}
-          />
-          <Ordenar /> */}
+          /> */}
+          
         </div>
-        <h1 className="font-bold">Listado de pacientes</h1>
-        <div></div>
+        
+        <h1 className="font-bold ml-4">Listado de pacientes</h1>
+        <Ordenar />
+        {/* <div></div> */}
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">

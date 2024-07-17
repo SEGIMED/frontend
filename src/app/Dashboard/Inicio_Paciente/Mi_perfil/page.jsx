@@ -433,6 +433,35 @@ export default function HomePte() {
             </span>
           )}
         </div>
+        {/* <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
+            <IconCircle className="w-3" />
+            Obra Social:
+          </label>
+          {edit ? (
+            <div className="w-1/2 flex flex-col">
+              <input
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
+                  errors.birthDate ? "red" : "#DCDBDB"
+                }]`}
+                type="date"
+                defaultValue={paciente.sociodemographicDetails?.birthDate}
+                {...register("birthDate", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.birthDate && (
+                <p className="text-red-500 text-sm">
+                  {errors.birthDate.message}
+                </p>
+              )}
+            </div>
+          ) : (
+            <span className="w-1/2 text-start px-6 py-2">
+              {paciente.sociodemographicDetails?.birthDate}
+            </span>
+          )}
+        </div> */}
       </form>
       <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
         <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
