@@ -9,7 +9,7 @@ export default function MedicamentosTable({ medicamento }) {
         <div className="h-full text-[#686868] w-[100%]">
             <div className="flex border-b border-b-[#cecece]  border-t border-t-[#cecece] px-2">
                 <div className="w-[5%] bg-white  items-center justify-center hidden md:flex">         <IconMedicamento /></div>
-                <div className="grid md:grid-cols-6 grid-cols-3 items-center  md:pr-6 py-2 md:px-2 bg-white w-[100%]  md:w-[70%] min-h-14 text-start  font-medium md:font-semibold text-sm md:text-base leading-6 text-bluePrimary md:text-start">
+                <div className="grid md:grid-cols-6 grid-cols-3 items-center  md:pr-6 py-2 md:px-2 bg-white w-[100%]  md:w-[70%] min-h-14 text-center  font-medium md:font-semibold text-sm md:text-base leading-6 text-bluePrimary md:text-start">
                     <p >{medicamento.name}</p>
                     <p>{medicamento.dose}</p>
                     <p  >{medicamento.route}</p>
