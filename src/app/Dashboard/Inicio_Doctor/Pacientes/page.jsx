@@ -2,9 +2,6 @@
 
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
-import riesgoRojo from "@/components/images/riesgoRojo.png";
-import riesgoAmarillo from "@/components/images/riesgoAmarillo.png";
-import riesgoVerde from "@/components/images/riesgoVerde.png";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import {
@@ -12,8 +9,6 @@ import {
   toggleFavorite,
 } from "@/redux/slices/doctor/allPatients";
 import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
-import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPacientes.jsx";
-import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
 import config from "@/components/localData/localdata";
 import avatar from "@/utils/defaultAvatar";
 import Cookies from "js-cookie";
@@ -23,8 +18,6 @@ import IconFavoriteYellow from "@/components/icons/IconFavoriteyellow.jsx";
 import { PathnameShow } from "@/components/pathname/path";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
-import IconAddPatient from "@/components/icons/IconAddPatient.jsx";
-import FiltrarPacientes from "@/components/Buttons/FiltrarPacientes.jsx";
 import MenuDropDown from "@/components/dropDown/MenuDropDown.jsx";
 import IconMiniCalendar from "@/components/icons/IconMiniCalendar.jsx";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory.jsx";
@@ -33,9 +26,12 @@ import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
 import IconMessages from "@/components/icons/IconMessages.jsx";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import MapModalPte from "@/components/modal/MapModalPte.jsx";
-import IconTStar2 from "@/components/icons/IconStar2.jsx";
-import IconAccion from "@/components/icons/IconAccion.jsx";
-import IconInfo from "@/components/icons/IconInfo.jsx";
+import Ordenar from "@/components/Buttons/Ordenar";
+import IconOrder from "@/components/icons/IconOrder";
+import IconOptions from "@/components/icons/IconOptions";
+import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
+import IconAlarm from "@/components/icons/IconAlarm";
+
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -62,7 +58,7 @@ export default function HomeDoc() {
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patients?page=${pagination.currentPage}&limit=9&name=${searchTerm}`,
+      `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&&risk=${riskFilter}`,
       headers
     );
     if (response.data) {
@@ -72,7 +68,7 @@ export default function HomeDoc() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-
+  
       setPatients(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -87,7 +83,7 @@ export default function HomeDoc() {
       ...prev,
       currentPage: 1,
     }));
-  }, [searchTerm]);
+  }, [searchTerm, riskFilter]);
 
   const getFavorites = async (headers) => {
     const response = await ApiSegimed.get(
@@ -117,7 +113,7 @@ export default function HomeDoc() {
     } else {
       getFavorites({ headers: { token: token } }).catch(console.error);
     }
-  }, [showFavorites, pagination.currentPage, searchTerm]);
+  }, [showFavorites, pagination.currentPage, searchTerm, riskFilter]);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
@@ -145,7 +141,7 @@ export default function HomeDoc() {
     setIsSorted(!isSorted);
   };
 
-  const handleRiskFilterClick = (risk) => {
+  const handleRiskFilterClick = ({risk}) => {
     setRiskFilter(risk);
   };
 
@@ -232,7 +228,36 @@ export default function HomeDoc() {
         </div>
         
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
-        <Ordenar />
+        <MenuDropDown
+        label="Ordenar"
+        iconR={<IconOrder/>}
+        categories={[
+          {title:"Nivel de riesgo",
+          items: [
+                  {
+                    label: "Alto",
+                    onClick: () => setRiskFilter("Alto"),
+                    icon: <IconRisk color="#E73F3F"/>,
+                  },
+                  {
+                    label: "Medio",
+                    onClick: () =>setRiskFilter("Moderado"),
+                    icon: <IconRisk color="#F5E400"/>,
+                  },
+                  {
+                    label: "Bajo",
+                    onClick: () =>setRiskFilter("Bajo"),
+                    icon: <IconRisk color="#70C247"/>,
+                  },
+                  {
+                    label: "Ninguno",
+                    onClick: () =>setRiskFilter(""),
+                    icon: <IconRisk  color="lightGray"/>,
+                  },
+                  
+        ]}
+        ]}
+        />
         {/* <div></div> */}
       </div>
 
@@ -280,6 +305,7 @@ export default function HomeDoc() {
               /> */}
                 <MenuDropDown
                   label="Opciones"
+                  icon={<IconOptions color="#FFFFFF" />}
                   categories={[
                     {
                       title: "Acciones",
