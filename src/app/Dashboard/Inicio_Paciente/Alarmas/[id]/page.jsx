@@ -70,7 +70,7 @@ const AlarmSelector = () => {
       // Realizar la solicitud POST al servidor
       const response = await ApiSegimed.post("/alarm", body, headers);
 
-      console.log(body);
+   
       if (response.status === 200 || 201) {
         Swal.fire({
           icon: "success",

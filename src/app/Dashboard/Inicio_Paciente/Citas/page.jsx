@@ -46,7 +46,7 @@ export default function Citas() {
 
   function mapSchedules(appointments) {
     const myID = Number(Cookies.get("c"));
-    console.log(appointments)
+   
     const citas = appointments
       .filter((appointment) => appointment.patient === myID && appointment.schedulingStatus === 1)
       .map((appointment, index) => ({
