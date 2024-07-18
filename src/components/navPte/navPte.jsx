@@ -47,7 +47,7 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
     setTimeout(() => {
       // Realizar la recarga de la página para limpiar todos los datos
       window.location.reload(true);
-    }, 2000); 
+    }, 2000);
   };
 
   return (
@@ -263,6 +263,12 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
                   />
                   <li className="text-lg lg:text-md">Configuracion</li>
                 </Link> */}
+                <Elboton
+                  icon={<IconOut />}
+                  className={"font-bold h-[52px] flex sm:hidden text-[15px]"}
+                  nombre={"Cerrar sesión"}
+                  onPress={handleLogout}
+                />
               </ul>
             </div>
           </div>
@@ -273,9 +279,9 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
             Cerrar sesión
           </button> */}
           <Elboton
-            size={"lg"}
-            nombre={"Cerrar sesión"}
             icon={<IconOut />}
+            className={"font-bold h-[52px] hidden sm:flex text-[15px]"}
+            nombre={"Cerrar sesión"}
             onPress={handleLogout}
           />
         </div>
