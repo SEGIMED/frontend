@@ -198,7 +198,7 @@ export default function DoctoresPte() {
           className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
-        <p>
+        <p className=" w-12">
           {pagination.currentPage} de {pagination.totalPages}
         </p>
         <button
