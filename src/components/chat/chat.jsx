@@ -60,7 +60,7 @@ export default function Chat({ chat }) {
   return (
     <div className="text-[#686868] w-full flex h-full flex-col">
       {/* ACA INICIA EL CHAT */}
-      <div className="relative h-[90%] md:h-[80%] border-b border-b-[#cecece] px-6 py-2 overflow-hidden">
+      <div className="relative h-[90%] md:h-[80%] px-6 py-2 overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center bg-[#fafafc]">
           <Image
             src={ImageChat}
@@ -113,18 +113,18 @@ export default function Chat({ chat }) {
       </div>
 
       {/* ACA INICIA EL INPUT */}
-      <div className="h-[10%] md:h-[20%] flex items-center justify-center bottom-0 md:px-2">
+      <div className="h-[10%] md:h-[20%] flex items-center justify-center border-t bottom-0 md:px-2 gap-1">
         <input
           type="text"
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full md:w-1/2 py-4 md:py-8 px-4 border outline-none rounded md:mr-2 font-poppins"
+          className="w-full md:w-1/2 py-4 md:py-8 px-4 md:border outline-none md:rounded md:mr-2"
           placeholder="Escribe tu mensaje..."
         />
         <button
           onClick={sendMessage}
-          className="bg-[#70C247] text-white py-2 px-4 rounded flex items-center hover:scale-105 transition-transform">
+          className="bg-[#70C247] text-white py-2 px-4 rounded flex mr-4 items-center hover:scale-105 transition-transform">
           <span className="hidden md:block">Enviar</span>
           <IconSendMensaje className="w-6" />
         </button>
