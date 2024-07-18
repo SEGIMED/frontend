@@ -36,11 +36,11 @@ export default function ProximasConsultas() {
   }, [consultas]);
 
   return (
-    <div className="h-full w-full bg-[#FAFAFC] rounded-2xl border pb-2 border-[#DCDBDB]  ">
+    <div className="h-full w-full bg-white rounded-2xl border pb-2 border-[#DCDBDB]  ">
       <div className="flex items-center justify-between px-4 py-2 border-b border-[#DCDBDB]">
         <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center ">
           <IconCurrentRouteNav className={"w-4"} />
-          Sus próximas consultas
+          Próximas consultas
         </label>
         <Link href={`${rutas.Doctor}${rutas.Historial}`}>
           <button className="flex rounded-lg items-center  px-2 md:px-5 py-3 ont-bold text-sm leading-5 bg-bluePrimary text-white gap-1 ">

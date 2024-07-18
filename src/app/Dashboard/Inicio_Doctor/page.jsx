@@ -26,8 +26,8 @@ export default function HomeDoc() {
 
   const [currentChart, setCurrentChart] = useState(0);
   const dataAlarms = useAppSelector((state) => state.alarms);
-  const dataPtesGrafic= useAppSelector(state => state.activePtes)
-  
+  const dataPtesGrafic = useAppSelector(state => state.activePtes)
+
   console.log(dataPtesGrafic)
 
   const handlePreviousChart = () => {
@@ -37,7 +37,7 @@ export default function HomeDoc() {
   const handleNextChart = () => {
     setCurrentChart((prev) => (prev === charts.length - 1 ? 0 : prev + 1));
   };
-  
+
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart />
@@ -170,7 +170,7 @@ export default function HomeDoc() {
         {charts[currentChart]}
         {/* </div> */}
       </div>
-      <div className="h-fit w-full  border border-[#DCDBDB] rounded-2xl ">
+      <div className="h-fit w-full bg-white  border border-[#DCDBDB] rounded-2xl ">
 
         <Citas />
       </div>
