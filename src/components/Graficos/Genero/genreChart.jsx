@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import { Pie } from "react-chartjs-2";
@@ -7,18 +7,17 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 
 Chart.register(...registerables);
 
-
-
-
 export const GenreChart = () => {
-  const [dataGenre, setDataGenre] = useState({ women: 0, men: 0});
+  const [dataGenre, setDataGenre] = useState({ women: 0, men: 0 });
 
   useEffect(() => {
     const getGenre = async () => {
       try {
         const token = Cookies.get("a");
-        const response = await ApiSegimed.get("/statistics-genre", { headers: { 'token': token } });
-        
+        const response = await ApiSegimed.get("/statistics-genre", {
+          headers: { token: token },
+        });
+
         setDataGenre(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -28,18 +27,16 @@ export const GenreChart = () => {
     getGenre();
   }, []);
 
-  
-const data = {
-  labels: ["Femenino", "Masculino"],
-  datasets: [
-    {
-      label: "Distribución de géneros",
-      data: [dataGenre.women, dataGenre.men],
-      backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
-    },
-  ],
-};
-
+  const data = {
+    labels: ["Femenino", "Masculino"],
+    datasets: [
+      {
+        label: "Distribución de géneros",
+        data: [dataGenre.women, dataGenre.men],
+        backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+      },
+    ],
+  };
 
   return (
     <div className="w-full">
@@ -103,7 +100,11 @@ export const GooglePieChart = () => {
         pieStartAngle: 0,
         enableInteractivity: false,
         pieSliceText: "value-and-label",
-        legend: { textStyle: { fontSize: 16 } },
+        legend: { 
+          position: "top",
+          alignment: "center",
+          textStyle: { fontSize: 16 },
+        },
       };
 
       const chart = new google.visualization.PieChart(
@@ -115,7 +116,16 @@ export const GooglePieChart = () => {
 
   return (
     <div>
-      <div id="3d-pie-chart" style={{ width: "700px", height: "500px" }}></div>
+      <div
+        id="3d-pie-chart"
+        style={{
+          width: "700px",
+          height: "500px",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      ></div>
     </div>
   );
 };
+
