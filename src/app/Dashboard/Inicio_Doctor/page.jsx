@@ -171,6 +171,7 @@ export default function HomeDoc() {
         {/* </div> */}
       </div>
       <div className="h-fit w-full  border border-[#DCDBDB] rounded-2xl ">
+
         <Citas />
       </div>
       <ProximasConsultas />
