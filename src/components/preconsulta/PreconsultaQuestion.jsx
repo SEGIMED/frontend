@@ -12,6 +12,11 @@ import { useState } from "react";
 import IconCircle from "../icons/IconCircle";
 
 const SimpleQuestionBox = ({ question, title, index, selectedOption, onQuestionChange }) => {
+  const [binaryButtonsActive, setBinaryButtonsActive] = useState({
+    si: false,
+    no: false,
+  });
+
   return (
     <div className="flex md:flex-row px-4 md:pl-20 py-4 flex-col">
       <div className="self-start flex md:flex-row w-full md:w-[40%] gap-2 items-center">
@@ -69,7 +74,7 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
           <BotonPreconsulta
             label="No"
             onClick={() => onQuestionActive(question, false)}
-            active={!section.active}
+            active={section.active}
           />
         </div>}
         {section.showRowOptions && (
