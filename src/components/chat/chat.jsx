@@ -119,7 +119,7 @@ export default function Chat({ chat }) {
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full md:w-1/2 py-4 md:py-8 px-4 md:border outline-none md:rounded md:mr-2"
+          className="w-full md:w-1/2 py-3 md:py-8 px-4 md:border outline-none md:rounded md:mr-2"
           placeholder="Escribe tu mensaje..."
         />
         <button
