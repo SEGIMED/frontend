@@ -14,10 +14,11 @@ export default function Elboton({
     <Button
       size={size}
       as={href && Link}
-      color="primary"
       href={href}
       onClick={onPress}
-      className={className}>
+      className={
+        "bg-[#487FFA] text-[#FFFFFF] font-Roboto rounded-lg" + " " + className
+      }>
       {icon} {nombre}
     </Button>
   );

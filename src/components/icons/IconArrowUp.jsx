@@ -6,8 +6,7 @@ const IconArrowUp = ({ className }) => {
       className={className}
       viewBox="0 0 50 50"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+      xmlns="http://www.w3.org/2000/svg">
       <desc>Created with Pixso.</desc>
       <defs>
         <clipPath id="clip795_729">
@@ -47,7 +46,7 @@ const IconArrowUp = ({ className }) => {
         <path
           id="path"
           d="M25 39.58L25 10.41"
-          stroke="#70C247"
+          stroke="white"
           strokeOpacity="1.000000"
           strokeWidth="5.000000"
           strokeLinejoin="round"
@@ -63,7 +62,7 @@ const IconArrowUp = ({ className }) => {
         <path
           id="path"
           d="M25 10.41L12.5 22.91"
-          stroke="#70C247"
+          stroke="white"
           strokeOpacity="1.000000"
           strokeWidth="5.000000"
           strokeLinejoin="round"
@@ -79,7 +78,7 @@ const IconArrowUp = ({ className }) => {
         <path
           id="path"
           d="M37.5 22.91L25 10.41"
-          stroke="#70C247"
+          stroke="white"
           strokeOpacity="1.000000"
           strokeWidth="5.000000"
           strokeLinejoin="round"

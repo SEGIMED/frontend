@@ -22,6 +22,7 @@ import { socket } from "@/utils/socketio";
 import { useAppDispatch } from "@/redux/hooks";
 import { resetApp } from "@/redux/rootReducer";
 import Elboton from "../Buttons/Elboton";
+import IconEducacion from "../icons/IconEducacion";
 
 export const NavDoctor = ({ toggleSidebar, isOpen }) => {
   const pathname = usePathname();
@@ -47,10 +48,11 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
 
   return (
     <div
-      className={`flex overflow-y-auto ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
-        } md:flex`}>
-      <div className="h-full rounded-b-xl w-[60%] px-4 md:w-72 md:px-6 md:border-r-2 md:border-[#cecece] py-4 bg-white  flex flex-col justify-between shadow-lg md:shadow-none">
-        <div className="flex flex-col justify-center gap-3 sm:gap-5 ">
+      className={`flex overflow-y-auto ${
+        isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
+      } md:flex`}>
+      <div className="h-full rounded-b-xl w-[60%] px-4 md:w-72 md:px-6 md:border-r-2 md:border-[#cecece] py-8 bg-white  flex flex-col justify-between shadow-lg md:shadow-none">
+        <div className="flex flex-col justify-center gap-3 sm:gap-10 ">
           <Link href={`${rutas.Doctor}`} className="block">
             <LogoSegimed className="w-40 md:w-full" />
           </Link>
@@ -58,108 +60,122 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
             <Link
               onClick={toggleSidebar}
               href={rutas.Doctor}
-              className={`flex items-center gap-4 ${pathname === rutas.Doctor ? "text-[#487FFA]" : ""
-                }`}>
+              className={`flex items-center gap-4 ${
+                pathname === rutas.Doctor ? "text-[#487FFA]" : ""
+              }`}>
               <IconCube
                 className="w-5"
-                iconColor={`${pathname === rutas.Doctor ? "#487FFA" : "#B2B2B2"
-                  }`}
+                iconColor={`${
+                  pathname === rutas.Doctor ? "#487FFA" : "#B2B2B2"
+                }`}
               />
               <li className="text-lg md:text-md">Tablero</li>
             </Link>
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Mi_Perfil}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Mi_Perfil}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Mi_Perfil}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <IconDoctorNav
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Mi_Perfil}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Mi_Perfil}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Mi perfil</li>
             </Link>
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Historial}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Historial}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Historial}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <IconRecordNav
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Historial}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Historial}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Consultas</li>
             </Link>
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Mensajes}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Mensajes}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Mensajes}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <IconMessageNav
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Mensajes}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Mensajes}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Chats</li>
             </Link>
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Citas}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Citas}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Citas}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <IconCalendarNav
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Citas}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Citas}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Mi Agenda</li>
             </Link>
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Estadisticas}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Estadisticas}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Estadisticas}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <Estadistica
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Estadisticas}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Estadisticas}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Estadísticas</li>
             </Link>
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Alarm}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Alarm}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Alarm}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <AlarmDash
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Alarm}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Alarm}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Alarmas</li>
             </Link>
@@ -184,16 +200,18 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
             <Link
               onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Pacientes}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Pacientes}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Pacientes}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <IconPatientNav
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Pacientes}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Pacientes}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Pacientes</li>
             </Link>
@@ -217,27 +235,44 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
                 </Link> */}
             <Link
               onClick={toggleSidebar}
+              href={`https://circulacionpulmonar.com/`}
+              target="_blank"
+              className={`flex items-center gap-4`}>
+              <IconEducacion className="w-6" />
+              <li className="text-lg md:text-md">Educación</li>
+            </Link>
+            <Link
+              onClick={toggleSidebar}
               href={`${rutas.Doctor}${rutas.Sugerencias}`}
-              className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Sugerencias}`
+              className={`flex items-center gap-4 ${
+                pathname === `${rutas.Doctor}${rutas.Sugerencias}`
                   ? "text-[#487FFA]"
                   : ""
-                }`}>
+              }`}>
               <Sugerencias
                 className="w-6"
-                color={`${pathname === `${rutas.Doctor}${rutas.Sugerencias}`
+                color={`${
+                  pathname === `${rutas.Doctor}${rutas.Sugerencias}`
                     ? "#487FFA"
                     : "#B2B2B2"
-                  }`}
+                }`}
               />
               <li className="text-lg md:text-md">Sugerencias</li>
             </Link>
+            <Elboton
+              icon={<IconOut />}
+              className={"font-bold h-[52px] flex sm:hidden text-[15px]"}
+              nombre={"Cerrar sesión"}
+              onPress={handleLogout}
+            />
           </ul>
-          <Elboton
-            icon={<IconOut />}
-            nombre={"Cerrar sesión"}
-            onPress={handleLogout}
-          />
         </div>
+        <Elboton
+          icon={<IconOut />}
+          className={"font-bold h-[52px] hidden sm:flex text-[15px]"}
+          nombre={"Cerrar sesión"}
+          onPress={handleLogout}
+        />
       </div>
       <div className="flex-1" onClick={toggleSidebar}></div>
     </div>
