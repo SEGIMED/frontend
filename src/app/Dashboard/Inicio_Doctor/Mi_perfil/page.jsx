@@ -25,6 +25,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
+import IconUpload from "@/components/icons/IconUpload";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -171,7 +172,7 @@ export default function HomeDoc() {
                 size={buttonSize}
                 onPress={handleSubmit(onSubmit)}
                 nombre={"Guardar Cambios"}
-                icon={<IconKeep />}
+                icon={<IconUpload/>}
               />
               <Elboton
                 size={buttonSize}
