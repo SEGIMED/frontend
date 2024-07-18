@@ -17,7 +17,7 @@ import Alarm1 from "@/components/modal/alarm/alarm1";
 import Alarm2 from "@/components/modal/alarm/alarm2";
 import Alarm3 from "@/components/modal/alarm/alarm3";
 
-const Modals = [<Alarm1 />, <Alarm2 />, <Alarm3 />]
+const Modals = [<Alarm1 key={"alarma 1"} />, <Alarm2 key={"alarma 2"} />, <Alarm3 key={"alarma 3"} />]
 
 
 export default function AlarmPte() {
