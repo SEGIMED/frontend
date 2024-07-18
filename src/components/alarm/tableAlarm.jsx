@@ -10,6 +10,10 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import rutas from "@/utils/rutas";
 import { extractHourMinutes, extractMonthDay } from "@/utils/formatDate";
+import MenuDropDown from "../dropDown/MenuDropDown";
+import IconAccion from "../icons/IconAccion";
+import IconTablillaTilde from "../icons/iconTablillaTilde";
+import Swal from "sweetalert2";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority) {
@@ -39,6 +43,13 @@ export default function TableAlarm({ pacientes }) {
         body,
         headers
       );
+      if (response.data) {
+        Swal.fire({
+          title: "Alarma resuelta",
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
+      }
     } catch (error) {
       console.error("Error al intentar actualizar la alarma:", error);
     }
@@ -68,13 +79,28 @@ export default function TableAlarm({ pacientes }) {
               {extractMonthDay(paciente.fecha)}
             </div>
             {/* <div className="text-[#5F5F5F]"></div> */}
-            <div className="text-[#5F5F5F] hidden md:block">
+            <div className="text-[#5F5F5F] hidden md:block truncate">
               {paciente.alarmDescription}
             </div>
 
-            <AlarmButtonDoc
+            {/* <AlarmButtonDoc
               id={paciente.id}
               handleStatus={() => handleStatus({ id: paciente.id })}
+            /> */}
+            <MenuDropDown
+              items={[
+                {
+                  label: "Marcar resuelta",
+                  icon: <IconAccion />,
+                  onClick: () => handleStatus({ id: paciente.id }),
+                },
+                {
+                  label: "Ver Detalle",
+                  icon: <IconTablillaTilde />,
+                  href: `${rutas.Doctor}${rutas.Alarm}/${paciente.id}`,
+                },
+              ]}
+              label="Opciones"
             />
           </div>
         ))}

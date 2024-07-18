@@ -18,7 +18,6 @@ import {
   updateTratamiento,
   updateBodyPainLevel,
 } from "@/redux/slices/user/preconsultaFormSlice";
-import { Button } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
@@ -324,7 +323,7 @@ export default function PreconsultaPte({ params }) {
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto gap-5">
-        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] ">
+        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece]">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
               <Elboton

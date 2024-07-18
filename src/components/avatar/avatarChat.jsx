@@ -8,7 +8,7 @@ export default function Avatars({ avatar1 }) {
       <Avatar
         isBordered
         src={avatar1 === null || avatar1 === undefined ? avatar : avatar1}
-        className="md:w-10 md:h-10 w-8 h-8"
+        className="md:w-10 md:h-10 w-7 h-7"
       />
     </div>
   );

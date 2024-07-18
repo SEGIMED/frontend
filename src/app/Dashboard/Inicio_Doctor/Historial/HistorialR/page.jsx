@@ -14,12 +14,20 @@ import rutas from "@/utils/rutas";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import PatientCardConsulta from "@/components/card/PatientCardConsulta";
 import Cookies from "js-cookie";
+import MenuDropDown from "@/components/dropDown/MenuDropDown";
+import { title } from "process";
+import IconInfo from "@/components/icons/IconInfo";
+import IconCorazonMini from "@/components/icons/iconCorazon";
+import IconPersonalData from "@/components/icons/IconPersonalData";
+import ReviewModalApte from "@/components/modal/ReviewModalApte";
 
 export default function HomeDocAll() {
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
   const [isSorted, setIsSorted] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
   const myID = Number(Cookies.get("c"));
 
   // Obtener consultas del estado
@@ -74,6 +82,11 @@ export default function HomeDocAll() {
     }
     return <MensajeSkeleton />;
   }
+
+  const handleReviewClick = (patient) => {
+    setIsReviewModalOpen(true);
+    setSelectedPatient(patient);
+  };
   console.log(scheduledPatientIds);
 
   return (
@@ -101,7 +114,6 @@ export default function HomeDocAll() {
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}                
                 /> */}
-
       </div>
       <div className="flex flex-col items-start justify-center w-full md:overflow-y-auto">
         {scheduledConsultas?.map((paciente) => (
@@ -109,14 +121,36 @@ export default function HomeDocAll() {
             key={paciente.id}
             paciente={paciente}
             button={
-              <OptPteHistorial
-                id={paciente.patient}
-                ruta={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.patient}/${rutas.Consultas}`}
+              <MenuDropDown
+                label={"Mas"}
+                categories={[
+                  {
+                    title: "Opciones",
+                    items: [
+                      {
+                        label: "Dejar Review",
+                        icon: <IconCorazonMini />,
+                        onClick: () => handleReviewClick(paciente),
+                      },
+                      {
+                        label: "Ver consultas",
+                        icon: <IconPersonalData />,
+                        href: `${rutas.Doctor}${rutas.Alarm}/${paciente.id}`,
+                      },
+                    ],
+                  },
+                ]}
               />
             }
           />
         ))}
       </div>
+      {isReviewModalOpen && (
+        <ReviewModalApte
+          onClose={() => setIsReviewModalOpen(false)}
+          id={selectedPatient.id}
+        />
+      )}
     </div>
   );
 }

@@ -3,20 +3,20 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
-import { ApiSegimed } from "@/Api/ApiSegimed";
-
-import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
-import IconOrder from "@/components/icons/IconOrder";
-
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 
 import OptDocCardHistorial from "@/components/Buttons/optDocCardHistorial";
 import DoctorCardConsulta from "@/components/card/docCardConsulta";
 import Cookies from "js-cookie";
+import MenuDropDown from "@/components/dropDown/MenuDropDown";
+import IconCorazonMini from "@/components/icons/iconCorazon";
+import ReviewModal from "@/components/modal/ReviewModal";
 
 export default function HomeDocAll() {
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedDocId, setSelectedDocId] = useState(null);
   const consultas = useAppSelector((state) => state.schedules);
 
   const [isSorted, setIsSorted] = useState(false);
@@ -34,6 +34,12 @@ export default function HomeDocAll() {
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
+
+  const handleReviewModal = (id) => {
+    setSelectedDocId(id);
+    setIsReviewModalOpen(true);
+  };
+
   if (!consultas) {
     return <MensajeSkeleton />;
   }
@@ -65,10 +71,33 @@ export default function HomeDocAll() {
             key={doc.id}
             doctor={doc}
             consulta={doc.consulta}
-            button={<OptDocCardHistorial id={doc.id} />}
+            button={
+              // <OptDocCardHistorial id={doc.id} />
+              <MenuDropDown
+                label="Más"
+                categories={[
+                  {
+                    title: "Información",
+                    items: [
+                      {
+                        label: "Dejar Review",
+                        icon: <IconCorazonMini />,
+                        onClick: () => handleReviewModal(doc.id),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            }
           />
         ))}
       </div>
+      {isReviewModalOpen && (
+        <ReviewModal
+          onClose={() => setIsReviewModalOpen(false)}
+          idDoc={selectedDocId}
+        />
+      )}
     </div>
   );
 }

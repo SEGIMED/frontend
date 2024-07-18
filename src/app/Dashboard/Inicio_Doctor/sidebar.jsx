@@ -44,7 +44,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   const dispatch = useAppDispatch();
 
-
   const router = useRouter(); // Use the useRouter hook
 
   const getUser = async (headers) => {
@@ -110,39 +109,39 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     }
   };
 
-  
   const getActivesAlarms = async (headers) => {
-    
-      try {
-        
-        const response = await ApiSegimed.get("/alarms-by-patient", headers);
-        
-        const actives = response.data.filter(alarm => alarm.solved === false).length;
-        const inactives = response.data.filter(alarm => alarm.solved === true).length;
-        const data = { activeAlarms: Number(actives), inactiveAlarms: Number(inactives) }
-        // console.log(data)
-        dispatch( addAlarms (data)) ;
-       
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    try {
+      const response = await ApiSegimed.get("/alarms-by-patient", headers);
 
-    const getActivesPacientes = async (headers) => {
-      try {
-        
-        const response = await ApiSegimed.get("/statistics-patient-activity", headers);
-        
-        dispatch ( addActivePtes(response.data))
+      const actives = response.data.filter(
+        (alarm) => alarm.solved === false
+      ).length;
+      const inactives = response.data.filter(
+        (alarm) => alarm.solved === true
+      ).length;
+      const data = {
+        activeAlarms: Number(actives),
+        inactiveAlarms: Number(inactives),
+      };
+      // console.log(data)
+      dispatch(addAlarms(data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-  
+  const getActivesPacientes = async (headers) => {
+    try {
+      const response = await ApiSegimed.get(
+        "/statistics-patient-activity",
+        headers
+      );
 
-
+      dispatch(addActivePtes(response.data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     const token = Cookies.get("a");
@@ -169,14 +168,13 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getPatients({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
-      getActivesAlarms({ headers: { token: token } })
-      getActivesPacientes({ headers: { token: token } })
+      getActivesAlarms({ headers: { token: token } });
+      getActivesPacientes({ headers: { token: token } });
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
-
   }, []);
 
   return (
@@ -202,19 +200,19 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       <div className="flex justify-center items-center gap-4 text-lg font-semibold">
         <IconCurrentRouteNav className="w-4 hidden md:block" />
         {lastSegment === "Inicio_Doctor" ? (
-          <p>Inicio | Segimed</p>
+          <p>Inicio</p>
         ) : lastSegment === "Mi_perfil" ? (
-          <p>Mi Perfil | Segimed</p>
+          <p>Mi Perfil</p>
         ) : lastSegment === "Citas" ? (
-          <p>Mi Agenda | Segimed</p>
+          <p>Mi Agenda</p>
         ) : lastSegment === "Soporte_tecnico" ? (
-          <p>Soporte Técnico | Segimed</p>
+          <p>Soporte Técnico</p>
         ) : IsEvent ? (
-          <p>Evento | Segimed</p>
+          <p>Evento</p>
         ) : IsMessage ? (
-          <p>Mensaje | Segimed</p>
+          <p>Mensaje</p>
         ) : (
-          <p>{lastSegmentText}  | Segimed</p>
+          <p>{lastSegmentText}</p>
         )}
       </div>
       {showSearch && (

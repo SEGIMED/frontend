@@ -1,17 +1,23 @@
 "use client";
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 
 export default function Elboton({
   icon,
   nombre,
   onPress,
-  color,
   size,
+  href,
   className,
 }) {
   return (
-    <Button size={size} color="primary" onClick={onPress} className={className}>
+    <Button
+      size={size}
+      as={href && Link}
+      color="primary"
+      href={href}
+      onClick={onPress}
+      className={className}>
       {icon} {nombre}
     </Button>
   );

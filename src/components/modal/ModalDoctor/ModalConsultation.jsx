@@ -45,13 +45,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   };
   useEffect(() => {
     function onClose2(event) {
-
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     }
 
-    if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+    if (typeof window !== "undefined")
+      window.addEventListener("keydown", onClose2);
 
     // Cleanup function to remove the event listener when the component unmounts
     return () => {
@@ -72,7 +72,6 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
         scheduledStartTimestamp: "",
         scheduledEndTimestamp: "",
       });
-
     }
   }, [isOpen, reset]);
 
@@ -126,7 +125,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-      <div onClick={handleClickOutside}
+      <div
+        onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
         <form
@@ -213,8 +213,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                errors.healthCenter ? "border-red-500" : ""
+              }`}
               {...register("healthCenter", {
                 required: {
                   value: true,
