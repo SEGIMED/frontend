@@ -13,8 +13,6 @@ import ReviewModal from "../modal/ReviewModal";
 import IconOptions from "../icons/IconOptions";
 
 export default function OptDocCardHistorial({ id }) {
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-
   return (
     <div className="relative">
       <details className="relative">
