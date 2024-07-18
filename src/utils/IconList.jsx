@@ -6,7 +6,7 @@ import IconAlarm from "@/components/icons/IconAlarm";
 import IconAlarmBlue from "@/components/icons/iconAlarmBlue";
 import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
 import IconAlarmNotSelected from "@/components/icons/iconAlarmaNotSelected";
-import IconAlarmDash from "@/components/icons/iconAlarmDash";
+import IconAlarmDash from "@/components/icons/IconAlarmDash";
 import IconAlarmRed from "@/components/icons/iconAlarmRed";
 import IconAlarmSelected from "@/components/icons/iconAlarmSelected";
 import IconAlarmUsers from "@/components/icons/IconAlarmUsers";
@@ -110,7 +110,7 @@ import IconReasonQuerie from "@/components/icons/IconReasonQuerie";
 import IconRegister from "@/components/icons/IconRegister";
 import IconRegresar from "@/components/icons/iconRegresar";
 import IconRobotRegister from "@/components/icons/IconRobotRegister";
-import IconSend from "@/components/icons/iconSend";
+import IconSend from "@/components/icons/IconSend";
 import IconSendArrow from "@/components/icons/IconSendArrow";
 import IconSendMensaje from "@/components/icons/iconSendMensaje";
 import SoporteTecnico from "@/components/icons/IconSoporte";
@@ -520,18 +520,10 @@ export default function IconList() {
   ];
 
   return (
-    <div className="">
+    <div className="grid grid-cols-4 gap-4 p-4">
       {icons.map((icon, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "8px",
-          }}>
-          <div style={{ marginRight: "8px", fontSize: "24px" }}>
-            {icon.component}
-          </div>
+        <div key={index} className="flex flex-col items-center">
+          <div className="text-2xl mb-2">{icon.component}</div>
           <div>{icon.name}</div>
         </div>
       ))}

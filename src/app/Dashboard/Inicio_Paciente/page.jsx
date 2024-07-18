@@ -14,7 +14,7 @@ import LastLogin from "@/utils/lastLogin";
 
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
- 
+
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
@@ -23,7 +23,7 @@ export default function HomePte() {
       <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
         <div className="flex justify-center items-center ml-5">
           <div>
-            <AvatarDashPte avatar1={user?.avatar} />
+            <AvatarDashPte avatar={user?.avatar} />
           </div>
           <div className="flex flex-col ml-4 ">
             <span className="font-bold text-xl">
