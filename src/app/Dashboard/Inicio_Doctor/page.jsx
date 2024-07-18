@@ -27,6 +27,7 @@ export default function HomeDoc() {
   const [currentChart, setCurrentChart] = useState(0);
   const [currentTitle,setCurrentTitle] = useState(0);
   const dataAlarms = useAppSelector((state) => state.alarms);
+<<<<<<< HEAD
   const dataPtesGrafic= useAppSelector(state => state.activePtes)
   
   
@@ -48,6 +49,20 @@ export default function HomeDoc() {
     <p>Actividad</p>,
     <p>Alarmas</p>
   ]
+=======
+  const dataPtesGrafic = useAppSelector((state) => state.activePtes);
+
+  console.log(dataPtesGrafic);
+
+  const handlePreviousChart = () => {
+    setCurrentChart((prev) => (prev === 0 ? charts.length - 1 : prev - 1));
+  };
+
+  const handleNextChart = () => {
+    setCurrentChart((prev) => (prev === charts.length - 1 ? 0 : prev + 1));
+  };
+
+>>>>>>> origin/develop
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart />
@@ -62,7 +77,7 @@ export default function HomeDoc() {
 
  
   return (
-    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] overflow-y-hidden md:overflow-y-scroll">
+    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] md:overflow-y-scroll">
       <h2 className="text-2xl">
         ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>
@@ -183,7 +198,6 @@ export default function HomeDoc() {
         {/* </div> */}
       </div>
       <div className="h-fit w-full  border border-[#DCDBDB] rounded-2xl ">
-
         <Citas />
       </div>
       <ProximasConsultas />

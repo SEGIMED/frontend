@@ -58,8 +58,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const id = Cookies.get("c");

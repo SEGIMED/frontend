@@ -27,17 +27,17 @@ export default function MapModalPte({ onClose, patient }) {
       onClose();
     }
   }
-
+  console.log(geolocationNumbers);
   return (
     <div
-      className="fixed inset-0  flex items-center justify-center w-full h-full z-50  bg-black bg-opacity-50"
+      className="fixed inset-0  flex items-center justify-center w-full h-full z-50 bg-opacity-50"
       onClick={handleClickOutside}>
       {geolocationNumbers && geolocationNumbers.length > 0 ? (
-        <div className="h-[70%] w-[80%] md:w-[60%] md:h-[60%]">
+        <div className="h-[70%] w-[80%] md:w-[50%] md:h-[50%]">
           <MapPte positions={geolocationNumbers} />
         </div>
       ) : (
-        <div className="bg-white p-4 rounded shadow-md">
+        <div className="bg-white p-4 rounded shadow-md ">
           <p>Geolocalizacion no esta disponible.</p>
         </div>
       )}

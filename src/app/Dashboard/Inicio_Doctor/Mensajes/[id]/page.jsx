@@ -48,13 +48,12 @@ export default function Ver_MensajesDoc() {
           </p>
         </div>
         <div>
-          <Link href={`${rutas.Doctor}${rutas.Mensajes}`}>
-            <Elboton
-              size={buttonSize}
-              nombre={"Regresar"}
-              icon={<IconRegresar />}
-            />
-          </Link>
+          <Elboton
+            href={`${rutas.Doctor}${rutas.Mensajes}`}
+            size={buttonSize}
+            nombre={"Regresar"}
+            icon={<IconRegresar />}
+          />
         </div>
       </div>
       <Chat chat={chat} />
