@@ -229,7 +229,7 @@ export default function DoctoresPte() {
           isOpen={isModalOpen}
           onClose={closeModal}
           Modals={[
-            <DoctorAsociado
+            <DoctorAsociado key={"solicitar asociacion"}
               name={selectedDoctorName}
             />,
           ]}
