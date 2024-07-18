@@ -2,30 +2,8 @@ import React, { useState, useEffect } from "react";
 import circleData from "@/components/images/circleData.png";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
+import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
-const defaultAnthropometricDetails = [
-  { measureType: "Talla", measureUnit: "Cm", measure: "" },
-  { measureType: "Peso", measureUnit: "Kg", measure: "" },
-  { measureType: "Perímetro Abdominal", measureUnit: "Cm", measure: "" },
-  { measureType: "IMC", measureUnit: "Kg/m²", measure: "" },
-];
-
-const defaultVitalSigns = [
-  {
-    measureType: "Presión Arterial Diastólica",
-    measureUnit: "mmHg",
-    measure: "",
-  },
-  {
-    measureType: "Presión Arterial Sistólica",
-    measureUnit: "mmHg",
-    measure: "",
-  },
-  { measureType: "Saturación de Oxígeno", measureUnit: "%", measure: "" },
-  { measureType: "Temperatura", measureUnit: "°C", measure: "" },
-  { measureType: "Frecuencia Respiratoria", measureUnit: "rpm", measure: "" },
-  { measureType: "Frecuencia Cardiaca", measureUnit: "bpm", measure: "" },
-];
 
 export default function SignosVitalesInfo({
   paciente,
@@ -33,6 +11,46 @@ export default function SignosVitalesInfo({
   defaultOpen = false,
   preconsult,
 }) {
+  console.log(paciente);
+  const defaultAnthropometricDetails = [
+    { measureType: "Estatura", 
+      measureUnit: "Cm", 
+      measure: "" },
+    { measureType: "Peso", 
+      measureUnit: "Kg", 
+      measure: "" },
+    { measureType: "Índice de Masa Corporal", 
+      measureUnit: "Kg/m²", 
+      measure: "" },
+  ];
+  
+  const defaultVitalSigns = [
+    
+    { measureType: "Temperatura", 
+      measureUnit: "°C", 
+      measure: "" },
+    { measureType: "Frecuencia Cardiaca", 
+      measureUnit: "bpm", 
+      measure: "" },
+    {
+      measureType: "Presión Arterial Sistólica",
+      measureUnit: "mmHg",
+      measure: "",
+    },
+    {
+      measureType: "Presión Arterial Diastólica",
+      measureUnit: "mmHg",
+      measure: "",
+    },
+    { measureType: "Frecuencia Respiratoria", 
+      measureUnit: "rpm", 
+      measure: "" },
+    
+    { measureType: "Saturación de Oxígeno", 
+      measureUnit: "%", 
+      measure: "" },
+  ];
+  
   const [anthropometricDetails, setAnthropometricDetails] = useState([]);
   const [vitalSigns, setVitalSigns] = useState([]);
   const [glucemiaElevada, setGlucemiaElevada] = useState(null);
@@ -51,14 +69,23 @@ export default function SignosVitalesInfo({
 
   useEffect(() => {
     setAnthropometricDetails(
-      paciente?.anthropometricDetails.length
-        ? paciente?.anthropometricDetails
+      paciente?.anthropometricDetails?.length > 0
+        ? paciente.anthropometricDetails
         : defaultAnthropometricDetails
     );
-    setVitalSigns(
-      paciente?.vitalSigns.length ? paciente?.vitalSigns : defaultVitalSigns
-    );
+
+    const combinedVitalSigns = combineVitalSigns(paciente?.vitalSigns ?? [], defaultVitalSigns);
+    setVitalSigns(combinedVitalSigns);
   }, [paciente]);
+
+  const combineVitalSigns = (patientVitalSigns, defaultVitalSigns) => {
+    return defaultVitalSigns.map(defaultVital => {
+      const patientVital = patientVitalSigns.find(
+        vital => vital.measureType === defaultVital.measureType
+      );
+      return patientVital ? patientVital : defaultVital;
+    });
+  };
 
   const handleDetailChange = (index, value) => {
     const updatedDetails = [...anthropometricDetails];
@@ -74,17 +101,16 @@ export default function SignosVitalesInfo({
 
   const handleGlucemiaSiClick = () => {
     setGlucemiaElevada(true);
-    //register("glucemiaElevada", true);
   };
 
   const handleGlucemiaNoClick = () => {
     setGlucemiaElevada(false);
-    //register("glucemiaElevada", false);
   };
+  
   useEffect(() => {
     setGlucemiaElevada(preconsult?.abnormalGlycemia);
-    //register("glucemiaElevada", glucemiaElevada);
   }, [preconsult]);
+
   const handleAnormalValueChange = (index, event) => {
     const updatedValues = [...ultimosValoresAnormales];
     updatedValues[index] = event.target.value;
@@ -93,12 +119,16 @@ export default function SignosVitalesInfo({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-center gap-1 px-6 py-2 border cursor-pointer">
+        <summary className="flex items-center justify-between gap-1 px-6 py-2 border cursor-pointer">
+          <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
             </p>
+          </div>
+          <div>
+            <IconArrowDetailDown/>
           </div>
         </summary>
 
@@ -190,7 +220,7 @@ export default function SignosVitalesInfo({
             />{" "}
             Escriba los últimos 4 valores más anormales que tuvo.
           </label>
-          <div className="md:flex grid grid-cols-2 justify-start w-1/2 md:gap-4 gap-1">
+          <div className="grid justify-start w-1/2 grid-cols-2 gap-1 md:flex md:gap-4">
             {ultimosValoresAnormales.map((value, index) => (
               <input
                 key={index}
@@ -198,7 +228,7 @@ export default function SignosVitalesInfo({
                 className="md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-[80%] md:w-[15%]"
                 defaultValue={value || preconsult?.lastAbnormalGlycemia[index]}
                 onChange={(event) => handleAnormalValueChange(index, event)}
-                //{...register("lastAbnormalGlycemia" )}
+                {...register("lastAbnormalGlycemia" )}
               />
             ))}
           </div>

@@ -16,17 +16,24 @@ import InputDiagnostico from "@/components/consulta/inputDiagnostico";
 import InputExam from "@/components/consulta/inputExam";
 import Component from "@/components/consulta/inputCuerpo";
 import { useForm, FormProvider } from "react-hook-form";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Elboton from "@/components/Buttons/Elboton";
 import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import IdDrug from "@/utils/IdDrug";
+import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
+import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
+import InputFilePreconsultation from "@/components/preconsulta/estudios";
 
 const DetallePaciente = (id) => {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const userId = id.params.id;
+  const scheduleId = 1; // revisar por que cambiar por params
+
+  const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
   const [physicalExamination, setPhysicalExamination] = useState({
@@ -34,7 +41,6 @@ const DetallePaciente = (id) => {
     description: "",
     medicalEventId: null,
   });
-  const [vitalSigns, setVitalSigns] = useState();
   const [preconsultPhysical, setPreconsultPhysical] = useState();
   const [cardiovascularRisk, setCardiovascularRisk] = useState();
   const [surgicalRisk, setSurgicalRisk] = useState();
@@ -45,12 +51,61 @@ const DetallePaciente = (id) => {
   const [selectedRisk2, setSelectedRisk2] = useState();
   const [selectedGroup, setSelectedGroup] = useState();
   const [medicalEvent, setMedicalEvent] = useState();
+  const [tests, setTests] = useState({});
+
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
-  const router = useRouter();
-  console.log(preconsult);
+  const formData = useAppSelector((state) => state.preconsultaForm.formData);
+
+  console.log(formState);
+  console.log(formData);
+  
+  const bodyOBJFormat = {
+    painOwnerId: Number(userId),
+    schedulingId: Number(scheduleId),
+    medicalEventId: null,
+    isTherePain: formData.bodySection.selectedOptions.pain,
+    painDurationId: formData.bodySection.selectedOptions.painTime,
+    painScaleId: formData.bodySection.selectedOptions.painLevel,
+    painTypeId: formData.bodySection.selectedOptions.painType,
+    painAreas: formData.bodySection.selectedOptions.painAreas,
+    painFrequencyId: formData.bodySection.selectedOptions.frecuencia,
+    isTakingAnalgesic: formData.bodySection.selectedOptions.analgesicos,
+    doesAnalgesicWorks: formData.bodySection.selectedOptions.calmaAnalgesicos,
+    isWorstPainEver: formData.bodySection.selectedOptions.peorDolor,
+  };
+
+  const handleUploadTestFile = (test, file) => {
+    // almacenamos los archivos subidos, en un estado local ya que en Redux no son compatible
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], file: file } });
+  };
+
+  const handleTestDescription = (test, testDescription) => {
+    // almacenamos la descripción del estudio
+    const studies = tests;
+    setTests({
+      ...studies,
+      [test]: { ...studies[test], description: testDescription },
+    });
+  };
+  const handleTestActive = (test, active) => {
+    // para los campos binarios
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], active: active } });
+  };
+
+  const handleTestSelectedOption = (test, value) => {
+    const studies = tests;
+    setTests({
+      ...studies,
+      [test]: { ...studies[test], selectedOption: value },
+    });
+  };
+
   const onSubmit = (data) => {
     console.log(data);
+    //Antecedentes completo
     setCardiovascularRisk({
       patientId: Number(userId),
       riskId: selectedRisk,
@@ -102,31 +157,31 @@ const DetallePaciente = (id) => {
           ? patient?.backgrounds?.vaccinationBackground
           : data["Vacunas"],
     });
+    //preconsulta
     setPreconsultPhysical({
-      preconsultationId: preconsult?.id,
       patient: Number(userId),
-      appointmentSchedule: 4,
-      bodyPain: false,
-      abnormalGlycemia:
-        data["glucemiaElevada"] === ""
-          ? preconsult?.abnormalGlycemia
-          : data["glucemiaElevada"],
-      lastAbnormalGlycemia: [526, 589, 600],
-      physicalExamination: 1,
-      laboratoryResults: ["https:cloudinary1", "https:cloudinary2"],
-      laboratoryResultsDescription: ["description1", "description2"],
-      electrocardiogram: "https:cloudinary",
-      electrocardiogramDescription: "decription electrocardiogram",
-      rxThorax: "https:cloudinary",
-      echocardiogram: "https:cloudinary",
-      walkTest: "https:cloudinary",
-      respiratoryFunctional: "https:cloudinary",
-      tomographies: "https:cloudinary",
-      rightHeartCatheterization: "https:cloudinary",
-      ccg: "https:cloudinary",
-      resonance: "https:cloudinary",
-      leftHeartCatheterization: "https:cloudinary",
-      otherStudies: ["other study 1", "other study 2"],
+      appointmentSchedule: Number(scheduleId),
+      //exploracion fisica
+      painRecordsToCreate: [
+        bodyOBJFormat,
+      ],
+      //estudios
+      laboratoryResults: tests.laboratoryResults.file,
+      laboratoryResultsDescription: tests.laboratoryResults.description,
+      electrocardiogram: tests.electrocardiogram.file,
+      electrocardiogramDescription: tests.electrocardiogram.description,
+      rxThorax: tests.rxThorax.file,
+      echocardiogram: tests.echocardiogram.file,
+      walkTest: tests.walkTest.file,
+      respiratoryFunctional: tests.respiratoryFunctional.file,
+      tomographies: tests.tomographies.file,
+      rightHeartCatheterization: tests.rightHeartCatheterization.file,
+      ccg: tests.ccg.file,
+      resonance: tests.resonance.file,
+      leftHeartCatheterization: tests.leftHeartCatheterization.file,
+      otherStudies: tests.otherStudies.file,
+      pendingStudies: tests.pendingStudies.description, 
+      //anamnesis sin evolucion de la enfermedad
       consultationReason:
         data["Motivo de consulta"] === ""
           ? preconsult?.consultationReason
@@ -135,54 +190,92 @@ const DetallePaciente = (id) => {
         data["Sintomas importantes"] === ""
           ? preconsult?.importantSymptoms
           : data["Sintomas importantes"],
-      currentMedications: ["medicamento1", "medicamento2", "medicamento3"],
+      //vital signs
+      abnormalGlycemia:
+        data["glucemiaElevada"] === ""
+          ? preconsult?.abnormalGlycemia
+          : data["glucemiaElevada"],
+      lastAbnormalGlycemia: [526, 589, 600],
+
+      // se tiene que aplicar una logica que cambia segun el patch o el post
+      vitalSignsToCreate:[
+        {
+          patientId: userId,
+          measureType: 1,
+          measure: data["Temperatura"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        {
+          patientId: userId,
+          measureType: 2,
+          measure: data["Presión Arterial Sistólica"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        {
+          patientId: Number(userId), // id del paciente
+          measureType: 3, // id del parametro "frecuencia cardiaca" en el catalogo vital signs
+          measure: data["Presión Arterial Diastólica"], // medida introducida por el médico o paciente,
+          schedulingId: null, /// id del scheduling si se crea en preconsulta
+          medicalEventId: 4, /// id del medical event si se crea durante medical event
+        },
+      
+        {
+          patientId: userId,
+          measureType: 5,
+          measure: data["Frecuencia Respiratoria"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        
+        {
+          patientId: userId,
+          measureType: 6,
+          measure: data["Saturación de Oxígeno"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        {
+          patientId: userId,
+          measureType: 7,
+          measure: data["Frecuencia Cardiaca"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        {
+          patientId: userId,
+          measureType: 8,
+          measure: data["Talla"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        {
+          patientId: userId,
+          measureType: 7,
+          measure: data["Temperatura"],
+          schedulingId: null,
+          medicalEventId: 4,
+        }
+        ,
+        {
+          patientId: userId,
+          measureType: 7,
+          measure: data["Perímetro Abdominal"],
+          schedulingId: null,
+          medicalEventId: 4,
+        },
+        {
+          patientId: userId,
+          measureType: 10,
+          measure: data["IMC"],
+          schedulingId: null,
+          medicalEventId: 4,
+        }
+      ]
     });
-    setVitalSigns([
-      {
-        patientId: Number(userId), // id del paciente
-        measureType: 7, // id del parametro "frecuencia cardiaca" en el catalogo vital signs
-        measure: data["Presión Arterial Diastólica"], // medida introducida por el médico o paciente,
-        schedulingId: null, /// id del scheduling si se crea en preconsulta
-        medicalEventId: 4, /// id del medical event si se crea durante medical event
-      },
-      {
-        patientId: userId,
-        measureType: 7,
-        measure: data["Presión Arterial Sistólica"],
-        schedulingId: null,
-        medicalEventId: 4,
-      },
-      {
-        patientId: userId,
-        measureType: 7,
-        measure: data["Saturación de Oxígeno"],
-        schedulingId: null,
-        medicalEventId: 4,
-      },
-      {
-        patientId: userId,
-        measureType: 7,
-        measure: data["Temperatura"],
-        schedulingId: null,
-        medicalEventId: 4,
-      },
-      {
-        patientId: userId,
-        measureType: 7,
-        measure: data["Frecuencia Respiratoria"],
-        schedulingId: null,
-        medicalEventId: 4,
-      },
-      {
-        patientId: userId,
-        measureType: 7,
-        measure: data["Frecuencia Cardiaca"],
-        schedulingId: null,
-        medicalEventId: 4,
-      },
-    ]);
     setPhysicalExamination({
-      physicalSubsystemId: 2,
+      physicalSubsystemId: formState.selectSubsistema,
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
       medicalEventId: 5,
     });
@@ -201,14 +294,15 @@ const DetallePaciente = (id) => {
       quantityTherapy: 10,
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
+    // en revision por el backend
     setMedicalEvent({        
-      physicianComments: data["Evolucion de la enfermedad"], ///evolucion
-      schedulingId: 54, /// el id del agendamiento
-      chiefComplaint: "Remitido por Medicina Interna por hipertension Pulmonar",// motivo de consulta
-      historyOfPresentIllness: "Paciente con Diagnóstico de HAP idiopática, con variables de alto riesgo.FRCV: flutter auricular, Insuficiencia cardiaca Fevi 76%. Múltiples internaciones por insuficiencia Cardiaca Derecha. Internación reciente por infusión súbita por treprostinil con efectos adversos asociados. Internacion 06/02/24 - 13/02/24 por hiponatremia severa sintomatica Na 106, hipocalcemia, infeccion de piel y partes blandas MSI. Acude el día de hoy a control.", /// enfermedad actual
-      reviewOfSystems: "Disnea a 500mts", /// revision por sistemas o sintomas
-      treatmentPlan: "Paciente con diagnostico de hipertensión arterial pulmonar idiopática, con variables de alto riesgo. Dilatación severa de cavidades derechas, remodelado negativo de las mismas. Continua con signos de insuficiencia cardíaca actuales y hemodinamia de alto riesgo (PAD 19 mm HG, IC 1,57 l/min/mt, IVS 23, Sat AP 54%).Continua con diuretico, actualmente con triple esquema de tratamiento especifico, se aumentara dosis de acuerdo a tolerancia.", /// plan de tratamiento
-      pendingDiagnosticTest : "test caminata 6 minutos y  ", // test pendientes
+      physicianComments: data["Anotaciones de la consulta"], ///evolucion
+      schedulingId: Number(scheduleId), /// el id del agendamiento
+      chiefComplaint: null,// motivo de consulta
+      historyOfPresentIllness: data["Evolucion de la enfermedad"], /// enfermedad actual
+      reviewOfSystems: null, /// revision por sistemas o sintomas
+      treatmentPlan: null, /// plan de tratamiento
+      pendingDiagnosticTest : null, // test pendientes
       alarmPattern: data["Pauta de alarma"], // patron de alarma
      
     })
@@ -228,8 +322,86 @@ const DetallePaciente = (id) => {
           ),
         ]);
 
+        console.log(response2.data);
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
+        setTests({
+        laboratoryResults: {
+          title: "Resultados de laboratorio",
+          file: response2.data[0].laboratoryResults || null,
+          description: "",
+          active: false,
+        },
+        electrocardiogram: {
+          title: "Electrocardiograma",
+          file:  response2.data[0].electrocardiogram || null,
+          description: "",
+          active: false,
+        },
+        rxThorax: {
+          title: "RX de Torax",
+          file: response2.data[0].rxThorax || null,
+          description: "",
+          active: false,
+        },
+        echocardiogram: {
+          title: "Ecocardiograma",
+          file: response2.data[0].echocardiogram || null,
+          description: "",
+          active: false,
+        },
+        walkTest: {
+          title: "Test de caminata",
+          file: response2.data[0].walkTest || null,
+          description: "",
+          active: false,
+        },
+        respiratoryFunctional: {
+          title: "Funcional respiratorio",
+          file: response2.data[0].respiratoryFunctional || null,
+          description: "",
+          active: false,
+        },
+        tomographies: {
+          title: "Tomografías",
+          file: response2.data[0].tomographies || null,
+          description: "",
+          active: false,
+        },
+        rightHeartCatheterization: {
+          title: "Cateterismo cardiaco derecho",
+          file: response2.data[0].rightHeartCatheterization || null,
+          description: "",
+          active: false,
+        },
+        ccg: {
+          title: "CCG (Coronariografia)",
+          file: response2.data[0].ccg || null,
+          description: "",
+          active: false,
+        },
+        resonance: {
+          title: "Resonancia",
+          file: response2.data[0].resonance || null,
+          description: "",
+          active: false,
+        },
+        leftHeartCatheterization: {
+          title: "Cateterismo cardiaco izquierdo",
+          file: response2.data[0].leftHeartCatheterization || null,
+          description: "",
+          active: false,
+        },
+        otherStudies: {
+          title: "Otros estudios",
+          file: response2.data[0].otherStudies || null,
+          description: "",
+        },
+        pendingStudies: {
+          title: "Estudios pendientes",
+          description: response2.data[0].pendingStudies || "",
+        },
+      });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -237,10 +409,14 @@ const DetallePaciente = (id) => {
 
     fetchData();
   }, []);
+  const handleBodyChange = (name, value) => {
+    dispatch(updateBodyPainLevel({ name, option: value }));
+  };
+
   const handleSave = async () => {
     const token = Cookies.get("a");
     setLoading(true);
-    if (patient?.backgrounds?.length === 0) {
+    if (patient?.backgrounds?.length === 0 || patient?.backgrounds === null) {
       const data = await ApiSegimed.post(
         `/backgrounds/update-backgrounds`,
         background,
@@ -300,14 +476,7 @@ const DetallePaciente = (id) => {
       console.log(data.data);
     }
 
-    /*if(patient.vitalSigns.length === 0){
-      const data = await ApiSegimed.post(`/vital-signs/create-vital-sign`,vitalSigns, {headers: { token: token },})
-      console.log(data);
-    }
-    else{
-      const data = await ApiSegimed.patch(`/vital-signs/update-vital-sign`,vitalSigns, {headers: { token: token },})
-      console.log(data);
-    } // funciona mal hasta en el postman
+    
 
     let response1;
     if(physicalExamination?.description === ""){
@@ -315,8 +484,8 @@ const DetallePaciente = (id) => {
     }else {
     response1 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`,physicalExamination, {headers: { token: token },})
     }
-    console.log(response1); // funciona mal en el formulario
-
+    console.log(response1);
+/*
     if(preconsult?.length === 0){
       const data = await ApiSegimed.post(`/pre-consultation`,preconsultPhysical, {headers: { token: token },})
       console.log(data);
@@ -340,7 +509,7 @@ const DetallePaciente = (id) => {
     */ // hay q esperar que la preconsulta traiga el id
 
 
-    if (/*response1.status === 200 && */ response2.status === 200) {
+    if (response1.status === 200 &&  response2.status === 200) {
       /*const data = await ApiSegimed.patch(
         `/patient-diagnostic/${idSchedule}`,{schedulingStatus:2},{
           headers: { token: token },
@@ -368,7 +537,7 @@ const DetallePaciente = (id) => {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-full overflow-y-auto">
+      <div className="flex flex-col h-full overflow-y-auto ">
         <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
           <div className="flex items-center ">
             <Image src={ruteActual} alt="ruta actual" />
@@ -425,10 +594,23 @@ const DetallePaciente = (id) => {
               paciente={patient}
               preconsult={preconsult}
             />
-            <Component title={"Exploracion fisica"} />
+            <InputCuerpoPre
+            title={"Exploracion fisica"}
+            onBodyChange={handleBodyChange}
+            defaultOpen
+            />
             <InputExam title={"Examen fisico"} />
             {/*<InputConsulta title={"Comentarios"} subtitle={["Anotaciones"]} />*/}
-            <InputFile title={"Estudios"} Links={preconsult} />
+            {/*<InputFile title={"Estudios"} Links={preconsult} />*/}
+            <InputFilePreconsultation
+              title={"Estudios"}
+              onUploadFile={handleUploadTestFile}
+              onDescriptionChange={handleTestDescription}
+              onTestActive={handleTestActive}
+              onTestSelectedOption={handleTestSelectedOption}
+              tests={tests}
+              defaultOpen
+            />
             <InputConsulta
               title={"Evolucion"}
               subtitle={["Anotaciones de la consulta"]}

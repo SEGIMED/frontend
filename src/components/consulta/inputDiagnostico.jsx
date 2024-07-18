@@ -11,6 +11,7 @@ import DropNext from "./dropdown";
 import AutocompleteDiagnostico from "./AutocompleteDiagnostico";
 import DrugModal from "../modal/ModalDoctor/DrugModal";
 import { useState } from "react";
+import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 
 export default function InputDiagnostico({
@@ -31,12 +32,16 @@ export default function InputDiagnostico({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-center gap-2 px-6 py-2 border cursor-pointer md:gap-1">
+        <summary className="flex items-center justify-between gap-2 px-6 py-2 border cursor-pointer md:gap-1">
+          <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
             </p>
+          </div>
+          <div>
+            <IconArrowDetailDown/>
           </div>
         </summary>
         {subtitle2?.map((sub, index) => (

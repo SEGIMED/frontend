@@ -7,6 +7,7 @@ import DropNext from "./dropdown";
 import { useState } from "react";
 
 import { useFormContext } from "react-hook-form";
+import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 export default function InputExam({ title, subtitle }) {
 
@@ -23,13 +24,17 @@ export default function InputExam({ title, subtitle }) {
     return (
         <div className="flex flex-col">
             <details>
-                <summary className="flex px-6 py-2 border gap-1 items-center cursor-pointer justify-center">
+                <summary className="flex items-center justify-between gap-1 px-6 py-2 border cursor-pointer">
+                    <div/>
                     <div className="flex items-center">
                         <Image src={circleData} alt="" />
                         <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">{title}</p>
                     </div>
+                    <div>
+                        <IconArrowDetailDown/>
+                    </div>
                 </summary>
-                <div className="flex justify-center items-center flex-col w-full px-4 py-4">
+                <div className="flex flex-col items-center justify-center w-full px-4 py-4">
                     <div>
                         <ButtonNext text={"¿Usar subsistemas?"} options={["Si", "No"]} name={"subsitemas"} handleSelection={handleSubsistemas} />
                     </div>
