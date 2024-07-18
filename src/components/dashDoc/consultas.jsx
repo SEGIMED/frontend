@@ -12,10 +12,10 @@ import rutas from "@/utils/rutas";
 export default function ProximasConsultasInfo({ info }) {
   return (
     <div className="flex items-center px-2 xs:px-4 md:px-6 md:py-4 py-2 justify-between border-b border-[#DCDBDB]">
-      <div className="flex items-center w-2/3 md:w-[35%] ">
-        <div className="w-full md:w-1/2 flex">
+      <div className="flex items-center w-2/3 md:w-[55%] ">
+        <div className="w-full md:w-1/2 flex items-center">
           <Avatars avatar1={info?.patientUser?.avatar} />
-          <p className="h-10 flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
+          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
             {info.patientUser.name} {info.patientUser.lastname}
           </p>
         </div>

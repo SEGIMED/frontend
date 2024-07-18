@@ -3,7 +3,7 @@ import IconNotFound from "../icons/ImageNotFound";
 
 
 
-export default function NotFound({ text }) {
+export default function NotFound({ text, sizeText }) {
     return (
         <div className="flex flex-col h-[90%]   items-center justify-center space-x-0">
 
@@ -11,7 +11,7 @@ export default function NotFound({ text }) {
 
                 <IconNotFound />
 
-                <p className='text-bluePrimary  leading-10 text-2xl md:text-4xl  font-normal  justify-center flex text-center  '>{text}</p>
+                <p className={` ${sizeText} text-bluePrimary   leading-10 text-2xl md:text-4xl  font-normal  justify-center flex text-center  `}>{text}</p>
 
             </div>
         </div>

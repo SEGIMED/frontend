@@ -97,13 +97,13 @@ const PhotoModal = ({ isOpen, onClose }) => {
       onClick={handleClose}>
       <div className="fixed inset-0 bg-black opacity-50"></div>
       <div
-        className="relative z-50 bg-white rounded w-[90%] md:w-[30%] h-fit md:h-[53%] flex flex-col items-center gap-5"
+        className="relative z-50 bg-white rounded w-[90%] md:w-[30%]  h-fit flex flex-col items-center gap-5"
         onClick={stopPropagation}>
-        <div className="h-full w-full flex flex-col">
+        <div className="h-fit w-full flex flex-col">
           <div className="md:h-16 text-2xl md:text-base flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
             <IconCurrentRouteNav className="w-4" /> Editar foto de perfil
           </div>
-          <div className="w-full h-full flex flex-col items-center gap-8 md:justify-between p-5">
+          <div className="w-full h-fit flex flex-col items-center gap-8 md:justify-between p-5">
             <div className="flex justify-center items-center">
               <div className="w-64 h-64 md:w-48 md:h-48  flex justify-center items-center">
                 <img

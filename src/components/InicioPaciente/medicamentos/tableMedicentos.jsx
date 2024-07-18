@@ -6,7 +6,7 @@ import IconMedicamento from "@/components/icons/IconMedicamento";
 
 export default function MedicamentosTable({ medicamento }) {
     return (
-        <div className="h-full text-[#686868] w-[100%]">
+        <div className="h-fit text-[#686868] w-[100%]">
             <div className="flex border-b border-b-[#cecece]  border-t border-t-[#cecece] px-2">
                 <div className="w-[5%] bg-white  items-center justify-center hidden md:flex">         <IconMedicamento /></div>
                 <div className="grid md:grid-cols-6 grid-cols-3 items-center  md:pr-6 py-2 md:px-2 bg-white w-[100%]  md:w-[70%] min-h-14 text-center  font-medium md:font-semibold text-sm md:text-base leading-6 text-bluePrimary md:text-start">
@@ -37,14 +37,14 @@ export default function MedicamentosTable({ medicamento }) {
                     </div>
                 </div>
             </div>
-            <div className=" flex-col md:flex-row md:flex w-[100%] px-10 py-5 gap-5 space-y-4 bg-[#fafafc]">
-                <TextoMedicament className={"md:hidden block"} size={"12"} description={medicamento.doctor} label={"Médico:"} />
-                <TextoMedicament className={"md:hidden block"} size={"12"} description={medicamento.startDate} label={"Fecha de Inicio:"} />
-                <TextoMedicament className={"md:hidden block"} size={"12"} description={medicamento.modifiedBy} label={"Modificado por poraciones:"} />
-                <TextoMedicament description={medicamento.instructions} size={"24"} label={"Indicaciones:"} />
-                <TextoMedicament description={medicamento.observations} size={"24"} label={"Observaciones:"} />
+            <div className=" flex-col md:flex-row md:flex w-[100%] px-10 py-5 gap-5 space-y-4 md:space-y-0 bg-[#fafafc]">
+                <TextoMedicament className={"md:hidden block"} size={"min-h-12"} description={medicamento.doctor} label={"Médico:"} />
+                <TextoMedicament className={"md:hidden block"} size={"min-h-12"} description={medicamento.startDate} label={"Fecha de Inicio:"} />
+                <TextoMedicament className={"md:hidden block"} size={"min-h-12"} description={medicamento.modifiedBy} label={"Modificado por poraciones:"} />
+                <TextoMedicament description={medicamento.instructions} size={"min-h-24"} label={"Indicaciones:"} />
+                <TextoMedicament description={medicamento.observations} size={"min-h-24"} label={"Observaciones:"} />
             </div>
-            <div className="flex gap-5 md:hidden justify-center py-5">
+            <div className="flex gap-5 bg-[#fafafc] md:hidden justify-center py-5">
 
                 <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-[40%]">
                     <IconSolicitar />

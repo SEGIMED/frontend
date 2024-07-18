@@ -198,7 +198,7 @@ export default function DoctoresPte() {
           className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
-        <p className=" w-12">
+        <p className=" w-14">
           {pagination.currentPage} de {pagination.totalPages}
         </p>
         <button
@@ -237,7 +237,7 @@ export default function DoctoresPte() {
           button1={"hidden"}
           button2={"bg-greenPrimary block"}
           progessBar={"hidden"}
-          size={"h-[21rem] md:h-[21rem] md:w-[33rem]"}
+          size={"h-[21rem] md:h-[17rem] md:w-[35rem]"}
           buttonText={{ end: `Enviar solicitud` }}
         />
       )}
