@@ -25,18 +25,24 @@ export default function ProximasConsultasInfo({ info }) {
      
         <div className="w-full md:w-1/2 flex">
           <Avatars avatar1={info?.patientUser?.avatar} />
-          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
-            {info.patientUser.name} {info.patientUser.lastname}
-          </p>
-        </div>
-        <IconCurrentRouteNav className={"w-4 hidden md:block"} />
-        <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 ">
-          {Fecha(info?.scheduledStartTimestamp)} 
+          </div>   
           
+          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-2 py-1">
+            {info.patientUser.name} 
+            </p>
+          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6  ">
+           {info.patientUser.lastname}
+          </p>
+        <div>
+        <IconCurrentRouteNav className={"w-4 hidden md:block mr-10"}/></div>
+        <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 md:mr-10">
+          {Fecha(info?.scheduledStartTimestamp)}   
         </p>
+        
         <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 ">
           {Hora(info?.scheduledStartTimestamp)}
         </p>
+        
       </div>
       <div className="flex space-x-1 md:space-x-4  ">
         <Link href={`${rutas.Doctor}${rutas.Historial}/${info.patient}`}>

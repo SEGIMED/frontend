@@ -40,7 +40,7 @@ export default function ProximasConsultas() {
   return (
     <div className="h-full w-full bg-white rounded-2xl border pb-2 border-[#DCDBDB]  ">
       <div className="flex items-center justify-between px-4 py-2 border-b border-[#DCDBDB]">
-        <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center ">
+        <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center md:ml-4">
           <IconCurrentRouteNav className={"w-4"} />
           Próximas consultas
         </label>
