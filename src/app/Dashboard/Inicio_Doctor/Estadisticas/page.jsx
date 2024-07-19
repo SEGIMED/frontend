@@ -108,14 +108,14 @@ export default function Estadisticas() {
           </p>
           <div className="flex  items-center justify-center">
             <div className="md:w-full ">
-              {/* <IconTorta className="w-full"/> */}
-              {is3D ? <GooglePieChart /> : <GenreChart />}
+              <GooglePieChart/>
+              {/* {is3D ? <GooglePieChart /> : <GenreChart />} */}
               <div className="flex justify-center mt-4">
-                <Elboton
+                {/* <Elboton
                   onPress={toggleChartType}
                   size={"sm"}
                   nombre={is3D ? "Normal" : "3D"}
-                />
+                /> */}
               </div>
               {/* <button onClick={toggleChartType}>Mostrar {is3D ? 'Normal' : '3D'}</button> */}
             </div>
