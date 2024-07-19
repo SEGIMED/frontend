@@ -43,7 +43,7 @@ const determinePriority = (questionsPriority) => {
 
 export default function TableAlarm({ paciente }) {
   const handleStatus = (id) => {};
-  console.log(paciente)
+  
   return (
     <div className="flex flex-col">
       {paciente.map((alarm, index) => {
