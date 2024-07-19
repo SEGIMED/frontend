@@ -220,7 +220,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   }, [rol]);
 
   return (
-    <div className=" flex  items-center justify-between h-[12%]  border-b-2 border-b-[#cecece] p-4">
+    <div className=" flex  items-center justify-between h-[12%] bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="md:hidden p-4">
         <button
           className="text-[#487FFA] focus:outline-none"
