@@ -170,9 +170,8 @@ export default function HomeDoc() {
         {charts[currentChart]}
         {/* </div> */}
       </div>
-      <div className="h-fit w-full  border border-[#DCDBDB] rounded-2xl ">
-
-        <Citas />
+      <div className="h-fit w-full border border-[#DCDBDB] rounded-2xl px-5 py-2 bg-white">
+        <Citas title={"Mi agenda"} />
       </div>
       <ProximasConsultas />
     </div>
