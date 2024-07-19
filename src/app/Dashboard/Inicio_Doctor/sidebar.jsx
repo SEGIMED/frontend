@@ -93,35 +93,35 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
 
-  const getActives = async (headers) => {
-    try {
-      const response = await ApiSegimed.get("/alarms-by-patient", headers);
+  // const getActivesAlarm = async (headers) => {
+  //   try {
+  //     const response = await ApiSegimed.get("/alarms-by-patient", headers);
 
-      const actives = response.data.filter(
-        (alarm) => alarm.solved === false
-      ).length;
-      const inactives = response.data.filter(
-        (alarm) => alarm.solved === true
-      ).length;
-      const data = {
-        activeAlarms: Number(actives),
-        inactiveAlarms: Number(inactives),
-      };
+  //     const actives = response.data.filter(
+  //       (alarm) => alarm.solved === false
+  //     ).length;
+  //     const inactives = response.data.filter(
+  //       (alarm) => alarm.solved === true
+  //     ).length;
+  //     const data = {
+  //       activeAlarms: Number(actives),
+  //       inactiveAlarms: Number(inactives),
+  //     };
      
-      dispatch(addAlarms(data));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  //     dispatch(addAlarms(data));
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const getActivesAlarms = async (headers) => {
     try {
       const response = await ApiSegimed.get("/alarms-by-patient", headers);
 
-      const actives = response.data.filter(
+      const actives = response.data?.alarms?.filter(
         (alarm) => alarm.solved === false
       ).length;
-      const inactives = response.data.filter(
+      const inactives = response.data?.alarms?.filter(
         (alarm) => alarm.solved === true
       ).length;
       const data = {
