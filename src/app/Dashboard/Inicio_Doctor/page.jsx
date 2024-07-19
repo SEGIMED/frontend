@@ -42,12 +42,12 @@ export default function HomeDoc() {
     setCurrentTitle((prev) => (prev === titles.length - 1 ? 0 : prev + 1));
   };
   const titles= [
-    <div>
+    <div key={0}>
   <p className="hidden md:block">Pacientes nuevos en los últimos 7 días</p>
   <p className="block md:hidden">Ultimos 7 días</p>
   </div>,
-    <p>Actividad</p>,
-    <p>Alarmas</p>
+    <p key={1}>Actividad</p>,
+    <p key={2}>Alarmas</p>
   ]
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
