@@ -32,7 +32,7 @@ export default function HomeDoc() {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
      
       if (response.data) {
-        const activeAlarms = response.data.filter((alarma) => !alarma.solved);
+        const activeAlarms = response?.data?.alarms?.filter((alarma) => !alarma.solved);
 
         
         // const formattedAlarms = formatAlarms(activeAlarms);

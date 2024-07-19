@@ -21,7 +21,7 @@ export default function HomeDoc() {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const inactiveAlarms = response.data.filter(
+        const inactiveAlarms = response.data?.alarms?.filter(
           (alarma) => alarma.solved === true
         ).sort((a, b) => {
           const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };

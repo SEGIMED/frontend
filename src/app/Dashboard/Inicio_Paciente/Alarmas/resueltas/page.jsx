@@ -23,7 +23,7 @@ export default function AlarmPte() {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
 
-    setAlarms(response.data);
+    setAlarms(response.data.alarms);
   };
 
   const router = useRouter();

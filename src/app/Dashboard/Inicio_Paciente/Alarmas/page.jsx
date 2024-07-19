@@ -38,20 +38,20 @@ export default function AlarmPte() {
   const getMyAlarms = async () => {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
-    
-    setAlarms(response.data);
+    console.log(response.data)
+    setAlarms(response.data.alarms);
   };
 
   const router = useRouter();
   const myID = Cookies.get("c");
 
-  const UnsolvedAlarmas = alarms.filter((alarm) => alarm.patient === Number(myId) && alarm.solved === false);
-
+  
   useEffect(() => {
     getMyAlarms();
   }, []);
 
-
+  
+  const UnsolvedAlarmas = alarms?.filter((alarm) => alarm.patient === Number(myId) && alarm.solved === false);
 
   // const unsolvedAlarms = misAlarmas.filter((a, b) => {
   //   if (sortResolvedFirst) {
