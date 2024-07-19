@@ -36,7 +36,7 @@ const data = {
 
 export const BarChart = () => {
   return (
-    <div className="w-full h-full lg:w-[800px]  p-5 flex items-center justify-center">
+    <div className="w-full h-full lg:w-[900px]  p-5 flex items-center justify-center">
       <Bar
         data={data}
         options={{
