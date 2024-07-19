@@ -12,12 +12,13 @@ const initialState = {
         subquestions: {
           lackOfAirIncremented: {
             title: "Se ha incrementado en las últimas:",
+            display: 'row',
+            selectedOption: null,
             options: [
               { label: "Horas" },
               { label: "Días" },
               { label: "Semanas" },
             ],
-            selectedOption: null,
           },
           lackOfAirClasification: {
             title: "Califique su falta de aire",
@@ -350,18 +351,28 @@ const preconsultaFormSlice = createSlice({
     },
 
     updateActive(state, action) {
-      const { question, active } = action.payload;
+      const { question, label, active } = action.payload;
       const currentSubquestions = state.formData.questions[question].subquestions;
-      if (!active) {
-        if (currentSubquestions) { // si decimos que no, entonces desactivamos y reseteamos los checkbox de las subpreguntas
-          state.formData.questions[question].active = active
+      console.log(state.formData.questions[question].active === active);
+      if (state.formData.questions[question].active === active) {
+        state.formData.questions[question].active = null;
+        if (currentSubquestions) { // limpiamos las opciones binarias, por lo tanto desactivamos y reseteamos los checkbox de las subpreguntas
           Object.keys(currentSubquestions).map((subquestion, index) => {
             state.formData.questions[question].subquestions[subquestion].selectedOption = null;
           });
         }
-        else { state.formData.questions[question].active = active }
       }
-      else state.formData.questions[question].active = active;
+      else {
+        if (!active) {
+          if (currentSubquestions) { // si decimos que no, entonces desactivamos y reseteamos los checkbox de las subpreguntas
+            Object.keys(currentSubquestions).map((subquestion, index) => {
+              state.formData.questions[question].subquestions[subquestion].selectedOption = null;
+            });
+          }
+          state.formData.questions[question].active = active;
+        }
+        else state.formData.questions[question].active = active;
+      }
     },
     subquestionSelectedOption(state, action) {
       const { question, subquestion, selectedOption } = action.payload;
