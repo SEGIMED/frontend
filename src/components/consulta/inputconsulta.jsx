@@ -10,6 +10,7 @@ import IdRiskCardiovascular from "@/utils/IdRiskCardiovascular";
 import IdRiskSurgical from "@/utils/idRiskSurgical";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconPreConsulta from "../icons/iconPreconsulta";
+import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
 export default function InputConsulta({
   title,
@@ -110,7 +111,7 @@ export default function InputConsulta({
             className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]"
           >
             <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconConsulta />
+              <IconCurrentRouteNav className="w-3 h-3"/>
               {sub}
             </label>
             <div className="flex">
@@ -160,7 +161,7 @@ export default function InputConsulta({
             className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]"
           >
             <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconConsulta />
+            <IconCurrentRouteNav className="w-3 h-3"/>
               {sub}
             </label>
             <div className="flex">
@@ -208,7 +209,7 @@ export default function InputConsulta({
             className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]"
           >
             <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconConsulta />
+              <IconCurrentRouteNav className="w-3 h-3"/>
               {sub}
             </label>
             <div className="flex">
@@ -245,7 +246,7 @@ export default function InputConsulta({
             className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]"
           >
             <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center ">
-              <IconConsulta />
+              <IconCurrentRouteNav className="w-3 h-3"/>
               {sub}
             </label>
             <textarea

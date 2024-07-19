@@ -9,6 +9,7 @@ export default function Elboton({
   size,
   href,
   className,
+  icon2,
 }) {
   return (
     <Button
@@ -19,7 +20,7 @@ export default function Elboton({
       className={
         "bg-[#487FFA] text-[#FFFFFF] font-Roboto rounded-lg" + " " + className
       }>
-      {icon} {nombre}
+      {icon} {nombre} {icon2}
     </Button>
   );
 }

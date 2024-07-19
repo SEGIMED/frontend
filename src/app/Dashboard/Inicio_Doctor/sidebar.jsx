@@ -22,6 +22,7 @@ import { socket } from "@/utils/socketio";
 import { addAlarms } from "@/redux/slices/alarms/alarms";
 import { addActivePtes } from "@/redux/slices/activePtes/activePtes";
 
+
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
 
@@ -41,6 +42,10 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const lastSegmentText = pathname
     .substring(pathname.lastIndexOf("/") + 1)
     .replace(/_/g, " ");
+
+  const segments = pathname.split('/');
+  const secondLastSegment = segments.length > 1 ? segments[segments.length - 2] : '';
+  const formattedSegment = secondLastSegment.replace(/_/g, " ");
 
   const dispatch = useAppDispatch();
 
@@ -179,7 +184,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
   return (
     <div className="  md:pl-10 md:pr-16 flex  items-center justify-between h-[12%] border-b-2 border-b-[#cecece] p-4">
-      <div className="md:hidden p-4">
+      <div className="p-4 md:hidden">
         <button
           className="text-[#B2B2B2] p-2 border rounded-lg focus:outline-none"
           onClick={toggleSidebar}>
@@ -197,8 +202,8 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           </svg>
         </button>
       </div>{" "}
-      <div className="flex justify-center items-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="w-4 hidden md:block" />
+      <div className="flex items-center justify-center gap-4 text-lg font-semibold">
+        <IconCurrentRouteNav className="hidden w-4 md:block" />
         {lastSegment === "Inicio_Doctor" ? (
           <p>Inicio</p>
         ) : lastSegment === "Mi_perfil" ? (
@@ -211,8 +216,10 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           <p>Evento</p>
         ) : IsMessage ? (
           <p>Mensaje</p>
+        ) : isNaN(lastSegment) ? (
+          <p>{lastSegmentText}</p> 
         ) : (
-          <p>{lastSegmentText}</p>
+          <p>{formattedSegment}</p>
         )}
       </div>
       {showSearch && (
@@ -230,16 +237,16 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           </button>
         </div>
       )}
-      <div className="flex justify-center items-center gap-4">
-        <div className="w-12 h-12 flex justify-center items-center">
+      <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center w-12 h-12">
           <img
             src={user?.avatar !== null ? user.avatar : avatar}
             alt=""
-            className="w-12 h-12 object-cover rounded-3xl "
+            className="object-cover w-12 h-12 rounded-3xl "
           />
         </div>
 
-        <div className="hidden md:flex flex-col">
+        <div className="flex-col hidden md:flex">
           <span className="text-start ">
             {user?.name} {user?.lastname}
           </span>
@@ -248,7 +255,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         {/* <button>
           <IconNotificationsNav
-            className=" w-12"
+            className="w-12 "
             circle="#E73F3F"
             campaign="#B2B2B2"
           />

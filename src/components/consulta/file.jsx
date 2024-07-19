@@ -1,22 +1,30 @@
 "use client"
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import IconUpload from '../icons/IconUpload';
 import { useAppDispatch } from '@/redux/hooks';
 
 import IconCurrentRouteNav from '../icons/IconCurrentRouteNav';
 import IconDownload from '../icons/IconDownload';
 import BotonPreconsulta from '../Buttons/BotonPreconsulta';
-
-const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, Link, Links }) => {
+const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, Link}) => {
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("");
     const fileInputRef = useRef(null);
+    const [orderedLinks, setOrderedLinks] = useState([])
+
 
     const handleButtonClick = (e) => {
         e.preventDefault(); // Previene el comportamiento predeterminado
         fileInputRef.current.click();
     };
 
+    useEffect(() => {
+        // Solo establece orderedLinks la primera vez que Links cambie
+        if (!Link==="" && orderedLinks.length === 0) {// Captura el primer estado de Links
+            setOrderedLinks(Link);
+        }
+    }, [Link]);
+    console.log(orderedLinks);
     const handleOnChange = (e) => {
         try {
             if (e.target.files.length) {
@@ -76,7 +84,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                     <button
                         className="flex items-center justify-center gap-3 py-2 px-6 border-2 bg-white border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
                         onClick={handleButtonClick}>
-                        <IconUpload />
+                        <IconUpload color="#808080"/>
                         Adjuntar archivo/informe
                     </button>
                     <input
@@ -98,17 +106,13 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                     />
                 </div>
             }
-            {Link && <a href={Link} className='mt-4"'>
-                <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
-                    {Link}
-                </div>
-            </a>}
-            {Links?.map((sub, index) => (
-                <a href={sub} key={index} >
+             {orderedLinks && orderedLinks.length > 0 && (
+                <a href={orderedLinks} className='mt-4'>
                     <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
-                        {sub}
+                        {orderedLinks}
                     </div>
-                </a>))}
+                </a>
+            )}
             {file && (
                 <div className="mt-4">
                     <div className="flex items-center gap-4">

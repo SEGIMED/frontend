@@ -3,6 +3,7 @@
 import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
 import IconGeolocation from "../icons/IconGeolocation";
+import Elboton from "../Buttons/Elboton";
 
 export default function DataPatient({ info, title, geolocation, openModal }) {
 
@@ -20,18 +21,15 @@ export default function DataPatient({ info, title, geolocation, openModal }) {
         </label>
         {
           geolocation ? 
-          <button
+          <Elboton
           onClick={(e) => {
             e.preventDefault();
             openModal();
           }}
-          className="flex px-6 py-3 text-sm font-bold text-white rounded-xl flex-nowrap bg-primary w-min"
-           >
-            <p className="mr-2 text-sm text-nowrap">
-                 Mostrar Mapa
-            </p>
-          <IconGeolocation color="white"/>
-          </button>
+          size={"lg"}
+          nombre="Mostrar Mapa"
+          icon2={<IconGeolocation color="white"/>}
+          />
           : 
             <span className="w-1/2 text-start text-[#5F5F5F] bg-white font-normal text-base leading-6  border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1 h-[34px]">
             {info}

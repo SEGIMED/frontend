@@ -44,13 +44,13 @@ export default function InputExam({ title, subtitle }) {
                                 <div>
                                     <DropNext options={['Sistema Cardiovascular', 'Sistema Respiratorio', 'Sistema Neurológico', 'Sistema Digestivo', 'Sistema Osteomuscular', 'Sistema Endocrino', 'Sistema Reproductor y Urológico', 'Sistema Oftalmológico', 'ORL', 'Piel y Faneras', 'Otros']} text2={"Seleccionar subsistema"} name={"selectSubsistema"} />
                                 </div>
-                                <div className="flex flex-col w-full gap-2 px-6 py-2 ">
-                                    <textarea className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]" placeholder="Describa toda la información posible"  {...register("inputSubsistema")} />
-                                </div>
+                                
                             </>
                         )
                     }
-
+                    <div className="flex flex-col w-full gap-2 px-6 py-2 ">
+                        <textarea className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]" placeholder="Describa toda la información posible"  {...register("inputSubsistema")} />
+                    </div>
                 </div>
             </details>
         </div>
