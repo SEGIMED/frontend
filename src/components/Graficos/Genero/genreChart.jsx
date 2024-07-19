@@ -98,7 +98,7 @@ export const GooglePieChart = ({ dataArray, chartId }) => {
         enableInteractivity: false,
         pieSliceText: 'value-and-label',
         legend: {
-          position: 'top',
+          position: 'bottom',
           alignment: 'center',
           textStyle: { fontSize: 16 },
         },
