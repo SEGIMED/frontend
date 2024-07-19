@@ -23,7 +23,7 @@ export default function HomeDoc() {
         headers
       );
       if (response.data) {
-        console.log(response.data);
+        
         setConsultas(response.data);
       }
     } catch (error) {
