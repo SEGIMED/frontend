@@ -105,17 +105,19 @@ const MenuDropDown = ({ icon,iconR, label, categories, items }) => {
               </DropdownSection>
             ))
           : items?.map((item, index) => (
-              <DropdownItem key={index} startContent={item.icon}>
+              <DropdownItem key={index}>
                 {item.href ? (
                   <Link
                     href={item.href}
                     className="w-full flex items-center gap-2  text-sm cursor-pointer">
+                    {item.icon}
                     {item.label}
                   </Link>
                 ) : (
                   <button
                     onClick={item.onClick}
                     className="w-full flex items-center gap-2  text-sm cursor-pointer">
+                    {item.icon}
                     {item.label}
                   </button>
                 )}
