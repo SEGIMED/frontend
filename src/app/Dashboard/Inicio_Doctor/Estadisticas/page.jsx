@@ -67,8 +67,8 @@ export default function Estadisticas() {
   }, []);
   
   const dataGenres = [
-    { label: 'Femenino', value: dataGenre?.women, color: 'rgb(255, 99, 132)' },
-    { label: 'Masculino', value: dataGenre?.men, color: 'rgb(54, 162, 235)' },
+    { label: 'Femenino', value: dataGenre?.women, color: 'rgb(239, 43, 125)' },
+    { label: 'Masculino', value: dataGenre?.men, color: 'rgb(1, 167, 157)' },
   ];
 
   const dataActives = [
