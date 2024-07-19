@@ -10,7 +10,6 @@ export default function Elboton({
   size,
   href,
   className,
-  icon2,
 }) {
   return (
     <Button
