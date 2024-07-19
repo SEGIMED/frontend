@@ -56,7 +56,7 @@ export default function TableAlarm({ pacientes }) {
       console.error("Error al intentar actualizar la alarma:", error);
     }
   };
-
+console.log(pacientes)
   return (
     <div className="flex flex-col">
       <div className="">

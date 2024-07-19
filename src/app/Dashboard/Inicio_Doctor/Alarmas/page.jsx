@@ -8,20 +8,20 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { PathnameShow } from "@/components/pathname/path";
 
-const getHighestPriority = (priorities) => {
-  if (priorities.includes("Alta")) return "Alta";
-  if (priorities.includes("Media")) return "Media";
-  return "Baja";
-};
+// const getHighestPriority = (priorities) => {
+//   if (priorities.includes("Alta")) return "Alta";
+//   if (priorities.includes("Media")) return "Media";
+//   return "Baja";
+// };
 
-const formatAlarms = (alarms) => {
-  return alarms.map((alarm) => ({
-    ...alarm,
-    highestPriority: getHighestPriority(
-      alarm.questionsPriority.map((p) => p.split(": ")[1])
-    ),
-  }));
-};
+// const formatAlarms = (alarms) => {
+//   return alarms.map((alarm) => ({
+//     ...alarm,
+//     highestPriority: getHighestPriority(
+//       alarm.questionsPriority.map((p) => p.split(": ")[1])
+//     ),
+//   }));
+// };
 
 export default function HomeDoc() {
   const [activeAlarms, setActiveAlarms] = useState([]);
@@ -30,20 +30,21 @@ export default function HomeDoc() {
   const getAlarms = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
-
+     
       if (response.data) {
         const activeAlarms = response.data.filter((alarma) => !alarma.solved);
 
-        const formattedAlarms = formatAlarms(activeAlarms);
+        
+        // const formattedAlarms = formatAlarms(activeAlarms);
+        
+        // formattedAlarms.sort((a, b) => {
+        //   const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
+        //   return (
+        //     priorityOrder[a.highestPriority] - priorityOrder[b.highestPriority]
+        //   );
+        // });
 
-        formattedAlarms.sort((a, b) => {
-          const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
-          return (
-            priorityOrder[a.highestPriority] - priorityOrder[b.highestPriority]
-          );
-        });
-
-        setActiveAlarms(formattedAlarms);
+        setActiveAlarms(activeAlarms);
       }
     } catch (error) {
       console.error("Error fetching alarms:", error);
@@ -55,8 +56,9 @@ export default function HomeDoc() {
     if (token) {
       getAlarms({ headers: { token: token } }).catch(console.error);
     }
+    
   }, []);
-
+  
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>

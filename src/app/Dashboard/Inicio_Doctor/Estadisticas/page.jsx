@@ -16,10 +16,14 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addEstadisticas } from "@/redux/slices/doctor/estadisticas";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
+import IconAlarmYellow from "@/components/icons/IconAlarmYellow";
+import IconAlarmRed from "@/components/icons/iconAlarmRed";
 
 export default function Estadisticas() {
   const lastSegmentTextToShow = PathnameShow()
   const dispatch = useAppDispatch();
+  const [alarm, setAlarm]= useState({})
 
   const getEstadisticas = async (headers) => {
     try {
@@ -31,11 +35,21 @@ export default function Estadisticas() {
       console.error(error);
     }
   };
+  const getAlarmsEstadistica= async (headers)=>{
+    try {
+      const response= await ApiSegimed.get("alarms-by-patient",headers)
+      console.log(response.data)
+      setAlarm(response.data.priorityCounts)
+    } catch (error) {
+      console.error(error)
+    }
+  } 
 
   useEffect(() => {
     const token = Cookies.get("a");
     if (token) {
-      getEstadisticas({ token: token });
+      getEstadisticas({ headers: { token: token } });
+      getAlarmsEstadistica({ headers: { token: token } })
     }
   }, []);
 
@@ -46,7 +60,7 @@ export default function Estadisticas() {
   const toggleChartType = () => {
     setIs3D((prevIs3D) => !prevIs3D);
   };
-
+  console.log(alarm)
   return (
     <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
@@ -57,8 +71,23 @@ export default function Estadisticas() {
             Alarmas activas
           </p>
           <div className="flex items-center justify-center">
-            <div className="w-full">
-              <IconAlertas className="h-full" />
+            <div className="flex w-full mt-10 gap-10">
+            <div className="w-full text-small flex flex-col items-center ">
+              <IconAlarmRed/>
+              prioridad alta
+              <div className=" text-4xl  md:text-7xl">{alarm?.Alta}</div></div>
+
+            <div className="w-full text-small flex flex-col items-center ">
+              <IconAlarmYellow/>
+              prioridad media
+              <div className=" text-4xl  md:text-7xl">{alarm?.Media}</div></div>
+
+            <div className="w-full text-small flex flex-col items-center ">
+              <IconAlarmGreen/> 
+              prioridad baja
+              <div className="text-4xl  md:text-7xl">{alarm?.Baja}</div></div>
+              
+             
             </div>
           </div>
         </div>
@@ -117,7 +146,7 @@ export default function Estadisticas() {
                   nombre={is3D ? "Normal" : "3D"}
                 /> */}
               </div>
-              {/* <button onClick={toggleChartType}>Mostrar {is3D ? 'Normal' : '3D'}</button> */}
+            
             </div>
           </div>
         </div>

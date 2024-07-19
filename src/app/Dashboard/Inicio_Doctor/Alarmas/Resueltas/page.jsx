@@ -11,11 +11,11 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 export default function HomeDoc() {
   const [inactiveAlarms, setInactiveAlarms] = useState([]);
 
-  const getHighestPriority = (priorities) => {
-    if (priorities.includes("Alta")) return "Alta";
-    if (priorities.includes("Media")) return "Media";
-    return "Baja";
-  };
+  // const getHighestPriority = (priorities) => {
+  //   if (priorities.includes("Alta")) return "Alta";
+  //   if (priorities.includes("Media")) return "Media";
+  //   return "Baja";
+  // };
 
   const getAlarms = async (headers) => {
     try {
@@ -23,25 +23,30 @@ export default function HomeDoc() {
       if (response.data) {
         const inactiveAlarms = response.data.filter(
           (alarma) => alarma.solved === true
-        );
-
-        // Map through the alarms to find the highest priority and add it to the alarm object
-        const mappedAlarms = inactiveAlarms.map((alarm) => ({
-          ...alarm,
-          highestPriority: getHighestPriority(
-            alarm.questionsPriority.map((p) => p.split(": ")[1])
-          ),
-        }));
-
-        // Sort alarms by highest priority
-        mappedAlarms.sort((a, b) => {
+        ).sort((a, b) => {
           const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
           return (
             priorityOrder[a.highestPriority] - priorityOrder[b.highestPriority]
           );
-        });
+        });;
 
-        setInactiveAlarms(mappedAlarms);
+        // Map through the alarms to find the highest priority and add it to the alarm object
+        // const mappedAlarms = inactiveAlarms.map((alarm) => ({
+        //   ...alarm,
+        //   highestPriority: getHighestPriority(
+        //     alarm.questionsPriority.map((p) => p.split(": ")[1])
+        //   ),
+        // }));
+
+        // Sort alarms by highest priority
+        // mappedAlarms.sort((a, b) => {
+        //   const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
+        //   return (
+        //     priorityOrder[a.highestPriority] - priorityOrder[b.highestPriority]
+        //   );
+        // });
+
+        setInactiveAlarms(inactiveAlarms);
       }
     } catch (error) {
       console.error("Error fetching alarms:", error);

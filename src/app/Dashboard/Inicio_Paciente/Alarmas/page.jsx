@@ -38,7 +38,7 @@ export default function AlarmPte() {
   const getMyAlarms = async () => {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
-
+    
     setAlarms(response.data);
   };
 
