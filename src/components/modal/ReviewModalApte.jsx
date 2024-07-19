@@ -104,7 +104,7 @@ export default function ReviewModalApte({ onClose, id }) {
               </span>
               <span className="mb-2 font-medium">{question}</span>
             </div>
-            <div className="flex justify-center items-center border-b pb-1">
+            <div className="flex justify-center items-center border-b gap-2 p-5">
               {[...Array(5)].map((star, index) => (
                 <label key={index} className="cursor-pointer">
                   <input
