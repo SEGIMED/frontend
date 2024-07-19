@@ -80,7 +80,7 @@ export default function TableAlarm({ pacientes }) {
             <div className="text-[#5F5F5F]">
               {extractMonthDay(paciente.fecha)}
             </div>
-            <div className="text-[#5F5F5F] hidden md:block "></div>
+            <div className="text-[#5F5F5F] hidden md:block "> {paciente.HTP?.data?.catHpGroup?.name}</div>
             <div className="text-[#5F5F5F] hidden md:block truncate">
               {paciente.alarmDescription}
             </div>

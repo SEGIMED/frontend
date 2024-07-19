@@ -67,16 +67,16 @@ export default function HomeDoc() {
           </button>
         </Link>
       </div>
-      <div className="flex items-center justify-between text-start border-b border-b-[#cecece] py-4 p-2 bg-white static md:sticky top-14 z-20 md:z-50">
+      <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
         <p className="font-bold text-[#5F5F5F] w-1/6">Prioridad</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Paciente</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Fecha</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Hora</p>
         <p className="font-bold text-[#5F5F5F] w-1/6 hidden md:block">HTP</p>
         <p className="font-bold text-[#5F5F5F] w-1/6 hidden md:block">Motivo</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6  hidden md:block">
+        {/* <p className="font-bold text-[#5F5F5F] w-1/6  hidden md:block">
           Tiempo de respuesta
-        </p>
+        </p> */}
       </div>
       <div className="md:overflow-auto h-full">
         <TableAlarmResueltas pacientes={inactiveAlarms} />
