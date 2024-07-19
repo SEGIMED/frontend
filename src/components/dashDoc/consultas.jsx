@@ -10,6 +10,7 @@ import Link from "next/link";
 import rutas from "@/utils/rutas";
 import IconRisk from "../icons/iconRisk";
 import RealColorRisk from "@/utils/realColor";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 export default function ProximasConsultasInfo({ info }) {
   return (
@@ -30,7 +31,11 @@ export default function ProximasConsultasInfo({ info }) {
         </div>
         <IconCurrentRouteNav className={"w-4 hidden md:block"} />
         <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 ">
-          {LastLogin(info?.scheduledStartTimestamp)}
+          {Fecha(info?.scheduledStartTimestamp)} 
+          
+        </p>
+        <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 ">
+          {Hora(info?.scheduledStartTimestamp)}
         </p>
       </div>
       <div className="flex space-x-1 md:space-x-4  ">
