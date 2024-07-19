@@ -69,12 +69,12 @@ export default function HomeDoc() {
           </button>
         </Link>
       </div>
-      <div className="grid grid-cols-5 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4">
-        <p className="font-bold text-[#5F5F5F]">Prioridad</p>
+      <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
+        <p className="font-bold text-[#5F5F5F] ">Prioridad</p>
         <p className="font-bold text-[#5F5F5F]">Paciente</p>
-        <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
-        {/* <p className="font-bold text-[#5F5F5F]">HTP</p> */}
+        <p className="font-bold text-[#5F5F5F]">Hora</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">HTP</p>
         <p className="font-bold text-[#5F5F5F] hidden md:block">
           Motivo de alarma
         </p>

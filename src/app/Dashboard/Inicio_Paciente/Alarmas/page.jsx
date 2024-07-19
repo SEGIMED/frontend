@@ -87,12 +87,12 @@ export default function AlarmPte() {
           <IconAlarmBlue color={"white"} /> Crear Alarma
         </button>
       </div>
-      <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-10 z-20 md:z-50">
+      <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
         <p className="font-bold text-[#5F5F5F]">Prioridad</p>
-        <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
-        <p className="font-bold text-[#5F5F5F]">Paciente</p>
-        <p className="font-bold text-[#5F5F5F]">Status</p>
+        <p className="font-bold text-[#5F5F5F]">Hora</p>
+        <p className="font-bold text-[#5F5F5F]">HTP</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">Status</p>
       </div>
       <div className="overflow-auto h-full">
         <TableAlarmPte paciente={UnsolvedAlarmas} />

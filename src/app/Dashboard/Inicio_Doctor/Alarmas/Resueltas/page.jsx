@@ -70,8 +70,8 @@ export default function HomeDoc() {
       <div className="flex items-center justify-between text-start border-b border-b-[#cecece] py-4 p-2 bg-white static md:sticky top-14 z-20 md:z-50">
         <p className="font-bold text-[#5F5F5F] w-1/6">Prioridad</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Paciente</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6">Hora</p>
         <p className="font-bold text-[#5F5F5F] w-1/6">Fecha</p>
+        <p className="font-bold text-[#5F5F5F] w-1/6">Hora</p>
         <p className="font-bold text-[#5F5F5F] w-1/6 hidden md:block">HTP</p>
         <p className="font-bold text-[#5F5F5F] w-1/6 hidden md:block">Motivo</p>
         <p className="font-bold text-[#5F5F5F] w-1/6  hidden md:block">
