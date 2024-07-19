@@ -27,15 +27,15 @@ export default function SubNavbar({ id }) {
 
   const getLinkClass = (routeLastSegment) =>
     `/${lastSegment}` === routeLastSegment
-      ? "bg-gray-200" // Estilo para la pestaña activa
+      ? "bg-white" // Estilo para la pestaña activa
       : "cursor-pointer ";
 
   const router = useRouter();
 
   return (
-    <div className="border-b border-b-[#cecece] flex  flex-row-reverse md:flex-row justify-around items-center md:pr-6">
+    <div className="border-b border-b-[#cecece] bg-[#fafafc] flex  flex-row-reverse md:flex-row justify-around items-center md:pr-6">
       <Navbar
-        className="flex justify-start items-center w-[86%] md:w-full"
+        className="flex justify-start items-center w-[86%] md:w-full bg-[#fafafc]"
         classNames={{
           item: [
             "flex",

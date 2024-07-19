@@ -4,6 +4,7 @@ import { Button, Link } from "@nextui-org/react";
 
 export default function Elboton({
   icon,
+  icon2,
   nombre,
   onPress,
   size,

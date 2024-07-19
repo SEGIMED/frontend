@@ -66,7 +66,7 @@ export default function ClincalCuerpo({ info }) {
             info.painMap.painAreas.map((muscle, index) => (
               <div
                 key={index}
-                className="flex flex-col gap-2 w-full py-3 px-7 border-b border-b-[#cecece]">
+                className="flex flex-col gap-2 w-full py-3 px-7">
                 <label
                   className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
                   htmlFor={`muscle-note-${index}`}>
