@@ -44,11 +44,12 @@ export default function TableAlarm({ pacientes }) {
         headers
       );
       if (response.data) {
-        Swal.fire({
+        await Swal.fire({
           title: "Alarma resuelta",
           icon: "success",
           confirmButtonText: "Ok",
         });
+        router.push(`${rutas.Doctor}${rutas.Mensajes}/${id}`)
       }
     } catch (error) {
       console.error("Error al intentar actualizar la alarma:", error);

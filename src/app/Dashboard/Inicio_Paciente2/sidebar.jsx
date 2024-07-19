@@ -281,7 +281,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         )}
       </div>
       {lastSegment !== "Inicio_Paciente2" ? (
-        <p className="font-semibold text-xl leading-6 text-[#686868]">
+        <p className="font-semibold text-xl hidden md:block leading-6 text-[#686868]">
           {lastSegmentText}
         </p>
       ) : null}
@@ -327,7 +327,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
                 isBordered: true,
                 src: user?.avatar ? user.avatar : avatar,
               }}
-              className="transition-transform"
+              className="transition-transform "
               // description={user?.role === 3 ? "Paciente" : ""}
               description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
               name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}

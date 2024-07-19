@@ -24,7 +24,7 @@ export default function ProximasConsultasInfo({ info }) {
      
         <div className="w-full md:w-1/2 flex">
           <Avatars avatar1={info?.patientUser?.avatar} />
-          <p className="h-10 flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
+          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
             {info.patientUser.name} {info.patientUser.lastname}
           </p>
         </div>

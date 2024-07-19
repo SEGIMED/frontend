@@ -19,6 +19,8 @@ import IconMiniCalendar from "@/components/icons/IconMiniCalendar";
 import IconPersonalData from "@/components/icons/IconPersonalData";
 import IconMessages from "@/components/icons/IconMessages";
 import rutas from "@/utils/rutas";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import DoctorAsociado from "@/components/modal/ModalPatient/modalDoctorAsociation";
 
 export default function DoctoresPte() {
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
@@ -28,11 +30,10 @@ export default function DoctoresPte() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedModal, setSelectedModal] = useState(null);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [isSorted, setIsSorted] = useState(false);
+  const [selectedDoctorName, setSelectedDoctorName] = useState("");
   const patientId = config.c;
   const [pagination, setPagination] = useState({
     totalUsers: 0,
@@ -90,21 +91,30 @@ export default function DoctoresPte() {
     }
   };
 
-  const handleViewDetail = (doctorId) => {
-    setIsDetailModalOpen(true);
+  const openModal = (doctorId, type, doctorName) => {
     setSelectedDoctorId(doctorId);
-    setSelectedModal("detail");
+    setSelectedDoctorName(doctorName);
+    setModalType(type);
+    setIsModalOpen(true);
   };
 
-  const openModal = (doctorId) => {
-    setIsModalOpen(true);
-    setSelectedDoctorId(doctorId);
-    setSelectedModal("consultation");
+  const closeModal = () => {
+    setSelectedDoctorId(null);
+    setSelectedDoctorName("");
+    setModalType(null);
+    setIsModalOpen(false);
   };
 
   const handleConsultationClick = (doctorId) => {
-    handleViewDetail(doctorId);
-    openModal(doctorId);
+    openModal(doctorId, "consultation");
+  };
+
+  const handleAssociateClick = (doctorId, doctorName, doctorLastname) => {
+    openModal(doctorId, "associate", `${doctorName} ${doctorLastname}`);
+  };
+
+  const handleViewDetail = (doctorId) => {
+    openModal(doctorId, "detail");
   };
 
   const toggleFilterMenu = () => {
@@ -113,15 +123,6 @@ export default function DoctoresPte() {
 
   const handleSortClick = () => {
     setIsSorted(!isSorted);
-  };
-
-  const closeModal = () => {
-    setSelectedDoctorId(null);
-    if (selectedModal === "detail") {
-      setIsDetailModalOpen(false);
-    } else if (selectedModal === "consultation") {
-      setIsModalOpen(false);
-    }
   };
 
   if (isLoading) {
@@ -140,11 +141,6 @@ export default function DoctoresPte() {
             key={doctor.id}
             doctor={doctor}
             button={
-              // <OpcionesDocCard
-              //   id={doctor.id}
-              //   onDetailClick={handleViewDetail}
-              //   onConsultationClick={() => handleConsultationClick(doctor.id)}
-              // />
               <MenuDropDown
                 label="Opciones"
                 categories={[
@@ -152,9 +148,22 @@ export default function DoctoresPte() {
                     title: "Acciones",
                     items: [
                       {
+                        label: "Solicitar asociarse",
+                        icon: <IconMiniCalendar />,
+                        onClick: () =>
+                          handleAssociateClick(
+                            doctor.id,
+                            doctor.name,
+                            doctor.lastname
+                          ),
+                      },
+                      {
                         label: "Solicitar Consulta",
                         icon: <IconMiniCalendar />,
-                        onClick: () => handleConsultationClick(doctor.id),
+                        onClick: () =>
+                          handleConsultationClick(
+                            doctor.id
+                          ),
                       },
                     ],
                   },
@@ -164,7 +173,10 @@ export default function DoctoresPte() {
                       {
                         label: "Ver Detalles",
                         icon: <IconPersonalData />,
-                        onClick: () => handleViewDetail(doctor.id),
+                        onClick: () =>
+                          handleViewDetail(
+                            doctor.id
+                          ),
                       },
                       {
                         label: "Ver Mensajes",
@@ -186,7 +198,7 @@ export default function DoctoresPte() {
           className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
-        <p>
+        <p className=" w-14">
           {pagination.currentPage} de {pagination.totalPages}
         </p>
         <button
@@ -197,19 +209,38 @@ export default function DoctoresPte() {
           <IconNext />
         </button>
       </div>
-      {selectedDoctorId && isDetailModalOpen && (
+      {isModalOpen && modalType === "detail" && (
         <ModalDetailDoctor
-          isOpen={isDetailModalOpen}
+          isOpen={isModalOpen}
           onClose={closeModal}
           doctorId={selectedDoctorId}
         />
       )}
-      <ModalConsultation
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        patientId={patientId}
-        doctorId={selectedDoctorId}
-      />
+      {isModalOpen && modalType === "consultation" && (
+        <ModalConsultation
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          patientId={patientId}
+          doctorId={selectedDoctorId}
+        />
+      )}
+      {isModalOpen && modalType === "associate" && (
+        <ModalModularizado
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          Modals={[
+            <DoctorAsociado key={"solicitar asociacion"}
+              name={selectedDoctorName}
+            />,
+          ]}
+          title={"Solicitar asociarse"}
+          button1={"hidden"}
+          button2={"bg-greenPrimary block"}
+          progessBar={"hidden"}
+          size={"h-[21rem] md:h-[17rem] md:w-[35rem]"}
+          buttonText={{ end: `Enviar solicitud` }}
+        />
+      )}
     </div>
   );
 }

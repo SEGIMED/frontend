@@ -117,7 +117,7 @@ export default function HomePte() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModalfoto = () => setIsModalOpen(true);
   const closeModalFoto = () => setIsModalOpen(false);
-  
+
   return (
     <div className="h-full overflow-y-scroll flex flex-col">
       <div

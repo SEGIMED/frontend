@@ -19,7 +19,7 @@ const Buttons = [
   },
   {
     name: "Medicamentos",
-    path: "/medicamentos",
+    path: "/Medicamentos",
     icon: IconMedicamentos,
     backgroundColor: "bg-[#FF7E7E]",
   },
