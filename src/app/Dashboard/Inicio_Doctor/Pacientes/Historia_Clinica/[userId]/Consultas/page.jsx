@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
+import NotFound from "@/components/notFound/notFound";
+import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 
 export default function HomeDoc() {
   const pathname = usePathname();
@@ -15,6 +17,7 @@ export default function HomeDoc() {
   // const userId = 8;
 
   const [consultas, setConsultas] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getConsultas = async (headers) => {
     try {
@@ -27,6 +30,8 @@ export default function HomeDoc() {
       }
     } catch (error) {
       console.error("Error fetching consultas:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,26 +46,30 @@ export default function HomeDoc() {
     <div className="h-full w-full flex flex-col">
       <div className="w-full flex justify-between px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
         <Ordenar />
-        <p className="text-[#686868] font-semibold text-xl md:text-base leading-6">
+        <p className="text-[#686868] text-center hidden md:block font-semibold text-xl md:text-base leading-6">
           Consultas
         </p>
         <FiltrarPacientes />
       </div>
-      <div className="grid text-center grid-cols-4 md:text-left md:grid-cols-7 items-center border-b border-b-[#cecece] py-2 bg-white z-10">
-        <div className="hidden md:block"></div>
-        <p className="font-bold text-[#5F5F5F] ">Fecha</p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block">Hora</p>
-        <p className="font-bold text-[#5F5F5F] ">Especialidad</p>
-        <p className="font-bold text-[#5F5F5F] ">Centro de atención</p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block">
-          Motivo de consulta
-        </p>
-        <p className="font-bold text-[#5F5F5F] block md:hidden"> Ver consulta</p>
+      <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
+        <div className="w-[5%] hidden md:block"></div>
+        <div className="grid w-[75%] text-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-left md:grid-cols-5 items-center py-2 z-10">
+          <p className="text-[#5F5F5F]">Fecha</p>
+          <p className="text-[#5F5F5F] hidden md:block">Hora</p>
+          <p className="text-[#5F5F5F]">Grupo HTP</p>
+          <p className="text-[#5F5F5F]">Centro de atención</p>
+          <p className="text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
+        </div>
+        <div className="w-[25%] md:w-[20%]">
+          <p className="text-[#5F5F5F] text-center items-center flex py-2 md:hidden">
+            Ver consulta
+          </p>
+        </div>
       </div>
-      {consultas.length === 0 ? (
-        <p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">
-          No hay informacion disponible
-        </p>
+      {isLoading ? (
+        <SkeletonList count={9} />
+      ) : consultas.length === 0 ? (
+        <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
       ) : (
         <TableConsultas consultas={consultas} />
       )}
