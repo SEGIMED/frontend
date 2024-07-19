@@ -117,7 +117,7 @@ export default function ReviewModalApte({ onClose, id }) {
                   <IconTStar3
                     color={
                       index < (hover[qIndex] || ratings[qIndex])
-                        ? "#FFC107"
+                        ? "#FFC900"
                         : "#FFFFFF"
                     }
                     onMouseEnter={() => handleHover(qIndex, index + 1)}
