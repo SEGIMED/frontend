@@ -67,16 +67,16 @@ const DetallePaciente = (id) => {
     painOwnerId: Number(userId),
     schedulingId: Number(scheduleId),
     medicalEventId: null,
-    isTherePain: formData.bodySection.selectedOptions.pain,
-    painDurationId: formData.bodySection.selectedOptions.painTime,
-    painScaleId: formData.bodySection.selectedOptions.painLevel,
-    painTypeId: formData.bodySection.selectedOptions.painType,
-    painAreas: formData.bodySection.selectedOptions.painAreas,
-    painFrequencyId: formData.bodySection.selectedOptions.frecuencia,
-    isTakingAnalgesic: formData.bodySection.selectedOptions.analgesicos,
-    doesAnalgesicWorks: formData.bodySection.selectedOptions.calmaAnalgesicos,
-    isWorstPainEver: formData.bodySection.selectedOptions.peorDolor,
-  };
+    isTherePain: formData.bodySection?.selectedOptions?.pain || null,
+    painDurationId: formData.bodySection?.selectedOptions?.painTime || null,
+    painScaleId: formData.bodySection?.selectedOptions?.painLevel || null,
+    painTypeId: formData.bodySection?.selectedOptions?.painType || null,
+    painAreas: formData.bodySection?.painAreas ? Object.values(formData.bodySection.painAreas) : null,
+    painFrequencyId: formData.bodySection?.painFrequency || null,
+    isTakingAnalgesic: formData.bodySection?.isTakingAnalgesic || null,
+    doesAnalgesicWorks: formData.bodySection?.doesAnalgesicWorks || null,
+    isWorstPainEver: formData.bodySection?.isWorstPainEver || null,
+  }
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
