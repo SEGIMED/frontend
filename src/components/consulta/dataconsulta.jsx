@@ -17,7 +17,9 @@ import MapModalPte from "../modal/MapModalPte";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 export default function Consulta({ paciente, title }) {
-  console.log(paciente);
+
+  const [showModal, setShowModal] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
   const [values, setValues] = useState({
     fullName: '',
     edad: '',
@@ -50,15 +52,16 @@ export default function Consulta({ paciente, title }) {
       });
     }
   }, [paciente]);
-  const [showModal, setShowModal] = useState(false);
+  
 
-  const openModal = () => {
-    setShowModal(true);
+  
+  const handleGeolocationClick = () => {
+    setShowMapModal(true);
   };
   return (
     <div className="flex flex-col">
       <details>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 border cursor-pointer">
+        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
           <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
@@ -68,7 +71,6 @@ export default function Consulta({ paciente, title }) {
             <IconArrowDetailDown/>
           </div>
         </summary>
-
         <DataPatient title="Nombre completo" info={values.fullName} />
         <DataPatient title="Edad" info={values.edad} />
         <DataPatient title="Genero" info={values.genre} />
@@ -77,11 +79,11 @@ export default function Consulta({ paciente, title }) {
         <DataPatient title="Telefono" info={values.phone} />
         <DataPatient title="Telefono de emergencia" info={values.emergencyNumber} />
         <DataPatient title="Correo electronico" info={values.email} />
-        <DataPatient title="Dirección de domicilio" geolocation={paciente?.geolocation} openModal={openModal}/>
+        <DataPatient title="Dirección de domicilio" geolocation={paciente?.geolocation} openModal={handleGeolocationClick}/>
         <DataPatient title="Lugar de nacimiento" info={values.currentLocationCountry} />
         <DataPatient title="Fecha de nacimiento" info={values.birthDate} />
       </details>
-      {showModal && (
+      {showMapModal && (
         <MapModalPte onClose={() => setShowModal(false)} patient={paciente} />
       )}
     </div>

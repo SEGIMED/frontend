@@ -32,7 +32,7 @@ export default function InputDiagnostico({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-2 px-6 py-2 border cursor-pointer md:gap-1">
+        <summary className="flex items-center justify-between gap-2 px-6 py-2 bg-white border cursor-pointer md:gap-1">
           <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
@@ -47,13 +47,13 @@ export default function InputDiagnostico({
         {subtitle2?.map((sub, index) => (
           <div
             key={index}
-            className="flex flex-col gap-2 px-6 py-4 md:py-2 border-b border-b-[#cecece]">
+            className="flex flex-col gap-2 px-6 py-4 md:py-2  bg-[#fafafc]">
             <label className="text-start  py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
               <IconCurrentRouteNav className="w-3" />
               {sub}
             </label>
             <input
-              className="w-full md:w-1/2 h-auto text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-2 md:py-1 outline-[#a8a8a8]"
+              className="w-full md:w-1/2 h-auto text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-2 md:py-1 outline-[#a8a8a8]"
               placeholder={`Escribe el ${sub} `}
               {...register(sub)}
             />
@@ -61,7 +61,7 @@ export default function InputDiagnostico({
         ))}
         {subtitle3 ? (
           <div
-            className="flex flex-col gap-2 px-6 py-4 md:py-2 border-b border-b-[#cecece]">
+            className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]">
             <label className="text-start  py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
               <IconCurrentRouteNav className="w-3" />
               {subtitle3}
@@ -79,13 +79,13 @@ export default function InputDiagnostico({
         {subtitle?.map((sub, index) => (
           <div
             key={index}
-            className="flex flex-col gap-2 px-6 py-2 border-b border-b-[#cecece]">
+            className="flex flex-col gap-2 px-6 py-2 bg-[#fafafc]">
             <label className="text-start text-[#686868] py-1 font-medium text-base leading-4 flex gap-2 items-center">
               <IconConsulta />
               {sub}
             </label>
             <textarea
-              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
+              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
             />

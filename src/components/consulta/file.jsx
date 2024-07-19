@@ -46,7 +46,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
     };
 
     return (
-        <div className="p-6 mb-4">
+        <div className="p-6 pb-4 bg-[#fafafc]">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
                 <IconCurrentRouteNav className="w-4" />
                 {label}
@@ -67,14 +67,14 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
             {test === 'lastAbnormalGlycemia' &&
                 <input
                     type="text"
-                    className="w-[20%] md:w-[8%] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 md:px-4 py-1"
+                    className="w-[20%] md:w-[8%] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 md:px-4 py-1"
                     onChange={(e) => onTestSelectedOption(test, [Number(e.target.value)])}
                 />
             }
             {(test !== 'pendingStudies' && test !== 'lastAbnormalGlycemia' && test !== 'abnormalGlycemia') &&
                 <div className="flex flex-row gap-3">
                     <button
-                        className="flex items-center justify-center gap-3 py-2 px-6 border-2 border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
+                        className="flex items-center justify-center gap-3 py-2 px-6 border-2 bg-white border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
                         onClick={handleButtonClick}>
                         <IconUpload />
                         Adjuntar archivo/informe

@@ -12,6 +12,7 @@ import IconDolor2 from "../icons/IconDolor2";
 import { useFormContext } from "react-hook-form";
 import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = false }) {
   const dispatch = useAppDispatch();
@@ -120,17 +121,21 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex px-6 py-2 border gap-1 items-center cursor-pointer justify-center">
+        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
+          <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
             </p>
           </div>
+          <div>
+            <IconArrowDetailDown/>
+          </div>
         </summary>
-        <div className="flex md:flex-row flex-col w-full items-center md:items-start justify-center ">
-          <div className="w-full md:w-1/2 h-full items-center flex flex-col justify-center py-4">
-            <div className=" items-center justify-center">
+        <div className="flex flex-col items-center justify-center w-full md:flex-row md:items-start ">
+          <div className="flex flex-col items-center justify-center w-full h-full py-4 md:w-1/2">
+            <div className="items-center justify-center ">
               <ButtonNextPreconsultation
                 onBodyChange={onBodyChange}
                 options={["Frente", "Dorso"]}
@@ -166,8 +171,8 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                 </div>
               ))}
           </div>
-          <div className="items-center w-full md:w-1/2 sticky top-0">
-            <div className="flex items-center flex-col gap-3 py-4 ">
+          <div className="sticky top-0 items-center w-full md:w-1/2">
+            <div className="flex flex-col items-center gap-3 py-4 ">
               <div>
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
@@ -188,7 +193,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     />
                   </div>
                   <div className="w-[90%] md:w-[80%]  flex flex-col">
-                    <div className="items-center  space-x-2 flex">
+                    <div className="flex items-center space-x-2">
                       <span className="h-12">
                         <IconDolor />
                       </span>

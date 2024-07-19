@@ -24,7 +24,7 @@ export default function InputExam({ title, subtitle }) {
     return (
         <div className="flex flex-col">
             <details>
-                <summary className="flex items-center justify-between gap-1 px-6 py-2 border cursor-pointer">
+                <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
                     <div/>
                     <div className="flex items-center">
                         <Image src={circleData} alt="" />
@@ -34,7 +34,7 @@ export default function InputExam({ title, subtitle }) {
                         <IconArrowDetailDown/>
                     </div>
                 </summary>
-                <div className="flex flex-col items-center justify-center w-full px-4 py-4">
+                <div className="flex flex-col items-center justify-center w-full px-4 py-4 bg-[#fafafc]">
                     <div>
                         <ButtonNext text={"¿Usar subsistemas?"} options={["Si", "No"]} name={"subsitemas"} handleSelection={handleSubsistemas} />
                     </div>
@@ -44,8 +44,8 @@ export default function InputExam({ title, subtitle }) {
                                 <div>
                                     <DropNext options={['Sistema Cardiovascular', 'Sistema Respiratorio', 'Sistema Neurológico', 'Sistema Digestivo', 'Sistema Osteomuscular', 'Sistema Endocrino', 'Sistema Reproductor y Urológico', 'Sistema Oftalmológico', 'ORL', 'Piel y Faneras', 'Otros']} text2={"Seleccionar subsistema"} name={"selectSubsistema"} />
                                 </div>
-                                <div className="flex w-full flex-col gap-2 px-6 py-2 border-b border-b-[#cecece]">
-                                    <textarea className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]" placeholder="Describa toda la información posible"  {...register("inputSubsistema")} />
+                                <div className="flex flex-col w-full gap-2 px-6 py-2 ">
+                                    <textarea className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]" placeholder="Describa toda la información posible"  {...register("inputSubsistema")} />
                                 </div>
                             </>
                         )

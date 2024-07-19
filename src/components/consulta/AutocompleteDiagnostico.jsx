@@ -19,9 +19,11 @@ export default function AutocompleteDiagnostico({ options, text2, name, onOption
   };
 
   return (
+    <>
+    
     <Autocomplete
       placeholder={text2}
-      className="w-1/2 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
+      className="w-1/2  border border-[#DCDBDB] rounded-lg "
       aria-label="Dropdown menu with icons"
       style={{ border: 'none', boxShadow: 'none', outline: 'none', borderRadius: 'none' }}
       onSelectionChange={(value) => {handleSelectionChange(value);}}
@@ -37,5 +39,6 @@ export default function AutocompleteDiagnostico({ options, text2, name, onOption
         </AutocompleteItem>
       ))}
     </Autocomplete>
+    </>
   );
 }
