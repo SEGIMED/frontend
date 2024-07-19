@@ -22,7 +22,7 @@ export default function DataPatient({ info, title, geolocation, openModal }) {
         {
           geolocation ? 
           <Elboton
-          onClick={(e) => {
+          onPress={(e) => {
             e.preventDefault();
             openModal();
           }}

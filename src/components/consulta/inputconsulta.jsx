@@ -36,7 +36,7 @@ export default function InputConsulta({
     groupPatientPulmonaryHypertensionRisksButton,
     setGroupPatientPulmonaryHypertensionButton,
   ] = useState([]);
-
+  const[isOpen, setIsOpen] = useState(defaultOpen);
   useEffect(() => {
     if (paciente?.patientCardiovascularRisks?.risk) {
       setRiskCardiovascularButton(paciente?.patientCardiovascularRisks?.risk);
@@ -93,7 +93,7 @@ export default function InputConsulta({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
+        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center ">
             <Image src={circleData} alt="" />
@@ -101,7 +101,7 @@ export default function InputConsulta({
               {title}
             </p>
           </div>
-          <div>
+          <div className={isOpen ? "rotate-180" : ""}>
             <IconArrowDetailDown />
           </div>
         </summary>

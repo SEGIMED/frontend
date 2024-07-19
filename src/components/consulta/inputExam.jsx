@@ -12,7 +12,7 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 export default function InputExam({ title, subtitle }) {
 
     const { register } = useFormContext()
-
+    const [isOpen, setIsOpen] = useState(false);
     const [subsistemas, setSubsistemas] = useState(false); // Estado para manejar si hay dolor
 
 
@@ -24,13 +24,13 @@ export default function InputExam({ title, subtitle }) {
     return (
         <div className="flex flex-col">
             <details>
-                <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
+                <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
                     <div/>
                     <div className="flex items-center">
                         <Image src={circleData} alt="" />
                         <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">{title}</p>
                     </div>
-                    <div>
+                    <div className={isOpen ? "rotate-180" : ""}>
                         <IconArrowDetailDown/>
                     </div>
                 </summary>
@@ -42,7 +42,7 @@ export default function InputExam({ title, subtitle }) {
                         subsistemas && (
                             <>
                                 <div>
-                                    <DropNext options={['Sistema Cardiovascular', 'Sistema Respiratorio', 'Sistema Neurológico', 'Sistema Digestivo', 'Sistema Osteomuscular', 'Sistema Endocrino', 'Sistema Reproductor y Urológico', 'Sistema Oftalmológico', 'ORL', 'Piel y Faneras', 'Otros']} text2={"Seleccionar subsistema"} name={"selectSubsistema"} />
+                                    <DropNext options={['Sistema Cardiovascular', 'Sistema Respiratorio', 'Sistema Neurológico', 'Sistema Digestivo', 'Sistema Osteomuscular', 'Sistema Endocrino', 'Sistema Reproductor y Urológico', 'Sistema Oftalmológico', 'ORL', 'Piel y Faneras', 'Otros']} text2={"Seleccionar subsistema"} name={"selectSubsistema"} icon={<IconArrowDetailDown color={"white"}/>} colorBackground={"#487FFA"} colorText={"white"}/>
                                 </div>
                                 
                             </>

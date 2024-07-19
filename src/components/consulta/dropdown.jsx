@@ -11,9 +11,10 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled }) {
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText}) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -38,6 +39,10 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
       dispatch(setSelectedOption({ name, option: key }));
     }
   };
+  const handleButtonClick = () => {
+    setIsOpen(!isOpen);
+  };
+
 
   return (
     <div>
@@ -55,11 +60,18 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
               variant="bordered"
               className="capitalize"
               style={{
-                color: "#487FFA",
+                backgroundColor: colorBackground || "none", 
+                color: colorText || "#487FFA",
                 borderColor: "#487FFA",
                 border: "2px solid",
-              }}>
+                
+              }}
+              onClick={handleButtonClick}
+              >
               {selectedOption || text2}
+              {icon && <div className={ isOpen===true ? "rotate-180" : ""}>
+              {icon}
+              </div>}
             </Button>
           ) : (
             <Button

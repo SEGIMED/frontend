@@ -24,6 +24,7 @@ export default function InputDiagnostico({
   const { register } = useFormContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -32,7 +33,7 @@ export default function InputDiagnostico({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-2 px-6 py-2 bg-white border cursor-pointer md:gap-1">
+        <summary className="flex items-center justify-between gap-2 px-6 py-2 bg-white border cursor-pointer md:gap-1 " onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
@@ -40,7 +41,7 @@ export default function InputDiagnostico({
               {title}
             </p>
           </div>
-          <div>
+          <div className={isOpen ? "rotate-180" : ""}>
             <IconArrowDetailDown/>
           </div>
         </summary>

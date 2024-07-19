@@ -18,8 +18,8 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 export default function Consulta({ paciente, title }) {
 
-  const [showModal, setShowModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
     fullName: '',
     edad: '',
@@ -61,13 +61,13 @@ export default function Consulta({ paciente, title }) {
   return (
     <div className="flex flex-col">
       <details>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
+        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer " onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">{title}</p>
           </div>
-          <div>
+          <div className={isOpen ? "rotate-180" : ""}>
             <IconArrowDetailDown/>
           </div>
         </summary>
@@ -83,9 +83,11 @@ export default function Consulta({ paciente, title }) {
         <DataPatient title="Lugar de nacimiento" info={values.currentLocationCountry} />
         <DataPatient title="Fecha de nacimiento" info={values.birthDate} />
       </details>
-      {showMapModal && (
-        <MapModalPte onClose={() => setShowModal(false)} patient={paciente} />
+
+      {showMapModal === true && (
+        <MapModalPte onClose={() => setShowMapModal(false)} patient={paciente} />
       )}
+
     </div>
   );
 }
