@@ -178,7 +178,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   }, []);
 
   return (
-    <div className="  md:pl-10 md:pr-16 flex  items-center justify-between h-[12%] border-b-2 border-b-[#cecece] p-4">
+    <div className="  md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="md:hidden p-4">
         <button
           className="text-[#B2B2B2] p-2 border rounded-lg focus:outline-none"

@@ -4,6 +4,7 @@ import { Button, Link } from "@nextui-org/react";
 
 export default function Elboton({
   icon,
+  icon2,
   nombre,
   onPress,
   size,
@@ -19,7 +20,7 @@ export default function Elboton({
       className={
         "bg-[#487FFA] text-[#FFFFFF] font-Roboto rounded-lg" + " " + className
       }>
-      {icon} {nombre}
+      {icon} {nombre} {icon2}
     </Button>
   );
 }
