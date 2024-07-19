@@ -117,7 +117,7 @@ export default function PreconsultaPte({ params }) {
     },
     pendingStudies: {
       title: "Estudios pendientes",
-      description: "No one is pending :) Good patient",
+      description: "",
     },
   });
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
