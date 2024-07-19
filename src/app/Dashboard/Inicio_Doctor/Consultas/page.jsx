@@ -97,19 +97,19 @@ export default function HomeDoc() {
         {/* <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
                     onClick={handleSortClick}>
-                    <p className="text-start text-white font-bold text-base leading-5">Ordenar</p>
+                    <p className="text-base font-bold leading-5 text-white text-start">Ordenar</p>
                     <IconOrder />
                 </button> */}
 
-        <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
+        <Link href={`${rutas.Doctor}${rutas.Consultas}${rutas.Teleconsulta}`}>
           <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
-            <p className="text-start text-white font-bold text-sm md:text-base leading-5">
+            <p className="text-sm font-bold leading-5 text-white text-start md:text-base">
               Teleconsultas
             </p>
           </button>
         </Link>
         <h1 className="font-bold md:text-xl">Consultas</h1>
-        <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
+        <Link href={`${rutas.Doctor}${rutas.Consultas}${rutas.Historial}R`}>
           <button className="flex px-3 md:px-6 py-1 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
             <IconFolder className="h-6" />
             <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
@@ -145,7 +145,7 @@ export default function HomeDoc() {
                       {
                         label: "Ver consultas",
                         icon: <IconPersonalData />,
-                        href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
+                        href: `${rutas.Doctor}${rutas.Consultas}/${paciente.patient}`,
                       },
                     ],
                   },
@@ -167,7 +167,7 @@ export default function HomeDoc() {
 
 // {filteredPatients?.map(paciente => (
 //     <div key={paciente.id} className="flex justify-between w-full border-b border-b-[#cecece] px-6 py-2 items-center " >
-//         <div className="flex gap-3 items-center">
+//         <div className="flex items-center gap-3">
 //             {/* <Image
 //                 src={
 //                     paciente.risk === 'alto' ? riesgoRojo :
@@ -177,8 +177,8 @@ export default function HomeDoc() {
 //                 }
 //                 alt="Punto de color"
 //             /> */}
-//             <div className="w-12 h-12 flex justify-center items-center">
-//                 <img src={paciente.avatar} alt="" className="w-12 h-12 object-cover rounded-3xl " />
+//             <div className="flex items-center justify-center w-12 h-12">
+//                 <img src={paciente.avatar} alt="" className="object-cover w-12 h-12 rounded-3xl " />
 //             </div>
 //             <p className="text-start text-[#686868] font-normal text-base leading-6">{paciente.name} {paciente.lastname}</p>
 //             {/* Aquí puedes agregar más elementos del paciente */}
@@ -188,15 +188,15 @@ export default function HomeDoc() {
 //         <details className="relative">
 //             <summary className="flex px-6 py-2  text-white bg-[#487FFA] rounded-xl gap-1 items-center cursor-pointer">
 //                 <Image src={opciones} alt="Opciones" />
-//                 <p className="text-start text-white font-bold text-base leading-5">Opciones</p>
+//                 <p className="text-base font-bold leading-5 text-white text-start">Opciones</p>
 //             </summary>
 //             <ul className="absolute bg-white z-50 p-2 text-start text-[#686868] font-normal text-base leading-6 w-64 right-0 border-2 border-[#D7D7D7] rounded-lg gap-4 mt-2 shadow-lg">
-//                 <li className='font-normal text-base leading-8 ml-6 flex items-center gap-2'>
+//                 <li className='flex items-center gap-2 ml-6 text-base font-normal leading-8'>
 //                     <Link className='flex items-center gap-2' href={`${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`}>
 //                         Dejar review
 //                     </Link>
 //                 </li>
-//                 <li className='font-normal text-base leading-8 ml-6 flex items-center gap-2'>
+//                 <li className='flex items-center gap-2 ml-6 text-base font-normal leading-8'>
 //                     <Link className='flex items-center gap-2' href={`${rutas.Doctor}${rutas.Historial}/${paciente.id}`}>
 //                         Ver  consultas
 //                     </Link>
