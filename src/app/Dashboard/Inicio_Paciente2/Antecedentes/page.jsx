@@ -27,7 +27,7 @@ export default function HomePte() {
             <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
                 <div className="flex justify-center items-center ml-5">
                     <div>
-                        <AvatarDashPte avatar={user?.avatar} />
+                        <AvatarDashPte avatar1={user?.avatar} />
                     </div>
                     <div className="flex flex-col ml-4 ">
                         <span className="font-bold text-xl">

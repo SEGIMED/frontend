@@ -19,6 +19,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
   const [selectedMuscles, setSelectedMuscles] = useState([]);
   const [isPain, setIsPain] = useState(false); // Estado para manejar si hay dolor
   const [selectedMuscleName, setSelectedMuscleName] = useState("");
+  const [musclesObject, setMusclesObject] = useState({});
   const [modelType, setModelType] = useState("anterior");
   const [painLevel, setPainLevel] = useState(1);
 
@@ -58,6 +59,31 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
     /* Head */
     head: "Cabeza",
     neck: "Cuello",
+  };
+
+  const reversePainAreaMap = {
+    trapezius: 1,
+    "upper-back": 2,
+    "lower-back": 3,
+    chest: 4,
+    biceps: 5,
+    triceps: 6,
+    forearm: 7,
+    "back-deltoids": 8,
+    "front-deltoids": 9,
+    abs: 10,
+    obliques: 11,
+    adductor: 12,
+    hamstring: 13,
+    quadriceps: 14,
+    abductors: 15,
+    calves: 16,
+    gluteal: 17,
+    knees: 18,
+    "right-soleus": 19,
+    "left-soleus": 20,
+    head: 21,
+    neck: 22
   };
 
   useEffect(() => {
@@ -101,21 +127,33 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
     const translatedMuscleName = muscleTranslations[muscle] || muscle;
     setSelectedMuscleName(translatedMuscleName); // Establecer el nombre del músculo seleccionado
     setSelectedMuscles([{ ...existingData, muscles: updatedMuscles }]);
-    onBodyChange("painAreas", [...updatedMuscles.map((m) => muscleTranslations[m] || m)]);
+    if (musclesObject[muscle] && musclesObject[muscle].active) {
+      setMusclesObject({ ...musclesObject, [muscle]: { ...musclesObject[muscle], muscle: muscle, painArea: reversePainAreaMap[muscle], active: false, painNotes: '' } });
+      onBodyChange("painAreas", { ...musclesObject, [muscle]: { ...musclesObject[muscle], muscle: muscle, painArea: reversePainAreaMap[muscle], active: false, painNotes: '' } });
+    }
+    else {
+      setMusclesObject({ ...musclesObject, [muscle]: { ...musclesObject[muscle], muscle: muscle, painArea: reversePainAreaMap[muscle], active: true, painNotes: '' } });
+      onBodyChange("painAreas", { ...musclesObject, [muscle]: { ...musclesObject[muscle], muscle: muscle, painArea: reversePainAreaMap[muscle], active: true, painNotes: '' } });
+    }
   };
 
-  const handlePainSelection = (selection) => {
-    setIsPain(selection === "Si");
+  const handleDescription = (description, muscle) => { // agregamos una descripción del dolor muscular que seleccionamos
+    setMusclesObject({ ...musclesObject, [muscle]: { ...musclesObject[muscle], muscle: muscle, painArea: reversePainAreaMap[muscle], active: true, painNotes: description } });
+    onBodyChange("painAreas", { ...musclesObject, [muscle]: { ...musclesObject[muscle], muscle: muscle, painArea: reversePainAreaMap[muscle], active: true, painNotes: description } });
   };
 
-  const handleModelTypeChange = (type) => {
+  const handlePainSelection = (selection) => { // setea si hay dolor o no
+    setIsPain(selection);
+  };
+
+  const handleModelTypeChange = (type) => { // para dar vuelta el cuerpo
     if (type === "Frente") setModelType("anterior");
     else setModelType("posterior");
   };
 
-  const handleChange = (value) => {
+  const handleChangePainLevel = (value) => { // el slide de la escala de dolor
     setPainLevel(value);
-    onBodyChange("painLevel", value);
+    onBodyChange("painScale", value);
   };
 
   return (
@@ -138,7 +176,10 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
             <div className="items-center justify-center ">
               <ButtonNextPreconsultation
                 onBodyChange={onBodyChange}
-                options={["Frente", "Dorso"]}
+                options={[
+                  { value: 'Frente', text: 'Frente' },
+                  { value: 'Dorso', text: 'Dorso' }
+                ]}
                 handleSelection={handleModelTypeChange}
                 name={"modelType"}
               />
@@ -165,6 +206,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                   </label>
                   <textarea
                     {...register(muscleTranslations[muscle])}
+                    onChange={(e) => handleDescription(e.target.value, muscle)}
                     className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
                     placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`}
                   />
@@ -177,9 +219,12 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
                   text={"¿Hay dolor?"}
-                  options={["Si", "No"]}
+                  options={[
+                    { value: true, text: 'Si' },
+                    { value: false, text: 'No' }
+                  ]}
                   handleSelection={handlePainSelection}
-                  name={"pain"}
+                  name={"isTherePain"}
                 />
               </div>
               {isPain && (
@@ -188,8 +233,12 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Desde hace cuánto tiempo tiene el dolor?"}
-                      options={["Horas", "Dias", "Semanas"]}
-                      name={"painTime"}
+                      options={[
+                        { value: 1, text: 'Horas' },
+                        { value: 2, text: 'Días' },
+                        { value: 3, text: 'Semana' }
+                      ]}
+                      name={"painDuration"}
                     />
                   </div>
                   <div className="w-[90%] md:w-[80%]  flex flex-col">
@@ -202,7 +251,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                         size="lg"
                         step={1}
                         value={painLevel}
-                        onChange={handleChange}
+                        onChange={handleChangePainLevel}
                         showSteps={true}
                         maxValue={10}
                         minValue={1}
@@ -262,17 +311,17 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                       onBodyChange={onBodyChange}
                       text={"Tipo de dolor"}
                       options={[
-                        "Opresión",
-                        "Punzante",
-                        "Cólico (va y viene)",
-                        "Quemante",
-                        "Molestia",
-                        "Eléctrico",
-                        "Desgarro",
-                        "Cansancio",
-                        "Irritante",
-                        "Pulsátil",
-                        "Taladreante",
+                        { value: 1, text: 'Opresión' },
+                        { value: 2, text: 'Punzante' },
+                        { value: 3, text: 'Cólico (va y viene)' },
+                        { value: 4, text: 'Quemante' },
+                        { value: 5, text: 'Molestia' },
+                        { value: 6, text: 'Eléctrico' },
+                        { value: 7, text: 'Desgarro' },
+                        { value: 8, text: 'Cansancio' },
+                        { value: 9, text: 'Irritante' },
+                        { value: 10, text: 'Pulsátil' },
+                        { value: 11, text: 'Taladreante' }
                       ]}
                       text2={"Seleccione tipo de dolor"}
                       name={"painType"}
@@ -282,16 +331,22 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Tomó analgésicos?"}
-                      options={["Si", "No"]}
-                      name={"analgesicos"}
+                      options={[
+                        { value: true, text: 'Si' },
+                        { value: false, text: 'No' }
+                      ]}
+                      name={"isTakingAnalgesic"}
                     />
                   </div>
                   <div>
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Calma con analgésicos?"}
-                      options={["Si", "No"]}
-                      name={"calmaAnalgesicos"}
+                      options={[
+                        { value: true, text: 'Si' },
+                        { value: false, text: 'No' }
+                      ]}
+                      name={"doesAnalgesicWorks"}
                     />
                   </div>
                   <div>
@@ -299,22 +354,25 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                       onBodyChange={onBodyChange}
                       text={"Frecuencia del dolor"}
                       options={[
-                        "De vez en cuando",
-                        "Algunas veces",
-                        "Intermitente",
-                        "Muchas veces",
-                        "Siempre",
+                        { value: 1, text: 'De vez en cuando' },
+                        { value: 2, text: 'Algunas veces' },
+                        { value: 3, text: 'Intermitente' },
+                        { value: 4, text: 'Muchas veces' },
+                        { value: 5, text: 'Siempre' },
                       ]}
                       text2={"Seleccione frecuencia"}
-                      name={"frecuencia"}
+                      name={"painFrequency"}
                     />
                   </div>
                   <div>
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Es el peor dolor de su vida?"}
-                      options={["Si", "No"]}
-                      name={"peorDolor"}
+                      options={[
+                        { value: true, text: 'Si' },
+                        { value: false, text: 'No' }
+                      ]}
+                      name={"isWorstPainEver"}
                     />
                   </div>
                 </>

@@ -99,16 +99,16 @@ const ModalDetailDoctor = ({ doctorId, onClose }) => {
               </span>
             </div>
 
-            <div className="border" />
+            {/* <div className="border" /> */}
 
-            <div className="flex items-center justify-between w-full px-5">
+            {/* <div className="flex items-center justify-between w-full px-5">
               <div className="w-full flex items-center justify-start gap-3">
                 <IconCircle className="w-3" /> Inicio de seguimiento
               </div>
               <span className="w-full flex justify-start">
                 2024-05-09 - 11:20AM
               </span>
-            </div>
+            </div> */}
 
             <div className="border" />
 

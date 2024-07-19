@@ -20,7 +20,7 @@ export default function Citas() {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const lastSegmentTextToShow = PathnameShow()
+  const lastSegmentTextToShow = PathnameShow();
 
   const [date, setDate] = useState(new Date());
   const [dateSelected, setDateSelected] = useState();
@@ -139,12 +139,12 @@ export default function Citas() {
     };
 
     return (
-      <div className="flex flex-col mb-2 rounded-xl gap-2">
+      <div className="flex flex-col mb-2 rounded-xl gap-2 bg-white">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex justify-between items-center bg-white rounded-lg p-2">
           <div className="space-x-1 md:space-x-4">
             <button
-              className="bg-[#487FFA] text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
+              className="bg-[#487FFA] font-Roboto text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
               onClick={() => onNavigate("PREV")}>
               Anterior
             </button>
@@ -186,7 +186,7 @@ export default function Citas() {
           </div>
           <div>
             <button
-              className="bg-[#487FFA] text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
+              className="bg-[#487FFA] text-white font-Roboto text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
               onClick={() => onNavigate("NEXT")}>
               Siguiente
             </button>
@@ -200,8 +200,8 @@ export default function Citas() {
   };
 
   return (
-    <div className=" flex flex-col items-center bg-[#FAFAFC] rounded-2xl h-screen" >
-      <div className="h-[90%] w-full md:px-10 py-5">
+    <div className=" flex flex-col items-center bg-white rounded-2xl h-screen" >
+      <div className="h-[90%] w-full md:px-10 bg-white rounded-2xl py-5">
         <Calendar
           localizer={localizer}
           events={events}
@@ -218,7 +218,7 @@ export default function Citas() {
             toolbar: CustomToolbar,
           }}
           firstDay={1}
-          style={{ height: '100%', width: '100%' }} // Aseguramos que ocupe todo el espacio
+          style={{ height: "100%", width: "100%" }} // Aseguramos que ocupe todo el espacio
         />
       </div>
       <ModalConsultationCalendar

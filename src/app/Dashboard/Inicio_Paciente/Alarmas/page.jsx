@@ -9,6 +9,16 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useState, useEffect } from "react";
 import TableAlarmPte from "@/components/alarm/tableAlarmPte";
 import IconAlarmRed from "@/components/icons/iconAlarmRed";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+
+
+// Modal
+import Alarm1 from "@/components/modal/alarm/alarm1";
+import Alarm2 from "@/components/modal/alarm/alarm2";
+import Alarm3 from "@/components/modal/alarm/alarm3";
+
+const Modals = [<Alarm1 key={"alarma 1"} />, <Alarm2 key={"alarma 2"} />, <Alarm3 key={"alarma 3"} />]
+
 
 export default function AlarmPte() {
   // Filter the patients with active alarm status
@@ -16,6 +26,14 @@ export default function AlarmPte() {
   const [sortResolvedFirst, setSortResolvedFirst] = useState(true);
   const myId = Cookies.get("c");
   const token = Cookies.get("a");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
 
   const getMyAlarms = async () => {
     const headers = { headers: { token: token } };
@@ -33,7 +51,7 @@ export default function AlarmPte() {
     getMyAlarms();
   }, []);
 
-  
+
 
   // const unsolvedAlarms = misAlarmas.filter((a, b) => {
   //   if (sortResolvedFirst) {
@@ -47,7 +65,7 @@ export default function AlarmPte() {
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
         {/* <Ordenar funcion={handleSortToggle} /> */}
-        
+
         <button
           className="flex items-center px-4 py-2 bg-white rounded-xl g text-[#487FFA] 
                     font-bold border-solid border-[#487FFA] border-3"
@@ -56,7 +74,7 @@ export default function AlarmPte() {
           }}>
           <IconAlarmBlue /> Resueltas
         </button>
-       
+
         <h1 className="font-bold gap-2 ml-2">Listado de Alarmas</h1>
         <button
           // className="flex items-center px-2 py-2 bg-white rounded-xl  text-[#487FFA] 
@@ -64,7 +82,7 @@ export default function AlarmPte() {
           className="flex items-center px-2 py-2 bg-[#E73F3F] rounded-xl  text-white
           font-bold border-solid border-red-600 border-3"
           onClick={() => {
-            router.push(`${rutas.PacienteDash}${rutas.Alarm}/${myID}`);
+            setIsModalOpen(true)
           }}>
           <IconAlarmBlue color={"white"} /> Crear Alarma
         </button>
@@ -79,6 +97,18 @@ export default function AlarmPte() {
       <div className="overflow-auto h-full">
         <TableAlarmPte paciente={UnsolvedAlarmas} />
       </div>
+      <ModalModularizado
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        Modals={Modals}
+        title={"Importante"}
+        ruta={`${rutas.PacienteDash}${rutas.Alarm}/${myID}`}
+        button1={"hidden"}
+        button2={"bg-greenPrimary block"}
+        progessBar={"hidden"}
+        size={"h-[36rem] md:h-[27rem] md:w-[33rem]"}
+        buttonText={{ end: `Aceptar y continuar`, start: `Continuar` }}
+      />
     </div>
   );
 }
