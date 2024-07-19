@@ -38,7 +38,7 @@ export default function Estadisticas() {
   const getAlarmsEstadistica= async (headers)=>{
     try {
       const response= await ApiSegimed.get("alarms-by-patient",headers)
-      console.log(response.data)
+      
       setAlarm(response.data.priorityCounts)
     } catch (error) {
       console.error(error)
@@ -60,7 +60,7 @@ export default function Estadisticas() {
   const toggleChartType = () => {
     setIs3D((prevIs3D) => !prevIs3D);
   };
-  console.log(alarm)
+  
   return (
     <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
