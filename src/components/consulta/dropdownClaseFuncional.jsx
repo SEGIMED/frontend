@@ -10,8 +10,12 @@ import {
 import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
+import IconArrowDetailDown from "../icons/IconArrowDetailDown";
+import IconArrowDetailUp from "../icons/IconArrowDetailUp";
+import IconPreConsulta from "../icons/iconPreconsulta";
+import { style } from "d3-selection";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText}) {
+export default function DropClaseFuncional({ text, options, text2, name, selectedOptions, type, handleDisabled }) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const [isOpen, setIsOpen] = useState(false);
@@ -39,11 +43,9 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
       dispatch(setSelectedOption({ name, option: key }));
     }
   };
-  const handleButtonClick = () => {
+  const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
-
   return (
     <div>
       <div className='flex items-center justify-center'>
@@ -52,58 +54,57 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
       <Dropdown className="emptyContent">
         <DropdownTrigger
           style={{
-            color: "#487FFA",
+            color: "#5F5F5F",
             width: "100px",
-          }}>
-          {!disabled ? (
+          }}
+          onClick={toggleDropdown}
+          >
+
             <Button
               variant="bordered"
               className="capitalize"
               style={{
-                backgroundColor: colorBackground || "none", 
-                color: colorText || "#487FFA",
-                borderColor: "#487FFA",
+                color: "#5F5F5F",
+                borderColor: "#DCDBDB",
                 border: "2px solid",
-                
-              }}
-              onClick={handleButtonClick}
-              >
-              {selectedOption || text2}
-              {icon && <div className={ isOpen===true ? "rotate-180" : ""}>
-              {icon}
-              </div>}
-            </Button>
-          ) : (
-            <Button
-              variant="bordered"
-              className="capitalize"
-              disabled
-              style={{
-                color: "#487FFA",
-                borderColor: "#487FFA",
-                border: "2px solid",
+                backgroundColor: "white",
               }}>
               {selectedOption || text2}
+              {isOpen ?  <IconArrowDetailUp/>: <IconArrowDetailDown/> }
             </Button>
-          )}
         </DropdownTrigger>
-        {!disabled ? (
           <DropdownMenu
             aria-label="Options menu"
             variant="flat"
             disallowEmptySelection
             selectionMode="single"
             selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
+            style={{ width: "250px" }}
             onSelectionChange={(keys) =>
               handleSelectionChange(Array.from(keys)[0])
+            
             }>
             {options?.map((option, index) => (
-              <DropdownItem key={option} aria-label={option}>
+              <DropdownItem key={option} aria-label={option} >
+                <div className="flex w-full gap-2">
+              <IconPreConsulta
+                    color={
+                      option === "Clase funcional I"
+                        ? "#70c247"
+                        : option === "Clase funcional II"
+                        ? "#f5e400"
+                        : option === "Clase funcional III"
+                        ? "#e73f3f"
+                        : option === "Clase funcional IV"
+                        ? "#9e193b"
+                        : null
+                    }
+                  />  
                 {option}
+                </div>
               </DropdownItem>
             ))}
           </DropdownMenu>
-        ) : null}
       </Dropdown>
     </div>
   );

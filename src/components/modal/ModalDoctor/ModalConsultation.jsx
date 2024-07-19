@@ -131,8 +131,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
         <form
           onSubmit={onSubmit}
-          className="h-full w-full flex flex-col justify-between">
-          <div className="h-16 flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
+          className="flex flex-col justify-between w-full h-full">
+          <div className="flex items-center justify-start h-16 gap-3 p-5 font-semibold border-b-2">
             <IconCurrentRouteNav className="w-4" /> Agendar consulta
           </div>
           <div className="flex flex-col justify-around px-5">
@@ -175,13 +175,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               </div>
             </div>
             {errors.typeOfMedicalConsultation && (
-              <span className="text-red-500 text-sm font-medium">
+              <span className="text-sm font-medium text-red-500">
                 {errors.typeOfMedicalConsultation.message}
               </span>
             )}
           </div>
 
-          <div className="border w-full" />
+          <div className="w-full border" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
@@ -199,13 +199,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               })}
             />
             {errors.reasonForConsultation && (
-              <span className="text-red-500 text-sm font-medium">
+              <span className="text-sm font-medium text-red-500">
                 {errors.reasonForConsultation.message}
               </span>
             )}
           </div>
 
-          <div className="border w-full" />
+          <div className="w-full border" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
@@ -227,20 +227,20 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               <option value="1">Centro Gallegos</option>
             </select>
             {errors.healthCenter && (
-              <span className="text-red-500 text-sm font-medium">
+              <span className="text-sm font-medium text-red-500">
                 {errors.healthCenter.message}
               </span>
             )}
           </div>
 
-          <div className="border w-full" />
+          <div className="w-full border" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconDate /> Fecha
             </div>
-            <div className="flex flex-col md:flex-row justify-around">
-              <div className="flex flex-row md:flex-col justify-between gap-2">
+            <div className="flex flex-col justify-around md:flex-row">
+              <div className="flex flex-row justify-between gap-2 md:flex-col">
                 <label
                   htmlFor="date"
                   className="flex items-center justify-start gap-2">
@@ -259,13 +259,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 {errors.date && (
-                  <span className="text-red-500 text-sm font-medium">
+                  <span className="text-sm font-medium text-red-500">
                     {errors.date.message}
                   </span>
                 )}
               </div>
 
-              <div className="flex flex-row md:flex-col justify-between gap-2">
+              <div className="flex flex-row justify-between gap-2 md:flex-col">
                 <label
                   htmlFor="time"
                   className="flex items-center justify-start gap-2">
@@ -284,7 +284,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 {errors.time && (
-                  <span className="text-red-500 text-sm font-medium">
+                  <span className="text-sm font-medium text-red-500">
                     {errors.time.message}
                   </span>
                 )}
@@ -292,7 +292,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
           </div>
 
-          <div className="w-full p-3 border-t-2 flex justify-center items-center">
+          <div className="flex items-center justify-center w-full p-3 border-t-2">
             <button
               type="submit"
               className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white">
@@ -303,7 +303,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
         </form>
         <button
           onClick={handleClose}
-          className="absolute top-0 right-0 m-4 hover:transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
+          className="absolute top-0 right-0 m-4 duration-300 ease-in-out transform hover:transition hover:scale-105 active:scale-100 active:translate-y-1">
           <IconClose className="w-8" />
         </button>
       </div>

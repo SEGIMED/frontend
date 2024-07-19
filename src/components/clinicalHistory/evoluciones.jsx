@@ -16,36 +16,42 @@ export default function Evoluciones({ pacientes }) {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col ">
       {pacientes?.map((paciente, index) => (
         <div key={index}>
           <details
             open={openDetails[index]}
             onToggle={() => toggleDetail(index)}>
             <summary className="flex items-center cursor-pointer ">
-              <div className="grid grid-cols-4 md:grid-cols-7 text-center md:text-left px-2 gap-1 items-center border-b border-t border-b-[#cecece] border-t-[#cecece] md:pr-6 py-2 bg-white w-full h-fit">
-                <div className="justify-center hidden md:flex">
+              <div className="w-[100%] flex border-b border-t border-b-[#cecece] border-t-[#cecece]  bg-white">
+                <div className="justify-center w-[5%] items-center hidden md:flex">
                   <IconConsulta />
                 </div>
-                <div className="text-[#5F5F5F]">
-                  {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
-                    month: "2-digit",
-                    day: "2-digit",
-                  })}
+
+                <div className="grid grid-cols-3 w-[90%] md:w-[90%]   md:grid-cols-5 text-center md:text-left px-2 md:px-0 items-center  py-2   h-fit">
+                  <div className="text-[#5F5F5F] hidden md:block">
+                    {new Date(paciente.timestamp).toLocaleTimeString()}
+                  </div>
+                  <div className="text-[#5F5F5F]">
+                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+                      month: "2-digit",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </div>
+
+                  <div className="text-[#FF8300]">
+                    {paciente?.physician?.name} {paciente?.physician?.lastname}
+                  </div>
+                  <div className="text-[#5F5F5F]">
+                    {paciente?.attendancePlace?.alias}
+                  </div>
+                  <div className="text-[#5F5F5F] hidden md:block">
+                    {paciente?.chiefComplaint}
+                  </div>
+
                 </div>
-                <div className="text-[#5F5F5F] hidden md:block">
-                  {new Date(paciente.timestamp).toLocaleTimeString()}
-                </div>
-                <div className="text-[#FF8300]">
-                  {paciente?.physician?.name} {paciente?.physician?.lastname}
-                </div>
-                <div className="text-[#5F5F5F]">
-                  {paciente?.attendancePlace?.alias}
-                </div>
-                <div className="text-[#5F5F5F] hidden md:block">
-                  {paciente?.chiefComplaint}
-                </div>
-                <div className="flex justify-center">
+                <div className="flex w-[10%] md:w-[5%]  items-center justify-center">
                   {openDetails[index] ? (
                     <IconArrowDetailUp />
                   ) : (

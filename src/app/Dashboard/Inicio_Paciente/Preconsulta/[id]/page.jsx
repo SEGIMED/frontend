@@ -307,7 +307,7 @@ export default function PreconsultaPte({ params }) {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-full overflow-y-auto gap-5">
+      <div className="flex flex-col h-full gap-5 overflow-y-auto">
         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece]">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>

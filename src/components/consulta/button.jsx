@@ -25,7 +25,7 @@ export default function ButtonNext({
 
   useEffect(() => {
     setSelectedOptionState(opcionRecibida);
-    if (selectedOptions) { handleDisabled() }
+    if (selectedOptions) { if (handleDisabled) handleDisabled() }
   }, [selectedOptions]);
 
   const handleClick = (option) => {
