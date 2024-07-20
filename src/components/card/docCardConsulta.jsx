@@ -1,11 +1,16 @@
+"use client"
+import { usePathname } from "next/navigation";
 import Avatars from "../avatar/avatarChat";
 import LastLogin from "@/utils/lastLogin";
 import avatar from "@/utils/defaultAvatar";
 import IconTablillaTilde from "../icons/iconTablillaTilde"
 import { Hora, Fecha } from "@/utils/NormaliceFechayHora";
+import rutas from "@/utils/rutas";
+
 
 export default function DoctorCardConsulta({ doctor, button }) {
-  console.log(doctor);
+  const pathname= usePathname()
+  const textColor = pathname === `${rutas.PacienteDash}${rutas.Preconsulta}` ? '#FF8300' : '#5F5F5F';
   
   return (
     <div className="flex flex-col">
@@ -17,7 +22,7 @@ export default function DoctorCardConsulta({ doctor, button }) {
               {Fecha(doctor?.scheduledStartTimestamp)}
             </div>
             <div className="text-[#5F5F5F]">{Hora(doctor?.scheduledStartTimestamp)}</div>
-            <div className="text-[#5F5F5F]">{doctor?.physicianThatAttend?.name} {doctor?.physicianThatAttend?.lastname}</div>
+            <div className={`text-[${textColor}]`}>{doctor?.physicianThatAttend?.name} {doctor?.physicianThatAttend?.lastname}</div>
             <div className="text-[#5F5F5F] hidden md:block">{doctor?.healthCenter === 1 ? "Centro Gallegos" : "Otro Centro" }</div>
             <div className="text-[#5F5F5F] hidden md:block">{doctor?.reasonForConsultation}</div>
 
