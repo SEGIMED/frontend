@@ -75,12 +75,18 @@ export default function HomePte() {
                     toggleMenu={toggleFilterMenu}
                 /> */}
       </div>
-      <div className="items-start justify-center w-full overflow-y-auto">
+      <div className="grid grid-cols-4 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
+        <p className="font-bold text-[#5F5F5F] ml-1 md:ml-10">Fecha</p>
+        <p className="font-bold text-[#5F5F5F]">Hora</p>
+        <p className="font-bold text-[#5F5F5F]">Medico</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">Centro de atención</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
+        </div>
+        <div className="overflow-auto h-full">
         {scheduledConsultas.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
             doctor={doc}
-            consulta={doc.consulta}
             button={
               <Ver
                 id={doc.id}

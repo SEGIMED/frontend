@@ -54,7 +54,7 @@ import Link from "next/link";
 //     },
 //   ];
 
-const MenuDropDown = ({ icon,iconR, label, categories, items }) => {
+const MenuDropDown = ({ icon,iconr, label, categories, items }) => {
   return (
     <Dropdown
       
@@ -66,7 +66,7 @@ const MenuDropDown = ({ icon,iconR, label, categories, items }) => {
         <div className="flex items-center md:gap-3">
           {icon ? icon : " "}
           <span className="hidden md:block font-semibold">{label}</span>
-          {iconR ? iconR : " " }
+          {iconr ? iconr : " " }
         </div>
       </DropdownTrigger>
       <DropdownMenu>
@@ -76,7 +76,7 @@ const MenuDropDown = ({ icon,iconR, label, categories, items }) => {
                 key={categoryIndex}
                 icon={category.icon}
                 title={category.title}
-                iconR={category.iconR}
+                iconr={category.iconr}
                 classNames={{
                   heading: "text-sm font-bold",
                 }}
@@ -89,7 +89,7 @@ const MenuDropDown = ({ icon,iconR, label, categories, items }) => {
                         className="w-full flex items-center gap-2  text-sm cursor-pointer">
                         {item.icon}
                         {item.label}
-                        {item.iconR}
+                        {item.iconr}
                       </Link>
                     )}
                     {item.onClick && (

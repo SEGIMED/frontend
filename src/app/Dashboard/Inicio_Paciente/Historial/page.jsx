@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconCorazonMini from "@/components/icons/iconCorazon";
 import ReviewModal from "@/components/modal/ReviewModal";
+import IconOptions from "@/components/icons/IconOptions";
 
 export default function HomeDocAll() {
   const dispatch = useAppDispatch();
@@ -48,6 +49,7 @@ export default function HomeDocAll() {
     return <div>No existen consultas registradas</div>;
   }
 
+  console.log(scheduledConsultas, "antes de pasar a la card")
   return (
     <div className="text-[#686868] h-full w-full flex flex-col">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
@@ -65,16 +67,23 @@ export default function HomeDocAll() {
                     toggleMenu={toggleFilterMenu}                
                 /> */}
       </div>
-      <div className="items-start justify-center w-full h-full overflow-y-auto">
+       <div className="grid grid-cols-4 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
+        <p className="font-bold text-[#5F5F5F] ml-1 md:ml-10">Fecha</p>
+        <p className="font-bold text-[#5F5F5F]">Hora</p>
+        <p className="font-bold text-[#5F5F5F]">Medico</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">Centro de atención</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
+        </div>
+        <div className="overflow-auto h-full">
         {scheduledConsultas?.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
             doctor={doc}
-            consulta={doc.consulta}
             button={
               // <OptDocCardHistorial id={doc.id} />
               <MenuDropDown
-                label="Más"
+                icon={<IconOptions color="white"/>}
+                label="Opciones"
                 categories={[
                   {
                     title: "Información",
@@ -82,7 +91,7 @@ export default function HomeDocAll() {
                       {
                         label: "Dejar Review",
                         icon: <IconCorazonMini />,
-                        onClick: () => handleReviewModal(doc.id),
+                        onClick: () => handleReviewModal(doc.physician),
                       },
                     ],
                   },

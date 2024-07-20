@@ -230,7 +230,7 @@ export default function HomeDoc() {
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
         <MenuDropDown
         label="Ordenar"
-        iconR={<IconOrder/>}
+        iconr={<IconOrder/>}
         categories={[
           {title:"Nivel de riesgo",
           items: [
