@@ -87,7 +87,7 @@ export default function HomeDocAll() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
-  console.log(scheduledPatientIds);
+  
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">

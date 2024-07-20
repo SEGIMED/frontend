@@ -49,7 +49,7 @@ export default function HomeDocAll() {
     return <div>No existen consultas registradas</div>;
   }
 
-  console.log(scheduledConsultas, "antes de pasar a la card")
+  
   return (
     <div className="text-[#686868] h-full w-full flex flex-col">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">

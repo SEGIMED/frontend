@@ -24,7 +24,7 @@ export default function HomePte() {
     // Obtener consultas del estado
     const consultas = useAppSelector(state => state.schedules);
     const myID = Number(Cookies.get("c")); 
-    console.log(consultas)
+  
     // Obtener docs del estado
     const listaDocs = useAppSelector(state => state.doctores.doctores);
     const searchTerm1 = useAppSelector(state => state.doctores.searchTerm1);
