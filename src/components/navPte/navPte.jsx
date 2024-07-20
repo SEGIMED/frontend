@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
-import IconTratamiento from "../icons/IconTratamiento";
 import LogoSegimed from "../logo/LogoSegimed";
 import IconOut from "../icons/iconOut";
 import IconMessageNav from "../icons/IconMessageNav";
@@ -15,12 +14,8 @@ import IconCube from "../icons/IconCube";
 import IconDoctorNav from "../icons/IconDoctorNav";
 
 import AlarmDash from "../icons/IconAlarmDash";
-
-import SoporteTecnico from "../icons/IconSoporte";
 import Sugerencias from "../icons/IconSugerencias";
 import rutas from "@/utils/rutas";
-
-import IconConfig from "../icons/iconConfig";
 import { socket } from "@/utils/socketio";
 import { resetApp } from "@/redux/rootReducer";
 import { useDispatch } from "react-redux";
@@ -62,7 +57,7 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
               <LogoSegimed className="w-40 md:w-full" />
             </Link>
             <div className="justify-center">
-              <ul className="flex flex-col gap-5 md:gap-4 ">
+              <ul className="flex flex-col gap-1 xs:gap-3 md:gap-4">
                 <Link
                   href={rutas.PacienteDash}
                   className={`flex items-center gap-4 ${
