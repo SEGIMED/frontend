@@ -31,6 +31,9 @@ import IconOrder from "@/components/icons/IconOrder";
 import IconOptions from "@/components/icons/IconOptions";
 import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
 import IconAlarm from "@/components/icons/IconAlarm";
+import IconHooter from "@/components/icons/IconHooter";
+import IconAlphabetic from "@/components/icons/IconAlphabetic";
+import IconFilter from "@/components/icons/IconFilter";
 
 
 export default function HomeDoc() {
@@ -229,10 +232,11 @@ export default function HomeDoc() {
         
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
         <MenuDropDown
-        label="Ordenar"
-        iconr={<IconOrder/>}
+        label="Filtrar"
+        iconr={<IconFilter/>}
         categories={[
           {title:"Nivel de riesgo",
+          icon:<IconHooter/>,
           items: [
                   {
                     label: "Alto",
@@ -249,13 +253,22 @@ export default function HomeDoc() {
                     onClick: () =>setRiskFilter("Bajo"),
                     icon: <IconRisk color="#70C247"/>,
                   },
-                  {
-                    label: "Ninguno",
-                    onClick: () =>setRiskFilter(""),
-                    icon: <IconRisk  color="lightGray"/>,
-                  },
+                  // {
+                  //   label: "Ninguno",
+                  //   onClick: () =>setRiskFilter(""),
+                  //   icon: <IconRisk  color="lightGray"/>,
+                  // },
                   
-        ]}
+        ]}, {
+          title:"Orden Alfabetico",
+          icon: <IconAlphabetic/>,
+          items:[
+            {
+            label: "Ver todos",
+            onClick: () =>setRiskFilter(""),
+            }
+          ]
+        }
         ]}
         />
         {/* <div></div> */}
