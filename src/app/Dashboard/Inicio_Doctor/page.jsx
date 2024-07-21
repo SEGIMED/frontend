@@ -20,6 +20,8 @@ import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
 import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
 import Citas from "./Citas/page";
+import IconPrev from "@/components/icons/IconPrev";
+import IconNext from "@/components/icons/IconNext";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -165,11 +167,19 @@ export default function HomeDoc() {
       </div>
       <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl flex flex-col">
         <div className="flex justify-between items-center p-2 xs:p-5">
-          <Elboton onPress={handlePreviousChart} nombre={"Anterior"} />
+          <Elboton
+            onPress={handlePreviousChart}
+            nombre={"Anterior"}
+            icon={<IconPrev color="white" />}
+          />
           <span className="text-sm xs:text-lg text-center leading-6">
             Pacientes nuevos en los últimos 7 días
           </span>
-          <Elboton onPress={handleNextChart} nombre={"Siguiente"} />
+          <Elboton
+            onPress={handleNextChart}
+            nombre={"Siguiente"}
+            icon2={<IconNext color="white" />}
+          />
           {/* <button onClick={handlePreviousChart}>Anterior</button>
             <button onClick={handleNextChart}>Siguiente</button> */}
         </div>
