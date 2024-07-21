@@ -51,7 +51,7 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
         className={`flex ${
           isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
         } md:flex`}>
-        <div className="h-screen w-[60%] px-4 md:w-64 md:px-6 py-5 bg-white border-r-[1px] border-[#D7D7D7] flex flex-col justify-between">
+        <div className="h-screen overflow-y-auto w-[60%] px-4 md:w-64 md:px-6 py-5 bg-white border-r-[1px] border-[#D7D7D7] flex flex-col justify-between">
           <div className="flex flex-col justify-center gap-5">
             <Link href={`${rutas.PacienteDash}`} className="block">
               <LogoSegimed className="w-40 md:w-full" />
