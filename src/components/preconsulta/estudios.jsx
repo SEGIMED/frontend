@@ -4,21 +4,26 @@ import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
 import FileUpload from "@/components/consulta/file";
 import { useAppSelector } from "@/redux/hooks";
+import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 export default function InputFilePreconsultation({ tests, title, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, defaultOpen = false }) {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
             <details open={defaultOpen}>
-                <summary className="flex px-6 py-2 border gap-1 items-center cursor-pointer justify-center">
-                    <div className="flex items-center">
+                <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
+                    <div/>
+                    <div className="flex items-center bg-white">
                         <Image src={circleData} alt="" />
                         <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
                             {title}
                         </p>
                     </div>
+                    <div>
+                        <IconArrowDetailDown />
+                    </div>
                 </summary>
                 {Object.keys(tests).map((test, index) => (
-                    <FileUpload key={index} data={tests[test]} onTestSelectedOption={onTestSelectedOption} onTestActive={onTestActive} onUploadFile={onUploadFile} onDescriptionChange={onDescriptionChange} test={test} label={tests[test].title} />
+                    <FileUpload key={index} data={tests[test]} onTestSelectedOption={onTestSelectedOption} onTestActive={onTestActive} onUploadFile={onUploadFile} onDescriptionChange={onDescriptionChange} test={test} label={tests[test].title} Link={tests[test].file}/>
                 ))}
             </details>
         </div>

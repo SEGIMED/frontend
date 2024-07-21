@@ -25,27 +25,31 @@ export default function SignosVitales({ pacientes, subtitle }) {
             open={openDetails[index]}
             onToggle={() => toggleDetail(index)}>
             <summary className="flex items-center cursor-pointer">
-              <div className="grid text-center grid-cols-4 md:text-left md:grid-cols-7 items-center border-b border-b-[#cecece] py-2 bg-white z-10">
-                <div className=" justify-center hidden md:flex">
+              <div className="w-[100%] flex border-b border-t border-b-[#cecece] border-t-[#cecece]  bg-white">
+                <div className="justify-center w-[5%] items-center hidden md:flex">
                   <IconConsulta />
                 </div>
-                <div className="text-[#5F5F5F] hidden md:block">
-                  {new Date(paciente.timestamp).toLocaleTimeString()}
+                <div className="grid text-center grid-cols-3 w-[90%] md:text-left md:grid-cols-5 items-center  py-2 bg-white z-10">
+
+                  <div className="text-[#5F5F5F] hidden md:block">
+                    {new Date(paciente.timestamp).toLocaleTimeString()}
+                  </div>
+                  <div className="text-[#5F5F5F]">
+                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+                      day: "numeric",
+                      month: "numeric",
+                    })}
+                  </div>
+                  <div className="text-[#5F5F5F] hidden md:block">
+                    {paciente.HTP || "Sin asignar"}
+                  </div>
+                  <div className="text-[#5F5F5F]">
+                    {paciente?.attendancePlace?.alias}
+                  </div>
+                  <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
+
                 </div>
-                <div className="text-[#5F5F5F]">
-                  {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
-                    day: "numeric",
-                    month: "numeric",
-                  })}
-                </div>
-                <div className="text-[#5F5F5F] hidden md:block">
-                  {paciente.HTP || "Sin asignar"}
-                </div>
-                <div className="text-[#5F5F5F]">
-                  {paciente?.attendancePlace?.alias}
-                </div>
-                <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
-                <div className="flex justify-center">
+                <div className="flex w-[10%] md:w-[5%]  items-center justify-center">
                   {openDetails[index] ? (
                     <IconArrowDetailUp />
                   ) : (
@@ -57,39 +61,39 @@ export default function SignosVitales({ pacientes, subtitle }) {
             <div className="bg-[#FBFBFB]">
               {paciente.anthropometricDetails
                 ? paciente.anthropometricDetails.map((detail, detailIndex) => (
-                    <div key={detailIndex}>
-                      <DataPatient
-                        title={detail.measureType}
-                        info={`${detail.measure} ${detail.measureUnit}`}
-                      />
-                    </div>
-                  ))
+                  <div key={detailIndex}>
+                    <DataPatient
+                      title={detail.measureType}
+                      info={`${detail.measure} ${detail.measureUnit}`}
+                    />
+                  </div>
+                ))
                 : anthropometricDetails.map((detail, detailIndex) => (
-                    <div key={detailIndex}>
-                      <DataPatient
-                        title={detail.measureType}
-                        info={`${detail.measure} ${detail.measureUnit}`}
-                      />
-                    </div>
-                  ))}
+                  <div key={detailIndex}>
+                    <DataPatient
+                      title={detail.measureType}
+                      info={`${detail.measure} ${detail.measureUnit}`}
+                    />
+                  </div>
+                ))}
 
               {paciente.vitalSigns
                 ? paciente.vitalSigns.map((vital, vitalIndex) => (
-                    <div key={vitalIndex}>
-                      <DataPatient
-                        title={vital.measureType}
-                        info={`${vital.measure} ${vital.measureUnit}`}
-                      />
-                    </div>
-                  ))
+                  <div key={vitalIndex}>
+                    <DataPatient
+                      title={vital.measureType}
+                      info={`${vital.measure} ${vital.measureUnit}`}
+                    />
+                  </div>
+                ))
                 : vitalSigns.map((vital, vitalIndex) => (
-                    <div key={vitalIndex}>
-                      <DataPatient
-                        title={vital.measureType}
-                        info={`${vital.measure} ${vital.measureUnit}`}
-                      />
-                    </div>
-                  ))}
+                  <div key={vitalIndex}>
+                    <DataPatient
+                      title={vital.measureType}
+                      info={`${vital.measure} ${vital.measureUnit}`}
+                    />
+                  </div>
+                ))}
 
               <div className="flex justify-start items-center gap-2 px-3 border-b border-b-[#cecece] md:pr-10">
                 <label className="flex w-[60%] md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">

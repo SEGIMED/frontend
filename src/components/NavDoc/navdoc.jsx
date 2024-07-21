@@ -89,16 +89,16 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
             </Link>
             <Link
               onClick={toggleSidebar}
-              href={`${rutas.Doctor}${rutas.Historial}`}
+              href={`${rutas.Doctor}${rutas.Consultas}`}
               className={`flex items-center gap-4 ${
-                pathname === `${rutas.Doctor}${rutas.Historial}`
+                pathname === `${rutas.Doctor}${rutas.Consultas}`
                   ? "text-[#487FFA]"
                   : ""
               }`}>
               <IconRecordNav
                 className="w-6"
                 color={`${
-                  pathname === `${rutas.Doctor}${rutas.Historial}`
+                  pathname === `${rutas.Doctor}${rutas.Consultas}`
                     ? "#487FFA"
                     : "#B2B2B2"
                 }`}

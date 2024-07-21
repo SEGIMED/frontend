@@ -32,6 +32,26 @@ module.exports = {
         textSubtitle: "#686868",
       },
       darkMode: "class",
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+        'fade-in': 'fadeIn 0.2s ease-in forwards',
+        'scale-up': 'scaleUp 0.5s ease-in-out forwards',
+        'scale-down': 'scaleDown 0.5s ease-in-out forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        scaleUp: {
+          '0%': { transform: 'scale(0)', opacity: 5 },
+          '100%': { transform: 'scale(1)', opacity: 1 },
+        },
+        scaleDown: {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(0)' },
+        },
+      },
     },
   },
   plugins: [

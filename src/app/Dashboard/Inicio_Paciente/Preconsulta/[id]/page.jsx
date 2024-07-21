@@ -117,13 +117,13 @@ export default function PreconsultaPte({ params }) {
     },
     pendingStudies: {
       title: "Estudios pendientes",
-      description: "No one is pending :) Good patient",
+      description: "",
     },
   });
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
-  const handleQuestionActive = (question, active) => {
-    dispatch(updateActive({ question, active })); // activamos o desactivamos las subpreguntas
+  const handleQuestionActive = (question, label, active) => {
+    dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
   };
 
   const handleSubquestionOption = (question, subquestion, selectedOption) => {
@@ -307,8 +307,8 @@ export default function PreconsultaPte({ params }) {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-full overflow-y-auto gap-5">
-        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece]">
+      <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
+        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
               <Elboton
