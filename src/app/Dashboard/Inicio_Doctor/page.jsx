@@ -58,7 +58,7 @@ export default function HomeDoc() {
       <div className="grid-cols-2 gap-4 grid lg:flex w-full">
         <Link
           href={`${rutas.Doctor}${rutas.Pacientes}`}
-          className="w-full md:w-1/4">
+          className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconAdminButtons className="w-[25%] md:w-12" />
             <span className="text-[16px] lg:text-2xl font-semibold">
@@ -69,7 +69,7 @@ export default function HomeDoc() {
 
         <Link
           href={`${rutas.Doctor}${rutas.Citas}`}
-          className="w-full md:w-1/4">
+          className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconDashAgenda className="w-[25%] md:w-14" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
@@ -81,7 +81,7 @@ export default function HomeDoc() {
 
         <Link
           href={`${rutas.Doctor}${rutas.Historial}`}
-          className="w-full md:w-1/4">
+          className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconDashAgenda className="w-[25%] md:w-14" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
@@ -93,7 +93,7 @@ export default function HomeDoc() {
 
         <Link
           href={`${rutas.Doctor}${rutas.Historial}`}
-          className="w-full md:w-1/4">
+          className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconHomeCitas className="w-[20%] md:w-12" />
             <span className="text-[16px] lg:text-2xl font-semibold">
@@ -111,47 +111,55 @@ export default function HomeDoc() {
 
         <div className="grid-cols-2 gap-4 grid lg:py-5 lg:flex">
           <div className="w-full bg-[#875CF2] flex flex-col justify-around gap-3 px-3 md:px-8 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
-            <div className="h-full w-full flex items-center justify-start gap-2">
+            <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start  gap-2">
               <IconNewUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-6xl md:text-7xl font-semibold ml-2">
                 6
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
-            <p className="font-semibold">Nuevos</p>
+            <p className="font-semibold text-start md:text-center lg:text-start">
+              Nuevos
+            </p>
           </div>
 
           <div className="w-full bg-[#64D594] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
-            <div className="h-full w-full flex items-center justify-start gap-2">
+            <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconActiveUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-6xl md:text-7xl font-semibold ml-2">
                 {dataPtesGrafic?.activePatients}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
-            <p className="font-semibold">Activos</p>
+            <p className="font-semibold text-start md:text-center lg:text-start">
+              Activos
+            </p>
           </div>
 
           <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
-            <div className="h-full w-full flex items-center justify-start gap-2">
+            <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconInactiveUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
                 {dataAlarms?.inactiveAlarms}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
-            <p className="font-semibold">Alarmas Inactivos</p>
+            <p className="font-semibold text-start md:text-center lg:text-start">
+              Alarmas Inactivos
+            </p>
           </div>
 
           <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
-            <div className="h-full w-full flex items-center justify-start gap-2">
+            <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
                 {dataAlarms?.activeAlarms}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
-            <p className="font-semibold">Alarmas Activas</p>
+            <p className="font-semibold text-start md:text-center lg:text-start">
+              Alarmas Activas
+            </p>
           </div>
         </div>
       </div>

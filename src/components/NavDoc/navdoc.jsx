@@ -48,7 +48,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
     <div
       className={`flex ${
         isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
-      } md:flex`}>
+      } lg:flex`}>
       <div className="h-screen overflow-y-auto  rounded-b-xl w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white  flex flex-col justify-between shadow-lg md:shadow-none">
         <div className="flex flex-col justify-center gap-3 sm:gap-10 ">
           <Link href={`${rutas.Doctor}`} className="block">
@@ -272,7 +272,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
           onPress={handleLogout}
         />
       </div>
-      <div className="flex-1" onClick={toggleSidebar}></div>
+      <div className="flex-1 bg-black opacity-50" onClick={toggleSidebar}></div>
     </div>
   );
 };
