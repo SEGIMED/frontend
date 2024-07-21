@@ -145,10 +145,10 @@ export default function Citas({ title }) {
       <div className={"flex flex-col rounded-xl gap-2 py-1 bg-white"}>
         <title>{lastSegmentTextToShow}</title>
         {title && <p className="text-sm md:text-lg text-center">{title}</p>}
-        <div className="flex justify-between items-center rounded-lg px-10 py-1">
+        <div className="flex justify-between items-center rounded-lg sm:px-10 py-1">
           <div className="space-x-1 md:space-x-4">
             <Elboton
-              className="font-bold"
+              className="px-2 xs:px-4"
               icon={<IconPrev color="white" />}
               onPress={() => onNavigate("PREV")}
               nombre={"Anterior"}
@@ -191,7 +191,7 @@ export default function Citas({ title }) {
           </div>
           <div>
             <Elboton
-              className="font-bold"
+              className="px-2 xs:px-4"
               icon2={<IconNext color="white" />}
               onPress={() => onNavigate("NEXT")}
               nombre={"Siguiente"}

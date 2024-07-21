@@ -50,7 +50,7 @@ export default function HomeDoc() {
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
   return (
-    <div className="h-full flex flex-col gap-8 p-4 xs:p-6 md:p-10 bg-[#FAFAFC] md:overflow-y-scroll">
+    <div className="h-full flex flex-col gap-8 p-3 xs:p-6 md:p-10 bg-[#FAFAFC] md:overflow-y-scroll">
       <h2 className="text-2xl">
         ¡Bienvenido {user?.name} {user?.lastname}!
       </h2>
@@ -170,7 +170,7 @@ export default function HomeDoc() {
         {charts[currentChart]}
         {/* </div> */}
       </div>
-      <div className="h-fit w-full border border-[#DCDBDB] rounded-2xl px-5 py-2 bg-white">
+      <div className="h-fit w-full border border-[#DCDBDB] rounded-2xl px-1 xs:px-5 py-2 bg-white">
         <Citas title={"Mi agenda"} />
       </div>
       <ProximasConsultas />
