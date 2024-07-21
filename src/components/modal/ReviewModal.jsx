@@ -10,6 +10,7 @@ import IconArrowRight from "../icons/iconArrowRight";
 import IconFatArrow from "../icons/iconFatarrowDash";
 import IconTablillaEstrella from "../icons/iconTablillaEstrella";
 import IconTablillaTilde from "../icons/iconTablillaTilde";
+import Elboton from "../Buttons/Elboton";
 
 export default function ReviewModal({ onClose, idDoc }) {
   const [rating, setRating] = useState(null);
