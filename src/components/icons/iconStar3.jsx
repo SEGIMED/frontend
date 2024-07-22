@@ -1,3 +1,5 @@
+"use state"
+
 import { useState } from "react";
 
 export default function IconTStar3({ className, color, onMouseEnter, onMouseLeave }) {
