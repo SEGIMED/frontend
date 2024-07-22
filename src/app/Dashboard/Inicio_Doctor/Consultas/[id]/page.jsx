@@ -28,6 +28,8 @@ import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
 import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
+import SubNavbar from "@/components/NavDoc/subNavDoc";
+import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 
 const DetallePaciente = (id) => {
   const dispatch = useAppDispatch();
@@ -586,11 +588,21 @@ console.log(preconsultPhysical);
   if (!userId) {
     return <div>Cargando...</div>;
   }
-
+  const [handleNav, setHandleNav] = useState("");
+  const handleClic = (title) => {
+    if (handleNav === title) {
+      setHandleNav("");
+    }else{
+    setHandleNav(title);
+  }
+  };
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
-        <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece] bg-white">
+        
+          <SubNavbarConsulta handleClic={handleClic}/>
+          {/*
+          <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece] bg-white">
           <div className="flex items-center ">
             <Image src={ruteActual} alt="ruta actual" />
             <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
@@ -604,11 +616,14 @@ console.log(preconsultPhysical);
                 Regresar
               </button>
             </Link>
+            
           </div>
         </div>
+          */}
+        
         {loading === false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
-            <Consulta title={"Datos del paciente"} paciente={patient} />
+            <Consulta title={"Datos del paciente"} paciente={patient} defaultOpen = {handleNav === "datos del paciente" ? true : false}/>
             <InputConsulta
               title={"Antecedentes"}
               risk={["Riesgo cardiovascular"]}
@@ -627,6 +642,7 @@ console.log(preconsultPhysical);
                 "Alergias",
                 "Vacunas",
               ]}
+              defaultOpen = {handleNav === "antecedentes" ? true : false}
               paciente={patient}
               onRiskChange={setSelectedRisk}
               onRiskChange2={setSelectedRisk2}
@@ -640,18 +656,22 @@ console.log(preconsultPhysical);
                 "Sintomas importantes",
               ]}
               preconsult={preconsult}
+              defaultOpen = {handleNav === "anamnesis" ? true : false}
             />
             <SignosVitalesInfo
               title={"Signos vitales"}
               paciente={patient}
               preconsult={preconsult}
+              defaultOpen = {handleNav === "signos vitales" ? true : false}
             />
             <InputCuerpoPre
             title={"Exploracion fisica"}
             onBodyChange={handleBodyChange}
-            defaultOpen
+            defaultOpen = {handleNav === "exploracion fisica" ? true : false}
             />
-            <InputExam title={"Examen fisico"} />
+            <InputExam title={"Examen fisico"} 
+            defaultOpen = {handleNav === "examen fisico" ? true : false}
+            />
             {/*<InputConsulta title={"Comentarios"} subtitle={["Anotaciones"]} />*/}
             {/*<InputFile title={"Estudios"} Links={preconsult} />*/}
             <InputFilePreconsultation
@@ -661,11 +681,12 @@ console.log(preconsultPhysical);
               onTestActive={handleTestActive}
               onTestSelectedOption={handleTestSelectedOption}
               tests={tests}
-              defaultOpen
+              defaultOpen = {handleNav === "estudios" ? true : false}
             />
             <InputConsulta
               title={"Evolucion"}
-              subtitle={["Anotaciones de la consulta"]}
+              subtitle={["Anotaciones sobre la consulta"]}
+              defaultOpen = {handleNav === "evolucion" ? true : false}
             />
             <InputDiagnostico
               title={"Diagnósticos y tratamiento"}
@@ -674,6 +695,7 @@ console.log(preconsultPhysical);
                 "Tratamientos no farmacológicos",
                 "Pauta de alarma",
               ]}
+              defaultOpen = {handleNav === "diagnostico y tratamientos"  ? true : false}
               subtitle2={["Diagnostico","Procedimientos"]}
               subtitle3={"Medicamentos"}
             />

@@ -99,9 +99,10 @@ export default function InputConsulta({
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
+              <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
-          <div className={isOpen ? "rotate-180" : ""}>
+          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
             <IconArrowDetailDown />
           </div>
         </summary>
