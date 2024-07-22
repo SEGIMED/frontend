@@ -60,7 +60,6 @@ const DetallePaciente = (id) => {
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
-
   console.log(patient);
   console.log(hpGroup);
   const bodyOBJFormat = {
@@ -71,37 +70,41 @@ const DetallePaciente = (id) => {
     painDurationId: formData.bodySection?.selectedOptions?.painTime || null,
     painScaleId: formData.bodySection?.selectedOptions?.painLevel || null,
     painTypeId: formData.bodySection?.selectedOptions?.painType || null,
-    painAreas: formData.bodySection?.painAreas ? Object.values(formData.bodySection.painAreas) : null,
+    painAreas: formData.bodySection?.painAreas
+      ? Object.values(formData.bodySection.painAreas)
+      : null,
     painFrequencyId: formData.bodySection?.painFrequency || null,
     isTakingAnalgesic: formData.bodySection?.isTakingAnalgesic || null,
     doesAnalgesicWorks: formData.bodySection?.doesAnalgesicWorks || null,
     isWorstPainEver: formData.bodySection?.isWorstPainEver || null,
-  }
+  };
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
       riskId: selectedRisk,
     });
-  },[selectedRisk]);
+  }, [selectedRisk]);
   useEffect(() => {
     setSurgicalRisk({
       patientId: Number(userId),
       surgicalRiskId: selectedRisk2,
     });
-  },[selectedRisk2]);
+  }, [selectedRisk2]);
   useEffect(() => {
     setHpGroup({
       patientId: Number(userId),
       hpGroupId: selectedGroup,
     });
-  },[selectedGroup]);
+  }, [selectedGroup]);
   useEffect(() => {
     //clase funcional
     setHeartFailureRisk({
       patientId: Number(userId),
-      heartFailureClassificationId: IdHeartFailureRiskText(formState.HeartFailureRisk)
-  });
-  },[formState])
+      heartFailureClassificationId: IdHeartFailureRiskText(
+        formState.HeartFailureRisk
+      ),
+    });
+  }, [formState]);
 
   const handleUploadTestFile = (test, file) => {
     // almacenamos los archivos subidos, en un estado local ya que en Redux no son compatible
@@ -131,11 +134,9 @@ const DetallePaciente = (id) => {
     });
   };
 
-  
-
   const onSubmit = (data) => {
     console.log(data);
-    //Antecedentes 
+    //Antecedentes
     setBackground({
       patientId: Number(userId),
       medicalEventId: Number(medicalEventId),
@@ -172,15 +173,13 @@ const DetallePaciente = (id) => {
           ? patient?.backgrounds?.vaccinationBackground
           : data["Vacunas"],
     });
-    
+
     //preconsulta
     setPreconsultPhysical({
       patient: Number(userId),
       appointmentSchedule: Number(scheduleId),
       //exploracion fisica
-      painRecordsToCreate: [
-        bodyOBJFormat,
-      ],
+      painRecordsToCreate: [bodyOBJFormat],
       //estudios
       laboratoryResults: tests.laboratoryResults.file,
       laboratoryResultsDescription: tests.laboratoryResults.description,
@@ -196,7 +195,7 @@ const DetallePaciente = (id) => {
       resonance: tests.resonance.file,
       leftHeartCatheterization: tests.leftHeartCatheterization.file,
       otherStudies: tests.otherStudies.file,
-      pendingStudies: tests.pendingStudies.description, 
+      pendingStudies: tests.pendingStudies.description,
       //anamnesis sin evolucion de la enfermedad
       consultationReason:
         data["Motivo de consulta"] === ""
@@ -211,11 +210,12 @@ const DetallePaciente = (id) => {
         data["glucemiaElevada"] === ""
           ? preconsult?.abnormalGlycemia
           : data["glucemiaElevada"],
-      lastAbnormalGlycemia: data["lastAbnormalGlycemia"]=== ""
-      ? preconsult?.lastAbnormalGlycemia
-      : data["lastAbnormalGlycemia"],
+      lastAbnormalGlycemia:
+        data["lastAbnormalGlycemia"] === ""
+          ? preconsult?.lastAbnormalGlycemia
+          : data["lastAbnormalGlycemia"],
       // se tiene que aplicar una logica que cambia segun el patch o el post
-      vitalSignsToCreate:[
+      vitalSignsToCreate: [
         {
           patientId: userId,
           measureType: 1,
@@ -237,7 +237,7 @@ const DetallePaciente = (id) => {
           schedulingId: null, /// id del scheduling si se crea en preconsulta
           medicalEventId: 4, /// id del medical event si se crea durante medical event
         },
-      
+
         {
           patientId: userId,
           measureType: 5,
@@ -245,7 +245,7 @@ const DetallePaciente = (id) => {
           schedulingId: null,
           medicalEventId: 4,
         },
-        
+
         {
           patientId: userId,
           measureType: 6,
@@ -273,8 +273,7 @@ const DetallePaciente = (id) => {
           measure: data["Temperatura"],
           schedulingId: null,
           medicalEventId: 4,
-        }
-        ,
+        },
         {
           patientId: userId,
           measureType: 7,
@@ -288,8 +287,8 @@ const DetallePaciente = (id) => {
           measure: data["IMC"],
           schedulingId: null,
           medicalEventId: 4,
-        }
-      ]
+        },
+      ],
     });
     setPhysicalExamination({
       physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
@@ -312,17 +311,16 @@ const DetallePaciente = (id) => {
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
     // en revision por el backend
-    setMedicalEvent({        
+    setMedicalEvent({
       physicianComments: data["Anotaciones de la consulta"], ///evolucion
       schedulingId: Number(scheduleId), /// el id del agendamiento
-      chiefComplaint: null,// motivo de consulta
+      chiefComplaint: null, // motivo de consulta
       historyOfPresentIllness: data["Evolucion de la enfermedad"], /// enfermedad actual
       reviewOfSystems: null, /// revision por sistemas o sintomas
       treatmentPlan: null, /// plan de tratamiento
-      pendingDiagnosticTest : null, // test pendientes
+      pendingDiagnosticTest: null, // test pendientes
       alarmPattern: data["Pauta de alarma"], // patron de alarma
-     
-    })
+    });
   };
 
   useEffect(() => {
@@ -343,82 +341,82 @@ const DetallePaciente = (id) => {
         setPreconsult(response2.data[0]);
         setPatient(response1.data);
         setTests({
-        laboratoryResults: {
-          title: "Resultados de laboratorio",
-          file: response2.data[0].laboratoryResults || null,
-          description: "",
-          active: false,
-        },
-        electrocardiogram: {
-          title: "Electrocardiograma",
-          file:  response2.data[0].electrocardiogram || null,
-          description: "",
-          active: false,
-        },
-        rxThorax: {
-          title: "RX de Torax",
-          file: response2.data[0].rxThorax || null,
-          description: "",
-          active: false,
-        },
-        echocardiogram: {
-          title: "Ecocardiograma",
-          file: response2.data[0].echocardiogram || null,
-          description: "",
-          active: false,
-        },
-        walkTest: {
-          title: "Test de caminata",
-          file: response2.data[0].walkTest || null,
-          description: "",
-          active: false,
-        },
-        respiratoryFunctional: {
-          title: "Funcional respiratorio",
-          file: response2.data[0].respiratoryFunctional || null,
-          description: "",
-          active: false,
-        },
-        tomographies: {
-          title: "Tomografías",
-          file: response2.data[0].tomographies || null,
-          description: "",
-          active: false,
-        },
-        rightHeartCatheterization: {
-          title: "Cateterismo cardiaco derecho",
-          file: response2.data[0].rightHeartCatheterization || null,
-          description: "",
-          active: false,
-        },
-        ccg: {
-          title: "CCG (Coronariografia)",
-          file: response2.data[0].ccg || null,
-          description: "",
-          active: false,
-        },
-        resonance: {
-          title: "Resonancia",
-          file: response2.data[0].resonance || null,
-          description: "",
-          active: false,
-        },
-        leftHeartCatheterization: {
-          title: "Cateterismo cardiaco izquierdo",
-          file: response2.data[0].leftHeartCatheterization || null,
-          description: "",
-          active: false,
-        },
-        otherStudies: {
-          title: "Otros estudios",
-          file: response2.data[0].otherStudies || null,
-          description: "",
-        },
-        pendingStudies: {
-          title: "Estudios pendientes",
-          description: response2.data[0].pendingStudies || "",
-        },
-      });
+          laboratoryResults: {
+            title: "Resultados de laboratorio",
+            file: response2.data[0].laboratoryResults || null,
+            description: "",
+            active: false,
+          },
+          electrocardiogram: {
+            title: "Electrocardiograma",
+            file: response2.data[0].electrocardiogram || null,
+            description: "",
+            active: false,
+          },
+          rxThorax: {
+            title: "RX de Torax",
+            file: response2.data[0].rxThorax || null,
+            description: "",
+            active: false,
+          },
+          echocardiogram: {
+            title: "Ecocardiograma",
+            file: response2.data[0].echocardiogram || null,
+            description: "",
+            active: false,
+          },
+          walkTest: {
+            title: "Test de caminata",
+            file: response2.data[0].walkTest || null,
+            description: "",
+            active: false,
+          },
+          respiratoryFunctional: {
+            title: "Funcional respiratorio",
+            file: response2.data[0].respiratoryFunctional || null,
+            description: "",
+            active: false,
+          },
+          tomographies: {
+            title: "Tomografías",
+            file: response2.data[0].tomographies || null,
+            description: "",
+            active: false,
+          },
+          rightHeartCatheterization: {
+            title: "Cateterismo cardiaco derecho",
+            file: response2.data[0].rightHeartCatheterization || null,
+            description: "",
+            active: false,
+          },
+          ccg: {
+            title: "CCG (Coronariografia)",
+            file: response2.data[0].ccg || null,
+            description: "",
+            active: false,
+          },
+          resonance: {
+            title: "Resonancia",
+            file: response2.data[0].resonance || null,
+            description: "",
+            active: false,
+          },
+          leftHeartCatheterization: {
+            title: "Cateterismo cardiaco izquierdo",
+            file: response2.data[0].leftHeartCatheterization || null,
+            description: "",
+            active: false,
+          },
+          otherStudies: {
+            title: "Otros estudios",
+            file: response2.data[0].otherStudies || null,
+            description: "",
+          },
+          pendingStudies: {
+            title: "Estudios pendientes",
+            description: response2.data[0].pendingStudies || "",
+          },
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -452,7 +450,7 @@ const DetallePaciente = (id) => {
       console.log(response1);
     }
     */
-   
+
     // riego cardiovascular en Antecedente = funcionan las dos rutas
 
     let response2;
@@ -471,8 +469,7 @@ const DetallePaciente = (id) => {
       );
       console.log(response2);
     }
-    
-   
+
     // riego quirurgico en Antecedente = funcionan las dos rutas
 
     let response3;
@@ -529,19 +526,25 @@ const DetallePaciente = (id) => {
     console.log(response6);
   */
 
-
     let response7;
-//parece responde bien preconsulta
-console.log(preconsultPhysical);
-    if(preconsult?.length === 0){
-      response7 = await ApiSegimed.post(`/pre-consultation`,preconsultPhysical, {headers: { token: token },})
+    //parece responde bien preconsulta
+    console.log(preconsultPhysical);
+    if (preconsult?.length === 0) {
+      response7 = await ApiSegimed.post(
+        `/pre-consultation`,
+        preconsultPhysical,
+        { headers: { token: token } }
+      );
+      console.log(response7);
+    } else {
+      response7 = await ApiSegimed.patch(
+        `/update-pre-consultation`,
+        preconsultPhysical,
+        { headers: { token: token } }
+      );
       console.log(response7);
     }
-    else{
-      response7 = await ApiSegimed.patch(`/update-pre-consultation`,preconsultPhysical, {headers: { token: token },})
-      console.log(response7);
-    } 
-/*
+    /*
     //falta el patch pero solo puedo si hay ruta get medical event por idSchedule 
     console.log(diagnostic);
     const response2 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, {
@@ -559,20 +562,24 @@ console.log(preconsultPhysical);
      
 */
 
-    if (/*response1.status === 200 && */ response2.status === 200 && response3.status === 200 && response7.status === 200) {
+    if (
+      /*response1.status === 200 && */ response2.status === 200 &&
+      response3.status === 200 &&
+      response7.status === 200
+    ) {
       //me falta el id Schedule
       /*const data = await ApiSegimed.patch(
         `/patient-diagnostic/${idSchedule}`,{schedulingStatus:2},{
           headers: { token: token },
         }
-      ) *///cambia es estatus de la consulta --- hay q esperar que la preconsulta traiga el id
+      ) */ //cambia es estatus de la consulta --- hay q esperar que la preconsulta traiga el id
       setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
         text: "Se ha creado la consulta",
       });
-      router.push(`/Dashboard/Inicio_Doctor/Historial`);
+      router.push(`/Dashboard/Inicio_Doctor/Consultas`);
     } else {
       setLoading(false);
       Swal.fire({
@@ -581,7 +588,6 @@ console.log(preconsultPhysical);
         text: "Error al crear la consulta",
       });
     }
-  
   };
   if (!userId) {
     return <div>Cargando...</div>;
@@ -647,9 +653,9 @@ console.log(preconsultPhysical);
               preconsult={preconsult}
             />
             <InputCuerpoPre
-            title={"Exploracion fisica"}
-            onBodyChange={handleBodyChange}
-            defaultOpen
+              title={"Exploracion fisica"}
+              onBodyChange={handleBodyChange}
+              defaultOpen
             />
             <InputExam title={"Examen fisico"} />
             {/*<InputConsulta title={"Comentarios"} subtitle={["Anotaciones"]} />*/}
@@ -674,7 +680,7 @@ console.log(preconsultPhysical);
                 "Tratamientos no farmacológicos",
                 "Pauta de alarma",
               ]}
-              subtitle2={["Diagnostico","Procedimientos"]}
+              subtitle2={["Diagnostico", "Procedimientos"]}
               subtitle3={"Medicamentos"}
             />
           </form>

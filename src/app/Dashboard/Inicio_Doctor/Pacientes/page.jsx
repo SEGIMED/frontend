@@ -2,9 +2,6 @@
 
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
-import riesgoRojo from "@/components/images/riesgoRojo.png";
-import riesgoAmarillo from "@/components/images/riesgoAmarillo.png";
-import riesgoVerde from "@/components/images/riesgoVerde.png";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import {
@@ -12,8 +9,6 @@ import {
   toggleFavorite,
 } from "@/redux/slices/doctor/allPatients";
 import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
-import OpcionesDocPacientes from "../../../../components/Buttons/OpcionesDocPacientes.jsx";
-import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
 import config from "@/components/localData/localdata";
 import avatar from "@/utils/defaultAvatar";
 import Cookies from "js-cookie";
@@ -23,8 +18,6 @@ import IconFavoriteYellow from "@/components/icons/IconFavoriteyellow.jsx";
 import { PathnameShow } from "@/components/pathname/path";
 import RealColorRisk from "@/utils/realColor.js";
 import IconRisk from "@/components/icons/iconRisk.jsx";
-import IconAddPatient from "@/components/icons/IconAddPatient.jsx";
-import FiltrarPacientes from "@/components/Buttons/FiltrarPacientes.jsx";
 import MenuDropDown from "@/components/dropDown/MenuDropDown.jsx";
 import IconMiniCalendar from "@/components/icons/IconMiniCalendar.jsx";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory.jsx";
@@ -33,9 +26,6 @@ import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
 import IconMessages from "@/components/icons/IconMessages.jsx";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import MapModalPte from "@/components/modal/MapModalPte.jsx";
-import IconTStar2 from "@/components/icons/IconStar2.jsx";
-import IconAccion from "@/components/icons/IconAccion.jsx";
-import IconInfo from "@/components/icons/IconInfo.jsx";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);

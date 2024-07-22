@@ -11,14 +11,16 @@ import TableAlarmPte from "@/components/alarm/tableAlarmPte";
 import IconAlarmRed from "@/components/icons/iconAlarmRed";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 
-
 // Modal
 import Alarm1 from "@/components/modal/alarm/alarm1";
 import Alarm2 from "@/components/modal/alarm/alarm2";
 import Alarm3 from "@/components/modal/alarm/alarm3";
 
-const Modals = [<Alarm1 key={"alarma 1"} />, <Alarm2 key={"alarma 2"} />, <Alarm3 key={"alarma 3"} />]
-
+const Modals = [
+  <Alarm1 key={"alarma 1"} />,
+  <Alarm2 key={"alarma 2"} />,
+  <Alarm3 key={"alarma 3"} />,
+];
 
 export default function AlarmPte() {
   // Filter the patients with active alarm status
@@ -29,11 +31,9 @@ export default function AlarmPte() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
 
   const getMyAlarms = async () => {
     const headers = { headers: { token: token } };
@@ -45,13 +45,13 @@ export default function AlarmPte() {
   const router = useRouter();
   const myID = Cookies.get("c");
 
-  const UnsolvedAlarmas = alarms.filter((alarm) => alarm.patient === Number(myId) && alarm.solved === false);
+  const UnsolvedAlarmas = alarms.filter(
+    (alarm) => alarm.patient === Number(myId) && alarm.solved === false
+  );
 
   useEffect(() => {
     getMyAlarms();
   }, []);
-
-
 
   // const unsolvedAlarms = misAlarmas.filter((a, b) => {
   //   if (sortResolvedFirst) {
@@ -63,7 +63,7 @@ export default function AlarmPte() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 md:z-50">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 lg:z-50">
         {/* <Ordenar funcion={handleSortToggle} /> */}
 
         <button
@@ -77,17 +77,17 @@ export default function AlarmPte() {
 
         <h1 className="font-bold gap-2 ml-2">Listado de Alarmas</h1>
         <button
-          // className="flex items-center px-2 py-2 bg-white rounded-xl  text-[#487FFA] 
+          // className="flex items-center px-2 py-2 bg-white rounded-xl  text-[#487FFA]
           //           font-bold border-solid border-[#487FFA] border-3"
           className="flex items-center px-2 py-2 bg-[#E73F3F] rounded-xl  text-white
           font-bold border-solid border-red-600 border-3"
           onClick={() => {
-            setIsModalOpen(true)
+            setIsModalOpen(true);
           }}>
           <IconAlarmBlue color={"white"} /> Crear Alarma
         </button>
       </div>
-      <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-10 z-20 md:z-50">
+      <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-10 z-20 lg:z-50">
         <p className="font-bold text-[#5F5F5F]">Prioridad</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>

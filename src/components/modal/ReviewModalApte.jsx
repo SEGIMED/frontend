@@ -8,6 +8,7 @@ import IconTablillaEstrella from "../icons/iconTablillaEstrella";
 import IconTablillaTilde from "../icons/iconTablillaTilde";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import Elboton from "../Buttons/Elboton";
 
 const ratingQuestions = [
   "Califique la adherencia terapéutica de su paciente",
@@ -37,6 +38,7 @@ export default function ReviewModalApte({ onClose, id }) {
   };
 
   const SendReview = async () => {
+    console.log("ratings", ratings);
     const payload = {
       physicianId: Number(myId),
       reviewScore: JSON.stringify(ratings), // Convert ratings array to JSON string
@@ -60,30 +62,31 @@ export default function ReviewModalApte({ onClose, id }) {
     }
   };
 
-  
   useEffect(() => {
     function onClose2(event) {
-        if (event.key === 'Escape') {
-            onClose();
-        }
+      if (event.key === "Escape") {
+        onClose();
+      }
     }
 
-    if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+    if (typeof window !== "undefined")
+      window.addEventListener("keydown", onClose2);
 
     // Cleanup function to remove the event listener when the component unmounts
     return () => {
-        window.removeEventListener("keydown", onClose2);
+      window.removeEventListener("keydown", onClose2);
     };
   }, [onClose]);
 
   function handleClickOutside(event) {
     if (event.target === event.currentTarget) {
-        onClose();
+      onClose();
     }
-    }
+  }
   return (
-    <div onClick={handleClickOutside}
-    className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div
+      onClick={handleClickOutside}
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-2 mb-2 h-[10%]">
           <span className="flex gap-4">
@@ -146,11 +149,12 @@ export default function ReviewModalApte({ onClose, id }) {
             onChange={(e) => setComments(e.target.value)}></textarea>
         </div>
         <div className="flex justify-center items-center h-[20%]">
-          <button
-            onClick={SendReview}
-            className="flex px-4 py-2 bg-blue-500 text-white rounded-md">
-            <span>Guardar</span> <IconArrowRight />
-          </button>
+          <Elboton
+            className="bg-[#70C247]"
+            onPress={SendReview}
+            nombre="Guardar"
+            icon2={<IconArrowRight />}
+          />
         </div>
       </div>
     </div>
