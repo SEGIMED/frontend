@@ -198,12 +198,15 @@ export default function Citas({ title }) {
             />
           </div>
         </div>
+        <div className="flex justify-center text-lg font-semibold">
+          {view === "day" ? formatLabel(label) : capitalizeFirstLetter(label)}
+        </div>
       </div>
     );
   };
 
   return (
-    <div className=" flex flex-col items-center bg-[#FAFAFC] rounded-2xl h-screen">
+    <div className=" flex flex-col items-center bg-[#FAFAFC] rounded-2xl h-full ">
       <div className={`h-[90%] w-full rounded-2xl ${title && "bg-white"}`}>
         <Calendar
           localizer={localizer}

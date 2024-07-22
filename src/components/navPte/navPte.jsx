@@ -51,13 +51,13 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
         className={`flex ${
           isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
         } lg:flex`}>
-        <div className="h-screen overflow-y-auto w-[60%] px-4 md:w-64 md:px-6 py-5 bg-white border-r-[1px] border-[#D7D7D7] flex flex-col justify-between">
+        <div className="h-screen overflow-y-auto gap-4 w-[60%] px-4 md:w-72 md:px-6 py-8 bg-white border-r-[1px] border-[#D7D7D7] flex flex-col justify-between">
           <div className="flex flex-col justify-center gap-5">
             <Link href={`${rutas.PacienteDash}`} className="block">
-              <LogoSegimed className="w-40 md:w-full" />
+              <LogoSegimed className="w-40 md:w-[80%]" />
             </Link>
             <div className="justify-center">
-              <ul className="flex flex-col gap-1 xs:gap-3 md:gap-4">
+              <ul className="flex flex-col gap-3 md:gap-4">
                 <Link
                   onClick={toggleSidebar}
                   href={rutas.PacienteDash}
@@ -284,7 +284,9 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
           </button> */}
           <Elboton
             icon={<IconOut />}
-            className={"font-bold h-[52px] hidden sm:flex text-[15px]"}
+            className={
+              "font-bold min-h-[45px] h-[52px] hidden sm:flex text-[15px]"
+            }
             nombre={"Cerrar sesión"}
             onPress={handleLogout}
           />
