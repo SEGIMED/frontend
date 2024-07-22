@@ -6,6 +6,7 @@ import IconTablillaEstrella from "../icons/iconTablillaEstrella";
 import IconTablillaTilde from "../icons/iconTablillaTilde";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import Elboton from "../Buttons/Elboton";
 
 const ratingQuestions = [
   "Califique la adherencia terapéutica de su paciente",
@@ -33,6 +34,7 @@ export default function ReviewModalApte({ onClose, id }) {
   };
 
   const SendReview = async () => {
+    console.log("ratings", ratings);
     const payload = {
       physicianId: Number(myId),
       reviewScore: JSON.stringify(ratings),
@@ -55,6 +57,7 @@ export default function ReviewModalApte({ onClose, id }) {
     }
   };
 
+
   useEffect(() => {
     const onClose2 = (event) => {
       if (event.key === 'Escape') {
@@ -68,11 +71,13 @@ export default function ReviewModalApte({ onClose, id }) {
 
     return () => {
       window.removeEventListener("keydown", onClose2);
+      window.removeEventListener("keydown", onClose2);
     };
   }, [onClose]);
 
   const handleClickOutside = (event) => {
     if (event.target === event.currentTarget) {
+      onClose();
       onClose();
     }
   };

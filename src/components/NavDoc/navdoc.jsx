@@ -14,8 +14,6 @@ import IconCube from "../icons/IconCube";
 import IconDoctorNav from "../icons/IconDoctorNav";
 import Estadistica from "../icons/IconEstadistica";
 import AlarmDash from "../icons/IconAlarmDash";
-import Interconsulta from "../icons/IconInterconsulta";
-import SoporteTecnico from "../icons/IconSoporte";
 import Sugerencias from "../icons/IconSugerencias";
 import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
@@ -48,15 +46,15 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
 
   return (
     <div
-      className={`flex overflow-y-auto ${
+      className={`flex ${
         isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
-      } md:flex`}>
-      <div className="h-full rounded-b-xl w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white  flex flex-col justify-between shadow-lg md:shadow-none">
-        <div className="flex flex-col justify-center gap-3 sm:gap-10 ">
+      } lg:flex`}>
+      <div className="h-screen overflow-y-auto gap-2 rounded-b-xl w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white  flex flex-col justify-between shadow-lg md:shadow-none">
+        <div className="flex flex-col justify-center gap-4 sm:gap-10 ">
           <Link href={`${rutas.Doctor}`} className="block">
-            <LogoSegimed className="w-40 md:w-full" />
+            <LogoSegimed className="w-40 md:w-[80%]" />
           </Link>
-          <ul className="flex flex-col gap-1 xs:gap-3 md:gap-4">
+          <ul className="flex flex-col gap-3 md:gap-4">
             <Link
               onClick={toggleSidebar}
               href={rutas.Doctor}
@@ -91,16 +89,16 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
             </Link>
             <Link
               onClick={toggleSidebar}
-              href={`${rutas.Doctor}${rutas.Historial}`}
+              href={`${rutas.Doctor}${rutas.Consultas}`}
               className={`flex items-center gap-4 ${
-                pathname === `${rutas.Doctor}${rutas.Historial}`
+                pathname === `${rutas.Doctor}${rutas.Consultas}`
                   ? "text-[#487FFA]"
                   : ""
               }`}>
               <IconRecordNav
                 className="w-6"
                 color={`${
-                  pathname === `${rutas.Doctor}${rutas.Historial}`
+                  pathname === `${rutas.Doctor}${rutas.Consultas}`
                     ? "#487FFA"
                     : "#B2B2B2"
                 }`}
@@ -269,12 +267,14 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
         </div>
         <Elboton
           icon={<IconOut />}
-          className={"font-bold h-[52px] hidden sm:flex text-[15px]"}
+          className={
+            "font-bold min-h-[45px] h-[52px] hidden sm:flex text-[15px]"
+          }
           nombre={"Cerrar sesión"}
           onPress={handleLogout}
         />
       </div>
-      <div className="flex-1" onClick={toggleSidebar}></div>
+      <div className="flex-1 bg-black opacity-50" onClick={toggleSidebar}></div>
     </div>
   );
 };

@@ -28,6 +28,7 @@ export default function InputFile({ title, defaultOpen = false , Links}) {
         <FileUpload label={"Resonancia"} Link={Links?.resonance}/>
         <FileUpload label={"Cateterismo cardiaco izquierdo"} Link={Links?.leftHeartCatheterization}/>
         <FileUpload label={"Otros estudios"} Link={Links?.laboratoryResults}/>
+
       </details>
     </div>
   );
