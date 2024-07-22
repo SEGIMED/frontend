@@ -58,8 +58,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -134,51 +134,64 @@ export const SidePte = ({ search, toggleSidebar }) => {
       ...response2.data,
       anthropometricDetails:
         response1.data.anthropometricDetails?.length > 0
-          ? response1.data.anthropometricDetails
-          : paciente.anthropometricDetails || [],
+          ? response1.data.anthropometricDetails : [],
+      // : paciente.anthropometricDetails || [],
+
       vitalSigns:
         response1.data.vitalSigns?.length > 0
-          ? response1.data.vitalSigns
-          : paciente.vitalSigns || [],
+          ? response1.data.vitalSigns : [],
+      // : paciente.vitalSigns || [],
       sociodemographicDetails:
         response1.data.sociodemographicDetails ||
-        paciente.sociodemographicDetails ||
+        // paciente.sociodemographicDetails ||
         {},
-      backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
+      backgrounds: response1.data.backgrounds ||
+        // paciente.backgrounds || 
+        {},
       patientPulmonaryHypertensionGroups:
         response1.data.patientPulmonaryHypertensionGroups?.length > 0
           ? response1.data.patientPulmonaryHypertensionGroups
-          : paciente.patientPulmonaryHypertensionGroups || {},
+          : {},
+      // : paciente.patientPulmonaryHypertensionGroups || {},
       patientPulmonaryHypertensionRisks:
         response1.data.patientPulmonaryHypertensionRisks?.length > 0
           ? response1.data.patientPulmonaryHypertensionRisks
-          : paciente.patientPulmonaryHypertensionRisks || {},
+          : {},
+      // : paciente.patientPulmonaryHypertensionRisks || {},
       patientCardiovascularRisks:
         response1.data.patientCardiovascularRisks?.length > 0
           ? response1.data.patientCardiovascularRisks
-          : paciente.patientCardiovascularRisks || {},
+          : {},
+      // : paciente.patientCardiovascularRisks || {},
       patientSurgicalRisks:
         response1.data.patientSurgicalRisks?.length > 0
           ? response1.data.patientSurgicalRisks
-          : paciente.patientSurgicalRisks || {},
+          : {},
+      // : paciente.patientSurgicalRisks || {},
       lastMedicalEventDate:
         response1.data.lastMedicalEventDate ||
-        paciente.lastMedicalEventDate ||
+        // paciente.lastMedicalEventDate ||
         null,
       currentPhysician:
-        response1.data.currentPhysician || paciente.currentPhysician || {},
-      cellphone: response1.data.cellphone || paciente.cellphone || null,
+        response1.data.currentPhysician || {},
+      //  paciente.currentPhysician ||
+
+      cellphone: response1.data.cellphone || null,
+      //  paciente.cellphone || 
       currentLocationCity:
         response1.data.currentLocationCity ||
-        paciente.currentLocationCity ||
+        // paciente.currentLocationCity ||
         null,
       currentLocationCountry:
         response1.data.currentLocationCountry ||
-        paciente.currentLocationCountry ||
+        // paciente.currentLocationCountry ||
         null,
-      lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
+      lastLogin: response1.data.lastLogin ||
+        // paciente.lastLogin ||
+        null,
     };
     dispatch(adduser(combinedData));
+    console.log(combinedData);
   };
 
   const getAllDoc = async (headers) => {
