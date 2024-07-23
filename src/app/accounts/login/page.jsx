@@ -210,7 +210,7 @@ export default function Login() {
       </div>
       {/* Lado izquierdo */}
       <div className="hidden md:flex flex-col md:w-1/2 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400 text-white text-center justify-center items-center">
-        <IconRegister />
+        <IconRegister className={"w-[400px]"} />
         <p className="px-24 pb-2 text-lg font-normal leading-8">
           SEGIMED es una novedosa plataforma médica interactiva que permite una
           intercomunicación continua entre médicos y pacientes, generando un

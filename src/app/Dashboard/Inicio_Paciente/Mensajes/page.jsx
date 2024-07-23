@@ -20,6 +20,7 @@ import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
 import avatar from "@/utils/defaultAvatar";
+import AsociarMedico from "@/components/asociarMedico/AsociarMedico";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -124,7 +125,7 @@ export default function MensajesDoc() {
   }
 
   return (
-    <div className="h-full text-[#686868] w-full flex flex-col">
+    <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2 ">
         <Elboton
           href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}

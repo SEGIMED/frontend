@@ -160,10 +160,7 @@ export default function DoctoresPte() {
                       {
                         label: "Solicitar Consulta",
                         icon: <IconMiniCalendar />,
-                        onClick: () =>
-                          handleConsultationClick(
-                            doctor.id
-                          ),
+                        onClick: () => handleConsultationClick(doctor.id),
                       },
                     ],
                   },
@@ -173,10 +170,7 @@ export default function DoctoresPte() {
                       {
                         label: "Ver Detalles",
                         icon: <IconPersonalData />,
-                        onClick: () =>
-                          handleViewDetail(
-                            doctor.id
-                          ),
+                        onClick: () => handleViewDetail(doctor.id),
                       },
                       {
                         label: "Ver Mensajes",
@@ -229,7 +223,8 @@ export default function DoctoresPte() {
           isOpen={isModalOpen}
           onClose={closeModal}
           Modals={[
-            <DoctorAsociado key={"solicitar asociacion"}
+            <DoctorAsociado
+              key={"solicitar asociacion"}
               name={selectedDoctorName}
             />,
           ]}
