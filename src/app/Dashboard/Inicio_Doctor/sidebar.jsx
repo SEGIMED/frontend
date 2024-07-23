@@ -108,7 +108,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   //       activeAlarms: Number(actives),
   //       inactiveAlarms: Number(inactives),
   //     };
-     
+
   //     dispatch(addAlarms(data));
   //   } catch (error) {
   //     console.error("Error fetching data:", error);
@@ -129,7 +129,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         activeAlarms: Number(actives),
         inactiveAlarms: Number(inactives),
       };
-   
+
       dispatch(addAlarms(data));
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -218,7 +218,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         ) : IsMessage ? (
           <p>Mensaje</p>
         ) : isNaN(lastSegment) ? (
-          <p>{lastSegmentText}</p> 
+          <p>{lastSegmentText}</p>
         ) : (
           <p>{formattedSegment}</p>
         )}
@@ -230,7 +230,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar pacientes"
-            className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
+            className="text-start text-[#808080] bg-[#FAFAFC] font-normal text-normal leading-6 outline-none"
             value={searchTerm}
           />
           <button>
