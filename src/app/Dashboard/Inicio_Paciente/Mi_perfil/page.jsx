@@ -19,6 +19,7 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import IconCircle from "@/components/icons/IconCircle";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 // Definir opciones para el select de sexo
 const sexoOptions = [
@@ -463,13 +464,35 @@ export default function HomePte() {
           )}
         </div> */}
       </form>
-      <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
+      <div className="flex items-center justify-center border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
         <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
           <IconCircle className="w-3" />
           Última conexión:
         </label>
         <span className="w-1/2 text-start px-6 py-2">
-          {LastLogin(paciente.lastLogin)}
+          {/* {LastLogin(paciente.lastLogin)} */}
+          {Fecha(paciente.lastLogin)} - 
+          {Hora(paciente.lastLogin)}
+        </span>
+      </div>
+      <div className="flex items-center justify-center border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
+        <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
+          <IconCircle className="w-3" />
+          Actividad Ultima Semana:
+        </label>
+        <span className="w-1/2 text-start px-6 py-2">
+          {/* {LastLogin(paciente.lastLogin)} */}
+       
+        </span>
+      </div>
+      <div className="flex items-center justify-center border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
+        <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
+          <IconCircle className="w-3" />
+          Actividad Ultimo Mes:
+        </label>
+        <span className="w-1/2 text-start px-6 py-2">
+          {/* {LastLogin(paciente.lastLogin)} */}
+    
         </span>
       </div>
       {showModal && (
