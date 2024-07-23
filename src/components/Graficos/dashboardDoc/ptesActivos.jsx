@@ -35,7 +35,7 @@ export default function PtesActivos() {
   };
 
   return (
-    <div className="w-full h-full lg:w-[510px] p-5 flex items-center justify-center">
+    <div className="w-full h-auto lg:w-[25vw] p-5 flex items-center justify-center">
       <Doughnut 
         data={data} 
         options={{
@@ -44,9 +44,17 @@ export default function PtesActivos() {
               display: true,
               position: 'bottom', 
               labels: {
-                usePointStyle: true, 
-                padding: 100, 
+                usePointStyle: true,
+                padding: 20,
               }
+            }
+          },
+          layout: {
+            padding: {
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20
             }
           }
         }}
