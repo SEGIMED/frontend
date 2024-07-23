@@ -63,14 +63,14 @@ export default function HomeDoc() {
         <div className="md:overflow-y-auto h-full w-[100%]">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
             <div className="w-[10%] md:w-[5%] md:block"></div>
-            <div className="grid w-[80%] md:w-[95%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-4 md:text-start md:grid-cols-7 py-2 z-10">
+            <div className="grid w-[80%] md:w-[80%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-4 md:text-start md:grid-cols-6 py-2 z-10">
               <p className="text-[#5F5F5F] hidden md:block">Prioridad</p>
               <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Fecha</p>
               <p className="text-[#5F5F5F]">Paciente</p>
               <p className="text-[#5F5F5F] hidden md:block">HTP</p>
               <p className="text-[#5F5F5F] hidden md:block">Motivo de alarma</p>
-              <p className="text-[#5F5F5F] justify-center ">Tiempo de respuesta</p>
+              {/* <p className="text-[#5F5F5F] justify-center ">Tiempo de respuesta</p> */}
             </div>
           </div>
           {isLoading ? (

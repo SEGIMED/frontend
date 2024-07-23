@@ -30,8 +30,8 @@ export default function TableAlarmResueltas({ pacientes }) {
               <PriorityIcon priority={paciente.highestPriority} />
 
             </div>
-            <div className="text-center w-[80%] md:w-[95%] md:text-start gap-3  grid grid-cols-4 md:grid-cols-7 items-center py-2 bg-white h-fit ">
-              <span className="hidden md:flex items-center justify-between pr-6 ">
+            <div className="text-center w-[80%] md:w-[80%] md:text-start gap-3  grid grid-cols-4 md:grid-cols-6 items-center py-2 bg-white h-fit ">
+              <span className="hidden md:flex items-center justify-between pr-20 ">
                 {paciente.highestPriority}
                 <IconCurrentRouteNav className="w-3 hidden md:block " />
               </span>
@@ -49,9 +49,9 @@ export default function TableAlarmResueltas({ pacientes }) {
               <div className="text-[#5F5F5F] hidden md:block truncate">
                 {paciente.alarmDescription}
               </div>
-              <div className="text-[#5F5F5F] ">
+              {/* <div className="text-[#5F5F5F] ">
                 {paciente.espera ? paciente.espera : "No"}
-              </div>
+              </div> */}
             </div>
             {/* <div className="hidden md:w-[20%] items-center justify-center md:flex"> */}
             {/* </div> */}
