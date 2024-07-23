@@ -81,13 +81,13 @@ const AlarmSelector = (id) => {
             router.push(`${rutas.Doctor}${rutas.Alarm}`);
           }}>
           <IconRegresar />
-          <p className="text-start text-white font-bold text-base leading-5">
+          <p className="text-start hidden md:block text-white font-bold text-base leading-5">
             {" "}
             Regresar
           </p>
         </button>
         <p className="flex items-center justify-center text-start text-[#5F5F5F] font-bold text-xl leading-5 ml-3">
-          Crear Alarma
+          Ver Alarma
         </p>
         <button
           onClick={() => {
@@ -96,7 +96,7 @@ const AlarmSelector = (id) => {
           }}
           type="submit"
           className="flex items-center px-4 md:px-6 py-2 bg-[#70C247] rounded-xl gap-3 text-white font-bold">
-          Resolver <IconArrowRight />
+          Resolver <IconArrowRight className={" hidden md:block"} />
         </button>
       </div>
 

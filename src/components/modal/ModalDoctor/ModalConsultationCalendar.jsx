@@ -26,24 +26,14 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
         formState: { errors },
     } = useForm();
 
-
     const [disabled, setDisabled] = useState(false);
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
-
     const selectTime = watch("time");
 
+    const combineDateTime = (date, time) => date && time ? `${date}T${time}:00` : "";
 
-    const combineDateTime = (date, time) => {
-        if (date && time) {
-            return `${date}T${time}:00`;
-        }
-        return "";
-    };
-
-    const addMinutes = (date, minutes) => {
-        return new Date(date.getTime() + minutes * 60000);
-    };
+    const addMinutes = (date, minutes) => new Date(date.getTime() + minutes * 60000);
 
     useEffect(() => {
         if (dateSelect) {
@@ -57,7 +47,6 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
     }, [dateSelect, setValue]);
 
     useEffect(() => {
-        // Reset form when isOpen becomes false
         if (!isOpen) {
             reset({
                 patient: "",
@@ -76,16 +65,11 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
 
     useEffect(() => {
         const startDateTime = combineDateTime(date, selectTime);
-        console.log('1', startDateTime);
-        // console.log(new Date(startDateTime));
         if (startDateTime) {
             const startDate = new Date(startDateTime);
-            console.log('2', startDate);
             const endDate = addMinutes(startDate, 30);
-            const endDateTime = endDate.toISOString();
-
             setValue("scheduledStartTimestamp", startDateTime);
-            setValue("scheduledEndTimestamp", endDateTime);
+            setValue("scheduledEndTimestamp", endDate.toISOString());
         }
         setValue("medicalSpecialty", 1);
         setValue("schedulingStatus", 1);
@@ -93,260 +77,172 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
 
     const formatDate = (date) => {
         const d = new Date(date);
-        let month = "" + (d.getMonth() + 1);
-        let day = "" + d.getDate();
         const year = d.getFullYear();
-
-        if (month.length < 2) month = "0" + month;
-        if (day.length < 2) day = "0" + day;
-
-        return [year, month, day].join("-");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
     };
 
     const getHourFromDateString = (dateString) => {
         const date = new Date(dateString);
-        const hour = date.getHours();
-        const minutes = date.getMinutes();
-
-        const formattedHour = `${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-
-        return formattedHour;
+        return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
     };
 
     const onSubmit = async (data) => {
         try {
-            setDisabled(true)
+            setDisabled(true);
             const token = Cookies.get("a");
-            const headers = { headers: { token: token } };
-            const dataSend = { ...data, physician };
-            console.log(dataSend);
-            const response = await ApiSegimed.post("/schedules", dataSend, headers);
-
+            const headers = { headers: { token } };
+            const response = await ApiSegimed.post("/schedules", { ...data, physician }, headers);
             if (response.data) {
                 alert("Cita agendada correctamente");
                 handleClose();
             }
         } catch (error) {
-            setDisabled(false)
+            setDisabled(false);
             console.error("Error al enviar los datos:", error);
-
-            if (error.response) {
-                console.error("Error response:", error.response.data);
-            } else if (error.request) {
-                console.error("Error request:", error.request);
-            } else {
-                console.error("Error message:", error.message);
-            }
         }
     };
 
-    const handleClose = () => {
-        onClose();
-    };
+    const handleClose = () => onClose();
 
     return isOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto">
             <div onClick={handleClose} className="fixed inset-0 bg-black opacity-50"></div>
-            <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
-                <form onSubmit={handleSubmit(onSubmit)} className="h-full w-full flex flex-col justify-between">
-                    <div className="h-16 flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
-                        <IconCurrentRouteNav className="w-4" /> Agendar consulta
+            <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
+                    <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
+                        <div className="flex items-center gap-3">
+                            <IconCurrentRouteNav className="w-4" />
+                            <p>Agendar consulta</p>
+                        </div>
+                        <button
+                            onClick={handleClose}
+                            className="transition-transform transform hover:scale-105 active:scale-100 active:translate-y-1"
+                        >
+                            <IconClose className="w-8" />
+                        </button>
                     </div>
-                    <div className="flex flex-col justify-around px-5">
-
-                        <div className="flex flex-col justify-around gap-2">
-                            <div className="flex items-center justify-start gap-3 text-sm font-semibold">
+                    <div className="p-3 flex flex-col gap-3 justify-center items-center ">
+                        <div className="flex flex-col gap-2 ">
+                            <label className="flex items-center gap-3 text-sm font-semibold">
                                 <IconCenterAtenttion /> Paciente
-                            </div>
+
+                            </label>
                             <select
                                 id="patient"
-                                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.patientId ? "border-red-500" : ""
-                                    }`}
-                                {...register("patient", {
-                                    required: {
-                                        value: true,
-                                        message: "*Debe elegir un paciente *",
-                                    },
-                                })}
-                            >   <option value="">Seleccione un paciente</option>
-                                {listaPacientes.map((paciente) => {
-                                    return (<option key={paciente.id} value={paciente.id}>{paciente.name} {paciente.lastname}</option>)
-                                })}
-
-
+                                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.patient ? "border-red-500" : ""}`}
+                                {...register("patient", { required: "*Debe elegir un paciente *" })}
+                            >
+                                <option value="">Seleccione un paciente</option>
+                                {listaPacientes.map(paciente => (
+                                    <option key={paciente.id} value={paciente.id}>
+                                        {paciente.name} {paciente.lastname}
+                                    </option>
+                                ))}
                             </select>
-                            {errors.patientId && (
-                                <span className="text-red-500 text-sm font-medium">
-                                    {errors.patientId.message}
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="border w-full" />
-                        <div className="flex items-center justify-start gap-2 text-sm font-semibold">
-                            <IconTypeQueries /> Tipo de consultas
-                        </div>
-                        <div className="flex items-center justify-around gap-2">
-                            <div className="flex items-center justify-start gap-3">
-                                <input
-                                    id="consultaFisica"
-                                    type="radio"
-                                    value="1"
-                                    {...register("typeOfMedicalConsultation", {
-                                        required: {
-                                            value: true,
-                                            message: "* Este dato es requerido *",
-                                        },
-                                    })}
-                                />
-                                <label htmlFor="consultaFisica" className="">
-                                    Consulta Física
+                            {errors.patient && <span className="text-red-500 text-sm">{errors.patient.message}</span>}
+                            <div className="border w-full" />
+                            <div className="flex flex-col gap-2">
+                                <label className="flex items-center gap-3 text-sm font-semibold">
+                                    <IconTypeQueries /> Tipo de consultas
                                 </label>
+                                <div className="flex gap-3 justify-around items-center">
+                                    <label className="flex items-center gap-3">
+                                        <input
+                                            id="consultaFisica"
+                                            type="radio"
+                                            value="1"
+                                            {...register("typeOfMedicalConsultation", { required: "* Este dato es requerido *" })}
+                                        />
+                                        Consulta Física
+                                    </label>
+                                    <label className="flex items-center gap-3">
+                                        <input
+                                            id="teleconsulta"
+                                            type="radio"
+                                            value="2"
+                                            {...register("typeOfMedicalConsultation", { required: "* Debes seleccionar una opción *" })}
+                                        />
+                                        Teleconsulta
+                                    </label>
+                                </div>
+                                {errors.typeOfMedicalConsultation && <span className="text-red-500 text-sm">{errors.typeOfMedicalConsultation.message}</span>}
                             </div>
-
-                            <div className="flex items-center justify-start gap-3">
-                                <input
-                                    id="teleconsulta"
-                                    type="radio"
-                                    value="2"
-                                    {...register("typeOfMedicalConsultation", {
-                                        required: {
-                                            value: true,
-                                            message: "* Debes seleccionar una opción *",
-                                        },
-                                    })}
-                                />
-                                <label htmlFor="teleconsulta" className="">
-                                    Teleconsulta
+                            <div className="border w-full" />
+                            <div className="flex flex-col gap-2">
+                                <label className="flex items-center gap-3 text-sm font-semibold">
+                                    <IconReasonQuerie /> Motivo de consulta
                                 </label>
+                                <input
+                                    id="reasonForConsultation"
+                                    placeholder="Ingrese el motivo de la consulta"
+                                    className="py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
+                                    {...register("reasonForConsultation", { required: "* ¿Cuál es el motivo de consulta? *" })}
+                                />
+                                {errors.reasonForConsultation && <span className="text-red-500 text-sm">{errors.reasonForConsultation.message}</span>}
                             </div>
-                        </div>
-                        {errors.typeOfMedicalConsultation && (
-                            <span className="text-red-500 text-sm font-medium">
-                                {errors.typeOfMedicalConsultation.message}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="border w-full" />
-
-                    <div className="flex flex-col justify-around gap-2 px-5">
-                        <div className="flex items-center justify-start gap-3 text-sm font-semibold">
-                            <IconReasonQuerie /> Motivo de consulta
-                        </div>
-                        <input
-                            id="reasonForConsultation"
-                            placeholder="Ingrese el motivo de la consulta"
-                            className="py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
-                            {...register("reasonForConsultation", {
-                                required: {
-                                    value: true,
-                                    message: "* ¿Cuál es el motivo de consulta? *",
-                                },
-                            })}
-                        />
-                        {errors.reasonForConsultation && (
-                            <span className="text-red-500 text-sm font-medium">
-                                {errors.reasonForConsultation.message}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="border w-full" />
-
-                    <div className="flex flex-col justify-around gap-2 px-5">
-                        <div className="flex items-center justify-start gap-3 text-sm font-semibold">
-                            <IconCenterAtenttion /> Centro de atención
-                        </div>
-                        <select
-                            id="healthCenter"
-                            className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                                }`}
-                            {...register("healthCenter", {
-                                required: {
-                                    value: true,
-                                    message: "* ¿En cuál centro de atención quieres ser atendido? *",
-                                },
-                            })}
-                        >
-                            <option value="">Seleccione el centro de atención</option>
-                            <option value="1">Centro Gallegos</option>
-                        </select>
-                        {errors.healthCenter && (
-                            <span className="text-red-500 text-sm font-medium">
-                                {errors.healthCenter.message}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="border w-full" />
-
-                    <div className="flex flex-col justify-around gap-2 px-5">
-                        <div className="flex items-center justify-start gap-3 text-sm font-semibold">
-                            <IconDate /> Fecha
-                        </div>
-                        <div className="flex flex-col md:flex-row justify-around">
-                            <div className="flex flex-row md:flex-col justify-between gap-2">
-                                <label htmlFor="date" className="flex items-center justify-start gap-2">
-                                    <IconDay /> Día
+                            <div className="border w-full" />
+                            <div className="flex flex-col gap-2">
+                                <label className="flex items-center gap-3 text-sm font-semibold">
+                                    <IconCenterAtenttion /> Centro de atención
                                 </label>
-                                <input
-                                    id="date"
-                                    type="date"
-                                    defaultValue={date}
-                                    placeholder=""
-                                    className="w-60 p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                                    disabled
-                                />
-                                {errors.date && (
-                                    <span className="text-red-500 text-sm font-medium">
-                                        {errors.date.message}
-                                    </span>
-                                )}
+                                <select
+                                    id="healthCenter"
+                                    className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""}`}
+                                    {...register("healthCenter", { required: "* ¿En cuál centro de atención quieres ser atendido? *" })}
+                                >
+                                    <option value="">Seleccione el centro de atención</option>
+                                    <option value="1">Centro Gallegos</option>
+                                </select>
+                                {errors.healthCenter && <span className="text-red-500 text-sm">{errors.healthCenter.message}</span>}
                             </div>
-
-                            <div className="flex flex-row md:flex-col justify-between gap-2">
-                                <label htmlFor="time" className="flex items-center justify-start gap-2">
-                                    <IconClock /> Hora
+                            <div className="border w-full" />
+                            <div className="flex flex-col gap-2">
+                                <label className="flex items-center gap-3 text-sm font-semibold">
+                                    <IconDate /> Fecha
                                 </label>
-                                <input
-                                    id="time"
-                                    type="time"
-                                    defaultValue={time}
-                                    placeholder=""
-                                    className="w-60 py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                                    {...register("time", {
-                                        required: {
-                                            value: true,
-                                            message: "* Selecciona la hora *",
-                                        },
-                                    })}
-                                />
-                                {errors.time && (
-                                    <span className="text-red-500 text-sm font-medium">
-                                        {errors.time.message}
-                                    </span>
-                                )}
+                                <div className="flex  md:flex-row gap-2">
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="date" className="flex items-center gap-2">
+                                            <IconDay /> Día
+                                        </label>
+                                        <input
+                                            id="date"
+                                            type="date"
+                                            defaultValue={date}
+                                            className=" md:w-60 w-full p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
+                                            disabled
+                                        />
+                                        {errors.date && <span className="text-red-500 text-sm">{errors.date.message}</span>}
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="time" className="flex items-center gap-2">
+                                            <IconClock /> Hora
+                                        </label>
+                                        <input
+                                            id="time"
+                                            type="time"
+                                            defaultValue={time}
+                                            className=" md:w-60 w-full py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
+                                            {...register("time", { required: "* Selecciona la hora *" })}
+                                        />
+                                        {errors.time && <span className="text-red-500 text-sm">{errors.time.message}</span>}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="w-full p-3 border-t-2 flex justify-center items-center">
+                    <div className="p-3 border-t-2 flex justify-center">
                         <button
                             disabled={disabled}
                             type="submit"
-                            className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white"
+                            className="flex items-center gap-3 bg-greenPrimary py-3 px-6 rounded-xl text-white"
                         >
                             Continuar <IconArrowNextConsult />
                         </button>
                     </div>
                 </form>
-                <button
-                    onClick={handleClose}
-                    className="absolute top-0 right-0 m-4 hover:transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1"
-                >
-                    <IconClose className="w-8" />
-                </button>
             </div>
         </div>
     ) : null;

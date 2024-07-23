@@ -58,7 +58,7 @@ import IconDown from "@/components/icons/IconDown";
 import IconDownload from "@/components/icons/IconDownload";
 import IconEdit from "@/components/icons/IconEdit";
 import IconEditar from "@/components/icons/iconEditar";
-import IconEnter from "@/components/icons/IconEnter";
+import IconEnter from "../../IconEnter";
 import Estadistica from "@/components/icons/IconEstadistica";
 import IconFacebook from "@/components/icons/iconFacebook";
 import IconFatArrow from "@/components/icons/iconFatarrowDash";
