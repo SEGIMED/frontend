@@ -139,7 +139,7 @@ export default function SubNavbar({ id }) {
                     <p>Examen Fisico</p>
                   </Link>
                 </DropdownItem>
-                <DropdownItem
+                {/* <DropdownItem
                   className={getLinkClass(rutas.SignosVitales)}
                   key="copy">
                   <Link
@@ -148,7 +148,7 @@ export default function SubNavbar({ id }) {
                     className="w-full">
                     <p>Signos Vitales</p>
                   </Link>
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownItem
                   className={getLinkClass(rutas.Diagnostico)}
                   key="edit">
