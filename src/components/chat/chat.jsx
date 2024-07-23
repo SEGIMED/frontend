@@ -67,7 +67,7 @@ export default function Chat({ chat }) {
           {messages.map((message, index) => (
             <div
               key={message._id}
-              className={`p-2 px-8 font-poppins flex flex-col ${
+              className={`p-2 px-4 lg:px-8 font-poppins flex flex-col ${
                 message?.sender?.userId === userId
                   ? "justify-end items-end"
                   : "justify-start items-start"
