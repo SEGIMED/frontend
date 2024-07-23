@@ -26,6 +26,7 @@ export default function Estadisticas() {
   const [alarm, setAlarm]= useState({})
   const [dataGenre, setDataGenre]=useState({})
   const [activity, setActiviy]=useState({})
+  const [general, setGeneral]=useState({})
 
   const getActivity = async (headers) => {
     try {
@@ -45,7 +46,7 @@ export default function Estadisticas() {
       console.error(error)
     }
   } 
-     const getGenreEstadistica = async (headers) => {
+  const getGenreEstadistica = async (headers) => {
       try {
         
         const response = await ApiSegimed.get("/statistics-genre", 
@@ -56,16 +57,30 @@ export default function Estadisticas() {
         console.error("Error fetching data:", error);
       }
     };
+  
+  const generalEstadistica = async (headers) => {
+    try {
+     const response = await ApiSegimed.get("statistics-general", headers)
+     
+     setGeneral(response.data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
 
   useEffect(() => {
     const token = Cookies.get("a");
     if (token) {
       getActivity({ headers: { token: token } });
-      getAlarmsEstadistica({ headers: { token: token } })
-      getGenreEstadistica({ headers: { token: token } })
+      getAlarmsEstadistica({ headers: { token: token } });
+      getGenreEstadistica({ headers: { token: token } });
+      generalEstadistica({ headers: { token: token } });
     }
   }, []);
   
+  console.log(general)
+
+
   const dataGenres = [
     { label: 'Femenino', value: dataGenre?.women, color: 'rgb(239, 43, 125)' },
     { label: 'Masculino', value: dataGenre?.men, color: 'rgb(1, 167, 157)' },
@@ -76,6 +91,10 @@ export default function Estadisticas() {
     { label: 'Activos', value: activity?.activePatients, color: 'rgb(112, 194, 71)' },
   ];
   
+  const dataAlarmsLast24=[
+    {label:"Sin responder", value:general?.last24hsAlarmStatistics?.activeAlarms, color: "rgb(231, 63, 63)"  },
+    {label:"Respondidas", value:general?.last24hsAlarmStatistics?.solvedAlarms, color: "rgb(112, 194, 71)"  }
+  ]
   return (
     <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
@@ -127,8 +146,8 @@ export default function Estadisticas() {
             Alarmas en las últimas 24 horas
           </p>
           <div className="flex items-center justify-center">
-            <div className="w-full ">
-              <IconTorta className="w-full" />
+            <div className="md:w-full ">
+            <GooglePieChart dataArray={dataAlarmsLast24} chartId="alarm24-chart" />
             </div>
           </div>
         </div>
