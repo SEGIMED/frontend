@@ -37,6 +37,8 @@ export default function ProximasConsultas() {
     }
   }, [consultas]);
 
+  
+
   return (
     <div className="h-full w-full bg-white rounded-2xl border pb-2 border-[#DCDBDB]  ">
       <div className="flex items-center justify-between px-6 py-2 border-b border-[#DCDBDB]">

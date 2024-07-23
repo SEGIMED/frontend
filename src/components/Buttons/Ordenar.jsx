@@ -6,8 +6,8 @@ export default function Ordenar({ funcion }) {
   return (
     <button
       onClick={funcion}
-      className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
-      <p className="text-start text-white font-bold text-base leading-5">
+      className="py-2 px-4 flex bg-[#487FFA] rounded-xl gap-1 items-center">
+      <p className="text-start text-white font-bold text-base leading-5 hidden md:block">
         Ordenar
       </p>
       <div className="hidden md:block">

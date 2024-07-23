@@ -100,7 +100,7 @@ export default function ReviewModalApte({ onClose, id }) {
               <span><IconTablillaEstrella /></span>
               <span className="font-medium text-base">{question}</span>
             </div>
-            <div className="flex justify-center items-center border-b pb-1">
+            <div className="flex justify-center items-center border-b gap-2 p-5">
               {[...Array(5)].map((star, index) => (
                 <label key={index} className="cursor-pointer">
                   <input
@@ -113,8 +113,8 @@ export default function ReviewModalApte({ onClose, id }) {
                   <IconTStar3
                     color={
                       index < (hover[qIndex] || ratings[qIndex])
-                        ? "#F5E400"
-                        : "white"
+                        ? "#FFC900"
+                        : "#FFFFFF"
                     }
                     onMouseEnter={() => handleHover(qIndex, index + 1)}
                     onMouseLeave={() => handleHover(qIndex, 0)}

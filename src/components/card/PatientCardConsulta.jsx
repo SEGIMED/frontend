@@ -17,7 +17,7 @@ export default function PatientCardConsulta({ paciente, button, consulta }) {
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
-  console.log(paciente);
+ 
   const getStatusTextAndColor = (status) => {
     switch (status) {
       case 1: // Agendada

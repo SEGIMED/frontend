@@ -105,7 +105,7 @@ const PhotoModal = ({ isOpen, onClose }) => {
           </div>
           <div className="w-full h-fit flex flex-col items-center gap-8 md:justify-between p-5">
             <div className="flex justify-center items-center">
-              <div className="w-64 h-64 md:w-48 md:h-48  flex justify-center items-center">
+              <div className="w-64 h-64 md:w-64 md:h-64  flex justify-center items-center">
                 <img
                   src={tempUrl}
                   alt="Perfil"

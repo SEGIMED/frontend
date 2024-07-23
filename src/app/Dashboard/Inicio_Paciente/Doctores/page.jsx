@@ -21,6 +21,7 @@ import IconMessages from "@/components/icons/IconMessages";
 import rutas from "@/utils/rutas";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import DoctorAsociado from "@/components/modal/ModalPatient/modalDoctorAsociation";
+import IconOptions from "@/components/icons/IconOptions";
 
 export default function DoctoresPte() {
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
@@ -138,10 +139,12 @@ export default function DoctoresPte() {
       <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
         {doctors?.map((doctor) => (
           <DoctorCard
+           
             key={doctor.id}
             doctor={doctor}
             button={
               <MenuDropDown
+                icon={<IconOptions color="white"/>}
                 label="Opciones"
                 categories={[
                   {

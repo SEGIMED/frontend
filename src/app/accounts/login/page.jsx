@@ -49,7 +49,7 @@ export default function Login() {
       // const result = await response.json();
       const response = await ApiSegimed.post("/user/login", postData);
       const result = response.data;
-      console.log(result);
+   
       if (response.status !== 200) {
         throw new Error(result.error);
       }
