@@ -285,7 +285,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar pacientes"
-            className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
+            className="text-start text-[#808080] bg-[#FAFAFC] font-normal text-normal leading-6 outline-none"
             value={searchTerm}
           />
           <button>

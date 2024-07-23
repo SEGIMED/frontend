@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="flex flex-col  h-screen bg-gray-100">
-      <div className="pl-3 h-[10%] justify-center flex md:justify-start">
+      <div className=" pt-5 md:pl-7 pl-0 h-[10%] justify-center flex md:justify-start">
         <LogoSegimed className="w-48 h-20" />
       </div>
       <div className="flex flex-col items-center justify-center  h-[90%] gap-8 md:gap-6 ">

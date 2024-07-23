@@ -1,6 +1,6 @@
 "use client"
 
-import IconEnter from "@/components/icons/IconEnter";
+import IconEnter from "../icons/IconEnter";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
@@ -12,35 +12,35 @@ import IconPasswordOpen from "../icons/IconPasswordOpen";
 export const FormUser = ({ formData, setFormData }) => {
     const { register, handleSubmit, reset, watch, formState: { errors }, setError } = useForm();
     // const [updatedData, setUpdatedData] = useState(null);
-    const router=useRouter()
+    const router = useRouter()
     const [showPassword, setShowPassword] = useState(false);
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
-        };
+    };
 
     const onSubmit = handleSubmit(async (data) => {
         try {
             const updatedData = { ...formData, ...data };
             setFormData(updatedData);
             // setUpdatedData(updatedData);
-            
-            const response = await ApiSegimed.post('/user/register-user', updatedData);
-            
-            const user= response.data;
 
-            router.push(`/accounts/verify/${user.id}`) ;
+            const response = await ApiSegimed.post('/user/register-user', updatedData);
+
+            const user = response.data;
+
+            router.push(`/accounts/verify/${user.id}`);
 
             reset();
-            
+
         } catch (error) {
-            
+
             if (error) {
                 Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: error.response.data.error,
+                    icon: "error",
+                    title: "Error",
+                    text: error.response.data.error,
                 });
-              }
+            }
 
         }
     });
@@ -98,13 +98,13 @@ export const FormUser = ({ formData, setFormData }) => {
                     <div className="w-96">
                         <label htmlFor="password">Contraseña</label>
                         <div className="relative">
-                        <button
-                        type="button"
-                        className="absolute right-2 focus:outline-none pt-6"
-                        onClick={togglePasswordVisibility}
-                        style={{ top: 0, bottom: 0, margin: "auto" }}>
-                        {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
-                        </button>
+                            <button
+                                type="button"
+                                className="absolute right-2 focus:outline-none pt-6"
+                                onClick={togglePasswordVisibility}
+                                style={{ top: 0, bottom: 0, margin: "auto" }}>
+                                {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
+                            </button>
                         </div>
                         <input
                             type={showPassword ? "text" : "password"}
@@ -129,7 +129,7 @@ export const FormUser = ({ formData, setFormData }) => {
                                 }
                             })}
                         />
-                        
+
                         {errors.password && <span className="text-red-500 text-sm font-medium">{errors.password.message}</span>}
                     </div>
 

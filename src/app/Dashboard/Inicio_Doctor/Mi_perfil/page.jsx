@@ -98,6 +98,8 @@ export default function HomeDoc() {
       ...data,
       medicalSpecialtyIds: selectedSpecialties.map((spec) => spec.id),
       specialties: selectedSpecialties,
+      currentLocationCity: data.city,
+      currentLocationCountry: data.country,
       attendancePlace: {
         addressDetails: data.addressDetails,
         alias: data.alias,
@@ -109,12 +111,19 @@ export default function HomeDoc() {
       },
     };
 
+    const updatedDataSend = {
+      ...doctor,
+      ...data,
+      medicalSpecialtyIds: selectedSpecialties.map((spec) => spec.id),
+      specialties: selectedSpecialties,
+    };
+    console.log(updatedData);
     dispatch(adduser({ ...doctor, ...updatedData }));
 
     try {
       const response = await ApiSegimed.patch(
         `/update-full-physician`,
-        updatedData,
+        updatedDataSend,
         headers
       );
       // const response = await ApiSegimed.patch(`/update-full-physician`, headers);
@@ -155,9 +164,8 @@ export default function HomeDoc() {
     <div className="h-full flex flex-col overflow-y-scroll">
       <title>{lastSegmentTextToShow}</title>
       <div
-        className={`flex ${
-          edit ? "flex-col md:flex-row" : "md:flex-row"
-        } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
+        className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"
+          } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
         <div
           className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
           <IconCurrentRouteNav className="w-4" />
@@ -332,9 +340,8 @@ export default function HomeDoc() {
           {edit ? (
             <div className="w-full flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
-                  errors.nacionalidad ? "red" : "#DCDBDB"
-                }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.nacionalidad ? "red" : "#DCDBDB"
+                  }]`}
                 type="text"
                 defaultValue={doctor?.nationality}
                 {...register("nationality", {
@@ -364,7 +371,7 @@ export default function HomeDoc() {
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
                 type="text"
                 defaultValue={doctor?.currentLocationCountry}
-                {...register("currentLocationCountry", {
+                {...register("country", {
                   required: "*Este campo es obligatorio",
                   minLength: {
                     value: 3,
@@ -372,9 +379,9 @@ export default function HomeDoc() {
                   },
                 })}
               />
-              {errors.currentLocationCountry && (
+              {errors.country && (
                 <p className="text-red-500 text-sm">
-                  {errors.currentLocationCountry.message}
+                  {errors.country.message}
                 </p>
               )}
             </div>
@@ -395,8 +402,8 @@ export default function HomeDoc() {
               <input
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
                 type="text"
-                defaultValue={doctor?.currentLocationProvince}
-                {...register("currentLocationProvince", {
+                defaultValue={doctor?.currentLocationCity}
+                {...register("city", {
                   required: "*Este campo es obligatorio",
                   minLength: {
                     value: 3,
@@ -404,15 +411,15 @@ export default function HomeDoc() {
                   },
                 })}
               />
-              {errors.currentLocationProvince && (
+              {errors.city && (
                 <p className="text-red-500 text-sm">
-                  {errors.currentLocationProvince.message}
+                  {errors.city.message}
                 </p>
               )}
             </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
-              {doctor?.currentLocationProvince}
+              {doctor?.currentLocationCity}
             </span>
           )}
         </div>
@@ -469,7 +476,31 @@ export default function HomeDoc() {
             </span>
           )}
         </div>
-
+        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+          <label className="w-full flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-2" />
+            Direccion de Atención:
+          </label>
+          {edit ? (
+            <div className="w-full flex flex-col">
+              <input
+                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                type="text"
+                defaultValue={doctor?.attendancePlace?.addressDetails}
+                {...register("addressDetails", {
+                  required: "*Este campo es obligatorio",
+                })}
+              />
+              {errors.alias && (
+                <p className="text-red-500 text-sm">{errors.addressDetails.message}</p>
+              )}
+            </div>
+          ) : (
+            <span className="w-full text-start px-6 py-2">
+              {doctor?.attendancePlace?.addressDetails}
+            </span>
+          )}
+        </div>
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
@@ -576,7 +607,8 @@ export default function HomeDoc() {
             Nivel de Experto:
           </label>
           <span className="w-full text-start px-6 py-2">
-            {doctor?.expertiseLevel}
+            {doctor?.expertiseLevel?.name
+            }
           </span>
         </div>
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">

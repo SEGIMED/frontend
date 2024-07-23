@@ -61,8 +61,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -194,7 +194,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       //     null,
       //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
       // };
-    };
+    }
     dispatch(adduser(combinedData));
     console.log(combinedData);
   };
@@ -310,8 +310,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
           <input
             onChange={handleSearchChange}
             type="text"
-            placeholder="Buscar doctores"
-            className="text-start text-[#808080] font-normal text-normal leading-6 outline-none"
+            placeholder="Buscar Médicos "
+            className="text-start text-[#808080]  bg-[#FAFAFC]font-normal text-normal leading-6 outline-none"
             value={searchTerm1}
           />
           <button>
@@ -335,9 +335,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            showNotifications && "bg-[#E73F3F]"
-          }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={showNotifications && "white"}
