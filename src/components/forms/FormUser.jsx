@@ -1,6 +1,6 @@
 "use client"
 
-import IconEnter from "../../../IconEnter";
+import IconEnter from "../icons/IconEnter";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
