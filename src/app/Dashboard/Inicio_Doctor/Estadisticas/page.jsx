@@ -78,7 +78,7 @@ export default function Estadisticas() {
     }
   }, []);
   
-  console.log(general)
+  
 
 
   const dataGenres = [
