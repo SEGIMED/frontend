@@ -15,9 +15,9 @@ import LastLogin from "@/utils/lastLogin";
 import Cookies from "js-cookie";
 import Elboton from "@/components/Buttons/Elboton";
 import IconMas from "@/components/icons/iconMas";
-
-import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
+import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
+
 import IconOrder from "@/components/icons/IconOrder";
 import avatar from "@/utils/defaultAvatar";
 import IconSendMensaje from "@/components/icons/iconSendMensaje";

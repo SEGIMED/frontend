@@ -34,6 +34,7 @@ import IconAlarm from "@/components/icons/IconAlarm";
 import IconHooter from "@/components/icons/IconHooter";
 import IconAlphabetic from "@/components/icons/IconAlphabetic";
 import IconFilter from "@/components/icons/IconFilter";
+import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 
 
 export default function HomeDoc() {
@@ -188,6 +189,10 @@ export default function HomeDoc() {
   };
   if (userId === null) {
     return <div>Loading...</div>;
+  }
+
+  if (sortedPatients.legth === 0) {
+    return <MensajeSkeleton />;
   }
 
   return (

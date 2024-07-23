@@ -1,44 +1,66 @@
+"use client"
+
 import { Chart, registerables } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { useEffect, useState } from "react";
+import { ApiSegimed } from "@/Api/ApiSegimed";
+import Cookies from "js-cookie";
 
 Chart.register(...registerables);
 
-const getRandomInt = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-const getRandomData = () => {
-  const data = [];
+const getDayNames = (startDate) => {
+  const daysOfWeek = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  let dayNames = [];
   for (let i = 0; i < 7; i++) {
-    data.push(getRandomInt(1, 10));
+    const day = new Date(startDate);
+    day.setDate(day.getDate() + i);
+    dayNames.push(daysOfWeek[day.getDay()]);
   }
-  return data;
-};
-
-const data = {
-  labels: [
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-    "Domingo",
-  ],
-  datasets: [
-    {
-      label: "Valor",
-      data: getRandomData(),
-      backgroundColor: "#70C247",
-    },
-  ],
+  return dayNames;
 };
 
 export const BarChart = () => {
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+  const token= Cookies.get("a")
+  useEffect(() => {
+    
+    const fetchData = async (headers) => {
+      const response = await ApiSegimed.get('/user/login-record', headers);
+      const data = response.data
+
+      // procesa la data para conseguir los ultimos 7 dias 
+      const today = new Date();
+      const lastSevenDays = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date();
+        date.setDate(today.getDate() - i);
+        const formattedDate = date.toISOString().split('T')[0];
+        lastSevenDays.push(data[formattedDate] || 0);
+      }
+      lastSevenDays.reverse();
+
+      // nombres ultimos 7 dias
+      const dayNames = getDayNames(new Date(today.setDate(today.getDate() - 6)));
+
+      setChartData({
+        labels: dayNames,
+        datasets: [
+          {
+            label: "Pacientes Activos",
+            data: lastSevenDays,
+            backgroundColor: "#70C247",
+          },
+        ],
+      });
+    };
+
+    fetchData({ headers: { token: token } });
+  }, []);
+
   return (
-    <div className="w-full h-full lg:w-[940px]  p-5 flex items-center justify-center">
+    <div className="w-full  h-auto lg:w-[48vw] p-5 flex items-center justify-center">
       <Bar
-        data={data}
+        data={chartData}
         options={{
           responsive: true,
           scales: {
@@ -56,3 +78,5 @@ export const BarChart = () => {
     </div>
   );
 };
+
+
