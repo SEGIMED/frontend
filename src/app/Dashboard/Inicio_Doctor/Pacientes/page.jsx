@@ -159,6 +159,7 @@ export default function HomeDoc() {
         headers: { token }
       });
       if (response.status === 201 || response.status === 200) {
+        getFavorites({ headers: { token: token } }).catch(console.error);
         getPatients({ headers: { token: token } }).catch(console.error);
         console.log(`Patient ${patient.isFavorite ? 'removed from' : 'added to'} favorites successfully.`, response);
       } else {
@@ -311,7 +312,7 @@ export default function HomeDoc() {
         {isLoading ? (
           <SkeletonList count={10} />
         ) : sortedPatients.length === 0 ? (
-          <NotFound />
+          <NotFound text={showFavorites ? "No hay pacientes favoritos " : "No hay pacientes"} sizeText={"w-[100%]"} />
         ) :
           (
             filteredPatients.map((paciente) => (
@@ -337,11 +338,14 @@ export default function HomeDoc() {
                   <p className="text-base">
                     {paciente.name} {paciente.lastname}
                   </p>
-                  {paciente.isFavorite ? (
-                    <IconFavoriteYellow />
-                  ) : (
-                    null
-                  )}
+                  <div onClick={() => changeFavorite(paciente)}>
+                    {paciente.isFavorite ? (
+                      <IconFavoriteYellow />
+                    ) : (
+                      <IconFavoriteBlue />
+                    )}
+                  </div>
+
                   {/* aca verificar si es favorite es true y poner IconFavoriteYellow sino nada y aplicar logica de skeleton y de notfound, haz las importaciones y todo para que funcione, usa las mismas que antes */}
                 </div>
                 <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
