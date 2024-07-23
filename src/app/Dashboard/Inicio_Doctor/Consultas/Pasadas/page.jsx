@@ -21,7 +21,7 @@ import ReviewModalApte from "@/components/modal/ReviewModalApte";
 import Ordenar from "@/components/Buttons/Ordenar";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
-import IconOptions from "@/components/icons/IconOptions";
+import IconRegresar from "@/components/icons/iconRegresar";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -31,6 +31,7 @@ export default function HomeDoc() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
 
   const consultas = useAppSelector((state) => state.schedules);
   // Obtener consultas del estado
@@ -50,9 +51,10 @@ export default function HomeDoc() {
     }
   }, [consultas]);
 
+
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
-    (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
+    (consulta) => consulta.schedulingStatus !== 1 && consulta.physician === myID
   );
 
   // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
@@ -64,9 +66,7 @@ export default function HomeDoc() {
 
   // Ordenar pacientes si es necesario
   const sortedPatients = isSorted
-    ? [...filteredPatients].sort((a, b) =>
-      a.patientUser.name.localeCompare(b.patientUser.name)
-    )
+    ? [...filteredPatients].sort((a, b) => a.patientUser.name.localeCompare(b.patientUser.name))
     : filteredPatients;
 
   const handleSortClick = () => {
@@ -92,10 +92,10 @@ export default function HomeDoc() {
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
       <div className="h-full w-full flex flex-col">
-        <div className="w-full flex justify-center md:justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
+        <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
           <Ordenar />
 
-          <h1 className="font-bold md:text-xl hidden md:block">Proximas</h1>
+          <h1 className="font-bold md:text-xl hidden md:block">Pasadas</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
@@ -104,11 +104,11 @@ export default function HomeDoc() {
                 </p>
               </button>
             </Link> */}
-            <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
-                <IconFolder className="h-6 hidden md:block" />
-                <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
-                  Pasadas
+            <Link href={`${rutas.Doctor}${rutas.Historial}`}>
+              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid bg-[#487FFA] border-2 ">
+                <IconRegresar />
+                <p className="text-start text-white font-bold text-sm md:text-base leading-5">
+                  Regresar
                 </p>
               </button>
             </Link>
@@ -128,10 +128,7 @@ export default function HomeDoc() {
           {isLoading ? (
             <SkeletonList count={9} />
           ) : filteredPatients.length === 0 ? (
-            <NotFound
-              text="No hay historial de consultas."
-              sizeText="w-[100%]"
-            />
+            <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
               {sortedPatients?.map((paciente) => (
@@ -142,11 +139,9 @@ export default function HomeDoc() {
                   button={
                     <MenuDropDown
                       label={"Mas"}
-                      icon={<IconOptions color="white" />}
                       categories={[
                         {
                           title: "Opciones",
-                          icon: <IconOrder />,
                           items: [
                             {
                               label: "Dejar Review",

@@ -13,6 +13,7 @@ import IconTypeQueries from "@/components/icons/IconTypeQueries";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
+import { useState } from "react";
 
 const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const {
@@ -24,6 +25,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
     formState: { errors },
     setError,
   } = useForm();
+
+
+  const [disabled, setDisabled] = useState(false);
 
   const handleClose = () => {
     onClose();
@@ -92,7 +96,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   }, [date, time, setValue, patientId, doctorId]);
 
   const onSubmit = handleSubmit(async (data) => {
+
     try {
+      setDisabled(true);
       const { date, time, ...rest } = data;
 
       const token = Cookies.get("a");
@@ -213,9 +219,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                errors.healthCenter ? "border-red-500" : ""
-              }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
+                }`}
               {...register("healthCenter", {
                 required: {
                   value: true,
@@ -294,6 +299,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
           <div className="flex items-center justify-center w-full p-3 border-t-2">
             <button
+              disabled={disabled}
               type="submit"
               className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white">
               Continuar
@@ -302,6 +308,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
           </div>
         </form>
         <button
+
           onClick={handleClose}
           className="absolute top-0 right-0 m-4 duration-300 ease-in-out transform hover:transition hover:scale-105 active:scale-100 active:translate-y-1">
           <IconClose className="w-8" />

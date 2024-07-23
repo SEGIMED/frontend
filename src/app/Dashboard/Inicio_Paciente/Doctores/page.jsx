@@ -26,10 +26,8 @@ import IconOptions from "@/components/icons/IconOptions";
 export default function DoctoresPte() {
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(
-    (state) => state.doctores.doctores.length === 0
-  );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [doctors, setDoctors] = useState([]);
@@ -52,8 +50,11 @@ export default function DoctoresPte() {
     try {
       const response = await ApiSegimed.get(
         `/all-physicians?page=${pagination.currentPage}&limit=7&name=${searchTerm}`,
+        // `/all-physicians?page=${pagination.currentPage}&limit=7`,
         { headers: { token: token } }
+
       );
+      console.log(response.data);
       if (response.data) {
         setDoctors(response.data.user);
         setPagination((prev) => ({
@@ -61,8 +62,10 @@ export default function DoctoresPte() {
           totalUsers: response.data.totalUsers,
           totalPages: response.data.totalPages,
         }));
+        setIsLoading(false)
       }
     } catch (error) {
+      setIsLoading(false)
       console.error(error);
     }
   };
@@ -133,12 +136,13 @@ export default function DoctoresPte() {
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6">
-        <div className="text-xl font-bold">Lista de Doctores</div>
+        <div className="text-xl font-bold">Médicos</div>
         <div></div>
       </div>
       <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
         {doctors?.map((doctor) => (
           <DoctorCard
+
             key={doctor.id}
             doctor={doctor}
             button={
