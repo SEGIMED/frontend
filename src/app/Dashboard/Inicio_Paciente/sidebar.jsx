@@ -24,6 +24,7 @@ import rutas from "@/utils/rutas";
 import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
+import Swal from "sweetalert2";
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -31,7 +32,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const notifications = useAppSelector((state) => state.notifications);
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
-
   const handleSearchChange = (e) => {
     dispatch(setSearchTerm1(e.target.value));
   };
@@ -61,8 +61,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -128,7 +128,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getPatientNotifications = async (headers) => {
     try {
       const response = await ApiSegimed.get(
-        `/all-notifications-patient?patientId=15`,
+        `/all-notifications-patient?patientId=` + id,
         headers
       );
 
@@ -148,53 +148,53 @@ export const SidePte = ({ search, toggleSidebar }) => {
     const combinedData = {
       ...response1.data,
       ...response2.data,
-    //   anthropometricDetails:
-    //     response1.data.anthropometricDetails?.length > 0
-    //       ? response1.data.anthropometricDetails
-    //       : paciente.anthropometricDetails || [],
-    //   vitalSigns:
-    //     response1.data.vitalSigns?.length > 0
-    //       ? response1.data.vitalSigns
-    //       : paciente.vitalSigns || [],
-    //   sociodemographicDetails:
-    //     response1.data.sociodemographicDetails ||
-    //     paciente.sociodemographicDetails ||
-    //     {},
-    //   backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
-    //   patientPulmonaryHypertensionGroups:
-    //     response1.data.patientPulmonaryHypertensionGroups?.length > 0
-    //       ? response1.data.patientPulmonaryHypertensionGroups
-    //       : paciente.patientPulmonaryHypertensionGroups || {},
-    //   patientPulmonaryHypertensionRisks:
-    //     response1.data.patientPulmonaryHypertensionRisks?.length > 0
-    //       ? response1.data.patientPulmonaryHypertensionRisks
-    //       : paciente.patientPulmonaryHypertensionRisks || {},
-    //   patientCardiovascularRisks:
-    //     response1.data.patientCardiovascularRisks?.length > 0
-    //       ? response1.data.patientCardiovascularRisks
-    //       : paciente.patientCardiovascularRisks || {},
-    //   patientSurgicalRisks:
-    //     response1.data.patientSurgicalRisks?.length > 0
-    //       ? response1.data.patientSurgicalRisks
-    //       : paciente.patientSurgicalRisks || {},
-    //   lastMedicalEventDate:
-    //     response1.data.lastMedicalEventDate ||
-    //     paciente.lastMedicalEventDate ||
-    //     null,
-    //   currentPhysician:
-    //     response1.data.currentPhysician || paciente.currentPhysician || {},
-    //   cellphone: response1.data.cellphone || paciente.cellphone || null,
-    //   currentLocationCity:
-    //     response1.data.currentLocationCity ||
-    //     paciente.currentLocationCity ||
-    //     null,
-    //   currentLocationCountry:
-    //     response1.data.currentLocationCountry ||
-    //     paciente.currentLocationCountry ||
-    //     null,
-    //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
-    // };
-    }
+      //   anthropometricDetails:
+      //     response1.data.anthropometricDetails?.length > 0
+      //       ? response1.data.anthropometricDetails
+      //       : paciente.anthropometricDetails || [],
+      //   vitalSigns:
+      //     response1.data.vitalSigns?.length > 0
+      //       ? response1.data.vitalSigns
+      //       : paciente.vitalSigns || [],
+      //   sociodemographicDetails:
+      //     response1.data.sociodemographicDetails ||
+      //     paciente.sociodemographicDetails ||
+      //     {},
+      //   backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
+      //   patientPulmonaryHypertensionGroups:
+      //     response1.data.patientPulmonaryHypertensionGroups?.length > 0
+      //       ? response1.data.patientPulmonaryHypertensionGroups
+      //       : paciente.patientPulmonaryHypertensionGroups || {},
+      //   patientPulmonaryHypertensionRisks:
+      //     response1.data.patientPulmonaryHypertensionRisks?.length > 0
+      //       ? response1.data.patientPulmonaryHypertensionRisks
+      //       : paciente.patientPulmonaryHypertensionRisks || {},
+      //   patientCardiovascularRisks:
+      //     response1.data.patientCardiovascularRisks?.length > 0
+      //       ? response1.data.patientCardiovascularRisks
+      //       : paciente.patientCardiovascularRisks || {},
+      //   patientSurgicalRisks:
+      //     response1.data.patientSurgicalRisks?.length > 0
+      //       ? response1.data.patientSurgicalRisks
+      //       : paciente.patientSurgicalRisks || {},
+      //   lastMedicalEventDate:
+      //     response1.data.lastMedicalEventDate ||
+      //     paciente.lastMedicalEventDate ||
+      //     null,
+      //   currentPhysician:
+      //     response1.data.currentPhysician || paciente.currentPhysician || {},
+      //   cellphone: response1.data.cellphone || paciente.cellphone || null,
+      //   currentLocationCity:
+      //     response1.data.currentLocationCity ||
+      //     paciente.currentLocationCity ||
+      //     null,
+      //   currentLocationCountry:
+      //     response1.data.currentLocationCountry ||
+      //     paciente.currentLocationCountry ||
+      //     null,
+      //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
+      // };
+    };
     dispatch(adduser(combinedData));
     console.log(combinedData);
   };
@@ -240,9 +240,44 @@ export const SidePte = ({ search, toggleSidebar }) => {
     }
   }, [rol]);
   const [showNotifications, setShowNotifications] = useState(false);
-
+  const unreadNotifications = notifications?.filter(
+    (notificacion) => !notificacion.state
+  );
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
+  };
+
+  const handleNotificationElementClick = (id) => {
+    try {
+      ApiSegimed.patch("/notification-seen", null, {
+        params: {
+          notification_Id: id,
+        },
+        headers: {
+          token: token,
+        },
+      }).then((response) => {
+        if (response.data) {
+          dispatch(
+            addNotifications(
+              notifications.map((notificacion) =>
+                notificacion._id === id
+                  ? { ...notificacion, state: true }
+                  : notificacion
+              )
+            )
+          );
+          Swal.fire({
+            icon: "success",
+            title: "Notificación leída",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <div className=" flex  items-center justify-between h-[12%] bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] p-4">
@@ -319,14 +354,21 @@ export const SidePte = ({ search, toggleSidebar }) => {
                 Notificaciones
               </p>
               <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-                {notifications
-                  ?.filter((notificacion) => !notificacion.state)
-                  ?.map((notificacion) => (
+                {unreadNotifications && unreadNotifications.length > 0 ? (
+                  unreadNotifications.map((notificacion) => (
                     <NotificacionElement
-                      key={notificacion.id}
+                      key={notificacion._id}
                       notificacion={notificacion}
+                      onClick={() =>
+                        handleNotificationElementClick(notificacion._id)
+                      }
                     />
-                  ))}
+                  ))
+                ) : (
+                  <p className="text-lg text-[#5F5F5F] text-center py-2">
+                    No hay notificaciones por leer
+                  </p>
+                )}
               </div>
             </div>
           </div>

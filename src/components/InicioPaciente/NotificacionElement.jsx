@@ -1,16 +1,12 @@
 import { IconNotificaciones } from "./IconNotificaciones";
 import { IconPoint } from "./IconPoint";
 
-export const NotificacionElement = ({ notificacion }) => {
-  const { _id, content } = notificacion;
-  const handleClick = () => {
-    console.log(`Notificación ${_id} clickeada`);
-  };
-  console.log(notificacion);
+export const NotificacionElement = ({ notificacion, onClick }) => {
+  const { content } = notificacion;
   return (
     <div
       className="flex gap-4 items-center w-full p-2 cursor-pointer"
-      onClick={handleClick}>
+      onClick={onClick}>
       <div className="w-[10%]">
         <IconNotificaciones className="w-5 h-5" color="#487ffa" />
       </div>

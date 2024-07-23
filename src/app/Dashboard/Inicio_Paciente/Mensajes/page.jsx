@@ -28,8 +28,7 @@ export default function MensajesDoc() {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
-  const token = Cookies.get("a");
-  const idUser = Cookies.get("c");
+  const user = useAppSelector((state) => state.user);
 
   useEffect(() => {
     // if (!socket.isConnected()) {
@@ -123,6 +122,11 @@ export default function MensajesDoc() {
   if (isLoading) {
     return <MensajeSkeleton />;
   }
+
+  //Falta lógica para asociar médico
+  // if (user?.treatingPhysician === null) {
+  //   return <AsociarMedico text={"chatear"} />;
+  // }
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto">

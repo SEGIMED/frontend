@@ -60,13 +60,12 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
       classNames={{
         trigger:
           "relative w-[60%] md:w-fit place-self-center md:place-self-end",
-      }}
-    >
+      }}>
       <DropdownTrigger className="flex justify-center md:px-4 font-Roboto py-2 text-white rounded-xl md:gap-3 bg-[#487FFA] items-center cursor-pointer">
         <div className="flex items-center md:gap-3">
-          {icon ? icon : " "}
+          {icon && icon}
           <span className="hidden md:block font-semibold">{label}</span>
-          {iconr ? iconr : " "}
+          {iconr && iconr}
         </div>
       </DropdownTrigger>
       <DropdownMenu>
@@ -77,23 +76,22 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
                 icon={category.icon}
                 title={
                   <div className="flex items-center gap-2">
-                    {category.icon}
+                    {category.icon && category.icon}
                     {category.title}
-                    {category.iconr}
+                    {category.icon && category.iconr}
                   </div>
                 }
                 classNames={{
-                  heading: "text-sm font-bold",
+                  heading: "text-sm font-bold p-0",
+                  base: "p-[3px]",
                 }}
-                showDivider={categoryIndex < categories.length - 1}
-              >
+                showDivider={categoryIndex < categories.length - 1}>
                 {category.items?.map((item, itemIndex) => (
                   <DropdownItem key={itemIndex}>
                     {item.href && (
                       <Link
                         href={item.href}
-                        className="w-full flex items-center gap-2  text-sm cursor-pointer"
-                      >
+                        className="w-full flex items-center gap-2  text-sm cursor-pointer">
                         {item.icon}
                         {item.label}
                         {item.iconr}
@@ -102,8 +100,7 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
                     {item.onClick && (
                       <button
                         onClick={item.onClick}
-                        className="w-full flex items-center gap-2  text-sm cursor-pointer"
-                      >
+                        className="w-full flex items-center gap-2  text-sm cursor-pointer">
                         {item.icon}
                         {item.label}
                         {item.iconr}
@@ -118,8 +115,7 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
                 {item.href ? (
                   <Link
                     href={item.href}
-                    className="w-full flex items-center gap-2  text-sm cursor-pointer"
-                  >
+                    className="w-full flex items-center gap-2  text-sm cursor-pointer">
                     {item.icon}
                     {item.label}
                     {item.iconr}
@@ -127,8 +123,7 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
                 ) : (
                   <button
                     onClick={item.onClick}
-                    className="w-full flex items-center gap-2  text-sm cursor-pointer"
-                  >
+                    className="w-full flex items-center gap-2  text-sm cursor-pointer">
                     {item.icon}
                     {item.label}
                     {item.iconr}

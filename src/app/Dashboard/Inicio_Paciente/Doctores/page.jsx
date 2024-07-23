@@ -139,27 +139,26 @@ export default function DoctoresPte() {
       <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
         {doctors?.map((doctor) => (
           <DoctorCard
-           
             key={doctor.id}
             doctor={doctor}
             button={
               <MenuDropDown
-                icon={<IconOptions color="white"/>}
+                icon={<IconOptions color="white" />}
                 label="Opciones"
                 categories={[
                   {
                     title: "Acciones",
                     items: [
-                      {
-                        label: "Solicitar asociarse",
-                        icon: <IconMiniCalendar />,
-                        onClick: () =>
-                          handleAssociateClick(
-                            doctor.id,
-                            doctor.name,
-                            doctor.lastname
-                          ),
-                      },
+                      // {
+                      //   label: "Solicitar asociarse",
+                      //   icon: <IconMiniCalendar />,
+                      //   onClick: () =>
+                      //     handleAssociateClick(
+                      //       doctor.id,
+                      //       doctor.name,
+                      //       doctor.lastname
+                      //     ),
+                      // },
                       {
                         label: "Solicitar Consulta",
                         icon: <IconMiniCalendar />,
