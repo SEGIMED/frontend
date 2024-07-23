@@ -93,7 +93,7 @@ export default function InputConsulta({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <summary className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center ">
             <Image src={circleData} alt="" />
@@ -251,7 +251,7 @@ export default function InputConsulta({
               {sub}
             </label>
             <textarea
-              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
+              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]"
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
               defaultValue={
