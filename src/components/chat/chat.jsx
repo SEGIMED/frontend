@@ -18,7 +18,7 @@ export default function Chat({ chat }) {
   const messagesContainerRef = useRef(null);
 
   const user = useAppSelector((state) => state.user);
-
+  console.log(chat);
   useEffect(() => {
     if (chat) {
       setInfoChat(chat);
@@ -58,26 +58,16 @@ export default function Chat({ chat }) {
   }
 
   return (
-    <div className="text-[#686868] w-full flex h-full flex-col">
+    <div className="text-[#686868] w-full flex h-full flex-col bg-[#FAFAFC]">
       {/* ACA INICIA EL CHAT */}
-      <div className="relative h-[90%] md:h-[80%] px-6 py-2 overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center bg-[#fafafc]">
-          <Image
-            src={ImageChat}
-            alt="Background"
-            layout="fill"
-            objectFit="cover"
-            quality={100}
-            className="z-5"
-          />
-        </div>
+      <div className="relative h-[90%] md:h-[80%] px-6 py-2 overflow-hidden ">
         <div
-          className="absolute inset-0 overflow-y-auto"
+          className="absolute inset-0 overflow-y-auto bg-image-chat bg-contain bg-no-repeat bg-center"
           ref={messagesContainerRef}>
           {messages.map((message, index) => (
             <div
               key={message._id}
-              className={`p-2 font-poppins flex flex-col ${
+              className={`p-2 px-4 lg:px-8 font-poppins flex flex-col ${
                 message?.sender?.userId === userId
                   ? "justify-end items-end"
                   : "justify-start items-start"
@@ -85,19 +75,28 @@ export default function Chat({ chat }) {
               <div
                 className={`flex items-center justify-center text-xs mb-2 ${
                   message?.sender?.userId === userId
-                    ? "self-end text-right"
+                    ? "self-end text-right flex-row-reverse gap-3"
                     : "self-start text-left"
                 }`}>
                 <span>
-                  <Avatars avatar={user.avatar ? user.avatar : null} />
+                  <Avatars
+                    avatar1={
+                      message?.sender?.avatar === null ||
+                      message?.sender?.avatar === undefined
+                        ? null
+                        : message?.sender?.avatar
+                    }
+                  />
                 </span>
-                <span className="ml-4">{message?.sender?.fullName}</span>
+                <span className="ml-4 text-lg">
+                  {message?.sender?.fullName}
+                </span>
               </div>
               <div
-                className={`px-1 md:px-3 py-1 md:py-2 w-fit max-w-[70%] md:max-w-[45%] rounded-3xl shadow-sm mb-2 ${
+                className={`px-1 md:px-3 py-1 md:py-2 w-fit max-w-[70%] border-[#D7D7D7] border md:max-w-[45%] bg-[#FFFFFF] rounded-2xl shadow-sm mb-2 ${
                   message?.sender?.userId === userId
-                    ? "rounded-tr-none ml-auto bg-[#c5e7b5]"
-                    : "rounded-tl-none bg-blue-100"
+                    ? "rounded-tr-none me-4 lg:me-[52px]"
+                    : "rounded-tl-none ms-4 lg:ms-[55px]"
                 }`}>
                 <small
                   className={`inline-block px-3 py-2 rounded-lg ${
@@ -119,7 +118,7 @@ export default function Chat({ chat }) {
           value={messageInput}
           onChange={(e) => setMessageInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full md:w-1/2 py-3 md:py-8 px-4 md:border outline-none md:rounded md:mr-2"
+          className="w-full md:w-1/2 py-3 md:py-4 px-4 md:border outline-none md:rounded md:mr-2 h-[80px]"
           placeholder="Escribe tu mensaje..."
         />
         <button
