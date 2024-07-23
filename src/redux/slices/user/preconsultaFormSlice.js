@@ -303,11 +303,27 @@ const initialState = {
         unit: "%",
         referenceValue: 80,
       },
+      abnormalGlycemia: {
+        label: "  Glicemia:  ¿Tuvo valores fuera del rango normal en el último tiempo? (+ 140 mg/dl y - 80 mg/dl)",
+        binaryOptions: true,
+        active: null,
+        description: '',
+        active: null,
+      },
+      lastAbnormalGlycemia: {
+        label: "Escriba los últimos 4 valores mas anormales que tuvo.",
+        selectedOption: null,
+        active: null,
+        description: '',
+        referenceValue: 100,
+        unit: 'mg/dl',
+        options: null,
+      },
     },
     bodySection: {
       isTherePain: null,
       painDuration: null,
-      painScale: null,
+      painScale: 1,
       painType: null,
       painAreas: null,
       painFrequency: null,
@@ -321,11 +337,11 @@ const initialState = {
     anamnesis: {
       consultationReason: {
         title: '¿Por qué solicitó la consulta?',
-        description: "Dolor de cabeza :("
+        description: ""
       },
       importantSymptoms: {
         title: 'Síntomas importantes',
-        description: "Dolor de cabeza muy fuerte por 2 días :("
+        description: ""
       },
     },
     tratamiento: {
@@ -414,6 +430,19 @@ const preconsultaFormSlice = createSlice({
         field
       ] = value;
     },
+    updateGlycemia(state, action) {
+      const { vitalSign, active } = action.payload;
+      if (state.formData.vitalSigns[vitalSign].active === active) {
+        state.formData.vitalSigns[vitalSign].active = null;
+      }
+      else {
+        state.formData.vitalSigns[field].active === active
+      }
+    },
+    updateLastGlycemia(state, action) {
+      const { vitalSign, key, value } = action.payload;
+      state.formData.vitalSigns[vitalSign].options[key] = value;
+    },
     setFormData(state, action) {
       state.formData = action.payload;
     },
@@ -426,6 +455,8 @@ const preconsultaFormSlice = createSlice({
 export const {
   updateField,
   updateActive,
+  updateGlycemia,
+  updateLastGlycemia,
   subquestionSelectedOption,
   questionSelectedOption,
   updateDescription,

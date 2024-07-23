@@ -37,7 +37,7 @@ function AnamnesisPreconsulta({ title, anamnesis, onAnamnesisChange, defaultOpen
     return (
         <div className="flex flex-col">
             <details open={defaultOpen}>
-                <summary className="flex px-6 py-2 border gap-1 items-center cursor-pointer justify-center">
+                <summary className="flex px-6 py-2 border-b border-t gap-1 items-center cursor-pointer justify-center bg-white">
                     <div className="flex items-center">
                         <Image src={circleData} alt="" />
                         <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">

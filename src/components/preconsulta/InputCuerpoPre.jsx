@@ -159,8 +159,8 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer">
-          <div/>
+        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border-t border-b cursor-pointer">
+          <div />
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
@@ -168,7 +168,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
             </p>
           </div>
           <div>
-            <IconArrowDetailDown/>
+            <IconArrowDetailDown />
           </div>
         </summary>
         <div className="flex flex-col items-center justify-center w-full md:flex-row md:items-start ">
@@ -214,7 +214,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
               ))}
           </div>
           <div className="sticky top-0 items-center w-full md:w-1/2">
-            <div className="flex flex-col items-center gap-3 py-4 ">
+            <div className="flex flex-col md:items-start items-center gap-3 py-4 ">
               <div>
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
@@ -248,7 +248,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                       </span>
                       <Slider
                         aria-label="Nivel de dolor"
-                        size="lg"
+                        size="sm"
                         step={1}
                         value={painLevel}
                         onChange={handleChangePainLevel}
