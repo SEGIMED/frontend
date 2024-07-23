@@ -24,6 +24,7 @@ import { addActivePtes } from "@/redux/slices/activePtes/activePtes";
 import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
+import Swal from "sweetalert2";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -31,6 +32,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const user = useAppSelector((state) => state.user);
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
   const id = Cookies.get("c");
+  const token = Cookies.get("a");
 
   // reemplazar pathname por adjustedPathname
   const showSearch =
@@ -261,7 +263,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       <div className="flex items-center justify-center gap-4 text-lg font-semibold">
         <IconCurrentRouteNav className="hidden w-4 md:block" />
         {lastSegment === "Inicio_Doctor" ? (
-          <p>Inicio</p>
+          <p>Tablero</p>
         ) : lastSegment === "Mi_perfil" ? (
           <p>Mi Perfil</p>
         ) : lastSegment === "Citas" ? (

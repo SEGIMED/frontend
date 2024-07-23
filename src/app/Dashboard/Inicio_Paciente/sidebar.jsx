@@ -42,7 +42,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
-
   const lastSegmentText = pathname
     .substring(pathname.lastIndexOf("/") + 1)
     .replace(/_/g, " ");
@@ -302,7 +301,23 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
       <div className="flex justify-center items-center gap-2">
         <Image src={ruteActual} alt="" className="hidden md:block" />
-        <p className="">{segmentToShow}</p>
+        {lastSegment === "Inicio_Paciente" ? (
+          <p>Tablero</p>
+        ) : lastSegment === "Mi_perfil" ? (
+          <p>Mi Perfil</p>
+        ) : lastSegment === "Citas" ? (
+          <p>Mi Agenda</p>
+        ) : lastSegment === "Soporte_tecnico" ? (
+          <p>Soporte Técnico</p>
+        ) : IsEvent ? (
+          <p>Evento</p>
+        ) : IsMessage ? (
+          <p>Mensaje</p>
+        ) : isNaN(lastSegment) ? (
+          <p>{lastSegmentText}</p>
+        ) : (
+          <p>{formattedSegment}</p>
+        )}
       </div>
       {showSearch && (
         <div
