@@ -148,7 +148,6 @@ export default function DoctoresPte() {
             button={
               <MenuDropDown
                 icon={<IconOptions color="white" />}
-                icon={<IconOptions color="white" />}
                 label="Opciones"
                 categories={[
                   {
