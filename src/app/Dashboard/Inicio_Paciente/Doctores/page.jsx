@@ -133,18 +133,18 @@ export default function DoctoresPte() {
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6">
-        <div className="text-xl font-bold">Lista de Doctores</div>
+        <div className="text-xl font-bold">Médicos</div>
         <div></div>
       </div>
       <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
         {doctors?.map((doctor) => (
           <DoctorCard
-           
+
             key={doctor.id}
             doctor={doctor}
             button={
               <MenuDropDown
-                icon={<IconOptions color="white"/>}
+                icon={<IconOptions color="white" />}
                 label="Opciones"
                 categories={[
                   {
