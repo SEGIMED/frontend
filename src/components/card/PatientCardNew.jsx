@@ -47,19 +47,11 @@ export default function PatientCardConsulta1({ paciente, button, consulta }) {
                     <IconRisk color="lightGray" />
                 )}
             </div>
-            <div className="text-center w-[70%] md:w-[75%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
+            <div className="text-center w-[70%] md:w-[75%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-4 items-center py-2 bg-white h-fit ">
                 <p className=" text-[#686868] font-normal  md:text-base leading-6  line-clamp-2">
                     {paciente?.patientUser?.name} {paciente?.patientUser?.lastname}
                 </p>
 
-
-                <p className=" text-[#686868] font-normal  md:text-base leading-6 ">
-                    {paciente?.reasonForConsultation}
-                </p>
-                <p
-                    className={` font-normal text-base leading-6 hidden md:block ${status?.color}`}>
-                    {status?.text}
-                </p>
                 <p className=" text-[#686868] font-normal md:text-base leading-6 ">
                     {/* {LastLogin(paciente?.scheduledStartTimestamp)} */}
                     {new Date(paciente?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
@@ -71,10 +63,16 @@ export default function PatientCardConsulta1({ paciente, button, consulta }) {
                     })}
                 </p>
 
-                <p
-                    className={` font-normal text-base leading-6 hidden md:block `}>
-                    {status?.text}
+                {/* <p className=" text-[#686868] font-normal  md:text-base leading-6 ">
+                    {paciente?.patientUser?.patientPulmonaryHypertensionRisks?.risk || "No asignado"}
+                </p> */}
+                <p className=" text-[#686868] font-normal  md:text-base leading-6 ">
+                    {paciente?.healthCenter === 1 ? "Centro Gallegos" : "Otro Centro"}
                 </p>
+                <p className=" text-[#686868] font-normal hidden md:block  md:text-base leading-6 ">
+                    {paciente?.reasonForConsultation}
+                </p>
+
             </div>
             <div className="w-[20%]  items-center justify-center flex">
                 {button}

@@ -21,6 +21,7 @@ import ReviewModalApte from "@/components/modal/ReviewModalApte";
 import Ordenar from "@/components/Buttons/Ordenar";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import IconOptions from "@/components/icons/IconOptions";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -96,13 +97,13 @@ export default function HomeDoc() {
 
           <h1 className="font-bold md:text-xl hidden md:block">Proximas</h1>
           <div className="flex gap-3">
-            <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
+            {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Teleconsultas
                 </p>
               </button>
-            </Link>
+            </Link> */}
             <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <IconFolder className="h-6 hidden md:block" />
@@ -117,12 +118,12 @@ export default function HomeDoc() {
         <div className="md:overflow-y-auto h-full">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
             <div className="w-[10%] md:w-[5%] md:block"></div>
-            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-5 py-2 z-10">
+            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-4 py-2 z-10">
               <p className="text-[#5F5F5F]">Nombre</p>
-              <p className="text-[#5F5F5F] hidden md:block">Dx Principal</p>
-              <p className="text-[#5F5F5F]">Grupo HTP</p>
-              <p className="text-[#5F5F5F]">Fecha de consulta</p>
-              <p className="text-[#5F5F5F] hidden md:block">Localidad</p>
+              <p className="text-[#5F5F5F]">Fecha </p>
+              {/* <p className="text-[#5F5F5F] hidden md:block">Grupo HTP</p> */}
+              <p className="text-[#5F5F5F] ">Centro de atencion</p>
+              <p className="text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
             </div>
           </div>
           {isLoading ? (
@@ -139,9 +140,11 @@ export default function HomeDoc() {
                   button={
                     <MenuDropDown
                       label={"Mas"}
+                      icon={<IconOptions color="white" />}
                       categories={[
                         {
                           title: "Opciones",
+
                           items: [
                             {
                               label: "Dejar Review",
