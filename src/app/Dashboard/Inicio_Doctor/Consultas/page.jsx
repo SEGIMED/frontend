@@ -143,7 +143,7 @@ export default function HomeDoc() {
                         onClick: () => handleReviewClick(paciente),
                       },
                       {
-                        label: "Ver consultas",
+                        label: "Realizar consulta",
                         icon: <IconPersonalData />,
                         href: `${rutas.Doctor}${rutas.Consultas}/${paciente.patient}`,
                       },
