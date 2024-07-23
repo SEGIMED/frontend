@@ -159,24 +159,24 @@ export default function HomePte() {
       </div>
       <form>
         {edit && (
-          <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-            <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-              <IconCircle className="w-3" />
+          <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+            <label className="w-1/2 flex justify-start gap-3 font-medium">
+              <IconCircle className="w-2" />
               Foto de perfil
             </label>
             <div className="w-1/2 h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
               <Elboton
                 size={buttonSize}
                 onPress={openModalfoto}
-                icon={<IconEditar />}
+                icon2={<IconEditar />}
                 nombre={"Editar Foto"}
               />
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
             Nombre:
           </label>
           {edit ? (
@@ -205,9 +205,9 @@ export default function HomePte() {
             <span className="w-1/2 text-start px-6 py-2">{paciente?.name}</span>
           )}
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
             Apellido:
           </label>
           {edit ? (
@@ -240,18 +240,18 @@ export default function HomePte() {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
             Edad:
           </label>
           <span className="w-1/2 text-start px-6 py-2">
             {CalcularEdad(paciente.sociodemographicDetails?.birthDate)}
           </span>
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
             Sexo:
           </label>
           {edit ? (
@@ -284,9 +284,9 @@ export default function HomePte() {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
             Fecha de nacimiento:
           </label>
           {edit ? (
@@ -313,9 +313,9 @@ export default function HomePte() {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
             Teléfono de contacto:
           </label>
           {edit ? (
@@ -354,10 +354,10 @@ export default function HomePte() {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
-            Teléfono de contacto de Emergencia:
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
+            Teléfono de Urgencia:
           </label>
           {edit ? (
             <div className="w-1/2 flex flex-col">
@@ -397,10 +397,10 @@ export default function HomePte() {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between border-b border-b-[#cecece] pl-3 md:pl-8 py-2">
-          <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-            <IconCircle className="w-3" />
-            Dirección:
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex  justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
+            Lugar de Domicilio:
           </label>
           {edit ? (
             <div className="flex items-center gap-2 w-1/2">
@@ -433,16 +433,31 @@ export default function HomePte() {
             </span>
           )}
         </div>
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
+            Última conexión:
+          </label>
+          <span className="w-1/2 text-start px-6 py-2">
+            {LastLogin(paciente.lastLogin)}
+          </span>
+        </div>
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
+            Actividad Última Semana:
+          </label>
+          <span className="w-1/2 text-start px-6 py-2"></span>
+        </div>
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
+            Actividad Última Mes:
+          </label>
+          <span className="w-1/2 text-start px-6 py-2"></span>
+        </div>
       </form>
-      <div className="flex items-center justify-center pl-3 md:pl-8 py-2">
-        <label className="w-1/2 flex items-center justify-start gap-3 font-medium">
-          <IconCircle className="w-3" />
-          Última conexión:
-        </label>
-        <span className="w-1/2 text-start px-6 py-2">
-          {LastLogin(paciente.lastLogin)}
-        </span>
-      </div>
+
       {showModal && (
         <MapModal isOpen={showModal} onClose={() => setShowModal(false)} />
       )}
