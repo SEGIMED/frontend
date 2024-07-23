@@ -17,6 +17,7 @@ import Alarm2 from "@/components/modal/alarm/alarm2";
 import Alarm3 from "@/components/modal/alarm/alarm3";
 import { useAppSelector } from "@/redux/hooks";
 import AsociarMedico from "@/components/asociarMedico/AsociarMedico";
+import NotFound from "@/components/notFound/notFound";
 
 const Modals = [
   <Alarm1 key={"alarma 1"} />,
@@ -101,7 +102,11 @@ export default function AlarmPte() {
         <p className="font-bold text-[#5F5F5F] hidden md:block">Status</p>
       </div>
       <div className="overflow-auto h-full">
-        <TableAlarmPte paciente={UnsolvedAlarmas} />
+        {UnsolvedAlarmas.length === 0 ? (
+          <NotFound text="No hay alarmas" />
+        ) : (
+          <TableAlarmPte paciente={UnsolvedAlarmas} />
+        )}
       </div>
       <ModalModularizado
         isOpen={isModalOpen}

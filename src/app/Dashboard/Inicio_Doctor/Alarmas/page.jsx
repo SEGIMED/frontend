@@ -30,13 +30,14 @@ export default function HomeDoc() {
   const getAlarms = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
-     
-      if (response.data) {
-        const activeAlarms = response?.data?.alarms?.filter((alarma) => !alarma.solved);
 
-        
+      if (response.data) {
+        const activeAlarms = response?.data?.alarms?.filter(
+          (alarma) => !alarma.solved
+        );
+
         // const formattedAlarms = formatAlarms(activeAlarms);
-        
+
         // formattedAlarms.sort((a, b) => {
         //   const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
         //   return (
@@ -56,9 +57,8 @@ export default function HomeDoc() {
     if (token) {
       getAlarms({ headers: { token: token } }).catch(console.error);
     }
-    
   }, []);
-  
+
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>

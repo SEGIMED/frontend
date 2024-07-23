@@ -12,6 +12,7 @@ import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconCorazonMini from "@/components/icons/iconCorazon";
 import ReviewModal from "@/components/modal/ReviewModal";
 import IconOptions from "@/components/icons/IconOptions";
+import NotFound from "@/components/notFound/notFound";
 
 export default function HomeDocAll() {
   const dispatch = useAppDispatch();
@@ -45,11 +46,6 @@ export default function HomeDocAll() {
     return <MensajeSkeleton />;
   }
 
-  if (!scheduledConsultas.length) {
-    return <div>No existen consultas registradas</div>;
-  }
-
-  
   return (
     <div className="text-[#686868] h-full w-full flex flex-col">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
@@ -67,14 +63,21 @@ export default function HomeDocAll() {
                     toggleMenu={toggleFilterMenu}                
                 /> */}
       </div>
-       <div className="grid grid-cols-4 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
+      <div className="grid grid-cols-4 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
         <p className="font-bold text-[#5F5F5F] ml-1 md:ml-10">Fecha</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Medico</p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block">Centro de atención</p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
-        </div>
-        <div className="overflow-auto h-full">
+        <p className="font-bold text-[#5F5F5F] hidden md:block">
+          Centro de atención
+        </p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">
+          Motivo de consulta
+        </p>
+      </div>
+      <div className="overflow-auto h-full">
+        {scheduledConsultas.length === 0 && (
+          <NotFound text="No hay consultas registradas" />
+        )}
         {scheduledConsultas?.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
@@ -82,7 +85,7 @@ export default function HomeDocAll() {
             button={
               // <OptDocCardHistorial id={doc.id} />
               <MenuDropDown
-                icon={<IconOptions color="white"/>}
+                icon={<IconOptions color="white" />}
                 label="Opciones"
                 categories={[
                   {
