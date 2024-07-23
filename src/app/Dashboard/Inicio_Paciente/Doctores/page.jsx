@@ -148,21 +148,22 @@ export default function DoctoresPte() {
             button={
               <MenuDropDown
                 icon={<IconOptions color="white" />}
+                icon={<IconOptions color="white" />}
                 label="Opciones"
                 categories={[
                   {
                     title: "Acciones",
                     items: [
-                      {
-                        label: "Solicitar asociarse",
-                        icon: <IconMiniCalendar />,
-                        onClick: () =>
-                          handleAssociateClick(
-                            doctor.id,
-                            doctor.name,
-                            doctor.lastname
-                          ),
-                      },
+                      // {
+                      //   label: "Solicitar asociarse",
+                      //   icon: <IconMiniCalendar />,
+                      //   onClick: () =>
+                      //     handleAssociateClick(
+                      //       doctor.id,
+                      //       doctor.name,
+                      //       doctor.lastname
+                      //     ),
+                      // },
                       {
                         label: "Solicitar Consulta",
                         icon: <IconMiniCalendar />,

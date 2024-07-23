@@ -15,6 +15,8 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import Alarm1 from "@/components/modal/alarm/alarm1";
 import Alarm2 from "@/components/modal/alarm/alarm2";
 import Alarm3 from "@/components/modal/alarm/alarm3";
+import { useAppSelector } from "@/redux/hooks";
+import AsociarMedico from "@/components/asociarMedico/AsociarMedico";
 
 const Modals = [
   <Alarm1 key={"alarma 1"} />,
@@ -28,7 +30,7 @@ export default function AlarmPte() {
   const [sortResolvedFirst, setSortResolvedFirst] = useState(true);
   const myId = Cookies.get("c");
   const token = Cookies.get("a");
-
+  const user = useAppSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const closeModal = () => {
@@ -38,20 +40,20 @@ export default function AlarmPte() {
   const getMyAlarms = async () => {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
-    
+
     setAlarms(response.data.alarms);
   };
 
   const router = useRouter();
   const myID = Cookies.get("c");
 
-  
   useEffect(() => {
     getMyAlarms();
   }, []);
 
-  
-  const UnsolvedAlarmas = alarms?.filter((alarm) => alarm.patient === Number(myId) && alarm.solved === false);
+  const UnsolvedAlarmas = alarms?.filter(
+    (alarm) => alarm.patient === Number(myId) && alarm.solved === false
+  );
 
   // const unsolvedAlarms = misAlarmas.filter((a, b) => {
   //   if (sortResolvedFirst) {
@@ -61,6 +63,10 @@ export default function AlarmPte() {
   //   }
   // });
 
+  //Falta lógica para mostrar el botón de asociar médico
+  // if (user?.treatingPhysician === null) {
+  //   return <AsociarMedico text="crear alarmas" />;
+  // }
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 lg:z-50">

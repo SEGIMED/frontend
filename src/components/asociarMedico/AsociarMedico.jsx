@@ -1,8 +1,9 @@
+import rutas from "@/utils/rutas";
 import Elboton from "../Buttons/Elboton";
 import IconArrowRight from "../icons/iconArrowRight";
 import IconRegister from "../icons/IconRegister";
 
-const AsociarMedico = () => {
+const AsociarMedico = ({ text }) => {
   return (
     <div className="h-full flex flex-col lg:flex-row items-center py-10 lg:justify-center gap-8">
       <IconRegister className="w-3/4 lg:w-[400px]" />
@@ -11,10 +12,14 @@ const AsociarMedico = () => {
           ¡Asociate con tu médico!
         </h2>
         <p className="text-lg lg:text-[24px] text-[#808080]">
-          Asociate con tu médico tratante para poder chatear haciendo click en
-          el botón de abajo.
+          Asociate con tu médico tratante para poder <span>{text}</span>{" "}
+          haciendo click en el botón de abajo.
         </p>
-        <Elboton nombre="Asociarme" icon2={<IconArrowRight />} />
+        <Elboton
+          nombre="Asociarme"
+          icon2={<IconArrowRight />}
+          href={`${rutas.PacienteDash}${rutas.Doctores}`}
+        />
       </div>
     </div>
   );

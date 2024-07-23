@@ -32,7 +32,6 @@ export default function HomeDoc() {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
   const consultas = useAppSelector((state) => state.schedules);
   // Obtener consultas del estado
   const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
@@ -51,7 +50,6 @@ export default function HomeDoc() {
     }
   }, [consultas]);
 
-
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
     (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
@@ -66,7 +64,9 @@ export default function HomeDoc() {
 
   // Ordenar pacientes si es necesario
   const sortedPatients = isSorted
-    ? [...filteredPatients].sort((a, b) => a.patientUser.name.localeCompare(b.patientUser.name))
+    ? [...filteredPatients].sort((a, b) =>
+      a.patientUser.name.localeCompare(b.patientUser.name)
+    )
     : filteredPatients;
 
   const handleSortClick = () => {
@@ -113,7 +113,6 @@ export default function HomeDoc() {
               </button>
             </Link>
           </div>
-
         </div>
         <div className="md:overflow-y-auto h-full">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
@@ -129,7 +128,10 @@ export default function HomeDoc() {
           {isLoading ? (
             <SkeletonList count={9} />
           ) : filteredPatients.length === 0 ? (
-            <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
+            <NotFound
+              text="No hay historial de consultas."
+              sizeText="w-[100%]"
+            />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
               {sortedPatients?.map((paciente) => (
@@ -144,7 +146,7 @@ export default function HomeDoc() {
                       categories={[
                         {
                           title: "Opciones",
-
+                          icon: <IconOrder />,
                           items: [
                             {
                               label: "Dejar Review",
@@ -171,8 +173,6 @@ export default function HomeDoc() {
               id={selectedPatient.id}
             />
           )}
-
-
         </div>
       </div>
     </div>

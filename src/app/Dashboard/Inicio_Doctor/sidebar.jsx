@@ -21,12 +21,16 @@ import { resetApp } from "@/redux/rootReducer";
 import { socket } from "@/utils/socketio";
 import { addAlarms } from "@/redux/slices/alarms/alarms";
 import { addActivePtes } from "@/redux/slices/activePtes/activePtes";
-
+import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
+import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
+import { addNotifications } from "@/redux/slices/user/notifications";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
-
+  const notifications = useAppSelector((state) => state.notifications);
+  const user = useAppSelector((state) => state.user);
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
+  const id = Cookies.get("c");
 
   // reemplazar pathname por adjustedPathname
   const showSearch =
@@ -44,8 +48,9 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     .substring(pathname.lastIndexOf("/") + 1)
     .replace(/_/g, " ");
 
-  const segments = pathname.split('/');
-  const secondLastSegment = segments.length > 1 ? segments[segments.length - 2] : '';
+  const segments = pathname.split("/");
+  const secondLastSegment =
+    segments.length > 1 ? segments[segments.length - 2] : "";
   const formattedSegment = secondLastSegment.replace(/_/g, " ");
 
   const dispatch = useAppDispatch();
@@ -53,7 +58,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const router = useRouter(); // Use the useRouter hook
 
   const getUser = async (headers) => {
-    const id = Cookies.get("c");
     const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
 
@@ -73,7 +77,20 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       dispatch(setAllPatients(pacientesFormateados));
     }
   };
+  const getDoctorNotifications = async (headers) => {
+    try {
+      const response = await ApiSegimed.get(
+        `/all-notifications-physician?physicianId=` + id,
+        headers
+      );
 
+      if (response.data) {
+        dispatch(addNotifications(response.data));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const getSchedules = async (headers) => {
     try {
       const response = await ApiSegimed.get("/schedules", headers);
@@ -85,8 +102,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       console.error(error);
     }
   };
-
-  const user = useAppSelector((state) => state.user);
 
   const handleSearchChange = (e) => {
     dispatch(setSearchTerm(e.target.value));
@@ -176,13 +191,53 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       getSchedules({ headers: { token: token } }).catch(console.error);
       getActivesAlarms({ headers: { token: token } });
       getActivesPacientes({ headers: { token: token } });
+      getDoctorNotifications({ headers: { token: token } });
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
   }, []);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const unreadNotifications = notifications?.filter(
+    (notificacion) => !notificacion.state
+  );
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
 
+  const handleNotificationElementClick = (id) => {
+    try {
+      ApiSegimed.patch("/notification-seen", null, {
+        params: {
+          notification_Id: id,
+        },
+        headers: {
+          token: token,
+        },
+      }).then((response) => {
+        if (response.data) {
+          dispatch(
+            addNotifications(
+              notifications.map((notificacion) =>
+                notificacion._id === id
+                  ? { ...notificacion, state: true }
+                  : notificacion
+              )
+            )
+          );
+          Swal.fire({
+            icon: "success",
+            title: "Notificación leída",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="lg:hidden p-4">
@@ -254,13 +309,46 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           <span className="text-start text-[#808080]">Médico</span>
         </div>
 
-        {/* <button>
-          <IconNotificationsNav
-            className="w-12 "
-            circle="#E73F3F"
-            campaign="#B2B2B2"
+        <button
+          onClick={handleNotificationClick}
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            showNotifications && "bg-[#E73F3F]"
+          }`}>
+          <IconNotificaciones
+            className="w-6 h-6"
+            color={showNotifications && "white"}
           />
-        </button> */}
+        </button>
+        {showNotifications && (
+          <div
+            onClick={handleNotificationClick}
+            className="fixed top-0 left-0 w-screen h-screen z-40">
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
+              <p className="text-2xl text-bluePrimary font-semibold py-2">
+                Notificaciones
+              </p>
+              <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
+                {unreadNotifications && unreadNotifications.length > 0 ? (
+                  unreadNotifications.map((notificacion) => (
+                    <NotificacionElement
+                      key={notificacion._id}
+                      notificacion={notificacion}
+                      onClick={() =>
+                        handleNotificationElementClick(notificacion._id)
+                      }
+                    />
+                  ))
+                ) : (
+                  <p className="text-lg text-[#5F5F5F] text-center py-2">
+                    No hay notificaciones por leer
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
