@@ -10,6 +10,7 @@ import Elboton from "@/components/Buttons/Elboton";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import IconCancel from "../icons/iconCancel";
+import IconGuardar from "../icons/iconGuardar";
 
 const PhotoModalPte = ({ isOpen, onClose }) => {
   const dispatch = useAppDispatch();
@@ -129,13 +130,21 @@ const PhotoModalPte = ({ isOpen, onClose }) => {
                 accept="image/*"
               />
               <Elboton
+                nombre={"Guardar Cambios"}
+                onPress={handleSaveChanges}
+                icon={<IconGuardar className="w-6" />}
+                className={
+                  "w-full md:w-fit px-6 py-6 md:py-2 md:text-base text-xl"
+                }
+              />
+              {/* <Elboton
                 nombre={"Eliminar Foto"}
                 onPress={onClose}
                 icon={<IconCancel color="#E73F3F" className="w-6" />}
                 className={
                   "bg-white text-[#E73F3F] w-full md:w-fit px-6 py-6 md:py-2 md:text-base text-xl"
                 }
-              />
+              /> */}
             </div>
           </div>
         </div>

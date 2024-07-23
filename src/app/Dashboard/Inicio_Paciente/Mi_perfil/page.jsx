@@ -164,7 +164,7 @@ export default function HomePte() {
               <IconCircle className="w-2" />
               Foto de perfil
             </label>
-            <div className="w-1/2 h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold mr-6">
+            <div className="w-1/2 h-8 md:h-12 flex items-center justify-start text-white text-sm font-bold">
               <Elboton
                 size={buttonSize}
                 onPress={openModalfoto}

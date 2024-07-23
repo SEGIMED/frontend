@@ -9,6 +9,7 @@ import Elboton from "@/components/Buttons/Elboton";
 
 import Cookies from "js-cookie";
 import IconCancel from "@/components/icons/iconCancel";
+import IconGuardar from "@/components/icons/iconGuardar";
 
 const PhotoModal = ({ isOpen, onClose }) => {
   const fileInputRef = useRef(null);
@@ -116,7 +117,7 @@ const PhotoModal = ({ isOpen, onClose }) => {
                 nombre={"Subir Foto"}
                 onPress={handleButtonClick}
                 className={
-                  "w-full md:w-fit px-6 py-6 md:py-3 md:text-base text-xl"
+                  "w-full md:w-[50%] px-6 py-6 md:py-3 md:text-base text-xl"
                 }
               />
               <input
@@ -127,13 +128,21 @@ const PhotoModal = ({ isOpen, onClose }) => {
                 accept="image/*"
               />
               <Elboton
+                nombre={"Guardar Cambios"}
+                onPress={handleSaveChanges}
+                icon={<IconGuardar className="w-6" />}
+                className={
+                  "w-full md:w-[50%] px-6 py-6 md:py-3 md:text-base text-xl"
+                }
+              />
+              {/* <Elboton
                 nombre={"Eliminar Foto"}
                 onPress={onClose}
                 icon={<IconCancel color="#E73F3F" className="w-6" />}
                 className={
                   "bg-white text-[#E73F3F] w-full md:w-fit px-6 py-6 md:py-2 md:text-base text-xl"
                 }
-              />
+              /> */}
             </div>
           </div>
         </div>
