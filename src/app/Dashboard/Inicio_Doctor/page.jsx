@@ -178,7 +178,7 @@ export default function HomeDoc() {
           </div>
         </div>
       </div>
-      <div className="h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl flex flex-col">
+      <div className=" h-fit w-full bg-white border border-[#DCDBDB] rounded-2xl flex flex-col">
         <div className="flex justify-between items-center p-2 xs:p-5">
           <Elboton
             onPress={handlePreviousChartTitle}
