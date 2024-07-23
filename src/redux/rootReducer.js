@@ -11,6 +11,7 @@ import preconsultaForm from "./slices/user/preconsultaFormSlice";
 import { enableMapSet } from "immer";
 import alarms from "./slices/alarms/alarms";
 import activePtes from "./slices/activePtes/activePtes";
+import notifications from "./slices/user/notifications";
 enableMapSet();
 // Define a reset action type
 const RESET_ACTION_TYPE = "root/reset";
@@ -27,7 +28,8 @@ const appReducer = combineReducers({
   formSlice,
   preconsultaForm,
   alarms,
-  activePtes
+  activePtes,
+  notifications,
 });
 
 // Create a root reducer that handles the reset action

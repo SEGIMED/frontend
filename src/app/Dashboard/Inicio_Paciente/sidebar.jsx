@@ -21,11 +21,14 @@ import { resetApp } from "@/redux/rootReducer";
 import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
 
 import rutas from "@/utils/rutas";
+import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
+import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
+import { addNotifications } from "@/redux/slices/user/notifications";
 
 export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
-
+  const notifications = useAppSelector((state) => state.notifications);
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
 
@@ -122,7 +125,20 @@ export const SidePte = ({ search, toggleSidebar }) => {
       console.error(error);
     }
   };
+  const getPatientNotifications = async (headers) => {
+    try {
+      const response = await ApiSegimed.get(
+        `/all-notifications-patient?patientId=15`,
+        headers
+      );
 
+      if (response.data) {
+        dispatch(addNotifications(response.data));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const getUser = async (headers) => {
     const response1 = await ApiSegimed.get(
       `/patient-details?id=${id}`,
@@ -214,13 +230,20 @@ export const SidePte = ({ search, toggleSidebar }) => {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
+      getPatientNotifications({ headers: { token: token } }).catch(
+        console.error
+      );
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
   }, [rol]);
+  const [showNotifications, setShowNotifications] = useState(false);
 
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
   return (
     <div className=" flex  items-center justify-between h-[12%] bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="lg:hidden p-4">
@@ -275,9 +298,39 @@ export const SidePte = ({ search, toggleSidebar }) => {
             {user.role === 3 ? "Paciente" : ""}
           </span>
         </div>
-        <button>
-          <Image src={notificacion2} alt="" />
+        <button
+          onClick={handleNotificationClick}
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            showNotifications && "bg-[#E73F3F]"
+          }`}>
+          <IconNotificaciones
+            className="w-6 h-6"
+            color={showNotifications && "white"}
+          />
         </button>
+        {showNotifications && (
+          <div
+            onClick={handleNotificationClick}
+            className="fixed top-0 left-0 w-screen h-screen z-40">
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
+              <p className="text-2xl text-bluePrimary font-semibold py-2">
+                Notificaciones
+              </p>
+              <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
+                {notifications
+                  ?.filter((notificacion) => !notificacion.state)
+                  ?.map((notificacion) => (
+                    <NotificacionElement
+                      key={notificacion.id}
+                      notificacion={notificacion}
+                    />
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
