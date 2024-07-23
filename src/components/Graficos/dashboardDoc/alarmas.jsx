@@ -11,10 +11,10 @@ export default function Alarmas() {
       try {
         const token = Cookies.get("a");
         const response = await ApiSegimed.get("/alarms-by-patient", { headers: { 'token': token } });
-        
-        const actives = response.data.filter(alarm => alarm.solved === false).length;
-        const inactives = response.data.filter(alarm => alarm.solved === true).length;
-        
+       
+        const actives = response.data?.priorityCounts?.Activas
+        const inactives = response.data?.priorityCounts?.Inactivas
+       
         setDataAlarms({ actives, inactives });
 
       } catch (error) {

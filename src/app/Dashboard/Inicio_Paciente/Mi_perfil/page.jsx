@@ -19,6 +19,7 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import IconCircle from "@/components/icons/IconCircle";
 import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 // Definir opciones para el select de sexo
 const sexoOptions = [

@@ -28,7 +28,7 @@ export default function Verify() {
         userId: userId, // ID del usuario recibido de la URL
         temporaryCode: data.number, // El código de confirmación ingresado por el usuario
       });
-      console.log(response);
+
       setApiResponse(response.data);
       if (response.data) {
         router.push("/");

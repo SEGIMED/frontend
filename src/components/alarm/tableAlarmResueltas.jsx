@@ -25,9 +25,9 @@ export default function TableAlarmResueltas({ pacientes }) {
     <div className="flex flex-col">
       <div className="">
         {pacientes?.map((paciente, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-4 md:grid-cols-7 items-center border-b border-b-[#cecece] pr-6 py-2 bg-white w-full text-center">
+           <div
+           key={index}
+           className="grid md:grid-cols-7 grid-cols-5 items-center border-b border-b-[#cecece] md:pr-6 py-2 md:px-2 bg-white w-full h-14 text-center md:text-start">
             <div className="text-[#5F5F5F] flex items-center justify-center md:justify-start md:gap-4  ">
               <PriorityIcon priority={paciente.highestPriority} />
               <span className="hidden md:block">
@@ -45,13 +45,13 @@ export default function TableAlarmResueltas({ pacientes }) {
               {extractMonthDay(paciente.fecha)}
             </div>
 
-            <div className="text-[#5F5F5F] hidden md:block"></div>
+            <div className="text-[#5F5F5F] hidden md:block">{paciente.HTP?.data?.catHpGroup?.name}</div>
             <div className="text-[#5F5F5F] hidden md:block">
               {paciente.alarmDescription}
             </div>
-            <div className="text-[#5F5F5F] hidden md:block">
+            {/* <div className="text-[#5F5F5F] hidden md:block">
               {paciente.espera ? paciente.espera : "No"}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

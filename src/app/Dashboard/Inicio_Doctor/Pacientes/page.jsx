@@ -26,6 +26,15 @@ import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
 import IconMessages from "@/components/icons/IconMessages.jsx";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import MapModalPte from "@/components/modal/MapModalPte.jsx";
+import Ordenar from "@/components/Buttons/Ordenar";
+import IconOrder from "@/components/icons/IconOrder";
+import IconOptions from "@/components/icons/IconOptions";
+import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
+import IconAlarm from "@/components/icons/IconAlarm";
+import IconHooter from "@/components/icons/IconHooter";
+import IconAlphabetic from "@/components/icons/IconAlphabetic";
+import IconFilter from "@/components/icons/IconFilter";
+
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -52,7 +61,7 @@ export default function HomeDoc() {
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patients?page=${pagination.currentPage}&limit=9&name=${searchTerm}`,
+      `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&&risk=${riskFilter}`,
       headers
     );
     if (response.data) {
@@ -62,7 +71,7 @@ export default function HomeDoc() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-
+  
       setPatients(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -77,7 +86,7 @@ export default function HomeDoc() {
       ...prev,
       currentPage: 1,
     }));
-  }, [searchTerm]);
+  }, [searchTerm, riskFilter]);
 
   const getFavorites = async (headers) => {
     const response = await ApiSegimed.get(
@@ -107,7 +116,7 @@ export default function HomeDoc() {
     } else {
       getFavorites({ headers: { token: token } }).catch(console.error);
     }
-  }, [showFavorites, pagination.currentPage, searchTerm]);
+  }, [showFavorites, pagination.currentPage, searchTerm, riskFilter]);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
@@ -135,7 +144,7 @@ export default function HomeDoc() {
     setIsSorted(!isSorted);
   };
 
-  const handleRiskFilterClick = (risk) => {
+  const handleRiskFilterClick = ({risk}) => {
     setRiskFilter(risk);
   };
 
@@ -217,11 +226,52 @@ export default function HomeDoc() {
               isOpen={isFilterOpen}
               toggleMenu={toggleFilterMenu}
               onClickSort={handleSortClick}
-          />
-          <Ordenar /> */}
+          /> */}
+          
         </div>
-        <h1 className="font-bold">Listado de pacientes</h1>
-        <div></div>
+        
+        <h1 className="font-bold ml-4">Listado de pacientes</h1>
+        <MenuDropDown
+        label="Filtrar"
+        iconr={<IconFilter/>}
+        categories={[
+          {title:"Nivel de riesgo",
+          icon:<IconHooter/>,
+          items: [
+                  {
+                    label: "Alto",
+                    onClick: () => setRiskFilter("Alto"),
+                    icon: <IconRisk color="#E73F3F"/>,
+                  },
+                  {
+                    label: "Medio",
+                    onClick: () =>setRiskFilter("Moderado"),
+                    icon: <IconRisk color="#F5E400"/>,
+                  },
+                  {
+                    label: "Bajo",
+                    onClick: () =>setRiskFilter("Bajo"),
+                    icon: <IconRisk color="#70C247"/>,
+                  },
+                  // {
+                  //   label: "Ninguno",
+                  //   onClick: () =>setRiskFilter(""),
+                  //   icon: <IconRisk  color="lightGray"/>,
+                  // },
+                  
+        ]}, {
+          title:"Orden Alfabetico",
+          icon: <IconAlphabetic/>,
+          items:[
+            {
+            label: "Ver todos",
+            onClick: () =>setRiskFilter(""),
+            }
+          ]
+        }
+        ]}
+        />
+        {/* <div></div> */}
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
@@ -268,6 +318,7 @@ export default function HomeDoc() {
               /> */}
                 <MenuDropDown
                   label="Opciones"
+                  icon={<IconOptions color="#FFFFFF" />}
                   categories={[
                     {
                       title: "Acciones",

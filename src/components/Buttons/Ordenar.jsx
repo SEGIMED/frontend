@@ -6,11 +6,14 @@ export default function Ordenar({ funcion }) {
   return (
     <button
       onClick={funcion}
-      className="flex px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-1 items-center">
-      <p className="text-start text-white font-bold text-base leading-5">
+      className="py-2 px-4 flex bg-[#487FFA] rounded-xl gap-1 items-center">
+      <p className="text-start text-white font-bold text-base leading-5 hidden md:block">
         Ordenar
       </p>
-      <Image src={ordenar} alt="Ordenar" />
+      <div className="hidden md:block">
+        <Image src={ordenar} alt="Ordenar" />
+      </div>
+
     </button>
   );
 }

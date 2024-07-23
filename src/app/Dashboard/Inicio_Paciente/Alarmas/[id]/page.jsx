@@ -70,14 +70,14 @@ const AlarmSelector = () => {
       // Realizar la solicitud POST al servidor
       const response = await ApiSegimed.post("/alarm", body, headers);
 
-      console.log(body);
+   
       if (response.status === 200 || 201) {
         Swal.fire({
           icon: "success",
           title: "Alarma creada con éxito",
           text: "Un profesional se pondrá en contacto a la brevedad",
         });
-        router.push("/Dashboard/Inicio_Paciente/Alarmas");
+        router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
       } else {
         throw new Error("Ha ocurrido un error al crear la alarma");
       }

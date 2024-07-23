@@ -103,9 +103,9 @@ const PhotoModalPte = ({ isOpen, onClose }) => {
           <div className="h-16 flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
             <IconCurrentRouteNav className="w-4" /> Editar foto de perfil
           </div>
-          <div className="w-full h-full flex flex-col items-center justify-between p-5">
+          <div className="w-full h-fit flex flex-col items-center gap-8 md:justify-between p-5">
             <div className="flex justify-center items-center">
-              <div className="w-48 h-48 flex justify-center items-center">
+              <div className="w-64 h-64 md:w-64 md:h-64  flex justify-center items-center">
                 <img
                   src={tempUrl}
                   alt="Perfil"
@@ -119,7 +119,7 @@ const PhotoModalPte = ({ isOpen, onClose }) => {
                 nombre={"Subir Foto"}
                 onPress={handleButtonClick}
                 className={
-                  "w-full md:w-fit px-6 py-6 md:py-3 md:text-base text-xl"
+                  "w-full md:w-1/2 px-6 py-6 md:py-3 md:text-base text-xl"
                 }
               />
               <input
@@ -134,7 +134,7 @@ const PhotoModalPte = ({ isOpen, onClose }) => {
                 onPress={handleSaveChanges}
                 icon={<IconGuardar className="w-6" />}
                 className={
-                  "w-full md:w-fit px-6 py-6 md:py-2 md:text-base text-xl"
+                  "w-full md:w-1/2 px-6 py-6 md:py-2 md:text-base text-xl"
                 }
               />
               {/* <Elboton

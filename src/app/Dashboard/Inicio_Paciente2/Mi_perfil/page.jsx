@@ -138,7 +138,7 @@ export default function HomePte() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModalfoto = () => setIsModalOpen(true);
   const closeModalFoto = () => setIsModalOpen(false);
-  console.log(errors);
+
   return (
     <div className="h-full overflow-y-scroll flex flex-col">
       <title>{lastSegmentTextToShow}</title>
