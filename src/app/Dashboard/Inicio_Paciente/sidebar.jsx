@@ -58,8 +58,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -180,6 +180,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
     // };
     }
     dispatch(adduser(combinedData));
+    console.log(combinedData);
   };
 
   const getAllDoc = async (headers) => {
@@ -222,7 +223,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   return (
     <div className=" flex  items-center justify-between h-[12%] bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] p-4">
-      <div className="md:hidden p-4">
+      <div className="lg:hidden p-4">
         <button
           className="text-[#487FFA] focus:outline-none"
           onClick={toggleSidebar}>

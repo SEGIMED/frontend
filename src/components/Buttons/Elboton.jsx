@@ -18,7 +18,9 @@ export default function Elboton({
       href={href}
       onClick={onPress}
       className={
-        "bg-[#487FFA] text-[#FFFFFF] font-Roboto rounded-lg" + " " + className
+        "bg-[#487FFA] text-[#FFFFFF] font-Roboto font-bold rounded-lg" +
+        " " +
+        className
       }>
       {icon} {nombre} {icon2}
     </Button>

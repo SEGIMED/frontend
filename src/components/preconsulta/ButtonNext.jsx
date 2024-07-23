@@ -15,7 +15,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
 
     return (
         <div>
-            <div className="font-bold mb-2">{text}</div>
+            <div className="font-semibold text-sm mb-2">{text}</div>
             <div className="flex space-x-4">
                 {!disabled ? (
                     options?.map((opcion, index) => (

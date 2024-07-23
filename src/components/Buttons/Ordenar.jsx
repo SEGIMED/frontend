@@ -10,7 +10,10 @@ export default function Ordenar({ funcion }) {
       <p className="text-start text-white font-bold text-base leading-5 hidden md:block">
         Ordenar
       </p>
-      <Image src={ordenar} alt="Ordenar" />
+      <div className="hidden md:block">
+        <Image src={ordenar} alt="Ordenar" />
+      </div>
+
     </button>
   );
 }

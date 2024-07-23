@@ -62,7 +62,7 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white static md:sticky top-0 z-20 md:z-50">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white static md:sticky top-0 z-20 lg:z-50">
         {/* <Ordenar /> */}
         <div></div>
         <h1 className="font-bold">Alarmas resueltas</h1>

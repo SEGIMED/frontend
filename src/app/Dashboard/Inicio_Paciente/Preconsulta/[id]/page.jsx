@@ -17,6 +17,8 @@ import {
   updateAnamnesis,
   updateTratamiento,
   updateBodyPainLevel,
+  updateGlycemia,
+  updateLastGlycemia,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
@@ -25,6 +27,7 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import AnamnesisPreconsulta from "@/components/preconsulta/Anamnesis";
 import TratamientoPreconsulta from "@/components/preconsulta/Tratamiento";
+import IconGuardar from "@/components/icons/iconGuardar";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -32,18 +35,18 @@ export default function PreconsultaPte({ params }) {
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
   const [tests, setTests] = useState({
-    abnormalGlycemia: {
-      title: "Glicemia anormal",
-      binaryOptions: true,
-      description: '',
-      active: null,
-    },
-    lastAbnormalGlycemia: {
-      title: "Última glicemia anormal",
-      selectedOption: null,
-      description: '',
-      active: null,
-    },
+    // abnormalGlycemia: {
+    //   title: "Glicemia anormal",
+    //   binaryOptions: true,
+    //   description: '',
+    //   active: null,
+    // },
+    // lastAbnormalGlycemia: {
+    //   title: "Última glicemia anormal",
+    //   selectedOption: null,
+    //   description: '',
+    //   active: null,
+    // },
     laboratoryResults: {
       title: "Resultados de laboratorio",
       file: null,
@@ -117,13 +120,13 @@ export default function PreconsultaPte({ params }) {
     },
     pendingStudies: {
       title: "Estudios pendientes",
-      description: "No one is pending :) Good patient",
+      description: "",
     },
   });
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
-  const handleQuestionActive = (question, active) => {
-    dispatch(updateActive({ question, active })); // activamos o desactivamos las subpreguntas
+  const handleQuestionActive = (question, label, active) => {
+    dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
   };
 
   const handleSubquestionOption = (question, subquestion, selectedOption) => {
@@ -140,8 +143,16 @@ export default function PreconsultaPte({ params }) {
     dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
   };
 
-  const handleVitalSign = (vitalSign, value) => {
-    dispatch(updateVitalSign({ vitalSign, value, number: Number(patientId), schedulingId: Number(scheduleId) })); // actualizamos los signos vitales en el estado global
+  const handleVitalSign = (vitalSign, value, active, key) => {
+    if (vitalSign === 'abnormalGlycemia') {
+      dispatch(updateGlycemia({ vitalSign, active }));
+    }
+    if (vitalSign === 'lastAbnormalGlycemia') {
+      dispatch(updateLastGlycemia({ vitalSign, key, value }));
+    }
+    else {
+      dispatch(updateVitalSign({ vitalSign, value, number: Number(patientId), schedulingId: Number(scheduleId) })); // actualizamos los signos vitales en el estado global
+    }
   };
 
   const handleAnamnesis = (field, description) => {
@@ -203,6 +214,17 @@ export default function PreconsultaPte({ params }) {
       doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks,
       isWorstPainEver: formData.bodySection.isWorstPainEver,
     }
+    const vitalSignFormat = [
+      formData.vitalSigns.height,
+      formData.vitalSigns.weight,
+      formData.vitalSigns.IMC,
+      formData.vitalSigns.temperature,
+      formData.vitalSigns.Heart_Rate,
+      formData.vitalSigns.Systolic_Blood_Pressure,
+      formData.vitalSigns.Diastolic_Blood_Pressure,
+      formData.vitalSigns.Breathing_frequency,
+      formData.vitalSigns.Oxygen_saturation,
+    ]
     const bodyForm = {
       patient: Number(patientId),
       appointmentSchedule: Number(scheduleId),
@@ -236,9 +258,6 @@ export default function PreconsultaPte({ params }) {
       urineStatus: formData.questions.urineStatus.selectedOption,
       exerciseStatus: formData.questions.exerciseStatus.selectedOption,
       // Estudios
-      abnormalGlycemia: tests.abnormalGlycemia.active,
-      lastAbnormalGlycemia: tests.lastAbnormalGlycemia.selectedOption,
-      // physicalExamination: tests.physicalExamination.file,
       laboratoryResults: tests.laboratoryResults.file,
       laboratoryResultsDescription: tests.laboratoryResults.description,
       electrocardiogram: tests.electrocardiogram.file,
@@ -260,7 +279,9 @@ export default function PreconsultaPte({ params }) {
       // Tratamiento
       currentMedications: formData.tratamiento.currentMedications?.selectedOptions ? Object.values(formData.tratamiento.currentMedications.selectedOptions) : null,
       // Signos vitales
-      vitalSignsToCreate: Object.values(formData.vitalSigns),
+      abnormalGlycemia: formData.vitalSigns.abnormalGlycemia.active,
+      lastAbnormalGlycemia: formData.vitalSigns.lastAbnormalGlycemia.options ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options) : null,
+      vitalSignsToCreate: vitalSignFormat,
       // painRecordsToCreate
       painRecordsToCreate: [bodyOBJFormat],
     };
@@ -307,8 +328,8 @@ export default function PreconsultaPte({ params }) {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col h-full gap-5 overflow-y-auto">
-        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece]">
+      <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
+        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
           <div className="md:w-1/2">
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
               <Elboton
@@ -368,11 +389,20 @@ export default function PreconsultaPte({ params }) {
           tratamiento={formData.tratamiento}
           defaultOpen
         />
-        <button
-          className="bg-[#0A6EAA] mt-4 w-1/5 mx-auto text-white text-lg font-bold rounded-lg px-2 py-4"
+        {/* <button
+          className="bg-[#70C247] mt-4 my-5 mx-auto text-white text-sm font-semibold rounded-lg px-2 py-4"
           onClick={handleSubmit}>
-          Enviar
-        </button>
+          Guardar cambios
+        </button> */}
+        <div className="flex justify-center p-6 bg-[#fafafc]">
+          <Elboton
+            nombre={"Guardar Cambios"}
+            icon={<IconGuardar />}
+            onPress={handleSubmit}
+            size={"lg"}
+            className={"bg-greenPrimary w-60 text-sm font-bold"}
+          />
+        </div>
       </div>
     </FormProvider>
   );

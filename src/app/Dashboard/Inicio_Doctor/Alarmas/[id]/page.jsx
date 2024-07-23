@@ -31,17 +31,13 @@ import { useRouter } from "next/navigation";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 
-
-
-
-
 const AlarmSelector = (id) => {
-const alarmId = id.params.id;
+  const alarmId = id.params.id;
   const initialSelections = Array(19).fill(0); // Inicializa con 19 elementos en 0
   const [selectedAlarms, setSelectedAlarms] = useState(initialSelections);
-  const [alarmDescription, setAlarmDescription] = useState("")
+  const [alarmDescription, setAlarmDescription] = useState("");
   const router = useRouter();
-  const token= Cookies.get ("a")
+  const token = Cookies.get("a");
 
   const handleSelect = (categoryIndex, index) => {
     const updatedSelections = [...selectedAlarms];
@@ -49,34 +45,35 @@ const alarmId = id.params.id;
     setSelectedAlarms(updatedSelections);
   };
   useEffect(() => {
-    const getAlarm =async ()=>{
-        const response=await ApiSegimed.get(`/alarms-by-patient?alarmId=${alarmId}`,{ headers: { token: token } })
-        const data= response?.data?.questionsPriority
-        const comment= response?.data?.alarmDescription
-        const mappedArray = data.map(item => {
-            if (item.includes('Alta')) {
-              return item.replace('Alta', '1');
-            } else if (item.includes('Media')) {
-              return item.replace('Media', '2');
-            } else if (item.includes('Baja')) {
-              return item.replace('Baja', '3');
-            } else {
-              return item;
-            }
-          });
-          setSelectedAlarms(mappedArray.map(value => parseInt(value.split(': ')[1])))
-          setAlarmDescription(comment)
-    }
-    getAlarm()
-    
+    const getAlarm = async () => {
+      const response = await ApiSegimed.get(
+        `/alarms-by-patient?alarmId=${alarmId}`,
+        { headers: { token: token } }
+      );
+      const data = response?.data?.questionsPriority;
+      const comment = response?.data?.alarmDescription;
+      const mappedArray = data.map((item) => {
+        if (item.includes("Alta")) {
+          return item.replace("Alta", "1");
+        } else if (item.includes("Media")) {
+          return item.replace("Media", "2");
+        } else if (item.includes("Baja")) {
+          return item.replace("Baja", "3");
+        } else {
+          return item;
+        }
+      });
+      setSelectedAlarms(
+        mappedArray.map((value) => parseInt(value.split(": ")[1]))
+      );
+      setAlarmDescription(comment);
+    };
+    getAlarm();
   }, []);
 
-
   return (
-    <form
-    
-      className="overflow-y-auto h-full w-full md:px-4">
-      <div className=" flex justify-between border-b border-b-[#cecece] px-4 py-2 bg-white sticky top-0 z-10 md:z-50">
+    <form className="overflow-y-auto h-full w-full md:px-4">
+      <div className=" flex justify-between border-b border-b-[#cecece] px-4 py-2 bg-white sticky top-0 z-10 lg:z-50">
         <button
           type="button"
           className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
@@ -93,10 +90,10 @@ const alarmId = id.params.id;
           Crear Alarma
         </p>
         <button
-            onClick={()=>{
-                router.push(`${rutas.Doctor}${rutas.Mensajes}/crearMensaje`)
-                event.preventDefault()
-            }}
+          onClick={() => {
+            router.push(`${rutas.Doctor}${rutas.Mensajes}/crearMensaje`);
+            event.preventDefault();
+          }}
           type="submit"
           className="flex items-center px-4 md:px-6 py-2 bg-[#70C247] rounded-xl gap-3 text-white font-bold">
           Resolver <IconArrowRight />
