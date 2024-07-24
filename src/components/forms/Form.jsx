@@ -29,7 +29,7 @@ export default function Form({ formData, setFormData, hideForm }) {
       </div>
       <div className="w-[50%] h-full flex flex-col gap-5 p-10 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400">
         <div className="w-full h-full flex items-center justify-center">
-          <IconRegister />
+          <IconRegister className={"w-[400px]"} />
         </div>
         <div className="flex items-center justify-center">
           <p className="text-white text-center">

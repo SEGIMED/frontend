@@ -25,7 +25,7 @@ export default function DropNextPreconsultation({ text, onBodyChange, options, t
 
     return (
         <div>
-            <div className="mb-2 font-bold">{text}</div>
+            <div className="mb-2 font-semibold text-sm">{text}</div>
             <Dropdown className="emptyContent">
                 <DropdownTrigger
                     style={{

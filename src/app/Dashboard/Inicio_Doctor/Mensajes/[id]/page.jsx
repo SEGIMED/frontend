@@ -40,7 +40,7 @@ export default function Ver_MensajesDoc() {
 
   return chat && chat.target ? (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between items-center gap-2 px-4 py-2 border-b border-b-[#cecece]">
+      <div className="flex justify-between items-center gap-2 px-4 py-2 border-b border-b-[#cecece] bg-[#FAFAFC]">
         <div className="flex items-center ">
           <IconFatArrow />
           <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">

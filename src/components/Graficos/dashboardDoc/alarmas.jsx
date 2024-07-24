@@ -4,19 +4,15 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function Alarmas() {
-  const [dataAlarms, setDataAlarms] = useState({  });
+  const [dataAlarms, setDataAlarms] = useState({ actives: 0, inactives: 0 });
 
   useEffect(() => {
     const getActives = async () => {
       try {
         const token = Cookies.get("a");
         const response = await ApiSegimed.get("/alarms-by-patient", { headers: { 'token': token } });
-        
-        const actives = response.data.filter(alarm => alarm.solved === false).length;
-        const inactives = response.data.filter(alarm => alarm.solved === true).length;
-        
-        setDataAlarms({ actives, inactives });
-
+        const data = {actives: response.data?.priorityCounts?.Activas, inactives: response.data?.priorityCounts?.Inactivas};
+        setDataAlarms(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -25,7 +21,6 @@ export default function Alarmas() {
     getActives();
   }, []);
 
- 
   const data = {
     labels: ['Respondidas', 'Sin Responder'],
     datasets: [{
@@ -38,7 +33,7 @@ export default function Alarmas() {
   };
 
   return (
-    <div className="w-full h-full lg:w-[530px] p-5 flex items-center justify-center">
+    <div className="w-full h-auto lg:w-[25vw] p-5 flex items-center justify-center">
       <Doughnut 
         data={data} 
         options={{
@@ -47,9 +42,17 @@ export default function Alarmas() {
               display: true,
               position: 'bottom', 
               labels: {
-                usePointStyle: true, 
-                padding: 100, 
+                usePointStyle: true,
+                padding: 20,
               }
+            }
+          },
+          layout: {
+            padding: {
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20
             }
           }
         }}
@@ -57,4 +60,5 @@ export default function Alarmas() {
     </div>
   );
 };
+
 

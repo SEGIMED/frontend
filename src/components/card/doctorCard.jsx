@@ -2,7 +2,7 @@ import { Avatar } from "@nextui-org/react";
 import Avatars from "../avatar/avatarChat";
 
 export default function DoctorCard({ doctor, button }) {
-  console.log(doctor);
+ 
   const specialtiesString = doctor?.physicianSpecialties
     ?.map((specialty) => specialty.specialty.name)
     .join(" | ");

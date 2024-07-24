@@ -1,9 +1,7 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import IconTStar3 from "../icons/iconStar3";
 import IconArrowRight from "../icons/iconArrowRight";
-import IconFatArrow from "../icons/iconFatarrowDash";
+import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 import IconTablillaEstrella from "../icons/iconTablillaEstrella";
 import IconTablillaTilde from "../icons/iconTablillaTilde";
 import Cookies from "js-cookie";
@@ -41,21 +39,20 @@ export default function ReviewModalApte({ onClose, id }) {
     console.log("ratings", ratings);
     const payload = {
       physicianId: Number(myId),
-      reviewScore: JSON.stringify(ratings), // Convert ratings array to JSON string
+      reviewScore: JSON.stringify(ratings),
       comments: comments,
-      patientId: Number(id), // Ensure patientId is a number
+      patientId: Number(id),
     };
 
     const token = Cookies.get("a");
 
     try {
-      const response = await ApiSegimed.post(`/patient-review/${id}`, payload, {
+      await ApiSegimed.post(`/patient-review/${id}`, payload, {
         headers: {
           token: token,
           "Content-Type": "application/json",
         },
       });
-
       onClose();
     } catch (error) {
       console.error("Error sending review:", error);
@@ -63,35 +60,40 @@ export default function ReviewModalApte({ onClose, id }) {
   };
 
   useEffect(() => {
-    function onClose2(event) {
+    const onClose2 = (event) => {
       if (event.key === "Escape") {
         onClose();
       }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", onClose2);
     }
 
-    if (typeof window !== "undefined")
-      window.addEventListener("keydown", onClose2);
-
-    // Cleanup function to remove the event listener when the component unmounts
     return () => {
+      window.removeEventListener("keydown", onClose2);
       window.removeEventListener("keydown", onClose2);
     };
   }, [onClose]);
 
-  function handleClickOutside(event) {
+  const handleClickOutside = (event) => {
     if (event.target === event.currentTarget) {
       onClose();
+      onClose();
     }
-  }
+  };
+
   return (
     <div
       onClick={handleClickOutside}
       className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white  p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
-        <div className="flex justify-between items-center border-b pb-2 mb-2 h-[10%]">
+      <div className="bg-white p-3 rounded-lg shadow-lg w-[85%] min-h-fit max-h-[95%] md:w-[40%] relative font-poppins overflow-y-auto">
+        <div className="flex justify-between items-center border-b pb-2 h-fit">
           <span className="flex gap-4">
-            <IconFatArrow />
-            <h2 className="text-xl font-bold">Califique a su paciente</h2>
+            <IconCurrentRouteNav className={"w-4"} />
+            <h2 className="text-lg font-normal leading-6">
+              Califique a su paciente
+            </h2>
           </span>
           <button
             onClick={onClose}
@@ -101,13 +103,13 @@ export default function ReviewModalApte({ onClose, id }) {
         </div>
         {ratingQuestions.map((question, qIndex) => (
           <div key={qIndex} className="mb-3">
-            <div className="flex gap-4 mb-2 mt-2">
+            <div className="flex gap-3 mb-2 mt-2">
               <span>
                 <IconTablillaEstrella />
               </span>
-              <span className="mb-2 font-medium">{question}</span>
+              <span className="font-medium text-base">{question}</span>
             </div>
-            <div className="flex justify-center items-center border-b pb-1">
+            <div className="flex justify-center items-center border-b gap-2 p-5">
               {[...Array(5)].map((star, index) => (
                 <label key={index} className="cursor-pointer">
                   <input
@@ -120,20 +122,20 @@ export default function ReviewModalApte({ onClose, id }) {
                   <IconTStar3
                     color={
                       index < (hover[qIndex] || ratings[qIndex])
-                        ? "#FFC107"
+                        ? "#F5E400"
                         : "#FFFFFF"
                     }
                     onMouseEnter={() => handleHover(qIndex, index + 1)}
                     onMouseLeave={() => handleHover(qIndex, 0)}
-                    className="transition-colors duration-300 ease-in-out w-8 md:w-12"
+                    className="transition-colors duration-300 ease-in-out w-8 md:w-10"
                   />
                 </label>
               ))}
             </div>
           </div>
         ))}
-        <div className="mb-2 ">
-          <div className="flex gap-4 mb-2 mt-2">
+        <div className="mb-2">
+          <div className="flex gap-4 mt-2">
             <span>
               <IconTablillaTilde />
             </span>
@@ -148,13 +150,14 @@ export default function ReviewModalApte({ onClose, id }) {
             value={comments}
             onChange={(e) => setComments(e.target.value)}></textarea>
         </div>
-        <div className="flex justify-center items-center h-[20%]">
-          <Elboton
-            className="bg-[#70C247]"
-            onPress={SendReview}
-            nombre="Guardar"
-            icon2={<IconArrowRight />}
-          />
+        <div className="flex justify-center items-center h-[10%]">
+          <button
+            onClick={SendReview}
+            className="py-2 px-4 items-center flex rounded-lg bg-greenPrimary gap-2 w-fit disabled:bg-gray-400">
+            <p className="text-white font-bold flex gap-2 items-center">
+              Guardar <IconArrowRight />
+            </p>
+          </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function MisTurnos({ columnNames, colum }) {
+export default function Table({ columnNames, colum }) {
     const columnCount = columnNames.length +1
 
     return (

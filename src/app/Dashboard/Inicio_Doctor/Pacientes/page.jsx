@@ -26,12 +26,24 @@ import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
 import IconMessages from "@/components/icons/IconMessages.jsx";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import MapModalPte from "@/components/modal/MapModalPte.jsx";
+import Ordenar from "@/components/Buttons/Ordenar";
+import IconOrder from "@/components/icons/IconOrder";
+import IconOptions from "@/components/icons/IconOptions";
+import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
+import IconAlarm from "@/components/icons/IconAlarm";
+import IconHooter from "@/components/icons/IconHooter";
+import IconAlphabetic from "@/components/icons/IconAlphabetic";
+import IconFilter from "@/components/icons/IconFilter";
+import IconTStar2 from "@/components/icons/IconStar2";
+import NotFound from "@/components/notFound/notFound";
+import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(false);
+  const [isLoading, setisLoading] = useState(true);
   const [isSorted, setIsSorted] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
   const [showFavorites, setShowFavorites] = useState(false);
@@ -52,7 +64,7 @@ export default function HomeDoc() {
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patients?page=${pagination.currentPage}&limit=9&name=${searchTerm}`,
+      `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&&risk=${riskFilter}&physicianId=${userId}`,
       headers
     );
     if (response.data) {
@@ -69,6 +81,7 @@ export default function HomeDoc() {
         totalUsers: response.data.totalUsers,
         totalPages: response.data.totalPages,
       }));
+      setisLoading(false);
     }
   };
 
@@ -77,11 +90,11 @@ export default function HomeDoc() {
       ...prev,
       currentPage: 1,
     }));
-  }, [searchTerm]);
+  }, [searchTerm, riskFilter]);
 
   const getFavorites = async (headers) => {
     const response = await ApiSegimed.get(
-      `/get-physician-favorite-patient?page=${pagination.currentPage}&limit=9&physicianId=${userId}`,
+      `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&&risk=${riskFilter}&physicianId=${userId}&onlyFavorites=true`,
       headers
     );
     if (response.data) {
@@ -98,6 +111,7 @@ export default function HomeDoc() {
         totalUsers: response.data.totalUsers,
         totalPages: response.data.totalPages,
       }));
+      setisLoading(false);
     }
   };
 
@@ -105,25 +119,59 @@ export default function HomeDoc() {
     if (!showFavorites) {
       getPatients({ headers: { token: token } }).catch(console.error);
     } else {
+      setisLoading(true);
       getFavorites({ headers: { token: token } }).catch(console.error);
     }
-  }, [showFavorites, pagination.currentPage, searchTerm]);
+  }, [showFavorites, pagination.currentPage, searchTerm, riskFilter]);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
 
   const filteredPatients = showFavorites ? patientsFavorites : patients;
+  console.log(filteredPatients);
 
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
     : filteredPatients;
+  console.log(sortedPatients, `xd`);
 
   const openModal = (patientId) => {
     setIsModalOpen(true);
     setSelectedPatientId(patientId);
     setOpenOptionsPatientId(null);
     setIsFilterOpen(false);
+  };
+
+  const changeFavorite = async (patient) => {
+    const url = patient.isFavorite
+      ? `/delete-physician-favorite-patient`
+      : `/create-physician-favorite-patient`;
+    const method = patient.isFavorite ? "DELETE" : "POST";
+    const data = { patientId: patient.id, physicianId: userId };
+
+    try {
+      const response = await ApiSegimed({
+        url,
+        method,
+        data,
+        headers: { token },
+      });
+      if (response.status === 201 || response.status === 200) {
+        getFavorites({ headers: { token: token } }).catch(console.error);
+        getPatients({ headers: { token: token } }).catch(console.error);
+        console.log(
+          `Patient ${
+            patient.isFavorite ? "removed from" : "added to"
+          } favorites successfully.`,
+          response
+        );
+      } else {
+        console.log("Something went wrong:", response);
+      }
+    } catch (error) {
+      console.error("Error in changeFavorite function:", error);
+    }
   };
 
   const closeModal = () => {
@@ -135,16 +183,16 @@ export default function HomeDoc() {
     setIsSorted(!isSorted);
   };
 
-  const handleRiskFilterClick = (risk) => {
+  const handleRiskFilterClick = ({ risk }) => {
     setRiskFilter(risk);
   };
 
   const handleFavoriteClick = () => {
-    getFavorites({ headers: { token: token } }).catch(console.error);
+    setisLoading(true);
     setShowFavorites(!showFavorites);
+
     handlePageChange(1);
     dispatch(setSearchTerm(""));
-    // setOpenOptionsPatientId(null);
     setIsFilterOpen(false);
   };
 
@@ -177,9 +225,6 @@ export default function HomeDoc() {
     setSelectedPatient(patient);
     setShowMapModal(true);
   };
-  if (userId === null) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex flex-col h-full ">
@@ -217,16 +262,67 @@ export default function HomeDoc() {
               isOpen={isFilterOpen}
               toggleMenu={toggleFilterMenu}
               onClickSort={handleSortClick}
-          />
-          <Ordenar /> */}
+          /> */}
         </div>
-        <h1 className="font-bold">Listado de pacientes</h1>
-        <div></div>
+
+        <h1 className="font-bold ml-4">Listado de pacientes</h1>
+        <MenuDropDown
+          label="Filtrar"
+          iconr={<IconFilter />}
+          categories={[
+            {
+              title: "Nivel de riesgo",
+              icon: <IconHooter />,
+              items: [
+                {
+                  label: "Alto",
+                  onClick: () => setRiskFilter("Alto"),
+                  icon: <IconRisk color="#E73F3F" />,
+                },
+                {
+                  label: "Medio",
+                  onClick: () => setRiskFilter("Moderado"),
+                  icon: <IconRisk color="#F5E400" />,
+                },
+                {
+                  label: "Bajo",
+                  onClick: () => setRiskFilter("Bajo"),
+                  icon: <IconRisk color="#70C247" />,
+                },
+                {
+                  label: "Ninguno",
+                  onClick: () => setRiskFilter(""),
+                  icon: <IconRisk color="lightGray" />,
+                },
+              ],
+            },
+            // {
+            //   title: "Orden Alfabetico",
+            //   icon: <IconAlphabetic />,
+            //   items: [
+            //     {
+            //       label: "Ver todos",
+            //       onClick: () => setRiskFilter(""),
+            //     }
+            //   ]
+            // }
+          ]}
+        />
+        {/* <div></div> */}
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
-        {sortedPatients.length > 0 ? (
-          sortedPatients.map((paciente) => (
+        {isLoading ? (
+          <SkeletonList count={10} />
+        ) : sortedPatients.length === 0 ? (
+          <NotFound
+            text={
+              showFavorites ? "No hay pacientes favoritos " : "No hay pacientes"
+            }
+            sizeText={"w-[100%]"}
+          />
+        ) : (
+          filteredPatients.map((paciente) => (
             <div
               key={paciente.id}
               className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
@@ -249,6 +345,15 @@ export default function HomeDoc() {
                 <p className="text-base">
                   {paciente.name} {paciente.lastname}
                 </p>
+                <div onClick={() => changeFavorite(paciente)}>
+                  {paciente.isFavorite ? (
+                    <IconFavoriteYellow />
+                  ) : (
+                    <IconFavoriteBlue />
+                  )}
+                </div>
+
+                {/* aca verificar si es favorite es true y poner IconFavoriteYellow sino nada y aplicar logica de skeleton y de notfound, haz las importaciones y todo para que funcione, usa las mismas que antes */}
               </div>
               <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
                 <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
@@ -268,6 +373,7 @@ export default function HomeDoc() {
               /> */}
                 <MenuDropDown
                   label="Opciones"
+                  icon={<IconOptions color="#FFFFFF" />}
                   categories={[
                     {
                       title: "Acciones",
@@ -276,6 +382,15 @@ export default function HomeDoc() {
                           label: "Agendar Consulta",
                           onClick: () => openModal(paciente.id),
                           icon: <IconMiniCalendar />,
+                        },
+                        {
+                          label: paciente.isFavorite
+                            ? "Quitar de Favoritos"
+                            : "Agregar a Favoritos",
+                          onClick: () => changeFavorite(paciente),
+                          icon: (
+                            <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
+                          ),
                         },
                       ],
                     },
@@ -314,10 +429,6 @@ export default function HomeDoc() {
               </div>
             </div>
           ))
-        ) : (
-          <p className="text-[#686868] font-semibold h-full text-base items-center flex justify-center ">
-            No hay pacientes encontrados
-          </p>
         )}
       </div>
       <div className="flex justify-center items-center gap-5  bg-[#FAFAFC] font-bold h-[15%]">

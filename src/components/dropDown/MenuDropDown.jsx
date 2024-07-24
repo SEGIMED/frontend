@@ -54,7 +54,7 @@ import Link from "next/link";
 //     },
 //   ];
 
-const MenuDropDown = ({ icon, label, categories, items }) => {
+const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
   return (
     <Dropdown
       classNames={{
@@ -63,8 +63,9 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
       }}>
       <DropdownTrigger className="flex justify-center md:px-4 font-Roboto py-2 text-white rounded-xl md:gap-3 bg-[#487FFA] items-center cursor-pointer">
         <div className="flex items-center md:gap-3">
-          {icon ? icon : <IconOptions color="#FFFFFF" />}
+          {icon && icon}
           <span className="hidden md:block font-semibold">{label}</span>
+          {iconr && iconr}
         </div>
       </DropdownTrigger>
       <DropdownMenu>
@@ -72,12 +73,20 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
           ? categories.map((category, categoryIndex) => (
               <DropdownSection
                 key={categoryIndex}
-                title={category.title}
+                icon={category.icon}
+                title={
+                  <div className="flex items-center gap-2">
+                    {category.icon && category.icon}
+                    {category.title}
+                    {category.icon && category.iconr}
+                  </div>
+                }
                 classNames={{
-                  heading: "text-sm font-bold",
+                  heading: "text-sm font-bold p-0",
+                  base: "p-[3px]",
                 }}
                 showDivider={categoryIndex < categories.length - 1}>
-                {category.items.map((item, itemIndex) => (
+                {category.items?.map((item, itemIndex) => (
                   <DropdownItem key={itemIndex}>
                     {item.href && (
                       <Link
@@ -85,6 +94,7 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
                         className="w-full flex items-center gap-2  text-sm cursor-pointer">
                         {item.icon}
                         {item.label}
+                        {item.iconr}
                       </Link>
                     )}
                     {item.onClick && (
@@ -93,6 +103,7 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
                         className="w-full flex items-center gap-2  text-sm cursor-pointer">
                         {item.icon}
                         {item.label}
+                        {item.iconr}
                       </button>
                     )}
                   </DropdownItem>
@@ -107,6 +118,7 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
                     className="w-full flex items-center gap-2  text-sm cursor-pointer">
                     {item.icon}
                     {item.label}
+                    {item.iconr}
                   </Link>
                 ) : (
                   <button
@@ -114,6 +126,7 @@ const MenuDropDown = ({ icon, label, categories, items }) => {
                     className="w-full flex items-center gap-2  text-sm cursor-pointer">
                     {item.icon}
                     {item.label}
+                    {item.iconr}
                   </button>
                 )}
               </DropdownItem>

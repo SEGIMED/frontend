@@ -125,7 +125,7 @@ export default function ReviewModal({ onClose, idDoc }) {
               <IconTStar3
                 width="50"
                 height="50"
-                color={index < (hover || rating) ? "#FFC107" : "#FFFFFF"}
+                color={index < (hover || rating) ? "#F5E400" : "#FFFFFF"}
                 onMouseEnter={() => setHover(index + 1)}
                 onMouseLeave={() => setHover(0)}
                 className="transition-colors duration-300 ease-in-out w-10 md:w-12"

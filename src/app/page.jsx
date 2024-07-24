@@ -140,8 +140,9 @@ export default function Home() {
                   id="userOrDni"
                   name="userOrDni"
                   placeholder="Ingrese su correo electrónico o DNI"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.userOrDni ? "border-red-500" : "border-gray-300"
-                    }`}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${
+                    errors.userOrDni ? "border-red-500" : "border-gray-300"
+                  }`}
                   {...register("userOrDni", {
                     required: true,
                     validate: (value) =>
@@ -165,8 +166,9 @@ export default function Home() {
                   id="password"
                   name="password"
                   placeholder="Ingrese su contraseña"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
-                    }`}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
                   {...register("password", { required: true })}
                 />
                 <div className="relative">
@@ -208,10 +210,11 @@ export default function Home() {
             <div className="text-center  flex justify-center">
               <button
                 type="submit"
-                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
+                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${
+                  Object.keys(errors).length === 0
                     ? ""
                     : "cursor-not-allowed opacity-50"
-                  }`}
+                }`}
                 disabled={Object.keys(errors).length !== 0}>
                 Iniciar Sesión <IconSend className="m" />
               </button>
@@ -220,7 +223,7 @@ export default function Home() {
         </div>
         {/* Lado izquierdo */}
         <div className="hidden md:flex flex-col md:w-1/2 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400 text-white text-center justify-center items-center">
-          <IconRegister />
+          <IconRegister className={"w-[400px]"} />
           <p className="px-24 pb-2 text-lg font-normal leading-8">
             SEGIMED es una novedosa plataforma médica interactiva que permite
             una intercomunicación continua entre médicos y pacientes, generando

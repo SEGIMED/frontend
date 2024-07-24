@@ -19,7 +19,14 @@ import { IconChat } from "@/components/InicioPaciente/IconChat";
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 import IconRegresar from "@/components/icons/iconRegresar";
 import rutas from "@/utils/rutas";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Avatar,
+  User,
+} from "@nextui-org/react";
 import avatar from "@/utils/defaultAvatar";
 import { resetApp } from "@/redux/rootReducer";
 import { useRouter } from "next/navigation";
@@ -27,10 +34,13 @@ import { useRouter } from "next/navigation";
 import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 
 import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
+import { addNotifications } from "@/redux/slices/user/notifications";
 
-export const SidePte = ({ search, toggleSidebar }) => {
+export const SidePte = ({ search }) => {
+  const [showNotifications, setShowNotifications] = useState(false);
   const pathname = usePathname();
   const user = useAppSelector((state) => state.user);
+  const notifications = useAppSelector((state) => state.notifications);
   const showSearch =
     pathname === "/Inicio_Paciente/Doctores" ||
     pathname === "/Inicio_Paciente/Mensajes" ||
@@ -43,10 +53,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   console.log(lastSegment);
 
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -64,8 +73,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const dispatch = useAppDispatch();
@@ -115,10 +124,28 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   const getSchedules = async (headers) => {
     try {
-      const response = await ApiSegimed.get(`/schedules?patientId=${id}`, headers);
+      const response = await ApiSegimed.get(
+        `/schedules?patientId=${id}`,
+        headers
+      );
 
       if (response.data) {
         dispatch(addSchedules(response.data));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getPatientNotifications = async (headers) => {
+    try {
+      const response = await ApiSegimed.get(
+        `/all-notifications-patient?patientId=15`,
+        headers
+      );
+
+      if (response.data) {
+        dispatch(addNotifications(response.data));
       }
     } catch (error) {
       console.error(error);
@@ -214,20 +241,24 @@ export const SidePte = ({ search, toggleSidebar }) => {
   useEffect(() => {
     obtenerUbicacion();
     const idUser = Cookies.get("c");
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setIsMobile(window.innerWidth <= 768);
     }
-    if (isModalOpen) { router.push(`${rutas.PacienteDash}2`); }
+    if (isModalOpen) {
+      router.push(`${rutas.PacienteDash}2`);
+    }
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getAllDoc({ headers: { token: token } }).catch(console.error);
       getSchedules({ headers: { token: token } }).catch(console.error);
+      getPatientNotifications({ headers: { token: token } }).catch(
+        console.error
+      );
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
       }
     }
   }, []);
-  const [showNotifications, setShowNotifications] = useState(false);
 
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
@@ -269,8 +300,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
               <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
                 <IconRegresar />
                 {!isMobile ? "Regresar" : null}
-
-
               </button>
             </Link>
           </div>
@@ -300,8 +329,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
       )}
 
-
-
       <div className="flex justify-center items-center gap-5">
         {/* <div className="w-12 h-12 flex justify-center items-center">
           <Link href={`${rutas.PacienteDash}2${rutas.Mi_Perfil}`}>
@@ -330,18 +357,24 @@ export const SidePte = ({ search, toggleSidebar }) => {
               className="transition-transform "
               // description={user?.role === 3 ? "Paciente" : ""}
               description={!isMobile && (user?.role === 3 ? "Paciente" : "")}
-              name={!isMobile ? `${user?.name ?? ''} ${user?.lastname ?? ''}` : ''}
-            // name={user ? `${user?.name} ${user?.lastname}` : ''}
+              name={
+                !isMobile ? `${user?.name ?? ""} ${user?.lastname ?? ""}` : ""
+              }
+              // name={user ? `${user?.name} ${user?.lastname}` : ''}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="User Actions" variant="flat">
-
-            <DropdownItem onPress={() => router.push(`${rutas.PacienteDash}2`)} key="inicio">
+            <DropdownItem
+              onPress={() => router.push(`${rutas.PacienteDash}2`)}
+              key="inicio">
               Inicio
             </DropdownItem>
 
-
-            <DropdownItem onPress={() => router.push(`${rutas.PacienteDash}2${rutas.Mi_Perfil}`)} key="mi_perfil">
+            <DropdownItem
+              onPress={() =>
+                router.push(`${rutas.PacienteDash}2${rutas.Mi_Perfil}`)
+              }
+              key="mi_perfil">
               Mi perfil
             </DropdownItem>
 
@@ -356,8 +389,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
           </button>
           <button
             onClick={handleNotificationClick}
-            className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
-              }`}>
+            className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+              showNotifications && "bg-[#E73F3F]"
+            }`}>
             <IconNotificaciones
               className="w-6 h-6"
               color={showNotifications && "white"}
@@ -374,23 +408,21 @@ export const SidePte = ({ search, toggleSidebar }) => {
                   Notificaciones
                 </p>
                 <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-                  {Notificaciones.map((notificacion) => (
-                    <NotificacionElement
-                      key={notificacion.id}
-                      notificacion={notificacion}
-                    />
-                  ))}
+                  {notifications
+                    .filter((notificacion) => !notificacion.state)
+                    .map((notificacion) => (
+                      <NotificacionElement
+                        key={notificacion.id}
+                        notificacion={notificacion}
+                      />
+                    ))}
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
-      <ModalBoarding
-        isOpen={isModalOpen}
-        onClose={closeModal}
-
-      />
-    </div >
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} />
+    </div>
   );
 };

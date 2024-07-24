@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import IconCurrentRouteNav from '../icons/IconCurrentRouteNav';
 import IconDownload from '../icons/IconDownload';
 import BotonPreconsulta from '../Buttons/BotonPreconsulta';
-const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, Link}) => {
+const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, Link }) => {
     const [file, setFile] = useState(null);
     const [description, setDescription] = useState("");
     const fileInputRef = useRef(null);
@@ -20,7 +20,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
 
     useEffect(() => {
         // Solo establece orderedLinks la primera vez que Links cambie
-        if (!Link==="" && orderedLinks.length === 0) {// Captura el primer estado de Links
+        if (!Link === "" && orderedLinks.length === 0) {// Captura el primer estado de Links
             setOrderedLinks(Link);
         }
     }, [Link]);
@@ -54,7 +54,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
     };
 
     return (
-        <div className="p-6 pb-4 bg-[#fafafc]">
+        <div className="px-6 py-4 bg-[#fafafc]">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
                 <IconCurrentRouteNav className="w-4" />
                 {label}
@@ -84,7 +84,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                     <button
                         className="flex items-center justify-center gap-3 py-2 px-6 border-2 bg-white border-[#D7D7D7]  text-[#808080] rounded-lg text-base "
                         onClick={handleButtonClick}>
-                        <IconUpload color="#808080"/>
+                        <IconUpload color="#808080" />
                         Adjuntar archivo/informe
                     </button>
                     <input
@@ -106,7 +106,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                     />
                 </div>
             }
-             {orderedLinks && orderedLinks.length > 0 && (
+            {orderedLinks && orderedLinks.length > 0 && (
                 <a href={orderedLinks} className='mt-4'>
                     <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
                         {orderedLinks}

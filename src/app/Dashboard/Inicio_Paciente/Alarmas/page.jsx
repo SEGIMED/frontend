@@ -15,6 +15,9 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import Alarm1 from "@/components/modal/alarm/alarm1";
 import Alarm2 from "@/components/modal/alarm/alarm2";
 import Alarm3 from "@/components/modal/alarm/alarm3";
+import { useAppSelector } from "@/redux/hooks";
+import AsociarMedico from "@/components/asociarMedico/AsociarMedico";
+import NotFound from "@/components/notFound/notFound";
 
 const Modals = [
   <Alarm1 key={"alarma 1"} />,
@@ -28,7 +31,7 @@ export default function AlarmPte() {
   const [sortResolvedFirst, setSortResolvedFirst] = useState(true);
   const myId = Cookies.get("c");
   const token = Cookies.get("a");
-
+  const user = useAppSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const closeModal = () => {
@@ -39,19 +42,19 @@ export default function AlarmPte() {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
 
-    setAlarms(response.data);
+    setAlarms(response.data.alarms);
   };
 
   const router = useRouter();
   const myID = Cookies.get("c");
 
-  const UnsolvedAlarmas = alarms.filter(
-    (alarm) => alarm.patient === Number(myId) && alarm.solved === false
-  );
-
   useEffect(() => {
     getMyAlarms();
   }, []);
+
+  const UnsolvedAlarmas = alarms?.filter(
+    (alarm) => alarm.patient === Number(myId) && alarm.solved === false
+  );
 
   // const unsolvedAlarms = misAlarmas.filter((a, b) => {
   //   if (sortResolvedFirst) {
@@ -61,6 +64,10 @@ export default function AlarmPte() {
   //   }
   // });
 
+  //Falta lógica para mostrar el botón de asociar médico
+  // if (user?.treatingPhysician === null) {
+  //   return <AsociarMedico text="crear alarmas" />;
+  // }
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 lg:z-50">
@@ -87,15 +94,19 @@ export default function AlarmPte() {
           <IconAlarmBlue color={"white"} /> Crear Alarma
         </button>
       </div>
-      <div className="grid grid-cols-5 items-center border-b border-b-[#cecece] p-2 text-center md:text-start bg-white sticky top-10 z-20 lg:z-50">
+      <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
         <p className="font-bold text-[#5F5F5F]">Prioridad</p>
-        <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
-        <p className="font-bold text-[#5F5F5F]">Paciente</p>
-        <p className="font-bold text-[#5F5F5F]">Status</p>
+        <p className="font-bold text-[#5F5F5F]">Hora</p>
+        <p className="font-bold text-[#5F5F5F]">HTP</p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">Status</p>
       </div>
       <div className="overflow-auto h-full">
-        <TableAlarmPte paciente={UnsolvedAlarmas} />
+        {UnsolvedAlarmas.length === 0 ? (
+          <NotFound text="No hay alarmas" />
+        ) : (
+          <TableAlarmPte paciente={UnsolvedAlarmas} />
+        )}
       </div>
       <ModalModularizado
         isOpen={isModalOpen}

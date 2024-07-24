@@ -1,50 +1,40 @@
 "use client";
 
 import TableAlarmResueltas from "@/components/alarm/tableAlarmResueltas";
-// import Ordenar from "@/components/Buttons/Ordenar";
 import Link from "next/link";
 import rutas from "@/utils/rutas";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import Ordenar from "@/components/Buttons/Ordenar";
+import NotFound from "@/components/notFound/notFound";
+import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import IconArrowLeft from "@/components/icons/IconArrowLeft";
 
 export default function HomeDoc() {
   const [inactiveAlarms, setInactiveAlarms] = useState([]);
-
-  const getHighestPriority = (priorities) => {
-    if (priorities.includes("Alta")) return "Alta";
-    if (priorities.includes("Media")) return "Media";
-    return "Baja";
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   const getAlarms = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const inactiveAlarms = response.data.filter(
-          (alarma) => alarma.solved === true
-        );
+        const inactiveAlarms = response.data?.alarms
+          ?.filter((alarma) => alarma.solved === true)
+          .sort((a, b) => {
+            const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
+            return (
+              priorityOrder[a.highestPriority] -
+              priorityOrder[b.highestPriority]
+            );
+          });
 
-        // Map through the alarms to find the highest priority and add it to the alarm object
-        const mappedAlarms = inactiveAlarms.map((alarm) => ({
-          ...alarm,
-          highestPriority: getHighestPriority(
-            alarm.questionsPriority.map((p) => p.split(": ")[1])
-          ),
-        }));
-
-        // Sort alarms by highest priority
-        mappedAlarms.sort((a, b) => {
-          const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
-          return (
-            priorityOrder[a.highestPriority] - priorityOrder[b.highestPriority]
-          );
-        });
-
-        setInactiveAlarms(mappedAlarms);
+        setInactiveAlarms(inactiveAlarms);
       }
     } catch (error) {
       console.error("Error fetching alarms:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,29 +47,49 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white static md:sticky top-0 z-20 lg:z-50">
-        {/* <Ordenar /> */}
-        <div></div>
-        <h1 className="font-bold">Alarmas resueltas</h1>
-        <Link href={`${rutas.Doctor}${rutas.Alarm}`}>
-          <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
-            Regresar
-          </button>
-        </Link>
-      </div>
-      <div className="flex items-center justify-between text-start border-b border-b-[#cecece] py-4 p-2 bg-white static md:sticky top-14 z-20 lg:z-50">
-        <p className="font-bold text-[#5F5F5F] w-1/6">Prioridad</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6">Paciente</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6">Hora</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6">Fecha</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6 hidden md:block">HTP</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6 hidden md:block">Motivo</p>
-        <p className="font-bold text-[#5F5F5F] w-1/6  hidden md:block">
-          Tiempo de respuesta
-        </p>
-      </div>
-      <div className="md:overflow-auto h-full">
-        <TableAlarmResueltas pacientes={inactiveAlarms} />
+      <title>Alarmas Resueltas</title>
+      <div className="h-full w-full flex flex-col">
+        <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
+          {/* <Ordenar /> */}
+          <div></div>
+          <h1 className="font-bold md:text-xl hidden md:block">
+            Alarmas resueltas
+          </h1>
+          <div className="flex gap-3">
+            <Link href={`${rutas.Doctor}${rutas.Alarm}`}>
+              <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+                <IconArrowLeft iconColor="white" />
+                Regresar
+              </button>
+            </Link>
+          </div>
+        </div>
+        <div className="md:overflow-y-auto h-full w-[100%]">
+          <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
+            <div className="w-[10%] md:w-[5%] md:block"></div>
+            <div className="grid w-[80%] md:w-[80%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-4 md:text-start md:grid-cols-6 py-2 z-10">
+              <p className="text-[#5F5F5F] hidden md:block">Prioridad</p>
+              <p className="text-[#5F5F5F]">Hora</p>
+              <p className="text-[#5F5F5F]">Fecha</p>
+              <p className="text-[#5F5F5F]">Paciente</p>
+              <p className="text-[#5F5F5F] hidden md:block">HTP</p>
+              <p className="text-[#5F5F5F] hidden md:block">Motivo de alarma</p>
+              {/* <p className="text-[#5F5F5F] justify-center ">Tiempo de respuesta</p> */}
+            </div>
+          </div>
+          {isLoading ? (
+            <SkeletonList count={10} />
+          ) : inactiveAlarms.length === 0 ? (
+            <NotFound
+              text="No hay historial de consultas."
+              sizeText="w-[100%]"
+            />
+          ) : (
+            <div className="items-start justify-center w-full md:overflow-y-auto">
+              <TableAlarmResueltas pacientes={inactiveAlarms} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

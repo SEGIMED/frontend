@@ -8,6 +8,9 @@ import IconOptions from "../icons/IconOptions";
 import IconMensajeBoton from "../icons/IconMensajeBoton";
 import Link from "next/link";
 import rutas from "@/utils/rutas";
+import IconRisk from "../icons/iconRisk";
+import RealColorRisk from "@/utils/realColor";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 export default function ProximasConsultasInfo({ info }) {
   console.log(info);
@@ -16,14 +19,24 @@ export default function ProximasConsultasInfo({ info }) {
       <div className="flex items-center w-2/3 md:w-[55%] ">
         <div className="flex items-center w-full md:w-1/2">
           <Avatars avatar1={info?.patientUser?.avatar} />
-          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-4 py-1">
-            {info.patientUser.name} {info.patientUser.lastname}
+          </div>   
+          
+          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6 px-2 py-1">
+            {info.patientUser.name} 
+            </p>
+          <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6  ">
+           {info.patientUser.lastname}
           </p>
-        </div>
-        <IconCurrentRouteNav className={"w-4 hidden md:block"} />
-        <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 ">
-          {LastLogin(info?.scheduledStartTimestamp)}
+        <div>
+        <IconCurrentRouteNav className={"w-4 hidden md:block mr-10"}/></div>
+        <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 md:mr-10">
+          {Fecha(info?.scheduledStartTimestamp)}   
         </p>
+        
+        <p className="hidden sm:flex text-center text-[#686868]  items-center justify-center font-normal text-sm md:text-base leading-6 w-60 ">
+          {Hora(info?.scheduledStartTimestamp)}
+        </p>
+        
       </div>
       <div className="flex space-x-1 md:space-x-4 ">
         <Link href={`${rutas.Doctor}${rutas.Consultas}/${info.id}?patientId=${info.patient}`}>

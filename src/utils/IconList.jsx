@@ -437,7 +437,10 @@ export default function IconList() {
     { component: <IconPreConsulta color={"black"} />, name: "IconPreConsulta" },
     { component: <IconPrev />, name: "IconPrev" },
     { component: <IconReasonQuerie />, name: "IconReasonQuerie" },
-    { component: <IconRegister />, name: "IconRegister" },
+    {
+      component: <IconRegister className={"w-[200px]"} />,
+      name: "IconRegister",
+    },
     {
       component: (
         <div className="bg-black">

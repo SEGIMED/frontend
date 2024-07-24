@@ -215,7 +215,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
               ))}
           </div>
           <div className="sticky top-0 items-center w-full md:w-1/2">
-            <div className="flex flex-col items-center gap-3 py-4 ">
+            <div className="flex flex-col items-center gap-3 py-4 md:items-start ">
               <div>
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
