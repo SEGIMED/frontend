@@ -248,7 +248,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                       </span>
                       <Slider
                         aria-label="Nivel de dolor"
-                        size="md"
+                        size="lg"
                         step={1}
                         value={painLevel}
                         onChange={handleChangePainLevel}
