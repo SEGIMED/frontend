@@ -24,7 +24,6 @@ export default function SubNavbarConsulta({ id, handleClic }) {
   const [openDetails, setOpenDetails] = useState(false);
   const pathname = usePathname();
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
-  console.log(lastSegment);
 
   const getLinkClass = (routeLastSegment) =>
     `/${lastSegment}` === routeLastSegment

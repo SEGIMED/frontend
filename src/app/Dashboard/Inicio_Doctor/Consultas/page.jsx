@@ -89,7 +89,7 @@ export default function HomeDoc() {
     setSelectedPatient(patient);
   };
   console.log(scheduledConsultas);
-
+  console.log(filteredPatients);
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
@@ -145,7 +145,7 @@ export default function HomeDoc() {
                       {
                         label: "Realizar consulta",
                         icon: <IconPersonalData />,
-                        href: `${rutas.Doctor}${rutas.Consultas}/${paciente.patient}`,
+                        href: `${rutas.Doctor}${rutas.Consultas}/${paciente.id}?patientId=${paciente.patient}`,
                       },
                     ],
                   },

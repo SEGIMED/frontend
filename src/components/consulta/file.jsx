@@ -24,7 +24,6 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
             setOrderedLinks(Link);
         }
     }, [Link]);
-    console.log(orderedLinks);
     const handleOnChange = (e) => {
         try {
             if (e.target.files.length) {
