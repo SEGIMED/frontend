@@ -9,10 +9,13 @@ import Link from "next/link";
 import rutas from "@/utils/rutas";
 import Elboton from "../Buttons/Elboton";
 import IconNext from "../icons/IconNext";
+import Cookies from "js-cookie";
 
 export default function ProximasConsultas() {
   const consultas = useAppSelector((state) => state.schedules);
+  const myID = Number(Cookies.get("c"));
   const [nextFiveConsultas, setNextFiveConsultas] = useState([]);
+
 
   useEffect(() => {
     const getNextFiveConsultas = () => {
@@ -20,7 +23,7 @@ export default function ProximasConsultas() {
 
       const filteredConsultas = consultas
         .filter(
-          (consulta) => new Date(consulta.scheduledStartTimestamp) > currentDate
+          (consulta) => new Date(consulta.scheduledStartTimestamp) > currentDate && consulta.schedulingStatus === 1 && consulta.physician === myID
         )
         .sort(
           (a, b) =>
@@ -31,13 +34,11 @@ export default function ProximasConsultas() {
 
       setNextFiveConsultas(filteredConsultas);
     };
-
     if (consultas && consultas.length > 0) {
       getNextFiveConsultas();
     }
   }, [consultas]);
 
-  
 
   return (
     <div className="h-full w-full bg-white rounded-2xl border pb-2 border-[#DCDBDB]  ">
