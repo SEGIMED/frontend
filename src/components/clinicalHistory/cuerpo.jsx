@@ -23,10 +23,12 @@ export default function ClincalCuerpo({ info }) {
   useEffect(() => {
     // Función para obtener los nombres de músculos en inglés
     const getMuscleNames = () => {
-      if (info && info.painMap && info.painMap.painAreas) {
-        const muscleData = info.painMap.painAreas.map(area => ({
-          name: 'Musculo',
-          muscles: area.painArea?.painAreaEnglish ? [area.painArea.painAreaEnglish] : [],
+      if (info && info.painMap && info.painMap?.painAreas) {
+        const muscleData = info.painMap.painAreas.map((area) => ({
+          name: "Musculo",
+          muscles: area.painArea?.painAreaEnglish
+            ? [area.painArea.painAreaEnglish]
+            : [],
         }));
         setSelectedMuscles(muscleData);
         console.log(muscleData);
@@ -36,6 +38,7 @@ export default function ClincalCuerpo({ info }) {
     getMuscleNames();
   }, [info]);
 
+  console.log(info);
   const handlePainSelection = (selection) => {
     setIsPain(selection === "Si");
   };
@@ -62,11 +65,9 @@ export default function ClincalCuerpo({ info }) {
               name={"modelType"}
             />
           </div>
-          {info.painMap.painAreas.length > 0 &&
-            info.painMap.painAreas.map((muscle, index) => (
-              <div
-                key={index}
-                className="flex flex-col gap-2 w-full py-3 px-7">
+          {info.painMap?.painAreas.length > 0 &&
+            info.painMap?.painAreas?.map((muscle, index) => (
+              <div key={index} className="flex flex-col gap-2 w-full py-3 px-7">
                 <label
                   className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
                   htmlFor={`muscle-note-${index}`}>
@@ -98,7 +99,7 @@ export default function ClincalCuerpo({ info }) {
                   options={["Horas", "Días", "Semanas"]}
                   name={"painTime"}
                   disabled={true}
-                  selectedOptions={info?.painMap.painDuration}
+                  selectedOptions={info?.painMap?.painDuration}
                 />
                 <div className="w-[90%] md:w-[80%]  flex flex-col">
                   <div className="items-center  space-x-2 flex">
@@ -182,19 +183,19 @@ export default function ClincalCuerpo({ info }) {
                   text2={"Seleccione tipo de dolor"}
                   name={"painType"}
                   disabled={true}
-                  selectedOptions={info?.painMap.painType}
+                  selectedOptions={info?.painMap?.painType}
                 />
                 <ButtonNext
                   text={"¿Tomó analgésicos?"}
                   options={["Si", "No"]}
                   disabled={true}
-                  selectedOptions={info?.painMap.isTakingAnalgesic}
+                  selectedOptions={info?.painMap?.isTakingAnalgesic}
                 />
                 <ButtonNext
                   text={"¿Calma con analgésicos?"}
                   options={["Si", "No"]}
                   disabled={true}
-                  selectedOptions={info?.painMap.doesAnalgesicWorks}
+                  selectedOptions={info?.painMap?.doesAnalgesicWorks}
                 />
                 <DropNext
                   text={"Frecuencia del dolor"}
@@ -208,14 +209,14 @@ export default function ClincalCuerpo({ info }) {
                   text2={"Seleccione frecuencia"}
                   name={"frecuencia"}
                   disabled={true}
-                  selectedOptions={info?.painMap.painFrequency}
+                  selectedOptions={info?.painMap?.painFrequency}
                 />
                 <ButtonNext
                   text={"¿Es el peor dolor de su vida?"}
                   options={["Si", "No"]}
                   name={"peorDolor"}
                   disabled={true}
-                  selectedOptions={info?.painMap.isWorstPainEver}
+                  selectedOptions={info?.painMap?.isWorstPainEver}
                 />
               </>
             )}
