@@ -6,6 +6,7 @@ import IconConsulta from "../icons/IconConsulta";
 
 export default function Evoluciones({ pacientes }) {
   // Estado para controlar qué detalles están abiertos
+ console.log(pacientes)
   const [openDetails, setOpenDetails] = useState({});
 
   const toggleDetail = (index) => {
@@ -30,10 +31,10 @@ export default function Evoluciones({ pacientes }) {
 
                 <div className="grid grid-cols-3 w-[90%] md:w-[90%]   md:grid-cols-5 text-center md:text-left px-2 md:px-0 items-center  py-2   h-fit">
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {new Date(paciente.timestamp).toLocaleTimeString()}
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
                       month: "2-digit",
                       day: "2-digit",
                       year: "numeric",
@@ -41,10 +42,10 @@ export default function Evoluciones({ pacientes }) {
                   </div>
 
                   <div className="text-[#FF8300]">
-                    {paciente?.physician?.name} {paciente?.physician?.lastname}
+                    {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {paciente?.attendancePlace?.alias}
+                  {paciente?.appSch?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
                     {paciente?.chiefComplaint}

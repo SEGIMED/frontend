@@ -33,19 +33,19 @@ export default function TableCuerpo({ consultas }) {
                 <div className="grid text-center grid-cols-3 w-[90%] md:text-left md:grid-cols-5 items-center  py-2 bg-white z-10">
 
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {new Date(paciente.timestamp).toLocaleTimeString()}
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
                       day: "numeric",
                       month: "numeric",
                     })}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {paciente.HTP || "Sin asignar"}
+                  {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {paciente?.attendancePlace?.alias}
+                  {paciente?.appSch?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
 

@@ -25,6 +25,7 @@ export default function HomeDoc() {
         `/medical-event/get-medical-event-history?patientId=${userId}`,
         headers
       );
+      console.log("hc", response)
       if (response.data) {
         setConsultas(response.data);
       }
