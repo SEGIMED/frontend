@@ -6,7 +6,7 @@ import {
   DropdownSection,
 } from "@nextui-org/react";
 import IconOptions from "../icons/IconOptions";
-import Link from "next/link";
+import { Link } from "@nextui-org/link";
 // Ejemplo de uso con secciones/categorias
 // const categories = [
 //   {
@@ -94,27 +94,15 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
                 {category.items?.map((item, itemIndex) => (
                   <DropdownItem
                     key={itemIndex}
+                    href={item.href && item.href}
+                    onClick={item.onClick && item.onClick}
+                    className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2"
+                    startContent={item.icon}
+                    endContent={item.iconr}
                     classNames={{
                       base: "w-full p-0",
                     }}>
-                    {item.href && (
-                      <Link
-                        href={item.href}
-                        className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2">
-                        {item.icon}
-                        {item.label}
-                        {item.iconr}
-                      </Link>
-                    )}
-                    {item.onClick && (
-                      <button
-                        onClick={item.onClick}
-                        className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2">
-                        {item.icon}
-                        {item.label}
-                        {item.iconr}
-                      </button>
-                    )}
+                    {item.label}
                   </DropdownItem>
                 ))}
               </DropdownSection>
@@ -122,29 +110,16 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
           : items?.map((item, index) => (
               <DropdownItem
                 key={index}
-                className="p-0"
+                className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2"
+                href={item.href && item.href}
+                onClick={item.onClick && item.onClick}
+                startContent={item.icon}
                 classNames={{
                   base: "w-full p-0",
                   group: "p-0",
                   heading: "text-sm font-bold p-0",
                 }}>
-                {item.href ? (
-                  <Link
-                    href={item.href}
-                    className="w-full flex items-center gap-2  text-sm cursor-pointer px-4 py-3">
-                    {item.icon}
-                    {item.label}
-                    {item.iconr}
-                  </Link>
-                ) : (
-                  <button
-                    onClick={item.onClick}
-                    className="w-full flex items-center gap-2  text-sm cursor-pointer px-4 py-3">
-                    {item.icon}
-                    {item.label}
-                    {item.iconr}
-                  </button>
-                )}
+                {item.label}
               </DropdownItem>
             ))}
       </DropdownMenu>
