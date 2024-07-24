@@ -52,7 +52,6 @@ export default function DoctoresPte() {
         `/all-physicians?page=${pagination.currentPage}&limit=7&name=${searchTerm}`,
         // `/all-physicians?page=${pagination.currentPage}&limit=7`,
         { headers: { token: token } }
-
       );
       console.log(response.data);
       if (response.data) {
@@ -62,10 +61,10 @@ export default function DoctoresPte() {
           totalUsers: response.data.totalUsers,
           totalPages: response.data.totalPages,
         }));
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
       console.error(error);
     }
   };
@@ -142,7 +141,6 @@ export default function DoctoresPte() {
       <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
         {doctors?.map((doctor) => (
           <DoctorCard
-
             key={doctor.id}
             doctor={doctor}
             button={

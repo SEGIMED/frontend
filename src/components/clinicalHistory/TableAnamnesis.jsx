@@ -9,7 +9,7 @@ import InputInfo from "./InputInfo";
 export default function Anamnesis({ pacientes, subtitle }) {
   // Estado para controlar qué detalles están abiertos
   const [openDetails, setOpenDetails] = useState({});
-
+  console.log(pacientes)
   const toggleDetail = (index) => {
     setOpenDetails((prevState) => ({
       ...prevState,
@@ -31,20 +31,20 @@ export default function Anamnesis({ pacientes, subtitle }) {
                 </div></div>
                 <div className="grid grid-cols-3 md:grid-cols-5 w-[90%] items-center  py-2 bg-white  h-fit text-center md:text-start">
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {new Date(paciente.timestamp).toLocaleTimeString()}
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
                       day: "numeric",
                       month: "numeric",
                       year: "numeric"
                     })}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {paciente.HTP || "Sin asignar"}
+                  {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {paciente?.attendancePlace?.alias}
+                  {paciente?.appSch?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
 

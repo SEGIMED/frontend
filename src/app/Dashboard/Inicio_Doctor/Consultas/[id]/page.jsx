@@ -26,11 +26,12 @@ import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import { ApiSegimed2 } from "@/Api/ApiSegimed2";
+import { usePathname } from "next/navigation";
 
 const DetallePaciente = (id) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const pathname= usePathname()
   const token = Cookies.get("a");
   const userId = Cookies.get("patientId");
   console.log(userId);
@@ -424,12 +425,13 @@ const DetallePaciente = (id) => {
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
     // en revision por el backend
+    
     setMedicalEvent({
       physicianComments: data["Anotaciones de la consulta"] ? data["Anotaciones de la consulta"] : null, ///evolucion
       schedulingId: Number(scheduleId), /// el id del agendamiento
-      chiefComplaint: null, // motivo de consulta
+      chiefComplaint: data["Motivo de consulta"] ? data["Motivo de consulta"] : null, // motivo de consulta
       historyOfPresentIllness: data["Evolucion de la enfermedad"] ? data["Evolucion de la enfermedad"] : null, /// enfermedad actual
-      reviewOfSystems: null, /// revision por sistemas o sintomas
+      reviewOfSystems: data["Sintomas importantes"] || null, /// revision por sistemas o sintomas
       treatmentPlan: null, /// plan de tratamiento
       pendingDiagnosticTest: null, // test pendientes
       alarmPattern: data["Pauta de alarma"] ? data["Pauta de alarma"] : null, // patron de alarma
@@ -465,11 +467,12 @@ const DetallePaciente = (id) => {
     const fetchData = async () => {
       try {
         // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
+       
           const response1 = await ApiSegimed.get(
             `/get-preconsultation?scheduleId=${scheduleId}`,
             { headers: { token: token } }
           );
-
+        console.log("estoe es preconsulta",response1)
         setPreconsult(response1.data);
       } catch (error) {
           console.log("Este agendamiento no tiene preconsulta", error);
@@ -493,22 +496,22 @@ const DetallePaciente = (id) => {
               `/medical-event/get-medical-event-detail?scheduleId=${scheduleId}`,
               { headers: { token: token} }
             );
-            console.log(response3.data);
-            setMedicalEventExist(response3.data);
+            console.log("esto es medical event",response3.data);
+            setMedicalEventExist(response3);
             setMedicalEventId(response3.data.medicalEventId);
       } catch (error) {
             console.log("No se ah echo un diagnostico anteriormente:", error);
 
             try {
               const medicalEventPrevisional = {
-                  physicianComments: "prueba", ///evolucion
+                  physicianComments: "-", ///evolucion
                   schedulingId: Number(scheduleId), /// el id del agendamiento
-                  chiefComplaint: "prueba",// motivo de consulta
-                  historyOfPresentIllness: "prueba", /// enfermedad actual
-                  reviewOfSystems: "prueba", /// revision por sistemas o sintomas
-                  treatmentPlan: "prueba", /// plan de tratamiento
-                  pendingDiagnosticTest : "prueba", // test pendientes
-                  alarmPattern: "prueba" // patron de alarma
+                  chiefComplaint: "-",// motivo de consulta
+                  historyOfPresentIllness: "-", /// enfermedad actual
+                  reviewOfSystems: "-", /// revision por sistemas o sintomas
+                  treatmentPlan: "-", /// plan de tratamiento
+                  pendingDiagnosticTest : "-", // test pendientes
+                  alarmPattern: "-" // patron de alarma
               }
               // Cuarta petición se hacer un previsional de diagnostico para obtener el id de medical event
               const response4 = await ApiSegimed.post(
