@@ -22,6 +22,7 @@ import Ordenar from "@/components/Buttons/Ordenar";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import IconOptions from "@/components/icons/IconOptions";
+import { useRouter } from "next/navigation";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -35,9 +36,10 @@ export default function HomeDoc() {
   const consultas = useAppSelector((state) => state.schedules);
   // Obtener consultas del estado
   const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
-
+  const router = useRouter();
   // Obtener pacientes del estado
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+  router.push(`/Dashboard/Inicio_Doctor/Consultas`);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
@@ -87,7 +89,10 @@ export default function HomeDoc() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
-
+  const handleCokiePatient = (schedule,id) => {
+    Cookies.set('patientId', id, { expires: 7 }); // La cookie expirará en 7 días
+    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`);
+  }
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
@@ -159,7 +164,7 @@ export default function HomeDoc() {
                             {
                               label: "Ver consultas",
                               icon: <IconPersonalData />,
-                              href: `${rutas.Doctor}${rutas.Consultas}/${paciente.id}?patientId=${paciente.patient}`,
+                              onClick: () => handleCokiePatient(paciente.id, paciente.patient),
                             },
                           ],
                         },
