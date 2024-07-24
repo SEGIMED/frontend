@@ -63,7 +63,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                     className='flex py-2 md:py-0 justify-evenly gap-3'>
                     <BotonPreconsulta
                       label="Sí"
-                      onClick={() => onGlicemyaActive(sign, null, true)}
+                      onClick={() => onVitalSignChange(sign, null, true)}
                       active={data.active}
                     />
                     <BotonPreconsulta
@@ -85,7 +85,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                         key={index}
                         type="number"
                         className="w-full text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                        onChange={(e) => onGlicemyaActive(sign, e.target.value, null, `option${index}`)}
+                        onChange={(e) => onVitalSignChange(sign, Number(e.target.value), null, `option${index}`)}
                       />
                     ))}
                   </div>
