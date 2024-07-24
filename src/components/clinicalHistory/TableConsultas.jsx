@@ -26,6 +26,8 @@ const PriorityIcon = ({ priority }) => {
 const handleStatus = (id) => {};
 
 export default function TableConsultas({ consultas }) {
+  const data=consultas?.appSch?.patientUser?.userHpGroups[0]
+  console.log("HTP",data)
   return (
     <div className="h-full flex flex-col">
       {consultas?.map((paciente, index) => (
@@ -39,18 +41,18 @@ export default function TableConsultas({ consultas }) {
           </div>
           <div className="text-center w-[80%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
             <div className="text-[#5F5F5F]">
-              {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+              {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
               })}
             </div>
             <div className="text-[#5F5F5F] hidden md:block">
-              {new Date(paciente.timestamp).toLocaleTimeString()}
+              {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
             </div>
-            <p className="text-[#FF8300] ">{paciente?.medicalSpecialty}</p>
+            <p className="text-[#FF8300] ">{paciente?.appSch?.patientUser?.userHpGroups[0]?.catHpGroup?.name}</p>
             <div className="text-[#5F5F5F]">
-              {paciente?.attendancePlace?.alias}
+              {paciente?.appSch?.attendancePlace?.alias}
             </div>
             <div className="text-[#5F5F5F] hidden md:block line-clamp-2">
               {paciente?.chiefComplaint}

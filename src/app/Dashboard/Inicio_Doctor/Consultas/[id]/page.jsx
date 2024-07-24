@@ -26,15 +26,16 @@ import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import { ApiSegimed2 } from "@/Api/ApiSegimed2";
+import { usePathname } from "next/navigation";
 
 const DetallePaciente = (id) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const pathname= usePathname()
   const token = Cookies.get("a");
   const scheduleId = id.params.id; // id de agendamiento
   const queryParams = new URLSearchParams(location.search);
-
+ console.log("PATHNAME",pathname)
   // Obtén el valor de patientId
   const userId = queryParams.get('patientId');
 
@@ -465,11 +466,12 @@ const DetallePaciente = (id) => {
     const fetchData = async () => {
       try {
         // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
+       
           const response1 = await ApiSegimed.get(
             `/get-preconsultation?scheduleId=${scheduleId}`,
             { headers: { token: token } }
           );
-
+        console.log("estoe es preconsulta",response1)
         setPreconsult(response1.data);
       } catch (error) {
           console.log("Este agendamiento no tiene preconsulta", error);
@@ -490,8 +492,8 @@ const DetallePaciente = (id) => {
               `/medical-event/get-medical-event-detail?scheduleId=${scheduleId}`,
               { headers: { token: token} }
             );
-            console.log(response3.data);
-            setMedicalEventExist(response3.data);
+            console.log("esto es medical event",response3.data);
+            setMedicalEventExist(response3);
             setMedicalEventId(response3.data.medicalEventId);
       } catch (error) {
             console.log("No se ah echo un diagnostico anteriormente:", error);
