@@ -155,20 +155,21 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
     setPainLevel(value);
     onBodyChange("painScale", value);
   };
-
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border-t border-b cursor-pointer">
-          <div />
+        <summary className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+          <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
+              <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
-          <div>
-            <IconArrowDetailDown />
+          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
+            <IconArrowDetailDown/>
           </div>
         </summary>
         <div className="flex flex-col items-center justify-center w-full md:flex-row md:items-start ">
@@ -214,7 +215,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
               ))}
           </div>
           <div className="sticky top-0 items-center w-full md:w-1/2">
-            <div className="flex flex-col md:items-start items-center gap-3 py-4 ">
+            <div className="flex flex-col items-center gap-3 py-4 md:items-start ">
               <div>
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}

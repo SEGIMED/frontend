@@ -47,11 +47,11 @@ export default function DropClaseFuncional({ text, options, text2, name, selecte
     setIsOpen(!isOpen);
   };
   return (
-    <div>
+    <div className="w-full">
       <div className='flex items-center justify-center'>
         <div className="mb-2 font-bold ">{text}</div>
       </div>
-      <Dropdown className="emptyContent">
+      <Dropdown className=" emptyContent">
         <DropdownTrigger
           style={{
             color: "#5F5F5F",
@@ -62,7 +62,7 @@ export default function DropClaseFuncional({ text, options, text2, name, selecte
 
             <Button
               variant="bordered"
-              className="capitalize"
+              className="capitalize max-sm:w-48"
               style={{
                 color: "#5F5F5F",
                 borderColor: "#DCDBDB",
@@ -79,7 +79,7 @@ export default function DropClaseFuncional({ text, options, text2, name, selecte
             disallowEmptySelection
             selectionMode="single"
             selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
-            style={{ width: "250px" }}
+            classNames="w-full"
             onSelectionChange={(keys) =>
               handleSelectionChange(Array.from(keys)[0])
             

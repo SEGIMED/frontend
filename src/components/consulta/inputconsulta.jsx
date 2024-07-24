@@ -35,7 +35,7 @@ export default function InputConsulta({
   const [
     groupPatientPulmonaryHypertensionRisksButton,
     setGroupPatientPulmonaryHypertensionButton,
-  ] = useState([]);
+  ] = useState();
   const[isOpen, setIsOpen] = useState(defaultOpen);
   useEffect(() => {
     if (paciente?.patientCardiovascularRisks?.risk) {
@@ -44,10 +44,12 @@ export default function InputConsulta({
     if (paciente?.patientSurgicalRisks?.risk) {
       setRiskSurgicalButton(paciente?.patientSurgicalRisks?.risk);
     }
-    if (paciente?.patientPulmonaryHypertensionGroups?.group) {
-      console.log(paciente?.patientPulmonaryHypertensionGroups?.group);
+    /*if (paciente?.patientPulmonaryHypertensionGroups?.group) { //esto es la logica de elegir varios botones del grupo a la vez
       const group = paciente.patientPulmonaryHypertensionGroups.group;
       setGroupPatientPulmonaryHypertensionButton([group]);
+    }*/
+   if (paciente?.patientPulmonaryHypertensionGroups?.group) {
+      setGroupPatientPulmonaryHypertensionButton(paciente?.patientPulmonaryHypertensionGroups?.group);
     }
     setValuesBackground([
       paciente?.backgrounds?.surgicalBackground,
@@ -60,7 +62,6 @@ export default function InputConsulta({
       paciente?.backgrounds?.vaccinationBackground,
     ]);
   }, [paciente]);
-  console.log(groupPatientPulmonaryHypertensionRisksButton);
   useEffect(() => {
     setValuesAmnesis([
       preconsult?.consultationReason,
@@ -78,7 +79,7 @@ export default function InputConsulta({
     setRiskSurgicalButton(sub);
     if (onRiskChange2) onRiskChange2(IdRiskSurgical(sub));
   };
-
+/* //esto es la logica de elegir varios botones del grupo a la vez
   const handleGroupChange = (sub) => {
     const updatedSelection = groupPatientPulmonaryHypertensionRisksButton.includes(sub)
       ? groupPatientPulmonaryHypertensionRisksButton.filter(item => item !== sub)
@@ -87,21 +88,28 @@ export default function InputConsulta({
     setGroupPatientPulmonaryHypertensionButton(updatedSelection);
     if (onGroupChange) onGroupChange(updatedSelection.map(RomanToInt));
   };
+*/ 
+const handleGroupChange = (sub) => {
+    
+  setGroupPatientPulmonaryHypertensionButton(sub);
+  if (onGroupChange) onGroupChange(RomanToInt(sub));
+};
 
   const { register } = useFormContext();
 
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-1 px-6 py-2 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <summary className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center ">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
+              <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
-          <div className={isOpen ? "rotate-180" : ""}>
+          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
             <IconArrowDetailDown />
           </div>
         </summary>
@@ -217,19 +225,20 @@ export default function InputConsulta({
                 <button
                   key={index}
                   className={`p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2 ${
-                    groupPatientPulmonaryHypertensionRisksButton.includes(sub)
+                    //groupPatientPulmonaryHypertensionRisksButton.includes(sub) //esto es la logica de elegir varios botones del grupo a la vez
+                      groupPatientPulmonaryHypertensionRisksButton === sub
                       ? "bg-primary text-white"
                       : "bg-white"
                   }`}
                   onClick={(event) => {
                     event.preventDefault();
                     handleGroupChange(sub);
-                    console.log(groupPatientPulmonaryHypertensionRisksButton.includes(sub));
                   }}
                 >
                   <IconPreConsulta
                     color={
-                      groupPatientPulmonaryHypertensionRisksButton.includes(sub)
+                      //groupPatientPulmonaryHypertensionRisksButton.includes(sub) //esto es la logica de elegir varios botones del grupo a la vez
+                      groupPatientPulmonaryHypertensionRisksButton === sub
                         ? "#ffffff"
                         : "#808080"
                     }
@@ -250,7 +259,7 @@ export default function InputConsulta({
               {sub}
             </label>
             <textarea
-              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
+              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]"
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
               defaultValue={

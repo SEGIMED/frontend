@@ -1,13 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useEffect, useState } from "react";
-import rutas from "@/utils/rutas";
 import Cookies from "js-cookie";
-import ruteActual from "../../../../../components/images/ruteActual.png";
-import backChanges from "../../../../../components/images/backChanges.png";
 import Consulta from "@/components/consulta/dataconsulta";
 import InputConsulta from "@/components/consulta/inputconsulta";
 import InputFile from "@/components/consulta/inputfile";
@@ -28,40 +24,50 @@ import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
 import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
+import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
+import { ApiSegimed2 } from "@/Api/ApiSegimed2";
 
 const DetallePaciente = (id) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const userId = id.params.id;
-  const scheduleId = 1; // revisar por que cambiar por params
-  const medicalEventId = 22; // revisar por que cambiar por params
+
+  const token = Cookies.get("a");
+  const scheduleId = id.params.id; // id de agendamiento
+  const queryParams = new URLSearchParams(location.search);
+
+  // Obtén el valor de patientId
+  const userId = queryParams.get('patientId');
+
+  const [medicalEventId, setMedicalEventId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
-  const [physicalExamination, setPhysicalExamination] = useState({
-    physicalSubsystemId: null,
-    description: "",
-    medicalEventId: null,
-  });
+  console.log(preconsult);
+  const [physicalExamination, setPhysicalExamination] = useState();
+  const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
   const [preconsultPhysical, setPreconsultPhysical] = useState();
   const [cardiovascularRisk, setCardiovascularRisk] = useState();
   const [surgicalRisk, setSurgicalRisk] = useState();
   const [hpGroup, setHpGroup] = useState();
   const [background, setBackground] = useState();
+  const [backgroundPatch, setBackgroundPatch] = useState();
   const [diagnostic, setDiagnostic] = useState();
   const [selectedRisk, setSelectedRisk] = useState();
   const [selectedRisk2, setSelectedRisk2] = useState();
   const [selectedGroup, setSelectedGroup] = useState();
   const [heartFailureRisk, setHeartFailureRisk] = useState();
   const [medicalEvent, setMedicalEvent] = useState();
+  const [medicalEventExist, setMedicalEventExist] = useState();
+  const [medicalEventPatch, setMedicalEventPatch] = useState();
   const [tests, setTests] = useState({});
+  const [handleNav, setHandleNav] = useState("");
 
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
-  console.log(patient);
   console.log(hpGroup);
+  console.log(patient);
   const bodyOBJFormat = {
     painOwnerId: Number(userId),
     schedulingId: Number(scheduleId),
@@ -134,6 +140,86 @@ const DetallePaciente = (id) => {
     });
   };
 
+  useEffect(() => {
+    setTests({
+      laboratoryResults: {
+        title: "Resultados de laboratorio",
+        file: preconsult?.laboratoryResults || null,
+        description: "",
+        active: false,
+      },
+      electrocardiogram: {
+        title: "Electrocardiograma",
+        file: preconsult?.electrocardiogram || null,
+        description: "",
+        active: false,
+      },
+      rxThorax: {
+        title: "RX de Torax",
+        file: preconsult?.rxThorax || null,
+        description: "",
+        active: false,
+      },
+      echocardiogram: {
+        title: "Ecocardiograma",
+        file: preconsult?.echocardiogram || null,
+        description: "",
+        active: false,
+      },
+      walkTest: {
+        title: "Test de caminata",
+        file: preconsult?.walkTest || null,
+        description: "",
+        active: false,
+      },
+      respiratoryFunctional: {
+        title: "Funcional respiratorio",
+        file: preconsult?.respiratoryFunctional || null,
+        description: "",
+        active: false,
+      },
+      tomographies: {
+        title: "Tomografías",
+        file: preconsult?.tomographies || null,
+        description: "",
+        active: false,
+      },
+      rightHeartCatheterization: {
+        title: "Cateterismo cardiaco derecho",
+        file: preconsult?.rightHeartCatheterization || null,
+        description: "",
+        active: false,
+      },
+      ccg: {
+        title: "CCG (Coronariografia)",
+        file: preconsult?.ccg || null,
+        description: "",
+        active: false,
+      },
+      resonance: {
+        title: "Resonancia",
+        file: preconsult?.resonance || null,
+        description: "",
+        active: false,
+      },
+      leftHeartCatheterization: {
+        title: "Cateterismo cardiaco izquierdo",
+        file: preconsult?.leftHeartCatheterization || null,
+        description: "",
+        active: false,
+      },
+      otherStudies: {
+        title: "Otros estudios",
+        file: preconsult?.otherStudies || null,
+        description: "",
+      },
+      pendingStudies: {
+        title: "Estudios pendientes",
+        description: preconsult?.pendingStudies || "",
+      },
+    });
+  }, [preconsult]);
+  
   const onSubmit = (data) => {
     console.log(data);
     //Antecedentes
@@ -142,38 +228,63 @@ const DetallePaciente = (id) => {
       medicalEventId: Number(medicalEventId),
       allergicBackground:
         data["Alergias"] === ""
-          ? patient?.backgrounds?.allergicBackground
+          ? ""
           : data["Alergias"],
       familyBackground:
         data["Antecedentes familiares"] === ""
-          ? patient?.backgrounds?.familyBackground
+          ? ""
           : data["Antecedentes familiares"],
       nonPathologicBackground:
         data["Antecedentes no patologicos"] === ""
-          ? patient?.backgrounds?.nonPathologicBackground
+          ? ""
           : data["Antecedentes no patologicos"],
       pathologicBackground:
         data["Antecedentes patologicos"] === ""
-          ? patient?.backgrounds?.pathologicBackground
+          ? ""
           : data["Antecedentes patologicos"],
       pediatricBackground:
         data["Antecedentes de infancia"] === ""
-          ? patient?.backgrounds?.pediatricBackground
+          ? ""
           : data["Antecedentes de infancia"],
       pharmacologicalBackground:
         data["Medicación actual"] === ""
-          ? patient?.backgrounds?.pharmacologicalBackground
+          ? ""
           : data["Medicación actual"],
       surgicalBackground:
         data["Antecedentes quirúrgicos"] === ""
-          ? patient?.backgrounds?.surgicalBackground
+          ? ""
           : data["Antecedentes quirúrgicos"],
       vaccinationBackground:
         data["Vacunas"] === ""
-          ? patient?.backgrounds?.vaccinationBackground
+          ? ""
           : data["Vacunas"],
+      schedulingId: Number(scheduleId),
     });
-
+    if(patient.backgrounds){
+    const backgroundPatch = {
+      id: Number(patient.backgrounds.id),
+    };
+    
+    // Función para agregar campos condicionalmente al objeto
+    const addBackgroundField = (field, fieldName) => {
+      if (data[field] && data[field] !== "") {
+        backgroundPatch[fieldName] = data[field];
+      }
+    };
+    
+    // Agregar cada campo condicionalmente
+    addBackgroundField("Alergias", "allergicBackground");
+    addBackgroundField("Antecedentes familiares", "familyBackground");
+    addBackgroundField("Antecedentes no patologicos", "nonPathologicBackground");
+    addBackgroundField("Antecedentes patologicos", "pathologicBackground");
+    addBackgroundField("Antecedentes de infancia", "pediatricBackground");
+    addBackgroundField("Medicación actual", "pharmacologicalBackground");
+    addBackgroundField("Antecedentes quirúrgicos", "surgicalBackground");
+    addBackgroundField("Vacunas", "vaccinationBackground");
+    
+    // Llamar a setBackgroundPatch con el objeto construido dinámicamente
+    setBackgroundPatch(backgroundPatch);
+}
     //preconsulta
     setPreconsultPhysical({
       patient: Number(userId),
@@ -237,7 +348,6 @@ const DetallePaciente = (id) => {
           schedulingId: null, /// id del scheduling si se crea en preconsulta
           medicalEventId: 4, /// id del medical event si se crea durante medical event
         },
-
         {
           patientId: userId,
           measureType: 5,
@@ -245,7 +355,6 @@ const DetallePaciente = (id) => {
           schedulingId: null,
           medicalEventId: 4,
         },
-
         {
           patientId: userId,
           measureType: 6,
@@ -295,6 +404,12 @@ const DetallePaciente = (id) => {
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
       medicalEventId: Number(medicalEventId),
     });
+    if(medicalEventExist?.physicalExaminations[0]?.id){
+    setPhysicalExaminationPatch({
+      physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
+      description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
+      id: Number(medicalEventExist.physicalExaminations[0].id),
+    });}
     setDiagnostic({
       patientId: Number(userId),
       diseaseId: 3,
@@ -312,267 +427,219 @@ const DetallePaciente = (id) => {
     });
     // en revision por el backend
     setMedicalEvent({
-      physicianComments: data["Anotaciones de la consulta"], ///evolucion
+      physicianComments: data["Anotaciones de la consulta"] ? data["Anotaciones de la consulta"] : null, ///evolucion
       schedulingId: Number(scheduleId), /// el id del agendamiento
       chiefComplaint: null, // motivo de consulta
-      historyOfPresentIllness: data["Evolucion de la enfermedad"], /// enfermedad actual
+      historyOfPresentIllness: data["Evolucion de la enfermedad"] ? data["Evolucion de la enfermedad"] : null, /// enfermedad actual
       reviewOfSystems: null, /// revision por sistemas o sintomas
       treatmentPlan: null, /// plan de tratamiento
       pendingDiagnosticTest: null, // test pendientes
-      alarmPattern: data["Pauta de alarma"], // patron de alarma
+      alarmPattern: data["Pauta de alarma"] ? data["Pauta de alarma"] : null, // patron de alarma
     });
+    setMedicalEventPatch({
+      id: Number(medicalEventExist?.id),
+    })
+    if(medicalEventExist){
+      const medicalEventPatch = {
+        id: Number(medicalEventExist.medicalEventId),
+      };
+      
+      // Función para agregar campos condicionalmente al objeto
+      const addMedicalEventField = (field, fieldName) => {
+        if (data[field] && data[field] !== "") {
+          medicalEventPatch[fieldName] = data[field];
+        }
+      };
+      
+      // Agregar cada campo condicionalmente
+      addMedicalEventField("Anotaciones de la consulta", "physicianComments");
+      addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
+      addMedicalEventField("alarmPattern", "Pauta de alarma");
+      
+      // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
+      setMedicalEventPatch(medicalEventPatch);
+  }
   };
 
   useEffect(() => {
-    const token = Cookies.get("a");
     const fetchData = async () => {
       try {
-        const [response1, response2, response3] = await Promise.all([
-          ApiSegimed.get(`/patient-details?id=${userId}`, {
-            headers: { token: token },
-          }),
-          ApiSegimed.get(
-            `/get-all-pateint-preconsultation?patientId=${userId}`,
+        // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
+          const response1 = await ApiSegimed.get(
+            `/get-preconsultation?scheduleId=${scheduleId}`,
             { headers: { token: token } }
-          ),
-        ]);
+          );
 
-        console.log(response2.data);
-        setPreconsult(response2.data[0]);
-        setPatient(response1.data);
-        setTests({
-          laboratoryResults: {
-            title: "Resultados de laboratorio",
-            file: response2.data[0].laboratoryResults || null,
-            description: "",
-            active: false,
-          },
-          electrocardiogram: {
-            title: "Electrocardiograma",
-            file: response2.data[0].electrocardiogram || null,
-            description: "",
-            active: false,
-          },
-          rxThorax: {
-            title: "RX de Torax",
-            file: response2.data[0].rxThorax || null,
-            description: "",
-            active: false,
-          },
-          echocardiogram: {
-            title: "Ecocardiograma",
-            file: response2.data[0].echocardiogram || null,
-            description: "",
-            active: false,
-          },
-          walkTest: {
-            title: "Test de caminata",
-            file: response2.data[0].walkTest || null,
-            description: "",
-            active: false,
-          },
-          respiratoryFunctional: {
-            title: "Funcional respiratorio",
-            file: response2.data[0].respiratoryFunctional || null,
-            description: "",
-            active: false,
-          },
-          tomographies: {
-            title: "Tomografías",
-            file: response2.data[0].tomographies || null,
-            description: "",
-            active: false,
-          },
-          rightHeartCatheterization: {
-            title: "Cateterismo cardiaco derecho",
-            file: response2.data[0].rightHeartCatheterization || null,
-            description: "",
-            active: false,
-          },
-          ccg: {
-            title: "CCG (Coronariografia)",
-            file: response2.data[0].ccg || null,
-            description: "",
-            active: false,
-          },
-          resonance: {
-            title: "Resonancia",
-            file: response2.data[0].resonance || null,
-            description: "",
-            active: false,
-          },
-          leftHeartCatheterization: {
-            title: "Cateterismo cardiaco izquierdo",
-            file: response2.data[0].leftHeartCatheterization || null,
-            description: "",
-            active: false,
-          },
-          otherStudies: {
-            title: "Otros estudios",
-            file: response2.data[0].otherStudies || null,
-            description: "",
-          },
-          pendingStudies: {
-            title: "Estudios pendientes",
-            description: response2.data[0].pendingStudies || "",
-          },
-        });
+        setPreconsult(response1.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+          console.log("Este agendamiento no tiene preconsulta", error);
+      };
+      try {  
+      // Segunda petición utilizando el userId de la primera respuesta - esto pide el paciente
+      const response2 = await ApiSegimed.get(
+        `/patient-details?id=${userId}`,
+        { headers: { token: token } }
+      );
+      setPatient(response2.data);
+      } catch (error) {
+      console.log("No existe este paciente", error);
+      };    
+      try {
+            // Tercera petición utilizando el scheduleId de params - esto pide el historial medico para saber siya hay diagnostico
+            const response3 = await ApiSegimed.get(
+              `/medical-event/get-medical-event-detail?scheduleId=${scheduleId}`,
+              { headers: { token: token} }
+            );
+            console.log(response3.data);
+            setMedicalEventExist(response3.data);
+            setMedicalEventId(response3.data.medicalEventId);
+      } catch (error) {
+            console.log("No se ah echo un diagnostico anteriormente:", error);
+
+            try {
+              const medicalEventPrevisional = {
+                  physicianComments: "prueba", ///evolucion
+                  schedulingId: Number(scheduleId), /// el id del agendamiento
+                  chiefComplaint: "prueba",// motivo de consulta
+                  historyOfPresentIllness: "prueba", /// enfermedad actual
+                  reviewOfSystems: "prueba", /// revision por sistemas o sintomas
+                  treatmentPlan: "prueba", /// plan de tratamiento
+                  pendingDiagnosticTest : "prueba", // test pendientes
+                  alarmPattern: "prueba" // patron de alarma
+              }
+              // Cuarta petición se hacer un previsional de diagnostico para obtener el id de medical event
+              const response4 = await ApiSegimed.post(
+                `/medical-event/create-event`,medicalEventPrevisional,
+                { headers: { token: token } }
+              );
+              console.log(response4.data.medicalEvent.id);
+              setMedicalEventId(response4.data.medicalEvent.id);
+              
+            } catch (error) {
+              console.log("No se ah realizado el previsional de diagnostico:", error);
+          }  }
       }
-    };
+      console.log(medicalEvent);
 
     fetchData();
-  }, []);
+  }, [userId, scheduleId, token]);
   const handleBodyChange = (name, value) => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
 
   const handleSave = async () => {
-    const token = Cookies.get("a");
     setLoading(true);
-    //ruta de antecedentes = funciona mal por que falta el id de medical event
-    /*
-    let response1;
-    if (patient?.backgrounds?.length === 0 || patient?.backgrounds === null) {
-      response1 = await ApiSegimed.post(
-        `/backgrounds/update-backgrounds`,
-        background,
-        { headers: { token: token } }
-      );
-      console.log(response1);
-    } else {
-      response1 = await ApiSegimed.patch(
-        `/backgrounds/update-backgrounds?id=${userId}`,
-        background,
-        { headers: { token: token } }
-      );
-      console.log(response1);
-    }
-    */
-
-    // riego cardiovascular en Antecedente = funcionan las dos rutas
-
-    let response2;
-    if (patient?.patientCardiovascularRisks[0]?.length === 0) {
-      response2 = await ApiSegimed.post(
-        `/patient-new-cardiovascular-risk`,
-        cardiovascularRisk,
-        { headers: { token: token } }
-      );
-      console.log(response2);
-    } else {
-      response2 = await ApiSegimed.patch(
-        `/patient-update-cardiovascular-risk`,
-        cardiovascularRisk,
-        { headers: { token: token } }
-      );
-      console.log(response2);
-    }
-
-    // riego quirurgico en Antecedente = funcionan las dos rutas
-
-    let response3;
-    if (patient?.patientSurgicalRisks === null) {
-      response3 = await ApiSegimed.post(
-        `/patient-new-surgical-risk`,
-        surgicalRisk,
-        { headers: { token: token } }
-      );
-      console.log(response3);
-    } else {
-      response3 = await ApiSegimed.patch(
-        `/patient-update-surgical-risk`,
-        surgicalRisk,
-        { headers: { token: token } }
-      );
-      console.log(response3);
-    }
-    /*
-      
-    //grupo Hipertension Pulmonar en Antecedente - funciona mal por que deberia poder recibir un array de ids
-    let response4;
-    if (patient?.patientPulmonaryHypertensionGroups === null) {
-      response4 = await ApiSegimed.post(`/patient-new-hp-group`, hpGroup, {
-        headers: { token: token },
-      });
-      console.log(response4);
-    } else {
-      response4 = await ApiSegimed.patch(`/patient-update-hp-group`, hpGroup, {
-        headers: { token: token },
-      });
-      console.log(response4);
-    }
-
     
-    //no tengo forma de saber el medical event id para hacer el post o patch
-    let response5;
-    if(physicalExamination?.description === ""){
-      response5 = await ApiSegimed.post(`/patient-physical-examination`,physicalExamination, {headers: { token: token },})
-    }else {
-    response5 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`,physicalExamination, {headers: { token: token },})
-    }
-    console.log(response5);
-
-  console.log(heartFailureRisk);
-  console.log(patient);
-  // clase funcional - funciona mal con el paciente 73
-    let response6;
-    if(patient?.patientPulmonaryHypertensionRisks === null){
-      response6 = await ApiSegimed.post(`/patient-new-nyha-classification`,heartFailureRisk, {headers: { token: token },})
-    }else {
-    response6 = await ApiSegimed.patch(`/patient-update-nyha-classification`,heartFailureRisk, {headers: { token: token },})
-    }
-    console.log(response6);
-  */
-
-    let response7;
-    //parece responde bien preconsulta
-    console.log(preconsultPhysical);
-    if (preconsult?.length === 0) {
-      response7 = await ApiSegimed.post(
-        `/pre-consultation`,
-        preconsultPhysical,
-        { headers: { token: token } }
-      );
-      console.log(response7);
+    const responses = [];
+  
+    // Ruta de antecedentes
+    console.log(background);
+    let response1;
+    if(background!==undefined){
+    if (patient?.backgrounds?.length === 0 || patient?.backgrounds === null) {
+      response1 = await ApiSegimed.post(`/backgrounds/create-backgrounds`, background, { headers: { token: token } });
     } else {
-      response7 = await ApiSegimed.patch(
-        `/update-pre-consultation`,
-        preconsultPhysical,
-        { headers: { token: token } }
-      );
-      console.log(response7);
+      response1 = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`, backgroundPatch, { headers: { token: token } });
+    }}
+    if(response1 !== undefined){responses.push(response1);}
+  
+    // Riesgo cardiovascular
+    let response2;
+    if (patient?.patientCardiovascularRisks === null && cardiovascularRisk.riskId > 0) {
+      response2 = await ApiSegimed.post(`/patient-new-cardiovascular-risk`, cardiovascularRisk, { headers: { token: token } });
+    } else if(cardiovascularRisk.riskId > 0){
+      response2 = await ApiSegimed.patch(`/patient-update-cardiovascular-risk`, cardiovascularRisk, { headers: { token: token } });
     }
-    /*
-    //falta el patch pero solo puedo si hay ruta get medical event por idSchedule 
-    console.log(diagnostic);
-    const response2 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, {
-      headers: { token: token },
- 
-    });
-    console.log(response2);
-
-    // va a funcionar bien con el id Schedule
-    console.log(medicalEvent);
-    const response3 = await ApiSegimed.post(`/medical-event/create-event`, medicalEvent, {
-      headers: { token: token },
-    });
-    console.log(response3);
-     
-*/
-
-    if (
-      /*response1.status === 200 && */ response2.status === 200 &&
-      response3.status === 200 &&
-      response7.status === 200
-    ) {
-      //me falta el id Schedule
-      /*const data = await ApiSegimed.patch(
-        `/patient-diagnostic/${idSchedule}`,{schedulingStatus:2},{
-          headers: { token: token },
+    if(response2 !== undefined){responses.push(response2);}
+  
+    // Riesgo quirúrgico
+    let response3;
+    if (patient?.patientSurgicalRisks === null && surgicalRisk.surgicalRiskId > 0) {
+      response3 = await ApiSegimed.post(`/patient-new-surgical-risk`, surgicalRisk, { headers: { token: token } });
+    } else if (surgicalRisk.surgicalRiskId > 0) {
+      response3 = await ApiSegimed.patch(`/patient-update-surgical-risk`, surgicalRisk, { headers: { token: token } });
+    }
+    if(response3 !== undefined){responses.push(response3);}
+  
+    // Grupo de hipertensión pulmonar
+    let response4;
+    if (patient?.patientPulmonaryHypertensionGroups === null && hpGroup.hpGroupId > 0) {
+      response4 = await ApiSegimed.post(`/patient-new-hp-group`, hpGroup, { headers: { token: token } });
+    } else if(hpGroup.hpGroupId > 0){
+      response4 = await ApiSegimed.patch(`/patient-update-hp-group`, hpGroup, { headers: { token: token } });
+    }
+    if(response4 !== undefined){responses.push(response4);}
+  
+    // Examen físico
+    let response5;
+    console.log(physicalExamination);
+    if(!physicalExamination?.physicalSubsystemId === 0){
+    if(medicalEventExist?.physicalExaminations?.length === 0 || medicalEventExist?.physicalExaminations === null) {
+      response5 = await ApiSegimed.post(`/patient-physical-examination`, physicalExamination, { headers: { token: token } });
+    } else {
+      response5 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`, physicalExaminationPatch, { headers: { token: token } });
+    }}
+    if(response5 !== undefined){responses.push(response5);}
+  
+    // Riesgo de insuficiencia cardíaca
+    let response6;
+    if(patient?.patientPulmonaryHypertensionRisks === null && heartFailureRisk.heartFailureRiskId > 0) {
+      response6 = await ApiSegimed.post(`/patient-new-nyha-classification`, heartFailureRisk, { headers: { token: token } });
+    } else if(heartFailureRisk.heartFailureRiskId > 0) {
+      response6 = await ApiSegimed.patch(`/patient-update-nyha-classification`, heartFailureRisk, { headers: { token: token } });
+    }
+    if(response6 !== undefined){responses.push(response6);}
+  
+    // Preconsulta
+    let response7;
+    if (preconsult?.length === 0) {
+      response7 = await ApiSegimed.post(`/pre-consultation`, preconsultPhysical, { headers: { token: token } });
+    } else {
+      response7 = await ApiSegimed.patch(`/update-pre-consultation`, preconsultPhysical, { headers: { token: token } });
+    }
+    if(response7 !== undefined){responses.push(response7);}
+  
+    // Diagnóstico
+    let response8;
+    if(diagnostic !== undefined){
+      response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, { headers: { token: token } });
+    }
+    if(response8 !== undefined){responses.push(response8);}
+  
+    // Evento médico
+    /*let response9; //no se hace post por q para que funcione se precrea el medical event
+    console.log(response9);
+    if(medicalEvent !== undefined){
+      if(medicalEvent.alarmPattern === null || medicalEvent.pendingDiagnosticTest === null || medicalEvent.treatmentPlan === null || medicalEvent.reviewOfSystems === null || medicalEvent.historyOfPresentIllness === null || medicalEvent.physicianComments === null || medicalEvent.chiefComplaint === null){
+        if(medicalEvent.alarmPattern === null && medicalEvent.pendingDiagnosticTest === null && medicalEvent.treatmentPlan === null && medicalEvent.reviewOfSystems === null && medicalEvent.historyOfPresentIllness === null && medicalEvent.physicianComments === null && medicalEvent.chiefComplaint === null){
+          console.log("object vacio");
+        } else {
+          response9 = await ApiSegimed.post(`/medical-event/create-event`, medicalEvent, { headers: { token: token } });
         }
-      ) */ //cambia es estatus de la consulta --- hay q esperar que la preconsulta traiga el id
+      }
+    }
+    if(response9 !== undefined){ responses.push(response9);}
+    */
+   // solo post
+    let response9;
+    console.log(medicalEventPatch);
+    if(medicalEventPatch !== undefined){
+      if(medicalEvent.alarmPattern === null || medicalEvent.pendingDiagnosticTest === null || medicalEvent.treatmentPlan === null || medicalEvent.reviewOfSystems === null || medicalEvent.historyOfPresentIllness === null || medicalEvent.physicianComments === null || medicalEvent.chiefComplaint === null){
+        if(medicalEvent.alarmPattern === null && medicalEvent.pendingDiagnosticTest === null && medicalEvent.treatmentPlan === null && medicalEvent.reviewOfSystems === null && medicalEvent.historyOfPresentIllness === null && medicalEvent.physicianComments === null && medicalEvent.chiefComplaint === null){
+          console.log("object vacio");
+        } else {
+          response9 = await ApiSegimed.patch(`/medical-event/update-event`, medicalEventPatch, { headers: { token: token } });
+        }
+      }
+    }
+    if(response9 !== undefined){ responses.push(response9);}
+    // Verificar todas las respuestas
+    const allSuccessful = responses.every(response => response?.status === 200);
+
+    console.log(allSuccessful);
+    if (allSuccessful) {
+      const data = await ApiSegimed.patch(`/schedule/${scheduleId}`, { schedulingStatus: 2 }, { headers: { token: token } });
+      console.log(data);
       setLoading(false);
       Swal.fire({
         icon: "success",
@@ -589,32 +656,21 @@ const DetallePaciente = (id) => {
       });
     }
   };
-  if (!userId) {
-    return <div>Cargando...</div>;
-  }
 
+  const handleClic = (title) => {
+    if (handleNav === title) {
+      setHandleNav("");
+    }else{
+    setHandleNav(title);
+  }
+  };
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
-        <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece] bg-white">
-          <div className="flex items-center ">
-            <Image src={ruteActual} alt="ruta actual" />
-            <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
-              Detalle de consulta
-            </p>
-          </div>
-          <div>
-            <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-              <button className="flex rounded-xl items-center  px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1 ">
-                <Image src={backChanges} alt="regresar" />
-                Regresar
-              </button>
-            </Link>
-          </div>
-        </div>
+        <SubNavbarConsulta handleClic={handleClic}/>
         {loading === false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
-            <Consulta title={"Datos del paciente"} paciente={patient} />
+            <Consulta title={"Datos del paciente"} paciente={patient} defaultOpen = {handleNav === "datos del paciente" ? true : false}/>
             <InputConsulta
               title={"Antecedentes"}
               risk={["Riesgo cardiovascular"]}
@@ -633,6 +689,7 @@ const DetallePaciente = (id) => {
                 "Alergias",
                 "Vacunas",
               ]}
+              defaultOpen = {handleNav === "antecedentes" ? true : false}
               paciente={patient}
               onRiskChange={setSelectedRisk}
               onRiskChange2={setSelectedRisk2}
@@ -646,18 +703,22 @@ const DetallePaciente = (id) => {
                 "Sintomas importantes",
               ]}
               preconsult={preconsult}
+              defaultOpen = {handleNav === "anamnesis" ? true : false}
             />
             <SignosVitalesInfo
               title={"Signos vitales"}
               paciente={patient}
               preconsult={preconsult}
+              defaultOpen = {handleNav === "signos vitales" ? true : false}
             />
             <InputCuerpoPre
-              title={"Exploracion fisica"}
-              onBodyChange={handleBodyChange}
-              defaultOpen
+            title={"Exploracion fisica"}
+            onBodyChange={handleBodyChange}
+            defaultOpen = {handleNav === "exploracion fisica" ? true : false}
             />
-            <InputExam title={"Examen fisico"} />
+            <InputExam title={"Examen fisico"} 
+            defaultOpen = {handleNav === "examen fisico" ? true : false}
+            />
             {/*<InputConsulta title={"Comentarios"} subtitle={["Anotaciones"]} />*/}
             {/*<InputFile title={"Estudios"} Links={preconsult} />*/}
             <InputFilePreconsultation
@@ -667,11 +728,12 @@ const DetallePaciente = (id) => {
               onTestActive={handleTestActive}
               onTestSelectedOption={handleTestSelectedOption}
               tests={tests}
-              defaultOpen
+              defaultOpen = {handleNav === "estudios" ? true : false}
             />
             <InputConsulta
               title={"Evolucion"}
-              subtitle={["Anotaciones de la consulta"]}
+              subtitle={["Anotaciones sobre la consulta"]}
+              defaultOpen = {handleNav === "evolucion" ? true : false}
             />
             <InputDiagnostico
               title={"Diagnósticos y tratamiento"}
@@ -680,7 +742,8 @@ const DetallePaciente = (id) => {
                 "Tratamientos no farmacológicos",
                 "Pauta de alarma",
               ]}
-              subtitle2={["Diagnostico", "Procedimientos"]}
+              defaultOpen = {handleNav === "diagnostico y tratamientos"  ? true : false}
+              subtitle2={["Diagnostico","Procedimientos"]}
               subtitle3={"Medicamentos"}
             />
           </form>

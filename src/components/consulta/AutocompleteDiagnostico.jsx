@@ -20,14 +20,21 @@ export default function AutocompleteDiagnostico({ options, text2, name, onOption
 
   return (
     <>
-    
+  
     <Autocomplete
       placeholder={text2}
-      className="w-1/2  border border-[#DCDBDB] rounded-lg "
+      className="w-1/2 bg-white "
       aria-label="Dropdown menu with icons"
-      style={{ border: 'none', boxShadow: 'none', outline: 'none', borderRadius: 'none' }}
+      style={{ border: 'none', boxShadow: 'none', outline: 'none' , backgroundColor: 'white', background: 'white',  }}
       onSelectionChange={(value) => {handleSelectionChange(value);}}
       {...register(name)}
+      classNames={{
+        base: 'white',
+        popoverContent: 'bg-white',
+        endContentWrapper: 'bg-white',
+        
+      }}
+      variant="bordered"
     >
       {options.map((option, index) => (
         <AutocompleteItem
