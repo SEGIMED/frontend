@@ -13,8 +13,8 @@ import IconCircle from "../icons/IconCircle";
 
 const SimpleQuestionBox = ({ question, label, index, selectedOption, onQuestionChange }) => {
   return (
-    <div className="animate-fade-in flex flex-col md:flex-row px-4 md:pl-20 py-4">
-      <div key={index} className="max-w-[600px] flex flex-row flex-wrap p-4 md:p-0 gap-4 items-start">
+    <div className="animate-fade-in flex items-start md:flex-row flex-col px-4 md:pl-20 py-4">
+      <div key={index} className="md:max-w-[600px] flex flex-wrap px-4 md:p-0 gap-2 items-start">
         <input
           type="checkbox"
           id={`checkbox${index}${question}`}
@@ -53,31 +53,33 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
     <div
       className={`flex ${section.showRowOptions || section.showSlider ? "flex-row" : "flex-col"
         }`}>
-      <div className="flex items-start justify-between w-[100%] md:flex-row md:gap-2 px-6 md:px-8 md:py-2 border-b-[#cecece]">
+      <div className="flex items-start justify-between w-[100%] flex-col md:flex-row md:gap-2 px-6 md:px-8 md:py-2 border-b-[#cecece]">
         <label className="text-start py-4 md:py-0 w-full md:w-[50%] text-[#686868] font-semibold text-base leading-4 flex gap-2 items-center">
           <IconFatArrow />
           {section.title}
         </label>
-        {section.binaryOptions && <div
-          className={`py-2 md:py-0 flex justify-evenly md:gap-3 ${section.showRowOptions || section.showSlider ? "hidden" : "block"
-            }`}>
-          <BotonPreconsulta
-            label="Sí"
-            onClick={() => onQuestionActive(question, "Sí", true)}
-            active={section.active}
-          />
-          <BotonPreconsulta
-            label="No"
-            onClick={() => onQuestionActive(question, "No", false)}
-            active={section.active}
-          />
-        </div>}
+        {section.binaryOptions &&
+          <div
+            className={`py-2 md:py-0 md:max-w-[50%] w-full flex justify-start md:justify-end gap-3 ${section.showRowOptions || section.showSlider ? "hidden" : "block"
+              }`}>
+            <BotonPreconsulta
+              label="Sí"
+              onClick={() => onQuestionActive(question, "Sí", true)}
+              active={section.active}
+            />
+            <BotonPreconsulta
+              label="No"
+              onClick={() => onQuestionActive(question, "No", false)}
+              active={section.active}
+            />
+          </div>
+        }
         {section.showRowOptions && (
-          <div className="md:flex gap-5 md:flex-row flex-wrap justify-end w-full py-1">
+          <div className="flex gap-5 flex-row flex-wrap items-start justify-start md:justify-end py-1">
             {section.options?.map((option, index) => (
               <button
                 key={index}
-                className={`flex flex-row gap-3 items-center px-4 py-4 md:py-2 border-1 rounded-lg ${section.selectedOption === index ? "bg-green-300" : "bg-white"}`}
+                className={`flex flex-row gap-3 items-center px-4 py-2 border-1 rounded-lg ${section.selectedOption === index ? "bg-green-300" : "bg-white"}`}
                 onClick={() => onQuestionChange(question, index)}>
                 <p className="text-[#686868] font-semibold text-sm leading-4">
                   {option.label}
@@ -88,13 +90,13 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
           </div>
         )}
         {section.showSlider && (
-          <div className="items-center w-full md:w-[50%] space-x-2 flex">
+          <div className="items-center w-full md:w-[50%] space-x-2 flex md:justify-end">
             <span className="h-12">
               <IconDolor2 />
             </span>
             <Slider
               aria-label="Nivel de dolor"
-              size="sm"
+              size="lg"
               step={1}
               showSteps={true}
               maxValue={10}

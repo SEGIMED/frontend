@@ -10,6 +10,7 @@ export default function Elboton({
   size,
   href,
   className,
+  disabled
 }) {
   return (
     <Button
@@ -17,6 +18,7 @@ export default function Elboton({
       as={href && Link}
       href={href}
       onClick={onPress}
+      disabled={disabled}
       className={
         "bg-[#487FFA] text-[#FFFFFF] font-Roboto font-bold rounded-lg" +
         " " +

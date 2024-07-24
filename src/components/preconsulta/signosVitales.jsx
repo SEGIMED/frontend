@@ -45,25 +45,25 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                 {data.label}
               </label>
               {(sign !== 'abnormalGlycemia' && sign !== 'lastAbnormalGlycemia') &&
-                <div className="w-full md:max-w-[50%] flex md:flex-row flex-col justify-end items-start gap-2 px-8 py-1">
-                  <span className="w-1/5 md:w-1/4 text-[#5F5F5F] font-normal text-sm">
+                <div className="w-full md:max-w-[50%] flex flex-row justify-start md:justify-end items-start gap-2 px-8 py-1">
+                  <span className="w-[100px] flex md:flex-1 justify-start md:justify-end text-[#5F5F5F] font-normal text-sm">
                     {data.referenceValue} {data.unit}
                   </span>
                   <input
                     type="number"
                     // value={signValue}
                     min={0}
-                    className="md:w-full  text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                    className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
                     onChange={(e) => handleInput(sign, Number(e.target.value))}
                   />
                 </div>}
               {sign === 'abnormalGlycemia' &&
-                <div className="max-w-[50%] flex justify-end items-center gap-2 px-8 py-1">
+                <div className="md:max-w-[50%] flex justify-end items-center gap-2 md:px-8 py-1">
                   <div
                     className='flex py-2 md:py-0 justify-evenly gap-3'>
                     <BotonPreconsulta
                       label="Sí"
-                      onClick={() => onGlicemyaActive(sign, null, true)}
+                      onClick={() => onVitalSignChange(sign, null, true)}
                       active={data.active}
                     />
                     <BotonPreconsulta
@@ -75,7 +75,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                 </div>
               }
               {sign === 'lastAbnormalGlycemia' &&
-                <div key={index} className="max-w-[50%] flex flex-col justify-end items-center gap-2 px-8 py-1">
+                <div key={index} className="md:max-w-[50%] flex flex-col justify-end items-center gap-2 py-1">
                   <span className="w-full">
                     {data.referenceValue} {data.unit}
                   </span>
@@ -85,7 +85,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                         key={index}
                         type="number"
                         className="w-full text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                        onChange={(e) => onGlicemyaActive(sign, e.target.value, null, `option${index}`)}
+                        onChange={(e) => onVitalSignChange(sign, Number(e.target.value), null, `option${index}`)}
                       />
                     ))}
                   </div>
