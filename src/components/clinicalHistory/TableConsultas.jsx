@@ -26,8 +26,7 @@ const PriorityIcon = ({ priority }) => {
 const handleStatus = (id) => {};
 
 export default function TableConsultas({ consultas }) {
-  const data=consultas?.appSch?.patientUser?.userHpGroups[0]
-  console.log("HTP",data)
+ 
   return (
     <div className="h-full flex flex-col">
       {consultas?.map((paciente, index) => (
