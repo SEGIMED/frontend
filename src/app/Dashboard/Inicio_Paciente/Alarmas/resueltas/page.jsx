@@ -11,6 +11,7 @@ import TableAlarmPte from "@/components/alarm/tableAlarmPte";
 import IconAlarmRed from "@/components/icons/iconAlarmRed";
 import IconArrowLeft from "@/components/icons/IconArrowLeft";
 import IconRegresar from "@/components/icons/iconRegresar";
+import NotFound from "@/components/notFound/notFound";
 
 export default function AlarmPte() {
   // Filter the patients with active alarm status
@@ -72,14 +73,18 @@ export default function AlarmPte() {
         </button>
       </div>
       <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
-      <p className="font-bold text-[#5F5F5F]">Prioridad</p>
+        <p className="font-bold text-[#5F5F5F]">Prioridad</p>
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">HTP</p>
         <p className="font-bold text-[#5F5F5F] hidden md:block">Status</p>
       </div>
       <div className="overflow-auto h-full">
-        <TableAlarmPte paciente={UnsolvedAlarmas} />
+        {UnsolvedAlarmas.length === 0 ? (
+          <NotFound text="No hay alarmas resueltas" />
+        ) : (
+          <TableAlarmPte paciente={UnsolvedAlarmas} />
+        )}
       </div>
     </div>
   );

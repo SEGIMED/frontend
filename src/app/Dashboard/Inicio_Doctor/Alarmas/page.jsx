@@ -19,7 +19,9 @@ export default function HomeDoc() {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const activeAlarms = response?.data?.alarms?.filter((alarma) => !alarma.solved);
+        const activeAlarms = response?.data?.alarms?.filter(
+          (alarma) => !alarma.solved
+        );
         setActiveAlarms(activeAlarms);
       }
     } catch (error) {
@@ -48,8 +50,11 @@ export default function HomeDoc() {
       <title>{lastSegmentTextToShow}</title>
       <div className="h-full w-full flex flex-col">
         <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
-          <Ordenar />
-          <h1 className="font-bold md:text-xl hidden md:block">Listado de Alarmas</h1>
+          {/* <Ordenar /> */}
+          <div></div>
+          <h1 className="font-bold md:text-xl hidden md:block">
+            Listado de Alarmas
+          </h1>
           <div className="flex gap-3">
             <Link href={`${rutas.Doctor}${rutas.Alarm}${rutas.resueltas}`}>
               <button className="flex items-center px-6 py-2 bg-[#70C247] rounded-xl gap-3 text-white font-bold">
@@ -73,7 +78,10 @@ export default function HomeDoc() {
           {isLoading ? (
             <SkeletonList count={10} />
           ) : activeAlarms.length === 0 ? (
-            <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
+            <NotFound
+              text="No hay historial de consultas."
+              sizeText="w-[100%]"
+            />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
               <TableAlarm pacientes={activeAlarms} />

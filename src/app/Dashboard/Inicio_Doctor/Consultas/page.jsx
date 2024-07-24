@@ -65,8 +65,8 @@ export default function HomeDoc() {
   // Ordenar pacientes si es necesario
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) =>
-      a.patientUser.name.localeCompare(b.patientUser.name)
-    )
+        a.patientUser.name.localeCompare(b.patientUser.name)
+      )
     : filteredPatients;
 
   const handleSortClick = () => {
@@ -93,7 +93,8 @@ export default function HomeDoc() {
       <title>{lastSegmentTextToShow}</title>
       <div className="h-full w-full flex flex-col">
         <div className="w-full flex justify-center md:justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
-          <Ordenar />
+          {/* <Ordenar /> */}
+          <div></div>
 
           <h1 className="font-bold md:text-xl hidden md:block">Proximas</h1>
           <div className="flex gap-3">
@@ -122,7 +123,9 @@ export default function HomeDoc() {
               <p className="text-[#5F5F5F]">Fecha </p>
               {/* <p className="text-[#5F5F5F] hidden md:block">Grupo HTP</p> */}
               <p className="text-[#5F5F5F] ">Centro de atencion</p>
-              <p className="text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
+              <p className="text-[#5F5F5F] hidden md:block">
+                Motivo de consulta
+              </p>
             </div>
           </div>
           {isLoading ? (

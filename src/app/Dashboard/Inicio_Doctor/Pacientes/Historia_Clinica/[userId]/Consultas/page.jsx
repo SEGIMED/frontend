@@ -44,16 +44,16 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="w-full flex justify-between px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
-        <Ordenar />
-        <p className="text-[#686868] text-center hidden md:block font-semibold text-xl md:text-base leading-6">
+      <div className="w-full flex justify-center items-center border-b bg-white border-b-[#cecece] py-2">
+        {/* <Ordenar /> */}
+        <p className="text-[#686868] text-center hidden md:block font-semibold text-xl md:text-lg leading-6">
           Consultas
         </p>
-        <FiltrarPacientes />
+        {/* <FiltrarPacientes /> */}
       </div>
       <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
         <div className="w-[5%] hidden md:block"></div>
-        <div className="grid w-[75%] text-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-left md:grid-cols-5 items-center py-2 z-10">
+        <div className="grid w-full text-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-left md:grid-cols-5 items-center py-2 z-10">
           <p className="text-[#5F5F5F]">Fecha</p>
           <p className="text-[#5F5F5F] hidden md:block">Hora</p>
           <p className="text-[#5F5F5F]">Grupo HTP</p>

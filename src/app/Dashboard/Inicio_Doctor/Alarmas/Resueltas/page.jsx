@@ -19,14 +19,15 @@ export default function HomeDoc() {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const inactiveAlarms = response.data?.alarms?.filter(
-          (alarma) => alarma.solved === true
-        ).sort((a, b) => {
-          const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
-          return (
-            priorityOrder[a.highestPriority] - priorityOrder[b.highestPriority]
-          );
-        });
+        const inactiveAlarms = response.data?.alarms
+          ?.filter((alarma) => alarma.solved === true)
+          .sort((a, b) => {
+            const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
+            return (
+              priorityOrder[a.highestPriority] -
+              priorityOrder[b.highestPriority]
+            );
+          });
 
         setInactiveAlarms(inactiveAlarms);
       }
@@ -49,8 +50,11 @@ export default function HomeDoc() {
       <title>Alarmas Resueltas</title>
       <div className="h-full w-full flex flex-col">
         <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
-          <Ordenar />
-          <h1 className="font-bold md:text-xl hidden md:block">Alarmas resueltas</h1>
+          {/* <Ordenar /> */}
+          <div></div>
+          <h1 className="font-bold md:text-xl hidden md:block">
+            Alarmas resueltas
+          </h1>
           <div className="flex gap-3">
             <Link href={`${rutas.Doctor}${rutas.Alarm}`}>
               <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
@@ -76,7 +80,10 @@ export default function HomeDoc() {
           {isLoading ? (
             <SkeletonList count={10} />
           ) : inactiveAlarms.length === 0 ? (
-            <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
+            <NotFound
+              text="No hay historial de consultas."
+              sizeText="w-[100%]"
+            />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
               <TableAlarmResueltas pacientes={inactiveAlarms} />

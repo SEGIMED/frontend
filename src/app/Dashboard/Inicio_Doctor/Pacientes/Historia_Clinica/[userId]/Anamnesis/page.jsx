@@ -43,12 +43,12 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="w-full flex justify-between px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
-        <Ordenar />
-        <p className="text-[#686868] text-center font-semibold text-xl hidden md:block md:text-base leading-6">
+      <div className="w-full flex justify-center items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
+        {/* <Ordenar /> */}
+        <p className="text-[#686868] text-center font-semibold text-xl hidden md:block md:text-lg leading-6">
           Anamnesis
         </p>
-        <FiltrarPacientes />
+        {/* <FiltrarPacientes /> */}
       </div>
       <div className="overflow-y-scroll flex flex-col h-full w-full">
         <div className="flex w-[100%] border-b bg-white border-b-[#cecece]">

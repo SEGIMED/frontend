@@ -44,12 +44,12 @@ export default function HomeDoc() {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="w-full flex justify-between px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">
-        <Ordenar />
-        <p className="text-[#686868] hidden md:block text-center font-semibold text-xl md:text-base leading-6">
+      <div className="w-full flex justify-center items-center border-b bg-white border-b-[#cecece] py-2">
+        {/* <Ordenar /> */}
+        <p className="text-[#686868] hidden md:block text-center font-semibold text-xl md:text-lg leading-6">
           Examen fisico
         </p>
-        <FiltrarPacientes />
+        {/* <FiltrarPacientes /> */}
       </div>
       <div className="overflow-y-scroll flex flex-col h-full w-full">
         <div className="flex w-[100%] border-b bg-white border-b-[#cecece] ">
@@ -66,7 +66,10 @@ export default function HomeDoc() {
         {isLoading ? (
           <SkeletonList count={9} />
         ) : infoPatient.length === 0 ? (
-          <NotFound text="No hay historial de examen físico." sizeText="w-[100%]" />
+          <NotFound
+            text="No hay historial de examen físico."
+            sizeText="w-[100%]"
+          />
         ) : (
           <ExamFisico pacientes={infoPatient} />
         )}

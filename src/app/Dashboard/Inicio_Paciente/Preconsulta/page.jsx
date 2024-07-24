@@ -11,6 +11,7 @@ import Ver from "@/components/Buttons/optPreconsulta";
 import DoctorCardConsulta from "@/components/card/docCardConsulta";
 import { useRouter } from "next/navigation";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import NotFound from "@/components/notFound/notFound";
 
 export default function HomePte() {
   const dispatch = useAppDispatch();
@@ -45,19 +46,15 @@ export default function HomePte() {
     return <MensajeSkeleton />;
   }
 
-  if (!scheduledConsultas.length) {
-    return <div>No existen preconsultas registradas</div>;
-  }
-
   return (
     <div className="h-full text-[#686868] w-full flex flex-col">
-      <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
-        {/* <button
+      {/* <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+        <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
                     onClick={handleSortClick}>
                     <p className="text-start text-white font-bold text-base leading-5">Ordenar</p>
                     <IconOrder />
-                </button> */}
+                </button>
         <button
           className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
           onClick={() => {
@@ -69,20 +66,25 @@ export default function HomePte() {
             Teleconsulta
           </p>
         </button>
-        {/* <FiltroDocPacientes
+        <FiltroDocPacientes
                     onClickSort={handleSortClick}
                     isOpen={isFilterOpen}
                     toggleMenu={toggleFilterMenu}
-                /> */}
-      </div>
+                />
+      </div> */}
       <div className="grid grid-cols-4 md:grid-cols-6 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
         <p className="font-bold text-[#5F5F5F] ml-1 md:ml-10">Fecha</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">Medico</p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block">Centro de atención</p>
-        <p className="font-bold text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
-        </div>
-        <div className="overflow-auto h-full">
+        <p className="font-bold text-[#5F5F5F] hidden md:block">
+          Centro de atención
+        </p>
+        <p className="font-bold text-[#5F5F5F] hidden md:block">
+          Motivo de consulta
+        </p>
+      </div>
+      <div className="overflow-auto h-full">
+        {scheduledConsultas.length === 0 && <NotFound />}
         {scheduledConsultas.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}

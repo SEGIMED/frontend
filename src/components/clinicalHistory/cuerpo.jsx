@@ -24,9 +24,11 @@ export default function ClincalCuerpo({ info }) {
     // Función para obtener los nombres de músculos en inglés
     const getMuscleNames = () => {
       if (info && info.painMap && info.painMap?.painAreas) {
-        const muscleData = info.painMap.painAreas.map(area => ({
-          name: 'Musculo',
-          muscles: area.painArea?.painAreaEnglish ? [area.painArea.painAreaEnglish] : [],
+        const muscleData = info.painMap.painAreas.map((area) => ({
+          name: "Musculo",
+          muscles: area.painArea?.painAreaEnglish
+            ? [area.painArea.painAreaEnglish]
+            : [],
         }));
         setSelectedMuscles(muscleData);
         console.log(muscleData);
@@ -65,9 +67,7 @@ export default function ClincalCuerpo({ info }) {
           </div>
           {info.painMap?.painAreas.length > 0 &&
             info.painMap?.painAreas?.map((muscle, index) => (
-              <div
-                key={index}
-                className="flex flex-col gap-2 w-full py-3 px-7">
+              <div key={index} className="flex flex-col gap-2 w-full py-3 px-7">
                 <label
                   className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
                   htmlFor={`muscle-note-${index}`}>

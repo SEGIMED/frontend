@@ -42,7 +42,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
     pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
-
   const lastSegmentText = pathname
     .substring(pathname.lastIndexOf("/") + 1)
     .replace(/_/g, " ");
@@ -61,8 +60,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -194,7 +193,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       //     null,
       //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
       // };
-    }
+    };
     dispatch(adduser(combinedData));
     console.log(combinedData);
   };
@@ -302,7 +301,19 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
       <div className="flex justify-center items-center gap-2">
         <Image src={ruteActual} alt="" className="hidden md:block" />
-        <p className="">{segmentToShow}</p>
+        {lastSegment === "Inicio_Paciente" ? (
+          <p>Tablero</p>
+        ) : lastSegment === "Mi_perfil" ? (
+          <p>Mi Perfil</p>
+        ) : lastSegment === "Citas" ? (
+          <p>Mi Agenda</p>
+        ) : lastSegment === "Preconsulta" ? (
+          <p>Preconsulta</p>
+        ) : isNaN(lastSegment) ? (
+          <p>{lastSegmentText}</p>
+        ) : (
+          <p>{lastSegmentText}</p>
+        )}
       </div>
       {showSearch && (
         <div
@@ -335,8 +346,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
-            }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            showNotifications && "bg-[#E73F3F]"
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={showNotifications && "white"}
