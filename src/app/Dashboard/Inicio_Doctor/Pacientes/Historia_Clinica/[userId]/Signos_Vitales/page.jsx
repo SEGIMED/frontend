@@ -67,7 +67,7 @@ export default function HomeDoc() {
         </div>
         {loading ? (
           <SkeletonList count={9} />
-        ) : infoPatient.length !== 0 ? (
+        ) : infoPatient.length === 0 ? (
           <NotFound text="No hay historial de signos vitales." sizeText="w-[100%]" />
         ) : (
           <SignosVitales pacientes={infoPatient} />
