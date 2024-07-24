@@ -9,7 +9,7 @@ import InputInfo from "./InputInfo";
 export default function ExamFisico({ pacientes, subtitle }) {
   // Estado para controlar qué detalles están abiertos
   const [openDetails, setOpenDetails] = useState({});
-
+  
   const toggleDetail = (index) => {
     setOpenDetails((prevState) => ({
       ...prevState,
@@ -60,7 +60,7 @@ export default function ExamFisico({ pacientes, subtitle }) {
               </div>
             </summary>
             <div className="md:p-5 bg-[#f5f4f4] p-2">
-              {paciente.physicalExaminations?.map((examen, index) => (
+              {paciente.patientPhysicalExaminations?.map((examen, index) => (
                 <div key={index}>
                   <InputInfo
                     title={examen.physicalSubsystem}

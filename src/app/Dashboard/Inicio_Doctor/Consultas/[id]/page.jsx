@@ -431,7 +431,7 @@ const DetallePaciente = (id) => {
       schedulingId: Number(scheduleId), /// el id del agendamiento
       chiefComplaint: data["Motivo de consulta"] ? data["Motivo de consulta"] : null, // motivo de consulta
       historyOfPresentIllness: data["Evolucion de la enfermedad"] ? data["Evolucion de la enfermedad"] : null, /// enfermedad actual
-      reviewOfSystems:  null, /// revision por sistemas o sintomas
+      reviewOfSystems: data["Sintomas importantes"] || null, /// revision por sistemas o sintomas
       treatmentPlan: null, /// plan de tratamiento
       pendingDiagnosticTest: null, // test pendientes
       alarmPattern: data["Pauta de alarma"] ? data["Pauta de alarma"] : null, // patron de alarma
@@ -454,7 +454,9 @@ const DetallePaciente = (id) => {
       // Agregar cada campo condicionalmente
       addMedicalEventField("Anotaciones de la consulta", "physicianComments");
       addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
-      addMedicalEventField("alarmPattern", "Pauta de alarma");
+      addMedicalEventField( "Pauta de alarma","alarmPattern");
+      addMedicalEventField("Motivo de consulta","chiefComplaint")
+      addMedicalEventField("Sintomas importantes","reviewOfSystems")
       
       // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
       setMedicalEventPatch(medicalEventPatch);
