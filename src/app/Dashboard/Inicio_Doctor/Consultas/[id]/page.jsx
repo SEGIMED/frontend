@@ -32,11 +32,9 @@ const DetallePaciente = (id) => {
   const router = useRouter();
 
   const token = Cookies.get("a");
+  const userId = Cookies.get("patientId");
+  console.log(userId);
   const scheduleId = id.params.id; // id de agendamiento
-  const queryParams = new URLSearchParams(location.search);
-
-  // Obtén el valor de patientId
-  const userId = queryParams.get('patientId');
 
   const [medicalEventId, setMedicalEventId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -473,7 +471,8 @@ const DetallePaciente = (id) => {
         setPreconsult(response1.data);
       } catch (error) {
           console.log("Este agendamiento no tiene preconsulta", error);
-      };
+      };}
+      const fetchData2 = async () => {
       try {  
       // Segunda petición utilizando el userId de la primera respuesta - esto pide el paciente
       const response2 = await ApiSegimed.get(
@@ -483,7 +482,9 @@ const DetallePaciente = (id) => {
       setPatient(response2.data);
       } catch (error) {
       console.log("No existe este paciente", error);
-      };    
+      };
+      };  
+      const fetchData3 = async () => {   
       try {
             // Tercera petición utilizando el scheduleId de params - esto pide el historial medico para saber siya hay diagnostico
             const response3 = await ApiSegimed.get(
@@ -522,7 +523,9 @@ const DetallePaciente = (id) => {
       console.log(medicalEvent);
 
     fetchData();
-  }, [userId, scheduleId, token]);
+    fetchData2();
+    fetchData3();
+  }, []);
   const handleBodyChange = (name, value) => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
