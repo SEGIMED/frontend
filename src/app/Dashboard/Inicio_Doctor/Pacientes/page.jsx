@@ -81,7 +81,7 @@ export default function HomeDoc() {
         totalUsers: response.data.totalUsers,
         totalPages: response.data.totalPages,
       }));
-      setisLoading(false)
+      setisLoading(false);
     }
   };
 
@@ -111,16 +111,15 @@ export default function HomeDoc() {
         totalUsers: response.data.totalUsers,
         totalPages: response.data.totalPages,
       }));
-      setisLoading(false)
+      setisLoading(false);
     }
   };
 
   useEffect(() => {
-
     if (!showFavorites) {
       getPatients({ headers: { token: token } }).catch(console.error);
     } else {
-      setisLoading(true)
+      setisLoading(true);
       getFavorites({ headers: { token: token } }).catch(console.error);
     }
   }, [showFavorites, pagination.currentPage, searchTerm, riskFilter]);
@@ -156,17 +155,22 @@ export default function HomeDoc() {
         url,
         method,
         data,
-        headers: { token }
+        headers: { token },
       });
       if (response.status === 201 || response.status === 200) {
         getFavorites({ headers: { token: token } }).catch(console.error);
         getPatients({ headers: { token: token } }).catch(console.error);
-        console.log(`Patient ${patient.isFavorite ? 'removed from' : 'added to'} favorites successfully.`, response);
+        console.log(
+          `Patient ${
+            patient.isFavorite ? "removed from" : "added to"
+          } favorites successfully.`,
+          response
+        );
       } else {
-        console.log('Something went wrong:', response);
+        console.log("Something went wrong:", response);
       }
     } catch (error) {
-      console.error('Error in changeFavorite function:', error);
+      console.error("Error in changeFavorite function:", error);
     }
   };
 
@@ -184,7 +188,7 @@ export default function HomeDoc() {
   };
 
   const handleFavoriteClick = () => {
-    setisLoading(true)
+    setisLoading(true);
     setShowFavorites(!showFavorites);
 
     handlePageChange(1);
@@ -210,7 +214,6 @@ export default function HomeDoc() {
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
-
       setPagination((prev) => ({
         ...prev,
         currentPage: newPage,
@@ -222,7 +225,6 @@ export default function HomeDoc() {
     setSelectedPatient(patient);
     setShowMapModal(true);
   };
-
 
   return (
     <div className="flex flex-col h-full ">
@@ -243,14 +245,16 @@ export default function HomeDoc() {
           </button> */}
           <button
             onClick={handleFavoriteClick}
-            className={`${showFavorites
-              ? "bg-bluePrimary text-white"
-              : "bg-white text-bluePrimary  border-bluePrimary"
-              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+            className={`${
+              showFavorites
+                ? "bg-bluePrimary text-white"
+                : "bg-white text-bluePrimary  border-bluePrimary"
+            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
-              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
-                } font-bold`}>
+              className={`hidden md:block ${
+                showFavorites ? "text-white" : "text-bluePrimary"
+              } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -259,7 +263,6 @@ export default function HomeDoc() {
               toggleMenu={toggleFilterMenu}
               onClickSort={handleSortClick}
           /> */}
-
         </div>
 
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
@@ -286,23 +289,23 @@ export default function HomeDoc() {
                   onClick: () => setRiskFilter("Bajo"),
                   icon: <IconRisk color="#70C247" />,
                 },
-                // {
-                //   label: "Ninguno",
-                //   onClick: () =>setRiskFilter(""),
-                //   icon: <IconRisk  color="lightGray"/>,
-                // },
-
-              ]
-            }, {
-              title: "Orden Alfabetico",
-              icon: <IconAlphabetic />,
-              items: [
                 {
-                  label: "Ver todos",
+                  label: "Ninguno",
                   onClick: () => setRiskFilter(""),
-                }
-              ]
-            }
+                  icon: <IconRisk color="lightGray" />,
+                },
+              ],
+            },
+            // {
+            //   title: "Orden Alfabetico",
+            //   icon: <IconAlphabetic />,
+            //   items: [
+            //     {
+            //       label: "Ver todos",
+            //       onClick: () => setRiskFilter(""),
+            //     }
+            //   ]
+            // }
           ]}
         />
         {/* <div></div> */}
@@ -312,113 +315,121 @@ export default function HomeDoc() {
         {isLoading ? (
           <SkeletonList count={10} />
         ) : sortedPatients.length === 0 ? (
-          <NotFound text={showFavorites ? "No hay pacientes favoritos " : "No hay pacientes"} sizeText={"w-[100%]"} />
-        ) :
-          (
-            filteredPatients.map((paciente) => (
-              <div
-                key={paciente.id}
-                className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
-                <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
-                  {paciente.patientPulmonaryHypertensionRisks?.risk ? (
-                    <RealColorRisk
-                      risk={paciente.patientPulmonaryHypertensionRisks.risk}
-                    />
-                  ) : (
-                    <IconRisk color="lightGray" />
-                  )}
+          <NotFound
+            text={
+              showFavorites ? "No hay pacientes favoritos " : "No hay pacientes"
+            }
+            sizeText={"w-[100%]"}
+          />
+        ) : (
+          filteredPatients.map((paciente) => (
+            <div
+              key={paciente.id}
+              className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
+              <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
+                {paciente.patientPulmonaryHypertensionRisks?.risk ? (
+                  <RealColorRisk
+                    risk={paciente.patientPulmonaryHypertensionRisks.risk}
+                  />
+                ) : (
+                  <IconRisk color="lightGray" />
+                )}
 
-                  <div className="flex justify-center items-center">
-                    <img
-                      src={paciente?.avatar !== null ? paciente.avatar : avatar}
-                      alt={paciente?.name}
-                      className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
-                    />
-                  </div>
-                  <p className="text-base">
-                    {paciente.name} {paciente.lastname}
-                  </p>
-                  <div onClick={() => changeFavorite(paciente)}>
-                    {paciente.isFavorite ? (
-                      <IconFavoriteYellow />
-                    ) : (
-                      <IconFavoriteBlue />
-                    )}
-                  </div>
-
-                  {/* aca verificar si es favorite es true y poner IconFavoriteYellow sino nada y aplicar logica de skeleton y de notfound, haz las importaciones y todo para que funcione, usa las mismas que antes */}
+                <div className="flex justify-center items-center">
+                  <img
+                    src={paciente?.avatar !== null ? paciente.avatar : avatar}
+                    alt={paciente?.name}
+                    className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
+                  />
                 </div>
-                <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
-                  <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
-                    <div className="text-sm md:text-base text-bluePrimary flex gap-1">
-                      <p className="hidden md:block">Grupo HTP:</p>
-                      <p className="font-bold">
-                        {paciente.patientPulmonaryHypertensionRisks?.group || "-"}
-                      </p>
-                    </div>
+                <p className="text-base">
+                  {paciente.name} {paciente.lastname}
+                </p>
+                <div onClick={() => changeFavorite(paciente)}>
+                  {paciente.isFavorite ? (
+                    <IconFavoriteYellow />
+                  ) : (
+                    <IconFavoriteBlue />
+                  )}
+                </div>
+
+                {/* aca verificar si es favorite es true y poner IconFavoriteYellow sino nada y aplicar logica de skeleton y de notfound, haz las importaciones y todo para que funcione, usa las mismas que antes */}
+              </div>
+              <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
+                <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
+                  <div className="text-sm md:text-base text-bluePrimary flex gap-1">
+                    <p className="hidden md:block">Grupo HTP:</p>
+                    <p className="font-bold">
+                      {paciente.patientPulmonaryHypertensionRisks?.group || "-"}
+                    </p>
                   </div>
-                  {/* <OpcionesDocPacientes
+                </div>
+                {/* <OpcionesDocPacientes
                 paciente={paciente}
                 onConsultationClick={() => openModal(paciente.id)}
                 onToggleFavorite={handleToggleFavorite}
                 isOpen={openOptionsPatientId === paciente.id}
                 toggleOptions={() => toggleOptionMenu(paciente.id)}
               /> */}
-                  <MenuDropDown
-                    label="Opciones"
-                    icon={<IconOptions color="#FFFFFF" />}
-                    categories={[
-                      {
-                        title: "Acciones",
-                        items: [
-                          {
-                            label: "Agendar Consulta",
-                            onClick: () => openModal(paciente.id),
-                            icon: <IconMiniCalendar />,
-                          },
-                          {
-                            label: paciente.isFavorite ? "Quitar de Favoritos" : "Agregar a Favoritos",
-                            onClick: () => changeFavorite(paciente),
-                            icon: <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />,
-                          },
-                        ],
-                      },
-                      {
-                        title: "Información",
-                        items: [
-                          {
-                            label: "Ver Historia Clínica",
-                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
-                            icon: <IconClinicalHistory />,
-                          },
-                          {
-                            label: "Ver datos Personales",
-                            href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
-                            icon: <IconPersonalData />,
-                          },
-                          {
-                            label: "Ver antiguas consultas",
-                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
-                            icon: <IconClinicalHistory />,
-                          },
-                          {
-                            label: "Ver Mensajes",
-                            href: `${rutas.Doctor}${rutas.Mensajes}`,
-                            icon: <IconMessages />,
-                          },
-                          {
-                            label: "Ver Geolocalización",
-                            onClick: () => handleGeolocationClick(paciente),
-                            icon: <IconGeolocation />,
-                          },
-                        ],
-                      },
-                    ]}
-                  />
-                </div>
+                <MenuDropDown
+                  label="Opciones"
+                  icon={<IconOptions color="#FFFFFF" />}
+                  categories={[
+                    {
+                      title: "Acciones",
+                      items: [
+                        {
+                          label: "Agendar Consulta",
+                          onClick: () => openModal(paciente.id),
+                          icon: <IconMiniCalendar />,
+                        },
+                        {
+                          label: paciente.isFavorite
+                            ? "Quitar de Favoritos"
+                            : "Agregar a Favoritos",
+                          onClick: () => changeFavorite(paciente),
+                          icon: (
+                            <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
+                          ),
+                        },
+                      ],
+                    },
+                    {
+                      title: "Información",
+                      items: [
+                        {
+                          label: "Ver Historia Clínica",
+                          href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
+                          icon: <IconClinicalHistory />,
+                        },
+                        {
+                          label: "Ver datos Personales",
+                          href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
+                          icon: <IconPersonalData />,
+                        },
+                        {
+                          label: "Ver antiguas consultas",
+                          href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
+                          icon: <IconClinicalHistory />,
+                        },
+                        {
+                          label: "Ver Mensajes",
+                          href: `${rutas.Doctor}${rutas.Mensajes}`,
+                          icon: <IconMessages />,
+                        },
+                        {
+                          label: "Ver Geolocalización",
+                          onClick: () => handleGeolocationClick(paciente),
+                          icon: <IconGeolocation />,
+                        },
+                      ],
+                    },
+                  ]}
+                />
               </div>
-            ))
-          )}
+            </div>
+          ))
+        )}
       </div>
       <div className="flex justify-center items-center gap-5  bg-[#FAFAFC] font-bold h-[15%]">
         <button

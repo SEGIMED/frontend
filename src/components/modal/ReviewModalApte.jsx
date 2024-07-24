@@ -16,7 +16,9 @@ const ratingQuestions = [
 ];
 
 export default function ReviewModalApte({ onClose, id }) {
-  const [ratings, setRatings] = useState(Array(ratingQuestions.length).fill(null));
+  const [ratings, setRatings] = useState(
+    Array(ratingQuestions.length).fill(null)
+  );
   const [hover, setHover] = useState(Array(ratingQuestions.length).fill(null));
   const [comments, setComments] = useState("");
   const myId = Cookies.get("c");
@@ -57,10 +59,9 @@ export default function ReviewModalApte({ onClose, id }) {
     }
   };
 
-
   useEffect(() => {
     const onClose2 = (event) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
@@ -83,21 +84,29 @@ export default function ReviewModalApte({ onClose, id }) {
   };
 
   return (
-    <div onClick={handleClickOutside} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div
+      onClick={handleClickOutside}
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white p-3 rounded-lg shadow-lg w-[85%] min-h-fit max-h-[95%] md:w-[40%] relative font-poppins overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-2 h-fit">
           <span className="flex gap-4">
             <IconCurrentRouteNav className={"w-4"} />
-            <h2 className="text-lg font-normal leading-6">Califique a su paciente</h2>
+            <h2 className="text-lg font-normal leading-6">
+              Califique a su paciente
+            </h2>
           </span>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700">
             &#x2715;
           </button>
         </div>
         {ratingQuestions.map((question, qIndex) => (
           <div key={qIndex} className="mb-3">
             <div className="flex gap-3 mb-2 mt-2">
-              <span><IconTablillaEstrella /></span>
+              <span>
+                <IconTablillaEstrella />
+              </span>
               <span className="font-medium text-base">{question}</span>
             </div>
             <div className="flex justify-center items-center border-b gap-2 p-5">
@@ -113,7 +122,7 @@ export default function ReviewModalApte({ onClose, id }) {
                   <IconTStar3
                     color={
                       index < (hover[qIndex] || ratings[qIndex])
-                        ? "#FFC900"
+                        ? "#F5E400"
                         : "#FFFFFF"
                     }
                     onMouseEnter={() => handleHover(qIndex, index + 1)}
@@ -127,23 +136,27 @@ export default function ReviewModalApte({ onClose, id }) {
         ))}
         <div className="mb-2">
           <div className="flex gap-4 mt-2">
-            <span><IconTablillaTilde /></span>
-            <span className="mb-2 font-medium">Comentarios sobre el paciente</span>
+            <span>
+              <IconTablillaTilde />
+            </span>
+            <span className="mb-2 font-medium">
+              Comentarios sobre el paciente
+            </span>
           </div>
           <textarea
             className="w-full p-2 border rounded-md"
             rows="4"
             placeholder="Ingrese sus comentarios sobre el paciente"
             value={comments}
-            onChange={(e) => setComments(e.target.value)}
-          ></textarea>
+            onChange={(e) => setComments(e.target.value)}></textarea>
         </div>
         <div className="flex justify-center items-center h-[10%]">
           <button
             onClick={SendReview}
-            className="py-2 px-4 items-center flex rounded-lg bg-greenPrimary gap-2 w-fit disabled:bg-gray-400"
-          >
-            <p className="text-white font-bold flex gap-2 items-center">Guardar <IconArrowRight /></p>
+            className="py-2 px-4 items-center flex rounded-lg bg-greenPrimary gap-2 w-fit disabled:bg-gray-400">
+            <p className="text-white font-bold flex gap-2 items-center">
+              Guardar <IconArrowRight />
+            </p>
           </button>
         </div>
       </div>

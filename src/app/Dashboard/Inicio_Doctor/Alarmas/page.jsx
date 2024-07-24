@@ -50,7 +50,8 @@ export default function HomeDoc() {
       <title>{lastSegmentTextToShow}</title>
       <div className="h-full w-full flex flex-col">
         <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
-          <Ordenar />
+          {/* <Ordenar /> */}
+          <div></div>
           <h1 className="font-bold md:text-xl hidden md:block">
             Listado de Alarmas
           </h1>

@@ -27,7 +27,7 @@ import IconAlphabetic from "@/components/icons/IconAlphabetic";
 
 export default function DoctoresPte() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
-  
+
   const [isSorted, setIsSorted] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
   const [showFavorites, setShowFavorites] = useState(false);
@@ -55,7 +55,7 @@ export default function DoctoresPte() {
           .replace(/\,/g, " -");
         return { ...paciente, lastLogin: fechaFormateada };
       });
-  
+
       setPatients(pacientesFormateados);
       setPagination((prev) => ({
         ...prev,
@@ -112,9 +112,6 @@ export default function DoctoresPte() {
     ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
     : filteredPatients;
 
-
-
-
   const handleFavoriteClick = () => {
     getFavorites({ headers: { token: token } }).catch(console.error);
     setShowFavorites(!showFavorites);
@@ -128,8 +125,6 @@ export default function DoctoresPte() {
     dispatch(toggleFavorite(patientId));
   };
 
-
-
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
       setPagination((prev) => ({
@@ -139,7 +134,6 @@ export default function DoctoresPte() {
     }
   };
 
- 
   if (sortedPatients.legth === 0) {
     return <MensajeSkeleton />;
   }
@@ -152,46 +146,48 @@ export default function DoctoresPte() {
     <div className="h-full w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
         <div className="w-full h-fit">
-      <MenuDropDown
-        label="Filtrar"
-        iconr={<IconFilter/>}
-        categories={[
-          {title:"Nivel de riesgo",
-          icon:<IconHooter/>,
-          items: [
+          <MenuDropDown
+            label="Filtrar"
+            iconr={<IconFilter />}
+            categories={[
+              {
+                title: "Nivel de riesgo",
+                icon: <IconHooter />,
+                items: [
                   {
                     label: "Alto",
                     onClick: () => setRiskFilter("Alto"),
-                    icon: <IconRisk color="#E73F3F"/>,
+                    icon: <IconRisk color="#E73F3F" />,
                   },
                   {
                     label: "Medio",
-                    onClick: () =>setRiskFilter("Moderado"),
-                    icon: <IconRisk color="#F5E400"/>,
+                    onClick: () => setRiskFilter("Moderado"),
+                    icon: <IconRisk color="#F5E400" />,
                   },
                   {
                     label: "Bajo",
-                    onClick: () =>setRiskFilter("Bajo"),
-                    icon: <IconRisk color="#70C247"/>,
+                    onClick: () => setRiskFilter("Bajo"),
+                    icon: <IconRisk color="#70C247" />,
                   },
-                  // {
-                  //   label: "Ninguno",
-                  //   onClick: () =>setRiskFilter(""),
-                  //   icon: <IconRisk  color="lightGray"/>,
-                  // },
-                  
-        ]}, {
-          title:"Orden Alfabetico",
-          icon: <IconAlphabetic/>,
-          items:[
-            {
-            label: "Ver todos",
-            onClick: () =>setRiskFilter(""),
-            }
-          ]
-        }
-        ]}
-        />
+                  {
+                    label: "Ninguno",
+                    onClick: () => setRiskFilter(""),
+                    icon: <IconRisk color="lightGray" />,
+                  },
+                ],
+              },
+              // {
+              //   title:"Orden Alfabetico",
+              //   icon: <IconAlphabetic/>,
+              //   items:[
+              //     {
+              //     label: "Ver todos",
+              //     onClick: () =>setRiskFilter(""),
+              //     }
+              //   ]
+              // }
+            ]}
+          />
         </div>
         <Elboton
           href={`${rutas.Doctor}${rutas.Mensajes}`}

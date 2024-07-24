@@ -22,6 +22,7 @@ import Ordenar from "@/components/Buttons/Ordenar";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import IconRegresar from "@/components/icons/iconRegresar";
+import IconOptions from "@/components/icons/IconOptions";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -31,7 +32,6 @@ export default function HomeDoc() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
 
   const consultas = useAppSelector((state) => state.schedules);
   // Obtener consultas del estado
@@ -51,7 +51,6 @@ export default function HomeDoc() {
     }
   }, [consultas]);
 
-
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
     (consulta) => consulta.schedulingStatus !== 1 && consulta.physician === myID
@@ -66,7 +65,9 @@ export default function HomeDoc() {
 
   // Ordenar pacientes si es necesario
   const sortedPatients = isSorted
-    ? [...filteredPatients].sort((a, b) => a.patientUser.name.localeCompare(b.patientUser.name))
+    ? [...filteredPatients].sort((a, b) =>
+        a.patientUser.name.localeCompare(b.patientUser.name)
+      )
     : filteredPatients;
 
   const handleSortClick = () => {
@@ -93,8 +94,8 @@ export default function HomeDoc() {
       <title>{lastSegmentTextToShow}</title>
       <div className="h-full w-full flex flex-col">
         <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
-          <Ordenar />
-
+          {/* <Ordenar /> */}
+          <div></div>
           <h1 className="font-bold md:text-xl hidden md:block">Pasadas</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
@@ -122,13 +123,18 @@ export default function HomeDoc() {
               <p className="text-[#5F5F5F]">Fecha </p>
               {/* <p className="text-[#5F5F5F] hidden md:block">Grupo HTP</p> */}
               <p className="text-[#5F5F5F] ">Centro de atencion</p>
-              <p className="text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
+              <p className="text-[#5F5F5F] hidden md:block">
+                Motivo de consulta
+              </p>
             </div>
           </div>
           {isLoading ? (
             <SkeletonList count={9} />
           ) : filteredPatients.length === 0 ? (
-            <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
+            <NotFound
+              text="No hay historial de consultas."
+              sizeText="w-[100%]"
+            />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
               {sortedPatients?.map((paciente) => (
@@ -139,6 +145,7 @@ export default function HomeDoc() {
                   button={
                     <MenuDropDown
                       label={"Mas"}
+                      icon={<IconOptions color="white" />}
                       categories={[
                         {
                           title: "Opciones",
@@ -148,11 +155,11 @@ export default function HomeDoc() {
                               icon: <IconCorazonMini />,
                               onClick: () => handleReviewClick(paciente),
                             },
-                            {
-                              label: "Ver consultas",
-                              icon: <IconPersonalData />,
-                              href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
-                            },
+                            // {
+                            //   label: "Ver consultas",
+                            //   icon: <IconPersonalData />,
+                            //   href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
+                            // },
                           ],
                         },
                       ]}
