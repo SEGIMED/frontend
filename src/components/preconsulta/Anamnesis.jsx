@@ -16,7 +16,7 @@ const AnamnesisItem = ({ title, field, onAnamnesisChange }) => {
     }
 
     return (
-        <div className="p-6 mb-4">
+        <div className="px-6 py-4">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
                 <IconCurrentRouteNav className="w-4" />
                 {title}

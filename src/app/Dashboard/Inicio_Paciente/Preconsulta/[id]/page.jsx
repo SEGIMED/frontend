@@ -397,7 +397,7 @@ export default function PreconsultaPte({ params }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-center my-2 bg-white">
+          <div className="flex items-center justify-center my-2">
             Su preconsulta ya fue enviada
           </div></div>
       </FormProvider>

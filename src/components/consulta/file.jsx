@@ -55,7 +55,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
     };
 
     return (
-        <div className="p-6 pb-4 bg-[#fafafc]">
+        <div className="px-6 py-4 bg-[#fafafc]">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
                 <IconCurrentRouteNav className="w-4" />
                 {label}
