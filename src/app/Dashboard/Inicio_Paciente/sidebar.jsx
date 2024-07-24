@@ -307,8 +307,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
           <p>Mi Perfil</p>
         ) : lastSegment === "Citas" ? (
           <p>Mi Agenda</p>
-        ) : lastSegment === "Preconsulta" ? (
-          <p>Preconsulta</p>
+        ) : lastSegment === "Doctores" ? (
+          <p>Médicos</p>
         ) : isNaN(lastSegment) ? (
           <p>{lastSegmentText}</p>
         ) : (

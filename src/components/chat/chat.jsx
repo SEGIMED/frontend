@@ -8,7 +8,6 @@ import Image from "next/image";
 import ImageChat from "@/components/images/imageChat.png";
 import { useAppSelector } from "@/redux/hooks";
 import Avatars from "../avatar/avatarChat";
-
 export default function Chat({ chat }) {
   const userId = Number(Cookies.get("c"));
   const [messageInput, setMessageInput] = useState("");
@@ -18,7 +17,6 @@ export default function Chat({ chat }) {
   const messagesContainerRef = useRef(null);
 
   const user = useAppSelector((state) => state.user);
-  console.log(chat);
   useEffect(() => {
     if (chat) {
       setInfoChat(chat);
@@ -30,7 +28,7 @@ export default function Chat({ chat }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
+  console.log;
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =

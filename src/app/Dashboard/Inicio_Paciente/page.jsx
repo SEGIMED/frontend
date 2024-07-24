@@ -69,7 +69,7 @@ export default function HomePte() {
           <label className="text-start w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
             <IconFatArrow /> Riesgo Cardiovascular
           </label>
-          <div className="flex gap-3">
+          <div className="md:flex md:gap-3 grid-cols-2 grid">
             <BotonDashPte
               riesgo={user?.patientCardiovascularRisks?.risk}
               nombre={"Bajo"}
@@ -93,7 +93,7 @@ export default function HomePte() {
           <label className="text-start w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
             <IconFatArrow /> Riesgo quirúrgico
           </label>
-          <div className="flex gap-3">
+          <div className="md:flex md:gap-3 grid-cols-2 grid">
             <BotonDashPte
               riesgo={user?.patientSurgicalRisks?.risk}
               nombre={"Bajo"}
