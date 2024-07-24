@@ -52,7 +52,7 @@ export default function HomePte() {
         <button
                     className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
                     onClick={handleSortClick}>
-                    <p className="text-start text-white font-bold text-base leading-5">Ordenar</p>
+                    <p className="text-base font-bold leading-5 text-white text-start">Ordenar</p>
                     <IconOrder />
                 </button>
         <button
@@ -62,7 +62,7 @@ export default function HomePte() {
               `${rutas.PacienteDash}${rutas.Preconsulta}${rutas.Teleconsulta}`
             );
           }}>
-          <p className="text-start text-white font-bold text-base leading-5">
+          <p className="text-base font-bold leading-5 text-white text-start">
             Teleconsulta
           </p>
         </button>
@@ -83,8 +83,11 @@ export default function HomePte() {
           Motivo de consulta
         </p>
       </div>
-      <div className="overflow-auto h-full">
-        {scheduledConsultas.length === 0 && <NotFound />}
+      <div className="h-full overflow-auto">
+        {scheduledConsultas.length === 0 && 
+          <NotFound 
+          text="No hay historial de preconsultas."
+          sizeText="w-[100%]"/>}
         {scheduledConsultas.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
@@ -92,7 +95,7 @@ export default function HomePte() {
             button={
               <Ver
                 id={doc.id}
-                ruta={`${rutas.PacienteDash}${rutas.Preconsulta}/${doc.id}`}
+                ruta={`${rutas.PacienteDash}${rutas.Preconsulta}/${doc.id}`} 
               />
             }
           />

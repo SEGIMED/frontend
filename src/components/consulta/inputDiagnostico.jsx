@@ -33,15 +33,16 @@ export default function InputDiagnostico({
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
-        <summary className="flex items-center justify-between gap-2 px-6 py-2 bg-white border cursor-pointer md:gap-1 " onClick={() => setIsOpen(!isOpen)}>
+        <summary className="flex items-center justify-between h-16 gap-2 px-6 bg-white border cursor-pointer md:gap-1 " onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
+              <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
-          <div className={isOpen ? "rotate-180" : ""}>
+          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
             <IconArrowDetailDown/>
           </div>
         </summary>
@@ -54,7 +55,7 @@ export default function InputDiagnostico({
               {sub}
             </label>
             <input
-              className="w-full md:w-1/2 h-auto text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-2 md:py-1 outline-[#a8a8a8]"
+              className="w-full md:w-1/2 h-11 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 md:py-1 outline-[#a8a8a8]"
               placeholder={`Escribe el ${sub} `}
               {...register(sub)}
             />
@@ -86,7 +87,7 @@ export default function InputDiagnostico({
               {sub}
             </label>
             <textarea
-              className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
+              className="w-full h-40 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]"
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
             />
