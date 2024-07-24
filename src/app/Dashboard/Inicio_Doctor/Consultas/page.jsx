@@ -23,6 +23,7 @@ import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import IconOptions from "@/components/icons/IconOptions";
 import { useRouter } from "next/navigation";
+import IconOpcionesConsulta from "@/components/icons/IconOpcionesConsulta";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -89,10 +90,12 @@ export default function HomeDoc() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
-  const handleCokiePatient = (schedule,id) => {
-    Cookies.set('patientId', id, { expires: 7 }); // La cookie expirará en 7 días
-    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`);
-  }
+  const handleCokiePatient = (schedule, id) => {
+    Cookies.set("patientId", id, { expires: 7 }); // La cookie expirará en 7 días
+    router.push(
+      `${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`
+    );
+  };
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
@@ -154,7 +157,7 @@ export default function HomeDoc() {
                       categories={[
                         {
                           title: "Opciones",
-                          icon: <IconOrder />,
+                          icon: <IconOpcionesConsulta />,
                           items: [
                             {
                               label: "Dejar Review",
@@ -164,7 +167,11 @@ export default function HomeDoc() {
                             {
                               label: "Ver consultas",
                               icon: <IconPersonalData />,
-                              onClick: () => handleCokiePatient(paciente.id, paciente.patient),
+                              onClick: () =>
+                                handleCokiePatient(
+                                  paciente.id,
+                                  paciente.patient
+                                ),
                             },
                           ],
                         },
