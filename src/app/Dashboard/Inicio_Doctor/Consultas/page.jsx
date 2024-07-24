@@ -91,12 +91,12 @@ export default function HomeDoc() {
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
-      <div className="h-full w-full flex flex-col">
+      <div className="flex flex-col w-full h-full">
         <div className="w-full flex justify-center md:justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
           {/* <Ordenar /> */}
           <div></div>
 
-          <h1 className="font-bold md:text-xl hidden md:block">Proximas</h1>
+          <h1 className="hidden font-bold md:text-xl md:block">Proximas</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
@@ -107,7 +107,7 @@ export default function HomeDoc() {
             </Link> */}
             <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
-                <IconFolder className="h-6 hidden md:block" />
+                <IconFolder className="hidden h-6 md:block" />
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Pasadas
                 </p>
@@ -115,7 +115,7 @@ export default function HomeDoc() {
             </Link>
           </div>
         </div>
-        <div className="md:overflow-y-auto h-full">
+        <div className="h-full md:overflow-y-auto">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
             <div className="w-[10%] md:w-[5%] md:block"></div>
             <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-4 py-2 z-10">
@@ -159,7 +159,7 @@ export default function HomeDoc() {
                             {
                               label: "Ver consultas",
                               icon: <IconPersonalData />,
-                              href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
+                              href: `${rutas.Doctor}${rutas.Consultas}/${paciente.id}?patientId=${paciente.patient}`,
                             },
                           ],
                         },

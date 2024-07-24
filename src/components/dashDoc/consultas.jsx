@@ -16,8 +16,15 @@ export default function ProximasConsultasInfo({ info }) {
   console.log(info);
   return (
     <div className="flex items-center px-2 xs:px-4 md:px-6 md:py-4 py-2 justify-between border-b border-[#DCDBDB]">
-      <div className="flex items-center w-2/3 md:w-[55%] ">
-        <div className="flex items-center w-full md:w-1/2">
+       <div className="flex items-center w-2/3 md:w-[35%] ">
+      <span className="mr-2"> {info.patientPulmonaryHypertensionRisks?.risk ? (
+                <RealColorRisk risk={paciente.patientPulmonaryHypertensionRisks.risk} />
+              ) : (
+                <IconRisk color="lightGray" />
+              )}
+              </span>
+     
+        <div className="flex w-full md:w-1/2">
           <Avatars avatar1={info?.patientUser?.avatar} />
           </div>   
           
