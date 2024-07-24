@@ -17,7 +17,16 @@ export default function AutocompleteDiagnostico({ options, text2, name, onOption
       onOptionSelect(selectedValue);
     }
   };
-
+  const SwitchCatalogo  = (value) => {
+    switch (value) {
+      case "0":
+        return "1";
+      case "1":
+        return "4";
+      default:
+        return "Medicamento Desconocido";
+    }
+  };
   return (
     <>
   
@@ -26,7 +35,7 @@ export default function AutocompleteDiagnostico({ options, text2, name, onOption
       className="w-1/2 bg-white "
       aria-label="Dropdown menu with icons"
       style={{ border: 'none', boxShadow: 'none', outline: 'none' , backgroundColor: 'white', background: 'white',  }}
-      onSelectionChange={(value) => {handleSelectionChange(value);}}
+      onSelectionChange={(value) => {handleSelectionChange(SwitchCatalogo(value));}}
       {...register(name)}
       classNames={{
         base: 'white',
