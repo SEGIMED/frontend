@@ -20,9 +20,9 @@ const DrugModal = ({ isOpen, onClose, selectedOption }) => {
 
   const getMedicationName = (value) => {
     switch (value) {
-      case "0":
-        return "Losartan";
       case "1":
+        return "Losartan";
+      case "4":
         return "Ácido Fenofíbrico";
       default:
         return "Medicamento Desconocido";
