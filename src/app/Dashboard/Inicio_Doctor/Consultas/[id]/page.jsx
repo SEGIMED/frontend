@@ -436,10 +436,9 @@ const DetallePaciente = (id) => {
     });
     setMedicalEventPatch({
       id: Number(medicalEventExist?.id),
-    })
-    if(medicalEventExist){
+    });
       const medicalEventPatch = {
-        id: Number(medicalEventExist.medicalEventId),
+        id: Number(medicalEventExist?.medicalEventId),
       };
       
       // Función para agregar campos condicionalmente al objeto
@@ -452,11 +451,14 @@ const DetallePaciente = (id) => {
       // Agregar cada campo condicionalmente
       addMedicalEventField("Anotaciones de la consulta", "physicianComments");
       addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
-      addMedicalEventField("alarmPattern", "Pauta de alarma");
+      addMedicalEventField("Pauta de alarma", "alarmPattern");
+      addMedicalEventField("Sintomas importantes", "reviewOfSystems");
+      addMedicalEventField("Motivo de consulta", "chiefComplaint");
+      addMedicalEventField("Tratamientos no farmacológicos", "treatmentPlan");
       
       // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
       setMedicalEventPatch(medicalEventPatch);
-  }
+  
   };
 
   useEffect(() => {
@@ -624,6 +626,7 @@ const DetallePaciente = (id) => {
     if(response9 !== undefined){ responses.push(response9);}
     */
    // solo post
+
     let response9;
     console.log(medicalEventPatch);
     if(medicalEventPatch !== undefined){
@@ -643,13 +646,13 @@ const DetallePaciente = (id) => {
     if (allSuccessful) {
       const data = await ApiSegimed.patch(`/schedule/${scheduleId}`, { schedulingStatus: 2 }, { headers: { token: token } });
       console.log(data);
-      setLoading(false);
+      //setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
         text: "Se ha creado la consulta",
       });
-      router.push(`/Dashboard/Inicio_Doctor/Consultas`);
+      //router.push(`/Dashboard/Inicio_Doctor/Consultas`);
     } else {
       setLoading(false);
       Swal.fire({
