@@ -42,7 +42,7 @@ const DetallePaciente = (id) => {
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
-
+  console.log(preconsult);
   const [physicalExamination, setPhysicalExamination] = useState();
   const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
   const [preconsultPhysical, setPreconsultPhysical] = useState();
@@ -470,7 +470,7 @@ const DetallePaciente = (id) => {
             { headers: { token: token } }
           );
 
-        setPreconsulta(response1.data);
+        setPreconsult(response1.data);
       } catch (error) {
           console.log("Este agendamiento no tiene preconsulta", error);
       };
@@ -535,11 +535,12 @@ const DetallePaciente = (id) => {
     // Ruta de antecedentes
     console.log(background);
     let response1;
+    if(background!==undefined){
     if (patient?.backgrounds?.length === 0 || patient?.backgrounds === null) {
       response1 = await ApiSegimed.post(`/backgrounds/create-backgrounds`, background, { headers: { token: token } });
     } else {
       response1 = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`, backgroundPatch, { headers: { token: token } });
-    }
+    }}
     if(response1 !== undefined){responses.push(response1);}
   
     // Riesgo cardiovascular
