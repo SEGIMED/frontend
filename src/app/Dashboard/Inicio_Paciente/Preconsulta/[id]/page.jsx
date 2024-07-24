@@ -9,16 +9,7 @@ import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
-  updateActive,
-  subquestionSelectedOption,
-  questionSelectedOption,
-  updateDescription,
-  updateVitalSign,
-  updateAnamnesis,
-  updateTratamiento,
-  updateBodyPainLevel,
-  updateGlycemia,
-  updateLastGlycemia,
+  updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
@@ -28,12 +19,18 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import AnamnesisPreconsulta from "@/components/preconsulta/Anamnesis";
 import TratamientoPreconsulta from "@/components/preconsulta/Tratamiento";
 import IconGuardar from "@/components/icons/iconGuardar";
+import LoadingFallback from "@/components/loading/loading";
+import Swal from "sweetalert2";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
   const scheduleId = params.id;
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
+  const [isLoading, setIsLoading] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(false);
+  const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] = useState(null);
+  const formData = useAppSelector((state) => state.preconsultaForm.formData);
   const [tests, setTests] = useState({
     // abnormalGlycemia: {
     //   title: "Glicemia anormal",
@@ -123,7 +120,6 @@ export default function PreconsultaPte({ params }) {
       description: "",
     },
   });
-  const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
   const handleQuestionActive = (question, label, active) => {
     dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
@@ -148,6 +144,7 @@ export default function PreconsultaPte({ params }) {
       dispatch(updateGlycemia({ vitalSign, active }));
     }
     if (vitalSign === 'lastAbnormalGlycemia') {
+      console.log({ vitalSign, key, value });
       dispatch(updateLastGlycemia({ vitalSign, key, value }));
     }
     else {
@@ -200,15 +197,17 @@ export default function PreconsultaPte({ params }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     const bodyOBJFormat = {
+      patient: Number(patientId),
+      patientPainMapId: Number(patientId),
       painOwnerId: Number(patientId),
       schedulingId: Number(scheduleId),
-      medicalEventId: null,
       isTherePain: formData.bodySection.isTherePain,
       painDurationId: formData.bodySection.painDuration,
       painScaleId: formData.bodySection.painScale,
       painTypeId: formData.bodySection.painType,
-      painAreas: formData.bodySection.painAreas ? Object.values(formData.bodySection.painAreas) : null,
+      painAreas: formData.bodySection.painAreas ? Object.values(formData.bodySection.painAreas) : {},
       painFrequencyId: formData.bodySection.painFrequency,
       isTakingAnalgesic: formData.bodySection.isTakingAnalgesic,
       doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks,
@@ -280,36 +279,73 @@ export default function PreconsultaPte({ params }) {
       currentMedications: formData.tratamiento.currentMedications?.selectedOptions ? Object.values(formData.tratamiento.currentMedications.selectedOptions) : null,
       // Signos vitales
       abnormalGlycemia: formData.vitalSigns.abnormalGlycemia.active,
-      lastAbnormalGlycemia: formData.vitalSigns.lastAbnormalGlycemia.options ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options) : null,
+      lastAbnormalGlycemia: Object.keys(formData.vitalSigns.lastAbnormalGlycemia.options).length ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options) : null,
       vitalSignsToCreate: vitalSignFormat,
       // painRecordsToCreate
       painRecordsToCreate: [bodyOBJFormat],
     };
-    console.log(bodyForm);
     try {
       if (!bodyForm) {
         console.error("No form data to submit");
+        setIsLoading(false);
         return;
       }
-      const response = await ApiSegimed.post(`/pre-consultation`, bodyForm, {
-        headers: {
-          token: token,
-          "Content-Type": "application/json",
-        },
-      });
-      if (response) {
-        console.log(response.data);
+      const isBodyCompleted = Object.values(bodyOBJFormat).some(item => item === null);
+      const isVitalSignCompleted = vitalSignFormat.some(item => item.measure === null);
+      if (isBodyCompleted || isVitalSignCompleted) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Debe completar la información del cuerpo y los signos vitales",
+        });
+        setIsLoading(false);
+        return;
+      }
+      if (!preconsultationAlreadyExists) {
+        console.log({ toCreate: bodyForm, preconsultationAlreadyExists: !!preconsultationAlreadyExists });
+        const response = await ApiSegimed.post(`/pre-consultation`, bodyForm, {
+          headers: {
+            token: token,
+            "Content-Type": "application/json",
+          },
+        });
+        if (response) {
+          Swal.fire({
+            icon: "success",
+            title: "Preconsulta creada con éxito",
+            text: '',
+          });
+          console.log({ resupuestaCreate: response.data });
+        }
+        setIsLoading(false);
+        setPreconsultationAlreadyExists(true);
+        return;
+      }
+      else {
+        console.log({ toUpdate: { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate }, preconsultationAlreadyExists: !!preconsultationAlreadyExists });
+        const response = await ApiSegimed.patch(`/update-pre-consultation`, { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate }, {
+          headers: {
+            token: token,
+            "Content-Type": "application/json",
+          },
+        });
+        if (response) {
+          console.log({ resupuestaPatch: response.data });
+        }
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error fetching data", error);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     const getPreConsultation = async () => {
       try {
+        setIsLoading(true);
         const res = await ApiSegimed.get(
-          `/get-all-pateint-preconsultation?patientId=${patientId}`,
+          `/get-preconsultation?scheduleId=${scheduleId}`,
           {
             headers: {
               token: token,
@@ -317,14 +353,56 @@ export default function PreconsultaPte({ params }) {
           }
         );
         if (res) {
-          console.log({ preConsultationLength: res.data.length });
+          setPreconsultationAlreadyExists(res.data);
+          setDisabledButton(true);
+          console.log({ setPreconsultationAlreadyExists: true, preconsultation: res.data });
         }
+        setIsLoading(false);
       } catch (error) {
+        console.log('NUEVA PRECONSULTA');
         console.error("Error fetching data", error);
+        setIsLoading(false);
       }
     };
-    // getPreConsultation();
+    getPreConsultation();
   }, []);
+
+  if (isLoading) {
+    return (
+      <FormProvider {...methods}>
+        <div className="flex h-full items-center justify-center my-2 bg-white">
+          <LoadingFallback />
+        </div>
+      </FormProvider>
+    )
+  }
+
+  if (preconsultationAlreadyExists) {
+    return (
+      <FormProvider {...methods}>
+        <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
+          <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
+            <div className="md:w-1/2">
+              <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
+                <Elboton
+                  size={"lg"}
+                  nombre={"Regresar"}
+                  icon={<IconRegresar />}
+                />
+              </Link>
+            </div>
+            <div className="flex items-center">
+              <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
+                Crear preconsulta
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center justify-center my-2 bg-white">
+            Su preconsulta ya fue enviada
+          </div></div>
+      </FormProvider>
+    )
+  }
 
   return (
     <FormProvider {...methods}>
@@ -389,16 +467,12 @@ export default function PreconsultaPte({ params }) {
           tratamiento={formData.tratamiento}
           defaultOpen
         />
-        {/* <button
-          className="bg-[#70C247] mt-4 my-5 mx-auto text-white text-sm font-semibold rounded-lg px-2 py-4"
-          onClick={handleSubmit}>
-          Guardar cambios
-        </button> */}
         <div className="flex justify-center p-6 bg-[#fafafc]">
           <Elboton
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
             onPress={handleSubmit}
+            disabled={disabledButton}
             size={"lg"}
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />

@@ -94,7 +94,7 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
             </span>
             <Slider
               aria-label="Nivel de dolor"
-              size="sm"
+              size="md"
               step={1}
               showSteps={true}
               maxValue={10}
