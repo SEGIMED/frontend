@@ -50,7 +50,7 @@ export default function DetallePaciente({ params }) {
           ...response2.data,
         };
 
-        console.log(combinedData);
+       
 
         dispatch(setPatient(combinedData));
       }

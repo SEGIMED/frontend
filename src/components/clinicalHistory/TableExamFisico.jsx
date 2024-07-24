@@ -9,13 +9,14 @@ import InputInfo from "./InputInfo";
 export default function ExamFisico({ pacientes, subtitle }) {
   // Estado para controlar qué detalles están abiertos
   const [openDetails, setOpenDetails] = useState({});
-
+  
   const toggleDetail = (index) => {
     setOpenDetails((prevState) => ({
       ...prevState,
       [index]: !prevState[index],
     }));
   };
+
 
   return (
     <div className="h-full flex flex-col">
@@ -25,27 +26,31 @@ export default function ExamFisico({ pacientes, subtitle }) {
             open={openDetails[index]}
             onToggle={() => toggleDetail(index)}>
             <summary className="flex items-center cursor-pointer">
-              <div className="grid text-center grid-cols-4 md:text-left md:grid-cols-7 items-center border-b border-b-[#cecece] py-2 bg-white z-10">
-                <div className="justify-center hidden md:flex">
+              <div className="w-[100%] flex border-b border-t border-b-[#cecece] border-t-[#cecece]  bg-white">
+                <div className="justify-center w-[5%] items-center hidden md:flex">
                   <IconConsulta />
                 </div>
-                <div className="text-[#5F5F5F] hidden md:block">
-                  {new Date(paciente.timestamp).toLocaleTimeString()}
+                <div className="grid text-center grid-cols-3 w-[90%] md:text-left md:grid-cols-5 items-center py-2 bg-white z-10">
+
+                  <div className="text-[#5F5F5F] hidden md:block">
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
+                  </div>
+                  <div className="text-[#5F5F5F]">
+                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
+                      day: "numeric",
+                      month: "numeric",
+                    })}
+                  </div>
+                  <div className="text-[#5F5F5F] hidden md:block">
+                  {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
+                  </div>
+                  <div className="text-[#5F5F5F]">
+                  {paciente?.appSch?.attendancePlace?.alias}
+                  </div>
+                  <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
+
                 </div>
-                <div className="text-[#5F5F5F]">
-                  {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
-                    day: "numeric",
-                    month: "numeric",
-                  })}
-                </div>
-                <div className="text-[#5F5F5F] hidden md:block">
-                  {paciente.HTP || "Sin asignar"}
-                </div>
-                <div className="text-[#5F5F5F]">
-                  {paciente?.attendancePlace?.alias}
-                </div>
-                <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
-                <div className="flex justify-center">
+                <div className="flex w-[10%] md:w-[5%]  items-center justify-center">
                   {openDetails[index] ? (
                     <IconArrowDetailUp />
                   ) : (
@@ -55,7 +60,7 @@ export default function ExamFisico({ pacientes, subtitle }) {
               </div>
             </summary>
             <div className="md:p-5 bg-[#f5f4f4] p-2">
-              {paciente.physicalExaminations?.map((examen, index) => (
+              {paciente.patientPhysicalExaminations?.map((examen, index) => (
                 <div key={index}>
                   <InputInfo
                     title={examen.physicalSubsystem}

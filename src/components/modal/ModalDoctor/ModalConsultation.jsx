@@ -13,6 +13,7 @@ import IconTypeQueries from "@/components/icons/IconTypeQueries";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
+import { useState } from "react";
 
 const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const {
@@ -24,6 +25,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
     formState: { errors },
     setError,
   } = useForm();
+
+
+  const [disabled, setDisabled] = useState(false);
 
   const handleClose = () => {
     onClose();
@@ -45,13 +49,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   };
   useEffect(() => {
     function onClose2(event) {
-
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     }
 
-    if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
+    if (typeof window !== "undefined")
+      window.addEventListener("keydown", onClose2);
 
     // Cleanup function to remove the event listener when the component unmounts
     return () => {
@@ -72,7 +76,6 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
         scheduledStartTimestamp: "",
         scheduledEndTimestamp: "",
       });
-
     }
   }, [isOpen, reset]);
 
@@ -93,7 +96,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   }, [date, time, setValue, patientId, doctorId]);
 
   const onSubmit = handleSubmit(async (data) => {
+
     try {
+      setDisabled(true);
       const { date, time, ...rest } = data;
 
       const token = Cookies.get("a");
@@ -126,13 +131,14 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-      <div onClick={handleClickOutside}
+      <div
+        onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
         <form
           onSubmit={onSubmit}
-          className="h-full w-full flex flex-col justify-between">
-          <div className="h-16 flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
+          className="flex flex-col justify-between w-full h-full">
+          <div className="flex items-center justify-start h-16 gap-3 p-5 font-semibold border-b-2">
             <IconCurrentRouteNav className="w-4" /> Agendar consulta
           </div>
           <div className="flex flex-col justify-around px-5">
@@ -175,13 +181,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               </div>
             </div>
             {errors.typeOfMedicalConsultation && (
-              <span className="text-red-500 text-sm font-medium">
+              <span className="text-sm font-medium text-red-500">
                 {errors.typeOfMedicalConsultation.message}
               </span>
             )}
           </div>
 
-          <div className="border w-full" />
+          <div className="w-full border" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
@@ -199,13 +205,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               })}
             />
             {errors.reasonForConsultation && (
-              <span className="text-red-500 text-sm font-medium">
+              <span className="text-sm font-medium text-red-500">
                 {errors.reasonForConsultation.message}
               </span>
             )}
           </div>
 
-          <div className="border w-full" />
+          <div className="w-full border" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
@@ -226,20 +232,20 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               <option value="1">Centro Gallegos</option>
             </select>
             {errors.healthCenter && (
-              <span className="text-red-500 text-sm font-medium">
+              <span className="text-sm font-medium text-red-500">
                 {errors.healthCenter.message}
               </span>
             )}
           </div>
 
-          <div className="border w-full" />
+          <div className="w-full border" />
 
           <div className="flex flex-col justify-around gap-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconDate /> Fecha
             </div>
-            <div className="flex flex-col md:flex-row justify-around">
-              <div className="flex flex-row md:flex-col justify-between gap-2">
+            <div className="flex flex-col justify-around md:flex-row">
+              <div className="flex flex-row justify-between gap-2 md:flex-col">
                 <label
                   htmlFor="date"
                   className="flex items-center justify-start gap-2">
@@ -258,13 +264,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 {errors.date && (
-                  <span className="text-red-500 text-sm font-medium">
+                  <span className="text-sm font-medium text-red-500">
                     {errors.date.message}
                   </span>
                 )}
               </div>
 
-              <div className="flex flex-row md:flex-col justify-between gap-2">
+              <div className="flex flex-row justify-between gap-2 md:flex-col">
                 <label
                   htmlFor="time"
                   className="flex items-center justify-start gap-2">
@@ -283,7 +289,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 {errors.time && (
-                  <span className="text-red-500 text-sm font-medium">
+                  <span className="text-sm font-medium text-red-500">
                     {errors.time.message}
                   </span>
                 )}
@@ -291,8 +297,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
           </div>
 
-          <div className="w-full p-3 border-t-2 flex justify-center items-center">
+          <div className="flex items-center justify-center w-full p-3 border-t-2">
             <button
+              disabled={disabled}
               type="submit"
               className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white">
               Continuar
@@ -301,8 +308,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
           </div>
         </form>
         <button
+
           onClick={handleClose}
-          className="absolute top-0 right-0 m-4 hover:transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
+          className="absolute top-0 right-0 m-4 duration-300 ease-in-out transform hover:transition hover:scale-105 active:scale-100 active:translate-y-1">
           <IconClose className="w-8" />
         </button>
       </div>

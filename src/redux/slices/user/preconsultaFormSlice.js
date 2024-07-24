@@ -5,22 +5,25 @@ const initialState = {
     questions: {
       lackOfAir: {
         title: "¿Tiene falta de aire (Disnea)?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         description: '',
         subquestions: {
           lackOfAirIncremented: {
             title: "Se ha incrementado en las últimas:",
+            display: 'row',
+            selectedOption: null,
             options: [
               { label: "Horas" },
               { label: "Días" },
               { label: "Semanas" },
             ],
-            selectedOption: null,
           },
           lackOfAirClasification: {
             title: "Califique su falta de aire",
+            selectedOption: null,
+            orientation: "column",
             options: [
               {
                 label: "Puedo caminar a paso rápido más de 10 cuadras sin parar.",
@@ -35,58 +38,56 @@ const initialState = {
                 label: "No puedo caminar ni una cuadra, tampoco realizar tareas domésticas con normalidad, me hace falta el aire aunque esté en reposo, uso oxígeno todo el tiempo.",
               },
             ],
-            selectedOption: null,
-            orientation: "column",
           },
         },
       },
       chestPainAtRest: {
         title: "¿Tiene dolor de pecho en reposo?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         description: '',
       },
       chestPainOnExertion: {
         title: "¿Tiene dolor de pecho al hacer esfuerzos físicos?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         description: '',
         subquestions: {
           chestPainOnExertionAmount: {
+            selectedOption: null,
             options: [
               { label: "Con poco esfuerzo físico" },
               { label: "Con esfuerzo físico moderado" },
               { label: "Con esfuerzo físico intenso" },
             ],
-            selectedOption: null,
           }
         }
       },
       edemaPresence: {
         title: "¿Ha notado edemas (hinchazón) o aumento del edema previo?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         description: '',
         subquestions: {
           edemaPresenceDescription: {
+            selectedOption: null,
             options: [
               { label: "Hinchazón en los pies" },
               { label: "Hinchazón por debajo de las rodillas" },
               { label: "Hinchazón de las rodillas a la cadera" },
               { label: "Hinchazón general" },
             ],
-            selectedOption: null,
           }
         }
       },
       feelings: {
         title: "¿Cómo se encuentra el día de hoy?",
-        active: false,
+        active: null,
         binaryOptions: false,
-        selectedOption: 1,
+        selectedOption: null,
         showRowOptions: true,
         description: '',
         options: [
@@ -98,7 +99,7 @@ const initialState = {
       },
       healthChanges: {
         title: "¿Ha notado algún cambio en su salud?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         showTextInput: true,
@@ -107,9 +108,9 @@ const initialState = {
       },
       healthWorsened: {
         title: "Siente que su salud se ha empeorado en las últimas:",
-        active: false,
+        active: null,
         binaryOptions: false,
-        selectedOption: 3,
+        selectedOption: null,
         showRowOptions: true,
         description: '',
         options: [
@@ -121,14 +122,14 @@ const initialState = {
       },
       bodyPain: {
         title: "¿Tiene alguna dolencia en su cuerpo?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         description: '',
       },
       mentalHealthAffected: {
         title: "¿Su salud mental está afectada?",
-        active: false,
+        active: null,
         binaryOptions: true,
         selectedOption: null,
         showTextInput: true,
@@ -137,17 +138,17 @@ const initialState = {
       },
       energyStatus: {
         title: "Califique su estado de energía - Fatiga",
-        active: false,
+        active: null,
         binaryOptions: false,
-        selectedOption: 1,
+        selectedOption: null,
         showSlider: true,
         description: '',
       },
       feed: {
         title: "Califique su alimentación",
-        active: false,
+        active: null,
         binaryOptions: false,
-        selectedOption: 2,
+        selectedOption: null,
         showRowOptions: true,
         description: '',
         options: [
@@ -161,7 +162,7 @@ const initialState = {
         title: "Califique su hidratación diaria (todos los líquidos ingeridos)",
         active: true,
         binaryOptions: false,
-        selectedOption: 2,
+        selectedOption: null,
         description: '',
         options: [
           { label: "Poca ingesta < de 1.5 litros (menos de 5 vasos aprox.) " },
@@ -173,7 +174,7 @@ const initialState = {
         title: "Califique su estado de orina (diuresis)",
         active: true,
         binaryOptions: false,
-        selectedOption: 4,
+        selectedOption: null,
         description: '',
         options: [
           { label: "Orino normal (entre 500 ml y 1 litro al día)" },
@@ -187,7 +188,7 @@ const initialState = {
         title: "Califique su estado de ejercicio físico",
         active: true,
         binaryOptions: false,
-        selectedOption: 2,
+        selectedOption: null,
         description: '',
         options: [
           { label: "Ninguno: no puedo, no quiero, no recomendado por el médico, contraindicado." },
@@ -202,6 +203,7 @@ const initialState = {
         cat: "antrophometric",
         medicalEventId: null,
         measureType: 4,
+        measure: null,
         key: "Talla",
         label: "Estatura",
         unit: "cm",
@@ -211,6 +213,7 @@ const initialState = {
         cat: "antrophometric",
         medicalEventId: null,
         measureType: 5,
+        measure: null,
         key: "Peso",
         label: "Peso",
         unit: "kg",
@@ -221,6 +224,7 @@ const initialState = {
         key: "IMC",
         medicalEventId: null,
         measureType: 7,
+        measure: null,
         label: "Índice de masa corporal",
         unit: "kg/m2",
         referenceValue: 24.69,
@@ -229,6 +233,7 @@ const initialState = {
         cat: "vitalSigns",
         medicalEventId: null,
         measureType: 1,
+        measure: null,
         key: "Temperatura",
         label: "Temperatura",
         unit: "°C",
@@ -245,6 +250,7 @@ const initialState = {
         cat: "vitalSigns",
         medicalEventId: null,
         measureType: 7,
+        measure: null,
         key: "Frecuencia Cardiaca",
         label: "Frecuencia cardíaca",
         unit: "lpm",
@@ -254,6 +260,7 @@ const initialState = {
         cat: "vitalSigns",
         medicalEventId: null,
         measureType: 2,
+        measure: null,
         key: "Presion Arterial Sistolica",
         label: "Presión arterial sistólica",
         unit: "mmHg",
@@ -263,6 +270,7 @@ const initialState = {
         cat: "vitalSigns",
         medicalEventId: null,
         measureType: 3,
+        measure: null,
         key: "Presion Arterial Diastolica",
         label: "Presión arterial diastólica",
         unit: "mmHg",
@@ -279,6 +287,7 @@ const initialState = {
         cat: "vitalSigns",
         medicalEventId: null,
         measureType: 5,
+        measure: null,
         key: "Frecuencia Respiratoria",
         label: "Frecuencia respiratoria",
         unit: "rpm",
@@ -288,36 +297,53 @@ const initialState = {
         cat: "vitalSigns",
         medicalEventId: null,
         measureType: 6,
+        measure: null,
         key: "Saturacion de Oxigeno",
         label: "Saturación de oxígeno",
         unit: "%",
         referenceValue: 80,
       },
+      abnormalGlycemia: {
+        label: "  Glicemia:  ¿Tuvo valores fuera del rango normal en el último tiempo? (+ 140 mg/dl y - 80 mg/dl)",
+        binaryOptions: true,
+        active: null,
+        measure: 0,
+        description: '',
+        active: null,
+      },
+      lastAbnormalGlycemia: {
+        label: "Escriba los últimos 4 valores mas anormales que tuvo.",
+        selectedOption: null,
+        active: null,
+        measure: 0,
+        description: '',
+        referenceValue: 100,
+        unit: 'mg/dl',
+        options: {},
+      },
     },
     bodySection: {
-      selectedOptions: {
-        isTherePain: null,
-        painDuration: null,
-        painScale: null,
-        painType: null,
-        painAreas: null,
-        painFrequency: null,
-        isTakingAnalgesic: null,
-        doesAnalgesicWorks: null,
-        isWorstPainEver: null,
-        painOwner: null,
-        scheduling: null,
-        medicalEvent: null,
-      },
+      isTherePain: null,
+      painDuration: null,
+      painScale: 1,
+      painType: null,
+      painAreas: null,
+      painFrequency: null,
+      isTakingAnalgesic: null,
+      doesAnalgesicWorks: null,
+      isWorstPainEver: null,
+      painOwner: null,
+      scheduling: null,
+      medicalEvent: null,
     },
     anamnesis: {
       consultationReason: {
         title: '¿Por qué solicitó la consulta?',
-        description: "Dolor de cabeza :("
+        description: ""
       },
       importantSymptoms: {
         title: 'Síntomas importantes',
-        description: "Dolor de cabeza muy fuerte por 2 días :("
+        description: ""
       },
     },
     tratamiento: {
@@ -343,15 +369,28 @@ const preconsultaFormSlice = createSlice({
     },
 
     updateActive(state, action) {
-      const { question, active } = action.payload;
+      const { question, label, active } = action.payload;
       const currentSubquestions = state.formData.questions[question].subquestions;
-      if (!active && currentSubquestions) { // si decimos que no, entonces desactivamos y reseteamos los checkbox de las subpreguntas
-        state.formData.questions[question].active = active
-        Object.keys(currentSubquestions).map((subquestion, index) => {
-          state.formData.questions[question].subquestions[subquestion].selectedOption = null;
-        });
+      console.log(state.formData.questions[question].active === active);
+      if (state.formData.questions[question].active === active) {
+        state.formData.questions[question].active = null;
+        if (currentSubquestions) { // limpiamos las opciones binarias, por lo tanto desactivamos y reseteamos los checkbox de las subpreguntas
+          Object.keys(currentSubquestions).map((subquestion, index) => {
+            state.formData.questions[question].subquestions[subquestion].selectedOption = null;
+          });
+        }
       }
-      else state.formData.questions[question].active = active;
+      else {
+        if (!active) {
+          if (currentSubquestions) { // si decimos que no, entonces desactivamos y reseteamos los checkbox de las subpreguntas
+            Object.keys(currentSubquestions).map((subquestion, index) => {
+              state.formData.questions[question].subquestions[subquestion].selectedOption = null;
+            });
+          }
+          state.formData.questions[question].active = active;
+        }
+        else state.formData.questions[question].active = active;
+      }
     },
     subquestionSelectedOption(state, action) {
       const { question, subquestion, selectedOption } = action.payload;
@@ -363,7 +402,6 @@ const preconsultaFormSlice = createSlice({
     },
     updateDescription(state, action) {
       const { question, description } = action.payload;
-      console.log({ question, description });
       state.formData.questions[question].description = description;
     },
     updateVitalSign(state, action) {
@@ -386,13 +424,28 @@ const preconsultaFormSlice = createSlice({
     },
     updateBodyPainLevel: (state, action) => {
       const { name, option } = action.payload;
-      state.formData.bodySection.selectedOptions[name] = option;
+      state.formData.bodySection[name] = option;
     },
     updateSubquestion(state, action) {
       const { sectionIndex, subquestionIndex, field, value } = action.payload;
       state.formData.questions[sectionIndex].subquestions[subquestionIndex][
         field
       ] = value;
+    },
+    updateGlycemia(state, action) {
+      const { vitalSign, active } = action.payload;
+      if (state.formData.vitalSigns[vitalSign].active === active) {
+        console.log(active);
+        state.formData.vitalSigns[vitalSign].active = null;
+      }
+      else {
+        console.log(active);
+        state.formData.vitalSigns[vitalSign].active = active
+      }
+    },
+    updateLastGlycemia(state, action) {
+      const { vitalSign, key, value } = action.payload;
+      state.formData.vitalSigns[vitalSign].options[key] = value;
     },
     setFormData(state, action) {
       state.formData = action.payload;
@@ -406,6 +459,8 @@ const preconsultaFormSlice = createSlice({
 export const {
   updateField,
   updateActive,
+  updateGlycemia,
+  updateLastGlycemia,
   subquestionSelectedOption,
   questionSelectedOption,
   updateDescription,

@@ -13,14 +13,17 @@ import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { useRouter } from "next/navigation";
 import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
 import { PathnameShow } from "@/components/pathname/path";
+import Elboton from "@/components/Buttons/Elboton";
+import IconNext from "@/components/icons/IconNext";
+import IconPrev from "@/components/icons/IconPrev";
 
 dayjs.locale("es");
 
-export default function Citas() {
+export default function Citas({ title }) {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const lastSegmentTextToShow = PathnameShow()
+  const lastSegmentTextToShow = PathnameShow();
 
   const [date, setDate] = useState(new Date());
   const [dateSelected, setDateSelected] = useState();
@@ -139,33 +142,35 @@ export default function Citas() {
     };
 
     return (
-      <div className="flex flex-col mb-2 rounded-xl gap-2">
+      <div className={"flex flex-col rounded-xl gap-2 py-1 bg-white"}>
         <title>{lastSegmentTextToShow}</title>
-        <div className="flex justify-between items-center bg-white rounded-lg p-2">
+        {title && <p className="text-sm md:text-lg text-center">{title}</p>}
+        <div className="flex justify-between items-center rounded-lg sm:px-10 py-1">
           <div className="space-x-1 md:space-x-4">
-            <button
-              className="bg-[#487FFA] text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
-              onClick={() => onNavigate("PREV")}>
-              Anterior
-            </button>
+            <Elboton
+              className="px-2 xs:px-4"
+              icon={<IconPrev color="white" />}
+              onPress={() => onNavigate("PREV")}
+              nombre={"Anterior"}
+            />
           </div>
           <div className="space-x-1 md:space-x-4">
             <button
               className={clsx(
-                "border  border-[#DCDBDB] font-bold text-sm md:text-base py-2 px-2 md:px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
+                "border border-[#DCDBDB] font-bold font-Roboto py-2 text-sm md:text-base px-2 md:px-4 rounded-xl transition duration-300",
                 {
-                  "bg-[#70C247] text-white": view === "month",
-                  "bg-[#FAFAFC] text-[#5F5F5F]": view !== "month",
+                  "bg-bluePrimary text-white": view === "day",
+                  "bg-[#FAFAFC] text-[#5F5F5F]": view !== "day",
                 }
               )}
-              onClick={() => onView("month")}>
-              Mes
+              onClick={() => onView("day")}>
+              Día
             </button>
             <button
               className={clsx(
-                "border border-[#DCDBDB] font-bold text-sm md:text-base py-2 px-2 md:px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
+                "border border-[#DCDBDB] font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-xl transition duration-300",
                 {
-                  "bg-[#70C247] text-white": view === "week",
+                  "bg-bluePrimary text-white": view === "week",
                   "bg-[#FAFAFC] text-[#5F5F5F]": view !== "week",
                 }
               )}
@@ -174,22 +179,23 @@ export default function Citas() {
             </button>
             <button
               className={clsx(
-                "border border-[#DCDBDB] font-bold py-2 text-sm md:text-base px-2 md:px-4 rounded-xl hover:bg-[#70C247] hover:text-white transition duration-300",
+                "border  border-[#DCDBDB] font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-xl transition duration-300",
                 {
-                  "bg-[#70C247] text-white": view === "day",
-                  "bg-[#FAFAFC] text-[#5F5F5F]": view !== "day",
+                  "bg-bluePrimary text-white": view === "month",
+                  "bg-[#FAFAFC] text-[#5F5F5F]": view !== "month",
                 }
               )}
-              onClick={() => onView("day")}>
-              Día
+              onClick={() => onView("month")}>
+              Mes
             </button>
           </div>
           <div>
-            <button
-              className="bg-[#487FFA] text-white text-sm md:text-base font-bold py-2 px-2 md:px-4 rounded-xl"
-              onClick={() => onNavigate("NEXT")}>
-              Siguiente
-            </button>
+            <Elboton
+              className="px-2 xs:px-4"
+              icon2={<IconNext color="white" />}
+              onPress={() => onNavigate("NEXT")}
+              nombre={"Siguiente"}
+            />
           </div>
         </div>
         <div className="flex justify-center text-lg font-semibold">
@@ -200,8 +206,10 @@ export default function Citas() {
   };
 
   return (
-    <div className=" flex flex-col items-center bg-[#FAFAFC] rounded-2xl h-screen" >
-      <div className="h-[90%] w-full md:px-10 py-5">
+    <div
+      className={` flex flex-col items-center ${title && "bg-white"} rounded-2xl ${title ? "h-screen" : "h-full"
+        } `}>
+      <div className={`h-[90%] w-full rounded-2xl ${title && "bg-white"}`}>
         <Calendar
           localizer={localizer}
           events={events}
@@ -213,12 +221,12 @@ export default function Citas() {
           date={date}
           onSelectSlot={handleSelectSlot}
           selectable
+          className="h-full w-full"
           dayPropGetter={dayStyle}
           components={{
             toolbar: CustomToolbar,
           }}
           firstDay={1}
-          style={{ height: '100%', width: '100%' }} // Aseguramos que ocupe todo el espacio
         />
       </div>
       <ModalConsultationCalendar

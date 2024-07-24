@@ -11,30 +11,44 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions }) {
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText, handleOptionChange}) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
-  // const { setValue, register } = useFormContext();
 
   useEffect(() => {
     if (selectedOptions) {
       setSelectedOptionState(selectedOptions);
+      if (handleDisabled)
+        handleDisabled();
     }
   }, [selectedOptions]);
 
   const handleSelectionChange = (key) => {
-    const selectedOption = key;
-    setSelectedOptionState(selectedOption);
+    const selectedIndex = options.findIndex(option => option === key);
+    console.log(selectedIndex);
+    setSelectedOptionState(key);
+
+    if (handleDisabled) { handleDisabled() }
     // setValue(name, selectedOption);
-    dispatch(setSelectedOption({ name, option: selectedOption }));
+    if (type) {
+      dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
+      dispatch(setSelectedOption({ name: `${name}2`, option: key }));
+    } else {
+      dispatch(setSelectedOption({ name, option: key }));
+    }
+    handleOptionChange(name, key);
   };
+  const handleButtonClick = () => {
+    setIsOpen(!isOpen);
+  };
+
 
   return (
     <div>
       <div className='flex items-center justify-center'>
-        <div className="font-bold mb-2 ">{text}</div>
-
+        <div className="mb-2 font-bold ">{text}</div>
       </div>
       <Dropdown className="emptyContent">
         <DropdownTrigger
@@ -47,11 +61,18 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
               variant="bordered"
               className="capitalize"
               style={{
-                color: "#487FFA",
+                backgroundColor: colorBackground || "none", 
+                color: colorText || "#487FFA",
                 borderColor: "#487FFA",
                 border: "2px solid",
-              }}>
+                
+              }}
+              onClick={handleButtonClick}
+              >
               {selectedOption || text2}
+              {icon && <div className={ isOpen===true ? "rotate-180" : ""}>
+              {icon}
+              </div>}
             </Button>
           ) : (
             <Button
@@ -77,7 +98,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
             onSelectionChange={(keys) =>
               handleSelectionChange(Array.from(keys)[0])
             }>
-            {options?.map((option) => (
+            {options?.map((option, index) => (
               <DropdownItem key={option} aria-label={option}>
                 {option}
               </DropdownItem>
@@ -85,7 +106,6 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
           </DropdownMenu>
         ) : null}
       </Dropdown>
-      {/* <input type="hidden" {...register(name)} value={selectedOption} /> */}
     </div>
   );
 }

@@ -1,55 +1,60 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
-import {
-  Autocomplete,
-  AutocompleteItem
-} from "@nextui-org/react";
-
+import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useAppDispatch } from "@/redux/hooks";
-import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import { setSelectedOption as setSelectedOptionAction } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
-import DrugModal from "../modal/ModalDoctor/DrugModal";
 
-export default function AutocompleteDiagnostico({ options, text2, name }) {
+export default function AutocompleteDiagnostico({ options, text2, name, onOptionSelect }) {
   const [selectedOption, setSelectedOptionState] = useState(null);
-  const { setValue, register } = useFormContext();
+  const { register } = useFormContext();
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    console.log(selectedOption);
 
-  }, [selectedOption]);
+  const handleSelectionChange = (selectedValue) => {
+    setSelectedOptionState(selectedValue);
 
-  const handleSelectionChange = (key) => {
-    const selectedOption = key;
-    setSelectedOptionState(selectedOption);
-
-    dispatch(setSelectedOption({ name, option: selectedOption }));
-    
-  }
+    dispatch(setSelectedOptionAction({ name, option: selectedValue }));
+    if (onOptionSelect) {
+      onOptionSelect(selectedValue);
+    }
+  };
+  const SwitchCatalogo  = (value) => {
+    switch (value) {
+      case "0":
+        return "1";
+      case "1":
+        return "4";
+      default:
+        return "Medicamento Desconocido";
+    }
+  };
   return (
-      <>
-      <Autocomplete
-        placeholder={text2}
-        className="w-1/2 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
-        aria-label="Dropdown menu with icons"
-        style={{ border: 'none', boxShadow: 'none', outline: 'none', borderRadius: 'none' }}
-        onSelectionChange={(keys) =>
-          handleSelectionChange(Array.from(keys)[1])
-        }
-        {...register(name)}
-      >
-        {options.map((option, index) => (
-          <AutocompleteItem
-            key={index}
-            value={option}
-            aria-label={option}
-
-          >
-            {option}
-          </AutocompleteItem>
-        ))}
-      </Autocomplete>
-      </>
+    <>
+  
+    <Autocomplete
+      placeholder={text2}
+      className="w-1/2 bg-white "
+      aria-label="Dropdown menu with icons"
+      style={{ border: 'none', boxShadow: 'none', outline: 'none' , backgroundColor: 'white', background: 'white',  }}
+      onSelectionChange={(value) => {handleSelectionChange(SwitchCatalogo(value));}}
+      {...register(name)}
+      classNames={{
+        base: 'white',
+        popoverContent: 'bg-white',
+        endContentWrapper: 'bg-white',
+        
+      }}
+      variant="bordered"
+    >
+      {options.map((option, index) => (
+        <AutocompleteItem
+          key={index}
+          value={option} // Utiliza el valor de la opción como el valor del AutocompleteItem
+          aria-label={option}
+        >
+          {option}
+        </AutocompleteItem>
+      ))}
+    </Autocomplete>
+    </>
   );
 }

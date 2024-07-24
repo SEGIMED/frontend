@@ -23,44 +23,49 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-const handleStatus = (id) => { };
+const handleStatus = (id) => {};
 
 export default function TableConsultas({ consultas }) {
+ 
   return (
     <div className="h-full flex flex-col">
       {consultas?.map((paciente, index) => (
         <div
           key={index}
-          className="text-center md:text-left xs:gap-2 grid grid-cols-4 md:grid-cols-7 items-center border-b border-b-[#cecece] md:px-2 py-2 bg-white w-full h-fit ">
-          <div className="justify-center w-1/2 hidden md:flex">
-            <IconConsulta />
+          className="w-[100%] border-b border-b-[#cecece] flex justify-start gap-3 md:gap-0">
+          <div className=" items-center w-[5%] hidden justify-center md:flex">
+            <div className=" justify-center w-1/2 hidden md:flex">
+              <IconConsulta />
+            </div>
           </div>
-          <div className="text-[#5F5F5F]">
-            {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
-              day: "2-digit",
-              month: "2-digit",
-            })}
+          <div className="text-center w-[80%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
+            <div className="text-[#5F5F5F]">
+              {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })}
+            </div>
+            <div className="text-[#5F5F5F] hidden md:block">
+              {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
+            </div>
+            <p className="text-[#FF8300] ">{paciente?.appSch?.patientUser?.userHpGroups[0]?.catHpGroup?.name}</p>
+            <div className="text-[#5F5F5F]">
+              {paciente?.appSch?.attendancePlace?.alias}
+            </div>
+            <div className="text-[#5F5F5F] hidden md:block line-clamp-2">
+              {paciente?.chiefComplaint}
+            </div>
           </div>
-          <div className="text-[#5F5F5F] hidden md:block">
-            {new Date(paciente.timestamp).toLocaleTimeString()}
-          </div>
-          <p className="text-[#FF8300] ">{paciente?.medicalSpecialty}</p>
-          <div className="text-[#5F5F5F]">
-            {paciente?.attendancePlace?.alias}
-          </div>
-          <div className="text-[#5F5F5F] hidden md:block">
-            {paciente?.chiefComplaint}
-          </div>
-
-          <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
-            <button className="flex rounded-lg items-center px-4 xs:px-6 py-2 font-bold text-sm leading-5 bg-bluePrimary text-white gap-1 ">
-              <IconOptions color="#FFFFFF" />
-              <p className="hidden md:block">Ver consulta</p>
-            </button>
-          </Link>
-
-
-
+          {/* <div className="w-[20%]  items-center justify-center flex">
+            {" "}
+            <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
+              <button className="flex rounded-lg items-center px-4 xs:px-6 py-2 font-bold text-sm leading-5 bg-bluePrimary text-white gap-1 ">
+                <IconOptions color="#FFFFFF" />
+                <p className="hidden md:block">Ver consulta</p>
+              </button>
+            </Link>
+          </div> */}
         </div>
       ))}
     </div>

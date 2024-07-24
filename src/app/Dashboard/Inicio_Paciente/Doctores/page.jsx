@@ -14,21 +14,25 @@ import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
 import FiltrosPaciente from "@/components/Buttons/FiltrosPaciente";
 import Ordenar from "@/components/Buttons/Ordenar";
-
-
+import MenuDropDown from "@/components/dropDown/MenuDropDown";
+import IconMiniCalendar from "@/components/icons/IconMiniCalendar";
+import IconPersonalData from "@/components/icons/IconPersonalData";
+import IconMessages from "@/components/icons/IconMessages";
+import rutas from "@/utils/rutas";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import DoctorAsociado from "@/components/modal/ModalPatient/modalDoctorAsociation";
+import IconOptions from "@/components/icons/IconOptions";
 
 export default function DoctoresPte() {
-  const doctores = useAppSelector((state) => state.doctores.doctores);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.doctores.doctores.length === 0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedModal, setSelectedModal] = useState(null);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [isSorted, setIsSorted] = useState(false);
+  const [selectedDoctorName, setSelectedDoctorName] = useState("");
   const patientId = config.c;
   const [pagination, setPagination] = useState({
     totalUsers: 0,
@@ -36,68 +40,84 @@ export default function DoctoresPte() {
     currentPage: 1,
   });
 
+  const token = Cookies.get("a");
+
   useEffect(() => {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
-  const getAllDoc = async (headers) => {
+  const fetchDoctors = async (searchTerm = "") => {
     try {
-      const response = await ApiSegimed.get(`/all-physicians?page=${pagination.currentPage}&limit=7`, headers);
+      const response = await ApiSegimed.get(
+        `/all-physicians?page=${pagination.currentPage}&limit=7&name=${searchTerm}`,
+        // `/all-physicians?page=${pagination.currentPage}&limit=7`,
+        { headers: { token: token } }
+      );
+      console.log(response.data);
       if (response.data) {
-        console.log(response.data);
         setDoctors(response.data.user);
         setPagination((prev) => ({
           ...prev,
           totalUsers: response.data.totalUsers,
           totalPages: response.data.totalPages,
         }));
+        setIsLoading(false);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
   };
 
   useEffect(() => {
-    const token = Cookies.get("a");
     if (token) {
-      getAllDoc({ headers: { token: token } });
+      fetchDoctors();
     }
-  }, [pagination.currentPage]);
+  }, [pagination.currentPage, token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchDoctors(searchTerm1);
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
+    }
+  }, [searchTerm1, token]);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= pagination.totalPages) {
-      setPagination(() => ({
-        ...pagination,
+      setPagination((prev) => ({
+        ...prev,
         currentPage: newPage,
       }));
     }
   };
 
-  const filteredDoctor = doctores?.filter(
-    (doc) =>
-      doc.name.toLowerCase().includes(searchTerm1.toLowerCase()) ||
-      doc.lastname.toLowerCase().includes(searchTerm1.toLowerCase())
-  );
-
-  const sortedDoctor = isSorted
-    ? [...filteredDoctor].sort((a, b) => a.name.localeCompare(b.name))
-    : filteredDoctor;
-
-  const handleViewDetail = (doctorId) => {
-    setIsDetailModalOpen(true);
+  const openModal = (doctorId, type, doctorName) => {
     setSelectedDoctorId(doctorId);
-    setSelectedModal("detail");
+    setSelectedDoctorName(doctorName);
+    setModalType(type);
+    setIsModalOpen(true);
   };
 
-  const openModal = (doctorId) => {
-    setIsModalOpen(true);
-    setSelectedDoctorId(doctorId);
-    setSelectedModal("consultation");
+  const closeModal = () => {
+    setSelectedDoctorId(null);
+    setSelectedDoctorName("");
+    setModalType(null);
+    setIsModalOpen(false);
   };
 
   const handleConsultationClick = (doctorId) => {
-    handleViewDetail(doctorId);
-    openModal(doctorId);
+    openModal(doctorId, "consultation");
+  };
+
+  const handleAssociateClick = (doctorId, doctorName, doctorLastname) => {
+    openModal(doctorId, "associate", `${doctorName} ${doctorLastname}`);
+  };
+
+  const handleViewDetail = (doctorId) => {
+    openModal(doctorId, "detail");
   };
 
   const toggleFilterMenu = () => {
@@ -108,31 +128,14 @@ export default function DoctoresPte() {
     setIsSorted(!isSorted);
   };
 
-  const closeModal = () => {
-    setSelectedDoctorId(null);
-    if (selectedModal === "detail") {
-      setIsDetailModalOpen(false);
-    } else if (selectedModal === "consultation") {
-      setIsModalOpen(false);
-    }
-  };
-
   if (isLoading) {
     return <MensajeSkeleton />;
   }
 
-
-
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6">
-        {/* <FiltrosPaciente
-              isOpen={isFilterOpen}
-              toggleMenu={toggleFilterMenu}
-              onClickSort={handleSortClick}
-          />
-          <Ordenar /> */}
-        <div className="text-xl font-bold">Lista de Doctores</div>
+        <div className="text-xl font-bold">Médicos</div>
         <div></div>
       </div>
       <div className="md:h-[92%] h-[95%] w-full overflow-y-auto">
@@ -141,10 +144,46 @@ export default function DoctoresPte() {
             key={doctor.id}
             doctor={doctor}
             button={
-              <OpcionesDocCard
-                id={doctor.id}
-                onDetailClick={handleViewDetail}
-                onConsultationClick={() => handleConsultationClick(doctor.id)}
+              <MenuDropDown
+                icon={<IconOptions color="white" />}
+                label="Opciones"
+                categories={[
+                  {
+                    title: "Acciones",
+                    items: [
+                      // {
+                      //   label: "Solicitar asociarse",
+                      //   icon: <IconMiniCalendar />,
+                      //   onClick: () =>
+                      //     handleAssociateClick(
+                      //       doctor.id,
+                      //       doctor.name,
+                      //       doctor.lastname
+                      //     ),
+                      // },
+                      {
+                        label: "Solicitar Consulta",
+                        icon: <IconMiniCalendar />,
+                        onClick: () => handleConsultationClick(doctor.id),
+                      },
+                    ],
+                  },
+                  {
+                    title: "Información",
+                    items: [
+                      {
+                        label: "Ver Detalles",
+                        icon: <IconPersonalData />,
+                        onClick: () => handleViewDetail(doctor.id),
+                      },
+                      {
+                        label: "Ver Mensajes",
+                        icon: <IconMessages />,
+                        href: `${rutas.PacienteDash}${rutas.Mensajes}`,
+                      },
+                    ],
+                  },
+                ]}
               />
             }
           />
@@ -157,7 +196,9 @@ export default function DoctoresPte() {
           className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
-        <p>{pagination.currentPage}</p>
+        <p className=" w-14">
+          {pagination.currentPage} de {pagination.totalPages}
+        </p>
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
@@ -166,19 +207,39 @@ export default function DoctoresPte() {
           <IconNext />
         </button>
       </div>
-      {selectedDoctorId && isDetailModalOpen && (
+      {isModalOpen && modalType === "detail" && (
         <ModalDetailDoctor
-          isOpen={isDetailModalOpen}
+          isOpen={isModalOpen}
           onClose={closeModal}
           doctorId={selectedDoctorId}
         />
       )}
-      <ModalConsultation
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        patientId={patientId}
-        doctorId={selectedDoctorId}
-      />
+      {isModalOpen && modalType === "consultation" && (
+        <ModalConsultation
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          patientId={patientId}
+          doctorId={selectedDoctorId}
+        />
+      )}
+      {isModalOpen && modalType === "associate" && (
+        <ModalModularizado
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          Modals={[
+            <DoctorAsociado
+              key={"solicitar asociacion"}
+              name={selectedDoctorName}
+            />,
+          ]}
+          title={"Solicitar asociarse"}
+          button1={"hidden"}
+          button2={"bg-greenPrimary block"}
+          progessBar={"hidden"}
+          size={"h-[21rem] md:h-[17rem] md:w-[35rem]"}
+          buttonText={{ end: `Enviar solicitud` }}
+        />
+      )}
     </div>
   );
 }

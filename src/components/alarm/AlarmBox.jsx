@@ -7,6 +7,7 @@ export default function AlarmBox({
   categoryIndex,
   selectedAlarms,
   handleSelect,
+  isDisabled
 }) {
   return (
     <div className="flex flex-col items-center justify-center w-full mt-4">
@@ -24,39 +25,37 @@ export default function AlarmBox({
 
           if (isSelected) {
             if (alarm.color.includes("red")) {
-              appliedClass = "bg-red-500 text-white";
+              appliedClass = "bg-[#E73F3F] border-red-500 border-2  text-white";
             } else if (alarm.color.includes("yellow")) {
-              appliedClass = "bg-yellow-500 text-white";
+              appliedClass = "bg-[#FFC900] text-white border-2 border-yellow-500";
             } else if (alarm.color.includes("green")) {
-              appliedClass = "bg-green-500 text-white";
+              appliedClass = "bg-[#70C247] border-2 border-green-500  text-white";
             }
           } else {
             if (alarm.color.includes("red")) {
-              appliedClass = "bg-red-200 border-2 border-red-500 text-gray-700";
+              appliedClass = "bg-[#FFECEC] border-2 border-red-500 text-gray-700";
             } else if (alarm.color.includes("yellow")) {
               appliedClass =
-                "bg-yellow-200 border-2 border-yellow-500 text-gray-700";
+                "bg-[#FFF8DC] border-2 border-yellow-500 text-gray-700";
             } else if (alarm.color.includes("green")) {
               appliedClass =
-                "bg-green-200 border-2 border-green-500 text-gray-700";
+                "bg-[#E9FFDD] border-2 border-green-500 text-gray-700";
             }
           }
 
           return (
             <div
               key={index}
-              onClick={() => handleSelect(categoryIndex, index)}
+              onClick={() => !isDisabled && handleSelect(categoryIndex, index)}
               className={`p-4 cursor-pointer transition-all duration-300 ease-in-out rounded-lg ${appliedClass}`}>
               <h3
-                className={`flex font-bold mb-2 items-center justify-center gap-2 ${
-                  isSelected ? "text-white" : "text-gray-700"
-                }`}>
+                className={`flex font-bold mb-2 items-center justify-center gap-2 ${isSelected ? "text-white" : "text-gray-700"
+                  }`}>
                 {alarm.title}
               </h3>
               <ul
-                className={`list-disc list-inside ${
-                  isSelected ? "text-white" : "text-gray-700"
-                }`}>
+                className={`list-disc list-inside ${isSelected ? "text-white" : "text-gray-700"
+                  }`}>
                 {alarm?.description?.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}

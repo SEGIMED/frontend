@@ -10,6 +10,7 @@ import IconArrowRight from "../icons/iconArrowRight";
 import IconFatArrow from "../icons/iconFatarrowDash";
 import IconTablillaEstrella from "../icons/iconTablillaEstrella";
 import IconTablillaTilde from "../icons/iconTablillaTilde";
+import Elboton from "../Buttons/Elboton";
 
 export default function ReviewModal({ onClose, idDoc }) {
   const [rating, setRating] = useState(null);
@@ -19,11 +20,10 @@ export default function ReviewModal({ onClose, idDoc }) {
 
   const SendReview = async () => {
     if (rating === null) {
-      
       Swal.fire({
         title: "Review?",
         text: "Es necesario ingresar una calificacion y un comentario",
-        icon: "question"
+        icon: "question",
       });
       return;
     }
@@ -32,16 +32,16 @@ export default function ReviewModal({ onClose, idDoc }) {
       Swal.fire({
         title: "Review?",
         text: "Es necesario ingresar una calificacion y un comentario",
-        icon: "question"
+        icon: "question",
       });
       return;
     }
 
     const payload = {
       physicianId: Number(idDoc),
-      reviewScore: rating,
+      reviewsScore: Number(rating),
       comments: comments,
-      patientId: Number(myId),
+      // patientId: Number(myId),
     };
 
     const token = Cookies.get("a");
@@ -50,20 +50,16 @@ export default function ReviewModal({ onClose, idDoc }) {
       const response = await ApiSegimed.post(
         `/physician-review/${idDoc}`,
         payload,
-        {
-          headers: {
-            token: token,
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { token: token } }
       );
-      if (response.status === 200 || response.status === 201){
-      onClose();
-      Swal.fire({
-        title: "Review enviada con exito!",
-        text: "",
-        icon: "success"
-      });
+
+      if (response.status === 200 || response.status === 201) {
+        onClose();
+        Swal.fire({
+          title: "Review enviada con exito!",
+          text: "",
+          icon: "success",
+        });
       }
     } catch (error) {
       console.error("Error sending review:", error);
@@ -95,15 +91,16 @@ export default function ReviewModal({ onClose, idDoc }) {
   return (
     <div
       onClick={handleClickOutside}
-      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
-    >
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white p-4 rounded-lg shadow-lg w-[85%] max-h-screen md:w-[30%] relative font-poppins overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
           <span className="flex gap-4">
             <IconFatArrow />
             <h2 className="text-xl font-bold">Califique su consulta</h2>
           </span>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700">
             &#x2715;
           </button>
         </div>
@@ -111,7 +108,9 @@ export default function ReviewModal({ onClose, idDoc }) {
           <span>
             <IconTablillaEstrella />
           </span>
-          <span className="mb-2 font-medium">Cuantas estrellas le da a su experiencia?</span>
+          <span className="mb-2 font-medium">
+            Cuantas estrellas le da a su experiencia?
+          </span>
         </div>
         <div className="flex justify-center items-center border-b pb-2">
           {[...Array(5)].map((star, index) => (
@@ -126,7 +125,7 @@ export default function ReviewModal({ onClose, idDoc }) {
               <IconTStar3
                 width="50"
                 height="50"
-                color={index < (hover || rating) ? "#FFC107" : "#FFFFFF"}
+                color={index < (hover || rating) ? "#F5E400" : "#FFFFFF"}
                 onMouseEnter={() => setHover(index + 1)}
                 onMouseLeave={() => setHover(0)}
                 className="transition-colors duration-300 ease-in-out w-10 md:w-12"
@@ -139,20 +138,24 @@ export default function ReviewModal({ onClose, idDoc }) {
             <span>
               <IconTablillaTilde />
             </span>
-            <span className="mb-2 font-medium">Comentarios sobre el doctor</span>
+            <span className="mb-2 font-medium">
+              Comentarios sobre el doctor
+            </span>
           </div>
           <textarea
             className="w-full p-2 border rounded-md"
             rows="4"
             placeholder="Ingrese sus comentarios sobre el paciente"
             value={comments}
-            onChange={(e) => setComments(e.target.value)}
-          ></textarea>
+            onChange={(e) => setComments(e.target.value)}></textarea>
         </div>
         <div className="flex justify-center items-center">
-          <button onClick={SendReview} className="flex px-4 py-2 bg-blue-500 text-white rounded-md">
-            <span>Guardar</span> <IconArrowRight />
-          </button>
+          <Elboton
+            className="bg-[#70C247]"
+            onPress={SendReview}
+            nombre="Guardar"
+            icon2={<IconArrowRight />}
+          />
         </div>
       </div>
     </div>

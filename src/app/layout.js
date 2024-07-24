@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import StoreProvider from "./StoreProvider";
-const inter = Inter({ subsets: ["latin"] });
+import { Providers } from "./providers";
 
 export const metadata = {
   title: "Segimed App",
@@ -21,9 +21,11 @@ export async function generateViewport() {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="font-Poppins">
         <div className="w-full relative">
-          <StoreProvider>{children}</StoreProvider>
+          <Providers>
+            <StoreProvider>{children}</StoreProvider>
+          </Providers>
         </div>
       </body>
     </html>

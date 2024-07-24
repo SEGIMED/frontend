@@ -28,7 +28,7 @@ export default function Verify() {
         userId: userId, // ID del usuario recibido de la URL
         temporaryCode: data.number, // El código de confirmación ingresado por el usuario
       });
-      console.log(response);
+
       setApiResponse(response.data);
       if (response.data) {
         router.push("/");
@@ -97,11 +97,6 @@ export default function Verify() {
               </div>
             </form>
           </div>
-          {apiResponse && (
-            <div className="w-full mt-5 p-3 border border-gray-300 rounded-md bg-gray-50">
-              <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
-            </div>
-          )}
         </div>
       </div>
       <div className="w-[50%] hidden md:flex h-full  flex-col justify-around gap-5 p-10 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400">

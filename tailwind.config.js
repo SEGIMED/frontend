@@ -10,13 +10,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        Roboto: ["Roboto", "sans-serif"],
+        Poppins: ["Poppins", "sans-serif"],
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "image-chat": "url('/images/imageChat.png')",
       },
       screens: {
-        xs: "359px",
+        xs: "380px",
         "2xl": "1540px",
       },
       colors: {
@@ -28,6 +33,26 @@ module.exports = {
         textSubtitle: "#686868",
       },
       darkMode: "class",
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
+        "fade-in": "fadeIn 0.2s ease-in forwards",
+        "scale-up": "scaleUp 0.5s ease-in-out forwards",
+        "scale-down": "scaleDown 0.5s ease-in-out forwards",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+        scaleUp: {
+          "0%": { transform: "scale(0)", opacity: 5 },
+          "100%": { transform: "scale(1)", opacity: 1 },
+        },
+        scaleDown: {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(0)" },
+        },
+      },
     },
   },
   plugins: [

@@ -13,6 +13,7 @@ export default function InputFile({ title, defaultOpen = false , Links}) {
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
               {title}
+              <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
         </summary>
@@ -28,6 +29,7 @@ export default function InputFile({ title, defaultOpen = false , Links}) {
         <FileUpload label={"Resonancia"} Link={Links?.resonance}/>
         <FileUpload label={"Cateterismo cardiaco izquierdo"} Link={Links?.leftHeartCatheterization}/>
         <FileUpload label={"Otros estudios"} Link={Links?.laboratoryResults}/>
+
       </details>
     </div>
   );

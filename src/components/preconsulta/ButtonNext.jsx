@@ -5,7 +5,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
     const opcionRecibida = selectedOptions ? selectedOptions : "";
     const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
 
-    const handleClick = (option, index) => {
+    const handleClick = (option) => {
         setSelectedOptionState(option);
         onBodyChange(name, option);
         if (handleSelection) {
@@ -15,7 +15,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
 
     return (
         <div>
-            <div className="font-bold mb-2">{text}</div>
+            <div className="font-semibold text-sm mb-2">{text}</div>
             <div className="flex space-x-4">
                 {!disabled ? (
                     options?.map((opcion, index) => (
@@ -23,14 +23,14 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
                             variant="bordered"
                             key={index}
                             style={{
-                                backgroundColor: selectedOption === opcion ? '#487FFA' : 'white',
-                                color: selectedOption === opcion ? 'white' : '#487FFA',
+                                backgroundColor: selectedOption === opcion.value ? '#487FFA' : 'white',
+                                color: selectedOption === opcion.value ? 'white' : '#487FFA',
                                 borderColor: "#487FFA",
                                 border: '2px solid #487FFA'  // Asegura que el borde tenga un valor válido
                             }}
-                            onClick={() => handleClick(opcion, index)}
+                            onClick={() => handleClick(opcion.value)}
                         >
-                            {opcion}
+                            {opcion.text}
                         </Button>
                     ))
                 ) : (
@@ -39,14 +39,14 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
                             variant="bordered"
                             key={index}
                             style={{
-                                backgroundColor: selectedOption === opcion ? '#487FFA' : 'white',
-                                color: selectedOption === opcion ? 'white' : '#487FFA',
+                                backgroundColor: selectedOption === opcion.value ? '#487FFA' : 'white',
+                                color: selectedOption === opcion.value ? 'white' : '#487FFA',
                                 borderColor: "#487FFA",
                                 border: '2px solid #487FFA'  // Asegura que el borde tenga un valor válido
                             }}
                             disabled
                         >
-                            {opcion}
+                            {opcion.text}
                         </Button>
                     ))
                 )}
