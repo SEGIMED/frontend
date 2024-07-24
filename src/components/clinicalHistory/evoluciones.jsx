@@ -6,7 +6,7 @@ import IconConsulta from "../icons/IconConsulta";
 
 export default function Evoluciones({ pacientes }) {
   // Estado para controlar qué detalles están abiertos
- 
+ console.log(pacientes)
   const [openDetails, setOpenDetails] = useState({});
 
   const toggleDetail = (index) => {

@@ -9,7 +9,7 @@ import InputInfo from "./InputInfo";
 export default function Anamnesis({ pacientes, subtitle }) {
   // Estado para controlar qué detalles están abiertos
   const [openDetails, setOpenDetails] = useState({});
-
+  console.log(pacientes)
   const toggleDetail = (index) => {
     setOpenDetails((prevState) => ({
       ...prevState,
