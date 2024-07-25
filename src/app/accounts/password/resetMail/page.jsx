@@ -11,6 +11,7 @@ import { useState } from "react";
 import IconPasswordClose from "@/components/icons/IconPasswordClose";
 import IconPasswordOpen from "@/components/icons/IconPasswordOpen";
 import { NavBar } from "@/components/NavBar/navbar";
+import IconCheckBoton from "@/components/icons/iconCheckBoton";
 
 export default function AuthSelect() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -37,7 +38,7 @@ export default function AuthSelect() {
         } catch (error) {
             Swal.fire({
                 title: "No pudo actualizar la contraseña",
-                text: error.message,
+                text: error?.response?.data?.error || error.message,
                 icon: "error"
             });
 
@@ -50,6 +51,15 @@ export default function AuthSelect() {
   };
 
     const newPassword = watch("newPassword");
+    const confirmPass=watch("confirmPassword")
+
+    const passwordCriteria = {
+        hasUpperCase: /[A-Z]/.test(newPassword),
+        hasLowerCase: /[a-z]/.test(newPassword),
+        hasSpecialChar: /[\W_]/.test(newPassword),
+        hasMinLength: newPassword?.length >= 6,
+        isEqual: newPassword === confirmPass,
+      };
 
     return (
         <div className="mx-auto h-screen flex justify-center items-center antialiased">
@@ -79,7 +89,8 @@ export default function AuthSelect() {
                                     }
                                 })}
                                 type="email"
-                                className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
+                                className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm 
+                                border-[#DCDBDB] font-normal text-base focus:outline-[#808080] placeholder-truncate"
                                 placeholder="Ingrese su correo electrónico"
                             />
                             {errors.userEmail && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.userEmail.message}</span>}
@@ -106,12 +117,25 @@ export default function AuthSelect() {
                         
                                 <input
                                     {...register("newPassword", {
-                                        required: "Este campo es obligatorio",
-                                        pattern: {
-                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                                            message: "La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula y un número",
+                                        required: {
+                                          value: true,
+                                          message: "* Este dato es requerido *",
                                         },
-                                    })}
+                                        minLength: {
+                                          value: 6,
+                                          message: "La contraseña debe tener al menos 6 caracteres.",
+                                        },
+                                        maxLength: {
+                                          value: 20,
+                                          message: "La contraseña no debe exceder los 20 caracteres.",
+                                        },
+                                        pattern: {
+                                          value:
+                                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/,
+                                          message:
+                                            "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial.",
+                                        },
+                                      })}
                                     type={showPassword ? "text" : "password"}
                                     className="text-[#808080] w-full bg-[#F2F2F2] px-6 py-2 border leading-3 rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
                                     placeholder="Ingrese su nueva contraseña"
@@ -127,6 +151,23 @@ export default function AuthSelect() {
                                     </div>
                                 {errors.newPassword && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.newPassword.message}</span>}
                             </label>
+                            <ul className="mt-2 text-sm">
+              <li className={`flex gap-2 ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : " "}`}>
+               {passwordCriteria.hasUpperCase ? <IconCheckBoton className={"w-4"}/> : " "} Debe contener una letra mayúscula
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : " "}`}>
+              {passwordCriteria.hasLowerCase ? <IconCheckBoton className={"w-4"}/> : " "} Debe contener una letra minúscula
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.hasSpecialChar ?  "text-[#70C247]" : " "}`}>
+              {passwordCriteria.hasSpecialChar ? <IconCheckBoton className={"w-4"}/> : " "} Debe contener un carácter especial
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.hasMinLength ?  "text-[#70C247]" : " "}`}>
+              {passwordCriteria.hasMinLength ? <IconCheckBoton className={"w-4"}/> : " "} Debe tener al menos 6 caracteres
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.isEqual ?  "text-[#70C247]" : " "}`}>
+              {passwordCriteria.isEqual ? <IconCheckBoton className={"w-4"}/> : " "} Deben coincidir las contraseñas
+              </li>
+            </ul>
                             <label className="w-full">
                                 <p className="text-[#5F5F5F] pb-2 pt-10 leading-3">Confirme su nueva contraseña</p>
                           
@@ -149,6 +190,8 @@ export default function AuthSelect() {
                                     </button>
                                     </div>
                                 {errors.confirmPassword && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.confirmPassword.message}</span>}
+                                
+           
                             </label>
                         </fieldset>
                         <div className="flex items-center justify-center text-center">
