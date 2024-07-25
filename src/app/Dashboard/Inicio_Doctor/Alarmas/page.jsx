@@ -79,7 +79,7 @@ export default function HomeDoc() {
             <SkeletonList count={10} />
           ) : activeAlarms.length === 0 ? (
             <NotFound
-              text="No hay historial de consultas."
+              text="No tenes alarmas pendientes."
               sizeText="w-[100%]"
             />
           ) : (
