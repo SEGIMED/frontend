@@ -22,7 +22,6 @@ dayjs.locale("es");
 export default function Citas({ title }) {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const lastSegmentTextToShow = PathnameShow();
 
   const [date, setDate] = useState(new Date());
@@ -64,10 +63,12 @@ export default function Citas({ title }) {
   // })
 
   const handleSelectSlot = ({ start, end }) => {
+    if (dayjs(start).isBefore(dayjs(), "minute")) {
+      return;
+    }
     setDateSelected(start);
     setIsModalOpen(true);
   };
-
   const userId = Cookies.get("c");
 
   const shedules = useAppSelector((state) => state.schedules);
@@ -117,6 +118,13 @@ export default function Citas({ title }) {
       return {
         style: {
           backgroundColor: "#A0C4FF",
+        },
+      };
+    }
+    if (currentDay.isBefore(today)) {
+      return {
+        style: {
+          backgroundColor: "#F4F4F4",
         },
       };
     }

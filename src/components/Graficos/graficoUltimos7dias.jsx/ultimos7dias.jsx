@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Chart, registerables } from "chart.js";
 import { Bar } from "react-chartjs-2";
@@ -9,7 +9,15 @@ import Cookies from "js-cookie";
 Chart.register(...registerables);
 
 const getDayNames = (startDate) => {
-  const daysOfWeek = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  const daysOfWeek = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
   let dayNames = [];
   for (let i = 0; i < 7; i++) {
     const day = new Date(startDate);
@@ -21,37 +29,42 @@ const getDayNames = (startDate) => {
 
 export const BarChart = () => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
-  const token= Cookies.get("a")
+  const token = Cookies.get("a");
   useEffect(() => {
-    
     const fetchData = async (headers) => {
-      const response = await ApiSegimed.get('/user/login-record', headers);
-      const data = response?.data
+      try {
+        const response = await ApiSegimed.get("/user/login-record", headers);
+        const data = response.data;
 
-      // procesa la data para conseguir los ultimos 7 dias 
-      const today = new Date();
-      const lastSevenDays = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date();
-        date.setDate(today.getDate() - i);
-        const formattedDate = date.toISOString().split('T')[0];
-        lastSevenDays.push(data[formattedDate] || 0);
+        // procesa la data para conseguir los ultimos 7 dias
+        const today = new Date();
+        const lastSevenDays = [];
+        for (let i = 0; i < 7; i++) {
+          const date = new Date();
+          date.setDate(today.getDate() - i);
+          const formattedDate = date.toISOString().split("T")[0];
+          lastSevenDays.push(data[formattedDate] || 0);
+        }
+        lastSevenDays.reverse();
+
+        // nombres ultimos 7 dias
+        const dayNames = getDayNames(
+          new Date(today.setDate(today.getDate() - 6))
+        );
+
+        setChartData({
+          labels: dayNames,
+          datasets: [
+            {
+              label: "Pacientes Activos",
+              data: lastSevenDays,
+              backgroundColor: "#70C247",
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-      lastSevenDays.reverse();
-
-      // nombres ultimos 7 dias
-      const dayNames = getDayNames(new Date(today.setDate(today.getDate() - 6)));
-
-      setChartData({
-        labels: dayNames,
-        datasets: [
-          {
-            label: "Pacientes Activos",
-            data: lastSevenDays,
-            backgroundColor: "#70C247",
-          },
-        ],
-      });
     };
 
     fetchData({ headers: { token: token } });
@@ -78,5 +91,3 @@ export const BarChart = () => {
     </div>
   );
 };
-
-
