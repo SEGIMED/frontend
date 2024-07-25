@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
