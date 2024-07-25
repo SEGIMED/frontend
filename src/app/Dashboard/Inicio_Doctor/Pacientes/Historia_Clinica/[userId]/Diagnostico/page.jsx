@@ -9,38 +9,16 @@ import { useEffect, useState } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function HomeDoc() {
   const pathname = usePathname();
   const pathArray = pathname.split("/");
   const userId = pathArray[pathArray.length - 2];
 
-  const [infoPatient, setInfoPatient] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
+  const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
-  const getConsultas = async (headers) => {
-    try {
-      const response = await ApiSegimed.get(
-        `/medical-event/get-medical-event-history?patientId=${userId}`,
-        headers
-      );
-      if (response.data) {
-        console.log(response.data);
-        setInfoPatient(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching consultas:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const token = Cookies.get("a");
-    if (token) {
-      getConsultas({ headers: { token: token } }).catch(console.error);
-    }
-  }, []);
 
   return (
     <div className="h-full w-full flex flex-col">
