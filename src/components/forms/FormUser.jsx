@@ -299,8 +299,8 @@ export const FormUser = ({ formData, setFormData }) => {
                 },
               })}
             >
-              <option value="2">Argentin@</option>
-              <option value="1">Colombian@</option>
+              <option value="2">Argentina</option>
+              <option value="1">Colombia</option>
             </select>
             {errors.nationality && (
               <span className="text-red-500 text-sm font-medium">
