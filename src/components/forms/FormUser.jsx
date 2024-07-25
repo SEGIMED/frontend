@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import IconPasswordClose from "../icons/IconPasswordClose";
 import IconPasswordOpen from "../icons/IconPasswordOpen";
+import IconCheckBoton from "../icons/iconCheckBoton";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -18,7 +19,6 @@ export const FormUser = ({ formData, setFormData }) => {
     formState: { errors },
     setError,
   } = useForm();
-  // const [updatedData, setUpdatedData] = useState(null);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -29,7 +29,6 @@ export const FormUser = ({ formData, setFormData }) => {
     try {
       const updatedData = { ...formData, ...data };
       setFormData(updatedData);
-      // setUpdatedData(updatedData);
 
       const response = await ApiSegimed.post(
         "/user/register-user",
@@ -53,6 +52,7 @@ export const FormUser = ({ formData, setFormData }) => {
   });
 
   const emailValue = watch("email");
+  const passwordValue = watch("password");
 
   useEffect(() => {
     const checkEmailExists = async () => {
@@ -82,6 +82,13 @@ export const FormUser = ({ formData, setFormData }) => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [emailValue, setError]);
+
+  const passwordCriteria = {
+    hasUpperCase: /[A-Z]/.test(passwordValue),
+    hasLowerCase: /[a-z]/.test(passwordValue),
+    hasSpecialChar: /[\W_]/.test(passwordValue),
+    hasMinLength: passwordValue?.length >= 6,
+  };
 
   return (
     <div className="pb-36">
@@ -119,7 +126,8 @@ export const FormUser = ({ formData, setFormData }) => {
                 type="button"
                 className="absolute right-2 focus:outline-none pt-6"
                 onClick={togglePasswordVisibility}
-                style={{ top: 0, bottom: 0, margin: "auto" }}>
+                style={{ top: 0, bottom: 0, margin: "auto" }}
+              >
                 {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
               </button>
             </div>
@@ -149,11 +157,26 @@ export const FormUser = ({ formData, setFormData }) => {
               })}
             />
 
-            {errors.password && (
+            {/* {errors.password && (
               <span className="text-red-500 text-sm font-medium">
                 {errors.password.message}
               </span>
-            )}
+            )} */}
+
+            <ul className="mt-2 text-sm">
+              <li className={`flex gap-2 ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : " "}`}>
+               {passwordCriteria.hasUpperCase ? <IconCheckBoton className={"w-4"}/> : " "} Debe contener una letra mayúscula
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : " "}`}>
+              {passwordCriteria.hasLowerCase ? <IconCheckBoton className={"w-4"}/> : " "} Debe contener una letra minúscula
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.hasSpecialChar ?  "text-[#70C247]" : " "}`}>
+              {passwordCriteria.hasSpecialChar ? <IconCheckBoton className={"w-4"}/> : " "} Debe contener un carácter especial
+              </li>
+              <li className={`flex gap-2 ${passwordCriteria.hasMinLength ?  "text-[#70C247]" : " "}`}>
+              {passwordCriteria.hasMinLength ? <IconCheckBoton className={"w-4"}/> : " "} Debe tener al menos 6 caracteres
+              </li>
+            </ul>
           </div>
 
           <div className="w-96">
@@ -166,7 +189,8 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
-              })}>
+              })}
+            >
               <option value="1">DNI</option>
               <option value="2">Pasaporte</option>
             </select>
@@ -271,7 +295,8 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
-              })}>
+              })}
+            >
               <option value="2">Argentin@</option>
               <option value="1">Colombian@</option>
             </select>
@@ -289,10 +314,8 @@ export const FormUser = ({ formData, setFormData }) => {
             <IconEnter className="w-6" />
           </button>
         </div>
-
-        {/* <pre>{JSON.stringify(watch(), null, 2)}</pre>
-                {updatedData && <pre>{JSON.stringify(updatedData, null, 2)}</pre>} */}
       </form>
     </div>
   );
 };
+

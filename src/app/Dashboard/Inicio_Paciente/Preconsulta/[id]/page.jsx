@@ -291,6 +291,7 @@ export default function PreconsultaPte({ params }) {
         return;
       }
       const isBodyCompleted = Object.values(bodyOBJFormat).some(item => item === null);
+      
       const isVitalSignCompleted = vitalSignFormat.some(item => item.measure === null);
       if (isBodyCompleted || isVitalSignCompleted) {
         Swal.fire({
