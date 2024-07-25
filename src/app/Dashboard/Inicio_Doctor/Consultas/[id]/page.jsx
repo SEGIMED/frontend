@@ -25,7 +25,6 @@ import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
-import { ApiSegimed2 } from "@/Api/ApiSegimed2";
 import { usePathname } from "next/navigation";
 
 const DetallePaciente = (id) => {
@@ -64,7 +63,7 @@ const DetallePaciente = (id) => {
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-
+  console.log(formState);
   console.log(hpGroup);
   console.log(patient);
   const bodyOBJFormat = {
@@ -259,9 +258,9 @@ const DetallePaciente = (id) => {
           : data["Vacunas"],
       schedulingId: Number(scheduleId),
     });
-    if(patient.backgrounds){
+    if(patient?.backgrounds){
     const backgroundPatch = {
-      id: Number(patient.backgrounds.id),
+      id: Number(patient?.backgrounds?.id),
     };
     
     // Función para agregar campos condicionalmente al objeto
@@ -403,7 +402,8 @@ const DetallePaciente = (id) => {
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
       medicalEventId: Number(medicalEventId),
     });
-    if(medicalEventExist?.physicalExaminations[0]?.id){
+
+    if(medicalEventExist?.data.physicalExaminations[0]?.id){
     setPhysicalExaminationPatch({
       physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
@@ -414,7 +414,7 @@ const DetallePaciente = (id) => {
       diseaseId: 3,
       diagnosticNotes: data["Diagnostico"],
       medicalEventId: 5,
-      drugId: data["selectDrug"] ? IdDrug(data["selectDrug"]) : "",
+      drugId: formState.selectDrug ? formState.selectDrug : null,
       prescribedDose: null,
       quantityDrug: 60,
       medicalProcedureId: 4,
@@ -436,15 +436,13 @@ const DetallePaciente = (id) => {
       pendingDiagnosticTest: null, // test pendientes
       alarmPattern: data["Pauta de alarma"] ? data["Pauta de alarma"] : null, // patron de alarma
     });
-    setMedicalEventPatch({
-      id: Number(medicalEventExist?.id),
-    })
-    if(medicalEventExist){
-      const medicalEventPatch = {
-        id: Number(medicalEventExist.medicalEventId),
+      const medicalEvent = {
+        id: Number(medicalEventExist?.data.medicalEventId) || medicalEvent?.id,
       };
       
       // Función para agregar campos condicionalmente al objeto
+      const medicalEventPatch = {};
+      medicalEventPatch.id = medicalEvent.id;
       const addMedicalEventField = (field, fieldName) => {
         if (data[field] && data[field] !== "") {
           medicalEventPatch[fieldName] = data[field];
@@ -454,13 +452,14 @@ const DetallePaciente = (id) => {
       // Agregar cada campo condicionalmente
       addMedicalEventField("Anotaciones de la consulta", "physicianComments");
       addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
-      addMedicalEventField( "Pauta de alarma","alarmPattern");
-      addMedicalEventField("Motivo de consulta","chiefComplaint")
-      addMedicalEventField("Sintomas importantes","reviewOfSystems")
+      addMedicalEventField("Pauta de alarma", "alarmPattern");
+      addMedicalEventField("Sintomas importantes", "reviewOfSystems");
+      addMedicalEventField("Motivo de consulta", "chiefComplaint");
+      addMedicalEventField("Tratamientos no farmacológicos", "treatmentPlan");
       
       // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
       setMedicalEventPatch(medicalEventPatch);
-  }
+  
   };
 
   useEffect(() => {
@@ -608,6 +607,7 @@ const DetallePaciente = (id) => {
     if(response7 !== undefined){responses.push(response7);}
   
     // Diagnóstico
+    console.log(diagnostic);
     let response8;
     if(diagnostic !== undefined){
       response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, { headers: { token: token } });
@@ -629,6 +629,7 @@ const DetallePaciente = (id) => {
     if(response9 !== undefined){ responses.push(response9);}
     */
    // solo post
+
     let response9;
     console.log(medicalEventPatch);
     if(medicalEventPatch !== undefined){
@@ -648,13 +649,13 @@ const DetallePaciente = (id) => {
     if (allSuccessful) {
       const data = await ApiSegimed.patch(`/schedule/${scheduleId}`, { schedulingStatus: 2 }, { headers: { token: token } });
       console.log(data);
-      setLoading(false);
+      //setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
         text: "Se ha creado la consulta",
       });
-      router.push(`/Dashboard/Inicio_Doctor/Consultas`);
+      //router.push(`/Dashboard/Inicio_Doctor/Consultas`);
     } else {
       setLoading(false);
       Swal.fire({

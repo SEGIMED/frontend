@@ -207,9 +207,8 @@ export default function Citas({ title }) {
 
   return (
     <div
-      className={` flex flex-col items-center bg-[#FAFAFC] rounded-2xl ${
-        title ? "h-screen" : "h-full"
-      } `}>
+      className={` flex flex-col items-center ${title && "bg-white"} rounded-2xl ${title ? "h-screen" : "h-full"
+        } `}>
       <div className={`h-[90%] w-full rounded-2xl ${title && "bg-white"}`}>
         <Calendar
           localizer={localizer}

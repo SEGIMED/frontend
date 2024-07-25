@@ -21,15 +21,27 @@ export default function InputDiagnostico({
   subtitle3,
   defaultOpen = false,
 }) {
+  const SwitchCatalogo  = (value) => {
+    switch (value) {
+      case "0":
+        return "1";
+      case "1":
+        return "4";
+      default:
+        return "Medicamento Desconocido";
+    }
+  };
   const { register } = useFormContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
+
   const handleOptionSelect = (option) => {
-    setSelectedOption(option);
+    setSelectedOption(SwitchCatalogo(option));
     setIsModalOpen(true);
   };
+
   return (
     <div className="flex flex-col">
       <details open={defaultOpen}>
