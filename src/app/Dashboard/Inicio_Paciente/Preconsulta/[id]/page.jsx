@@ -9,7 +9,16 @@ import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
-  updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia,
+  updateActive,
+  subquestionSelectedOption,
+  questionSelectedOption,
+  updateDescription,
+  updateVitalSign,
+  updateAnamnesis,
+  updateTratamiento,
+  updateBodyPainLevel,
+  updateGlycemia,
+  updateLastGlycemia,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
@@ -29,7 +38,8 @@ export default function PreconsultaPte({ params }) {
   const patientId = Cookies.get("c");
   const [isLoading, setIsLoading] = useState(false);
   const [disabledButton, setDisabledButton] = useState(false);
-  const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] = useState(null);
+  const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
+    useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
   const [tests, setTests] = useState({
     // abnormalGlycemia: {
@@ -47,67 +57,67 @@ export default function PreconsultaPte({ params }) {
     laboratoryResults: {
       title: "Resultados de laboratorio",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     electrocardiogram: {
       title: "Electrocardiograma",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     rxThorax: {
       title: "RX de Torax",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     echocardiogram: {
       title: "Ecocardiograma",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     walkTest: {
       title: "Test de caminata",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     respiratoryFunctional: {
       title: "Funcional respiratorio",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     tomographies: {
       title: "Tomografías",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     rightHeartCatheterization: {
       title: "Cateterismo cardiaco derecho",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     ccg: {
       title: "CCG (Coronariografia)",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     resonance: {
       title: "Resonancia",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     leftHeartCatheterization: {
       title: "Cateterismo cardiaco izquierdo",
       file: null,
-      description: '',
+      description: "",
       active: null,
     },
     otherStudies: {
@@ -140,15 +150,21 @@ export default function PreconsultaPte({ params }) {
   };
 
   const handleVitalSign = (vitalSign, value, active, key) => {
-    if (vitalSign === 'abnormalGlycemia') {
+    if (vitalSign === "abnormalGlycemia") {
       dispatch(updateGlycemia({ vitalSign, active }));
     }
-    if (vitalSign === 'lastAbnormalGlycemia') {
+    if (vitalSign === "lastAbnormalGlycemia") {
       console.log({ vitalSign, key, value });
       dispatch(updateLastGlycemia({ vitalSign, key, value }));
-    }
-    else {
-      dispatch(updateVitalSign({ vitalSign, value, number: Number(patientId), schedulingId: Number(scheduleId) })); // actualizamos los signos vitales en el estado global
+    } else {
+      dispatch(
+        updateVitalSign({
+          vitalSign,
+          value,
+          number: Number(patientId),
+          schedulingId: Number(scheduleId),
+        })
+      ); // actualizamos los signos vitales en el estado global
     }
   };
 
@@ -207,12 +223,14 @@ export default function PreconsultaPte({ params }) {
       painDurationId: formData.bodySection.painDuration,
       painScaleId: formData.bodySection.painScale,
       painTypeId: formData.bodySection.painType,
-      painAreas: formData.bodySection.painAreas ? Object.values(formData.bodySection.painAreas) : {},
+      painAreas: formData.bodySection.painAreas
+        ? Object.values(formData.bodySection.painAreas)
+        : [],
       painFrequencyId: formData.bodySection.painFrequency,
       isTakingAnalgesic: formData.bodySection.isTakingAnalgesic,
       doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks,
       isWorstPainEver: formData.bodySection.isWorstPainEver,
-    }
+    };
     const vitalSignFormat = [
       formData.vitalSigns.height,
       formData.vitalSigns.weight,
@@ -223,7 +241,7 @@ export default function PreconsultaPte({ params }) {
       formData.vitalSigns.Diastolic_Blood_Pressure,
       formData.vitalSigns.Breathing_frequency,
       formData.vitalSigns.Oxygen_saturation,
-    ]
+    ];
     const bodyForm = {
       patient: Number(patientId),
       appointmentSchedule: Number(scheduleId),
@@ -276,10 +294,17 @@ export default function PreconsultaPte({ params }) {
       consultationReason: formData.anamnesis.consultationReason.description,
       importantSymptoms: formData.anamnesis.importantSymptoms.description,
       // Tratamiento
-      currentMedications: formData.tratamiento.currentMedications?.selectedOptions ? Object.values(formData.tratamiento.currentMedications.selectedOptions) : null,
+      currentMedications: formData.tratamiento.currentMedications
+        ?.selectedOptions
+        ? Object.values(formData.tratamiento.currentMedications.selectedOptions)
+        : null,
       // Signos vitales
       abnormalGlycemia: formData.vitalSigns.abnormalGlycemia.active,
-      lastAbnormalGlycemia: Object.keys(formData.vitalSigns.lastAbnormalGlycemia.options).length ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options) : null,
+      lastAbnormalGlycemia: Object.keys(
+        formData.vitalSigns.lastAbnormalGlycemia.options
+      ).length
+        ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options)
+        : null,
       vitalSignsToCreate: vitalSignFormat,
       // painRecordsToCreate
       painRecordsToCreate: [bodyOBJFormat],
@@ -290,8 +315,12 @@ export default function PreconsultaPte({ params }) {
         setIsLoading(false);
         return;
       }
-      const isBodyCompleted = Object.values(bodyOBJFormat).some(item => item === null);
-      const isVitalSignCompleted = vitalSignFormat.some(item => item.measure === null);
+      const isBodyCompleted = Object.values(bodyOBJFormat).some(
+        (item) => item === null
+      );
+      const isVitalSignCompleted = vitalSignFormat.some(
+        (item) => item.measure === null
+      );
       if (isBodyCompleted || isVitalSignCompleted) {
         Swal.fire({
           icon: "error",
@@ -302,7 +331,10 @@ export default function PreconsultaPte({ params }) {
         return;
       }
       if (!preconsultationAlreadyExists) {
-        console.log({ toCreate: bodyForm, preconsultationAlreadyExists: !!preconsultationAlreadyExists });
+        console.log({
+          toCreate: bodyForm,
+          preconsultationAlreadyExists: !!preconsultationAlreadyExists,
+        });
         const response = await ApiSegimed.post(`/pre-consultation`, bodyForm, {
           headers: {
             token: token,
@@ -313,22 +345,31 @@ export default function PreconsultaPte({ params }) {
           Swal.fire({
             icon: "success",
             title: "Preconsulta creada con éxito",
-            text: '',
+            text: "",
           });
           console.log({ resupuestaCreate: response.data });
         }
         setIsLoading(false);
         setPreconsultationAlreadyExists(true);
         return;
-      }
-      else {
-        console.log({ toUpdate: { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate }, preconsultationAlreadyExists: !!preconsultationAlreadyExists });
-        const response = await ApiSegimed.patch(`/update-pre-consultation`, { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate }, {
-          headers: {
-            token: token,
-            "Content-Type": "application/json",
+      } else {
+        console.log({
+          toUpdate: {
+            ...bodyForm,
+            updateVitalSigns: bodyForm.vitalSignsToCreate,
           },
+          preconsultationAlreadyExists: !!preconsultationAlreadyExists,
         });
+        const response = await ApiSegimed.patch(
+          `/update-pre-consultation`,
+          { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate },
+          {
+            headers: {
+              token: token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response) {
           console.log({ resupuestaPatch: response.data });
         }
@@ -355,11 +396,14 @@ export default function PreconsultaPte({ params }) {
         if (res) {
           setPreconsultationAlreadyExists(res.data);
           setDisabledButton(true);
-          console.log({ setPreconsultationAlreadyExists: true, preconsultation: res.data });
+          console.log({
+            setPreconsultationAlreadyExists: true,
+            preconsultation: res.data,
+          });
         }
         setIsLoading(false);
       } catch (error) {
-        console.log('NUEVA PRECONSULTA');
+        console.log("NUEVA PRECONSULTA");
         console.error("Error fetching data", error);
         setIsLoading(false);
       }
@@ -374,7 +418,7 @@ export default function PreconsultaPte({ params }) {
           <LoadingFallback />
         </div>
       </FormProvider>
-    )
+    );
   }
 
   if (preconsultationAlreadyExists) {
@@ -399,9 +443,10 @@ export default function PreconsultaPte({ params }) {
           </div>
           <div className="flex items-center justify-center my-2">
             Su preconsulta ya fue enviada
-          </div></div>
+          </div>
+        </div>
       </FormProvider>
-    )
+    );
   }
 
   return (
