@@ -26,7 +26,7 @@ export const BarChart = () => {
     
     const fetchData = async (headers) => {
       const response = await ApiSegimed.get('/user/login-record', headers);
-      const data = response.data
+      const data = response?.data
 
       // procesa la data para conseguir los ultimos 7 dias 
       const today = new Date();
