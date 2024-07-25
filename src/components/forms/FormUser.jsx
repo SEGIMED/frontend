@@ -18,7 +18,11 @@ export const FormUser = ({ formData, setFormData }) => {
     watch,
     formState: { errors },
     setError,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+        password: "",
+    },
+});
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
