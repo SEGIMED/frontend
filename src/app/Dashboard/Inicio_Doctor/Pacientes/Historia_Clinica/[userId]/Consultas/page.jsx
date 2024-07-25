@@ -9,6 +9,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function HomeDoc() {
   const pathname = usePathname();
@@ -16,32 +17,35 @@ export default function HomeDoc() {
   const userId = pathArray[pathArray.length - 2];
   // const userId = 8;
 
-  const [consultas, setConsultas] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
+  const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
-  const getConsultas = async (headers) => {
-    try {
-      const response = await ApiSegimed.get(
-        `/medical-event/get-medical-event-history?patientId=${userId}`,
-        headers
-      );
-      console.log("hc", response)
-      if (response.data) {
-        setConsultas(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching consultas:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    const token = Cookies.get("a");
-    if (token) {
-      getConsultas({ headers: { token: token } }).catch(console.error);
-    }
-  }, []);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // const getConsultas = async (headers) => {
+  //   try {
+  //     const response = await ApiSegimed.get(
+  //       `/medical-event/get-medical-event-history?patientId=${userId}`,
+  //       headers
+  //     );
+  //     console.log("hc", response)
+  //     if (response.data) {
+  //       setConsultas(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching consultas:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const token = Cookies.get("a");
+  //   if (token) {
+  //     getConsultas({ headers: { token: token } }).catch(console.error);
+  //   }
+  // }, []);
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -54,14 +58,14 @@ export default function HomeDoc() {
       </div>
       <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
         <div className="w-[5%] hidden md:block"></div>
-        <div className="grid w-full text-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-left md:grid-cols-5 items-center py-2 z-10">
+        <div className="grid w-[75%] md:w-[90%] text-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-left md:grid-cols-5 items-center py-2 z-10">
           <p className="text-[#5F5F5F]">Fecha</p>
           <p className="text-[#5F5F5F] hidden md:block">Hora</p>
           <p className="text-[#5F5F5F]">Grupo HTP</p>
           <p className="text-[#5F5F5F]">Centro de atención</p>
           <p className="text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
         </div>
-        <div className="w-[25%] md:w-[20%]">
+        <div className="w-[25%] md:w-[5%]">
           <p className="text-[#5F5F5F] text-center items-center flex py-2 md:hidden">
             Ver consulta
           </p>
@@ -69,10 +73,10 @@ export default function HomeDoc() {
       </div>
       {isLoading ? (
         <SkeletonList count={9} />
-      ) : consultas.length === 0 ? (
+      ) : infoPatient.length === 0 ? (
         <NotFound text="No hay historial de consultas." sizeText="w-[100%]" />
       ) : (
-        <TableConsultas consultas={consultas} />
+        <TableConsultas consultas={infoPatient} />
       )}
     </div>
   );
