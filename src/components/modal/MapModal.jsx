@@ -8,21 +8,21 @@ export default function MapModal({ onClose }) {
     useEffect(() => {
         // Este código se ejecutará solo en el cliente, después de que el componente se haya montado
         if (typeof window !== "undefined") {
-          // Acceso seguro al objeto window
-          const width = window.innerWidth;
+            // Acceso seguro al objeto window
+            const width = window.innerWidth;
         }
-      }, []);
+    }, []);
 
     useEffect(() => {
         function onClose2(event) {
-        
+
             if (event.key === 'Escape') {
                 onClose();
             }
         }
-    
+
         if (typeof window !== "undefined") window.addEventListener("keydown", onClose2);
-        
+
         // Cleanup function to remove the event listener when the component unmounts
         return () => {
             window.removeEventListener("keydown", onClose2);
@@ -36,10 +36,10 @@ export default function MapModal({ onClose }) {
     }
 
     return (
-        <div 
-            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 "  
-            onClick={handleClickOutside}
-        >
+        <div
+            className=" flex items-center justify-center w-[100%] h-[100%]    "
+            onClick={handleClickOutside}>
+
             <Map />
         </div>
     );

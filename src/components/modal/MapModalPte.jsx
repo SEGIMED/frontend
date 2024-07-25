@@ -31,10 +31,10 @@ export default function MapModalPte({ onClose, patient }) {
   console.log(geolocationNumbers);
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-opacity-50"
+      className=" flex items-center justify-center w-[100%] h-[100%]    "
       onClick={handleClickOutside}>
       {geolocationNumbers && geolocationNumbers.length > 0 ? (
-        <div className="h-[70%] w-[80%] md:w-[50%] md:h-[50%]">
+        <div className="w-[100%] h-[100%] ">
           <MapPte positions={geolocationNumbers} />
         </div>
       ) : (

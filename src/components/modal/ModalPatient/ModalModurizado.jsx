@@ -89,8 +89,8 @@ const ModalModularizado = ({ isOpen, onClose, Modals, title, ruta, button1, butt
                     <p className="font-medium text-base leading-6 ">{title}</p>
                 </div>
                 <ProgressBar steps={Modals} currentIndex={index} progessBar={progessBar} />
-                <div className="flex flex-col items-center gap-5 justify-center h-full ">
-                    <div className="px-8 bg-[#fafafc] h-[80%] justify-center items-center flex">
+                <div className="flex flex-col items-center gap-5 justify-center w-full h-full ">
+                    <div className="px-8 bg-[#fafafc] h-[80%] w-[100%] justify-center items-center flex">
                         {Modals[index]}
                     </div>
                     <div className="flex gap-2 pb-5 bg-white border-t rounded-b-lg justify-center items-center pt-3 border-t-[#DCDBDB] w-full">
