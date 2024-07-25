@@ -39,8 +39,6 @@ const ModalModularizado = ({ isOpen, onClose, Modals, title, ruta, button1, butt
 
     const router = useRouter()
 
-    const user = useAppSelector((state) => state.user);
-
     function handleClickOutside(event) {
         if (event.target === event.currentTarget) {
             onClose();

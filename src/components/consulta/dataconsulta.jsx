@@ -98,10 +98,10 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
           />]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block"}
+          button2={"bg-bluePrimary block font-font-Roboto"}
           progessBar={"hidden"}
-          size={"h-[36rem] md:h-[27rem] md:w-[33rem]"}
-          buttonText={{ end: `Aceptar` }}
+          size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
+          buttonText={{ end: `Continuar` }}
         />
       )}
 

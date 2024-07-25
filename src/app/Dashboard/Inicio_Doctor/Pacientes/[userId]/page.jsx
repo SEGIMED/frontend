@@ -3,10 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-
 import { useEffect, useState } from "react";
 import rutas from "@/utils/rutas";
-
 import ruteActual from "../../../../../components/images/ruteActual.png";
 import backChanges from "../../../../../components/images/backChanges.png";
 import Detail from "@/components/detail/detail";
@@ -21,17 +19,14 @@ import CalcularEdad from "@/utils/calcularEdad";
 import ButtonSolicitar from "@/components/Buttons/buttonSolicitar";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
+import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 
 export default function DetallePaciente({ params }) {
   const id = params.userId;
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.allPatients.patient);
   const [showMapModal, setShowMapModal] = useState(false);
-
-  useEffect(() => { }, []);
-
   const [isLoading, setLoading] = useState(true);
-
 
   const openModal = () => {
     setShowMapModal(true);
@@ -48,13 +43,10 @@ export default function DetallePaciente({ params }) {
       ]);
 
       if (response1.data && response2.data) {
-        // Combinar los datos de ambas respuestas
         const combinedData = {
           ...response1.data,
           ...response2.data,
         };
-
-
         console.log(combinedData);
         dispatch(setPatient(combinedData));
       }
@@ -69,16 +61,14 @@ export default function DetallePaciente({ params }) {
     getPatient();
   }, [id]);
 
-  if (!user) {
-    return <div>Paciente no encontrado</div>;
-  }
-
-  return (
+  return isLoading ? (
+    <SkeletonList count={9} />
+  ) : (
     <div className="h-full flex flex-col overflow-y-auto">
       <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
         <div className="flex items-center ">
           <Image src={ruteActual} alt="ruta actual" />
-          <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
+          <p className="text-lg font-normal leading-6 text-[#5F5F5F]">
             Detalle del paciente
           </p>
         </div>
@@ -91,12 +81,21 @@ export default function DetallePaciente({ params }) {
       <div>
         <Detail
           title={"Ultima ubicacion:"}
-          data={<Elboton nombre={"Mostrar mapa"} icon2={<IconGeolocation color={"white"} />} onPress={openModal} />}
+          data={
+            <Elboton
+              nombre={"Mostrar mapa"}
+              icon2={<IconGeolocation color={"white"} />}
+              onPress={openModal}
+            />
+          }
         />
-        <Detail title={"Nombre completo:"} data={`${user?.name} ${user?.lastname}`} />
+        <Detail
+          title={"Nombre completo:"}
+          data={`${user?.name} ${user?.lastname}`}
+        />
         <Detail
           title={"Edad:"}
-          data={CalcularEdad(user?.sociodemographicDetails?.birthDate)}
+          data={user?.sociodemographicDetails?.birthDate ? CalcularEdad(user?.sociodemographicDetails?.birthDate) : ""}
         />
         <Detail title={"Sexo:"} data={user?.sociodemographicDetails?.genre} />
         <Detail
@@ -119,51 +118,56 @@ export default function DetallePaciente({ params }) {
           title={"Lugar de domicilio:"}
           data={<ButtonSolicitar nombre={"Solicitar permiso"} size={"sm"} />}
         />
-
-        {/* <Detail title={"Documento:"} data={user?.idNumber} /> */}
-        {/* <Detail
-          title={"Nacionalidad:"}
-          data={
-            user?.nationality === 1
-              ? "Colombiano"
-              : user.nationality === 2
-                ? "Argentino"
-                : user.nationality
-          }
-        /> */}
-
-
         <Detail
           title={"Fecha del Diagnostico Principal:"}
           data={"-"}
         />
-        <Detail title={"Lugar de atencion medica:"} data={"-"} />
-        <Detail title={"Medico a cargo:"} data={`${user?.currentPhysician?.name} ${user?.currentPhysician?.lastname}`} />
+        <Detail
+          title={"Lugar de atencion medica:"}
+          data={"-"}
+        />
+        <Detail
+          title={"Medico a cargo:"}
+          data={`${user?.currentPhysician?.name} ${user?.currentPhysician?.lastname}`}
+        />
         <Detail
           title={"Estado:"}
           data={user?.sociodemographicDetails?.civilStatus}
         />
-        <Detail title={"Última Conexión:"} data={LastLogin(user?.lastLogin)} />
-        <Detail title={"Actividad Última Semana:"} data={"-"} />
-        <Detail title={"Actividad Último Mes:"} data={"-"} />
-        <Detail title={"Fecha de Registro:"} data={"-"} />
+        <Detail
+          title={"Última Conexión:"}
+          data={LastLogin(user?.lastLogin)}
+        />
+        <Detail
+          title={"Actividad Última Semana:"}
+          data={"-"}
+        />
+        <Detail
+          title={"Actividad Último Mes:"}
+          data={"-"}
+        />
+        <Detail
+          title={"Fecha de Registro:"}
+          data={"-"}
+        />
       </div>
       {showMapModal && (
-
         <ModalModularizado
           isOpen={showMapModal}
           onClose={() => setShowMapModal(false)}
-          Modals={[<MapModalPte
-            onClose={() => setShowMapModal(false)}
-            patient={user}
-            key={"map"}
-          />]}
+          Modals={[
+            <MapModalPte
+              onClose={() => setShowMapModal(false)}
+              patient={user}
+              key={"map"}
+            />
+          ]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block"}
+          button2={"bg-bluePrimary block font-font-Roboto"}
           progessBar={"hidden"}
-          size={"h-[36rem] md:h-[27rem] md:w-[33rem]"}
-          buttonText={{ end: `Aceptar` }}
+          size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
+          buttonText={{ end: `Continuar` }}
         />
       )}
     </div>
