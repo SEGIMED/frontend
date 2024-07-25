@@ -138,7 +138,7 @@ export default function DetallePaciente({ params }) {
           data={"-"}
         />
         <Detail title={"Lugar de atencion medica:"} data={"-"} />
-        <Detail title={"Medico a cargo:"} data={`${user?.currentPhysician.name} ${user?.currentPhysician.lastname}`} />
+        <Detail title={"Medico a cargo:"} data={`${user?.currentPhysician?.name} ${user?.currentPhysician?.lastname}`} />
         <Detail
           title={"Estado:"}
           data={user?.sociodemographicDetails?.civilStatus}
