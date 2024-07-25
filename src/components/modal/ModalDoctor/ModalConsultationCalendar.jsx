@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { useAppSelector } from "@/redux/hooks";
+import Swal from "sweetalert2";
 
 const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) => {
     const listaPacientes = useAppSelector(state => state.allPatients.patients);
@@ -95,8 +96,14 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
             const headers = { headers: { token } };
             const response = await ApiSegimed.post("/schedules", { ...data, physician }, headers);
             if (response.data) {
-                alert("Cita agendada correctamente");
                 handleClose();
+
+                Swal.fire({
+                    title: "Consulta agendada con exito!",
+                    // text: "You clicked the button!",
+                    icon: "success"
+                });
+
             }
         } catch (error) {
             setDisabled(false);
