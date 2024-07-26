@@ -21,6 +21,7 @@ import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
 import avatar from "@/utils/defaultAvatar";
 import AsociarMedico from "@/components/asociarMedico/AsociarMedico";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -89,15 +90,25 @@ export default function MensajesDoc() {
             </div>
             <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
-                {chat?.target?.fullName} - {chat?.target?.role}
+                Dr. {chat?.target?.fullName} 
               </p>
-              <Image src={ruteActual} alt="" className="hidden md:block" />
+              <Image src={ruteActual} alt="" className="hidden md:block mr-10" />
               {chat.unseenMessages.length && (
-                <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
-                  {LastLogin(
+              
+                   
+                  
+                  
+                <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ml-10">
+                   {Fecha(
+                    chat.unseenMessages[chat.unseenMessages.length - 1].date, 4
+                  )}
+                  -
+                  {Hora(
                     chat.unseenMessages[chat.unseenMessages.length - 1].date
                   )}
-                </p>
+                  </span>
+                 
+                 
               )}
             </div>
           </div>
