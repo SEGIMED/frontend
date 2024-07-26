@@ -3,9 +3,6 @@ import LogoSegimed from "@/components/logo/LogoSegimed";
 import { FormUser } from "@/components/forms/FormUser";
 import IconRegister from "../icons/IconRegister";
 import { FooterAcc } from "../footer/footerAcc";
-import IconSend from "../icons/IconSend";
-import Link from "next/link";
-import { NavBar } from "../NavBar/navbar";
 
 export default function Form({ formData, setFormData, hideForm }) {
   return (
