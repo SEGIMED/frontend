@@ -17,22 +17,22 @@ export default function DataPatient({ info, title, geolocation, openModal }) {
             className="w-6 h-6"
           />
           {title}
-          
+
         </label>
         {
-          geolocation ? 
-          <Elboton
-          onPress={(e) => {
-            e.preventDefault();
-            openModal();
-          }}
-          size={"lg"}
-          nombre="Mostrar Mapa"
-          icon2={<IconGeolocation color="white"/>}
-          />
-          : 
+          geolocation ?
+            <Elboton
+              onPress={(e) => {
+                e.preventDefault();
+                openModal();
+              }}
+              size={"md"}
+              nombre="Mostrar Mapa"
+              icon2={<IconGeolocation color="white" />}
+            />
+            :
             <span className="w-1/2 text-start text-[#5F5F5F] bg-white font-normal text-base leading-6  border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1 h-[34px]">
-            {info}
+              {info}
             </span>
         }
       </div>

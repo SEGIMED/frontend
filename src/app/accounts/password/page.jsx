@@ -21,7 +21,7 @@ export default function AuthSelect() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await ApiSegimed.post("/user/recover-password", data);
+      await ApiSegimed.post("/user/recover-password", data);
 
       Swal.fire({
         title: "¡Email enviado correctamente!",
@@ -32,11 +32,12 @@ export default function AuthSelect() {
         router.push("/");
       });
     } catch (error) {
-      if (error.message) {
+      console.error("Error: ", error.response);
+      if (error) {
         Swal.fire({
           icon: "error",
-          title: "Error de conexión",
-          text: error.message,
+          title: "Error",
+          text: error?.response?.data?.error || error.message,
         });
       }
     }

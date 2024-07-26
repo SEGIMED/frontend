@@ -6,7 +6,7 @@ import IconConsulta from "../icons/IconConsulta";
 
 export default function Evoluciones({ pacientes }) {
   // Estado para controlar qué detalles están abiertos
- console.log(pacientes)
+
   const [openDetails, setOpenDetails] = useState({});
 
   const toggleDetail = (index) => {
@@ -24,7 +24,7 @@ export default function Evoluciones({ pacientes }) {
             open={openDetails[index]}
             onToggle={() => toggleDetail(index)}>
             <summary className="flex items-center cursor-pointer ">
-              <div className="w-[100%] flex border-b border-t border-b-[#cecece] border-t-[#cecece]  bg-white">
+              <div className="w-[100%] flex border-b border-b-[#cecece]   bg-white">
                 <div className="justify-center w-[5%] items-center hidden md:flex">
                   <IconConsulta />
                 </div>
@@ -45,7 +45,7 @@ export default function Evoluciones({ pacientes }) {
                     {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                  {paciente?.appSch?.attendancePlace?.alias}
+                    {paciente?.appSch?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
                     {paciente?.chiefComplaint}
@@ -61,7 +61,7 @@ export default function Evoluciones({ pacientes }) {
                 </div>
               </div>
             </summary>
-            <div className="p-5 bg-[#f5f4f4]">
+            <div className="p-5 bg-[#f5f4f4] border-b-[#cecece] border-b">
               <p className="w-full h-fit md:h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1">
                 {paciente.historyOfPresentIllness}
               </p>

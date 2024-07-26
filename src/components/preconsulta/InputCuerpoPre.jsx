@@ -14,7 +14,7 @@ import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
-export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = false }) {
+export default function InputCuerpoPre({ title, onBodyChange, bodySection, defaultOpen = false }) {
   const dispatch = useAppDispatch();
   const [selectedMuscles, setSelectedMuscles] = useState([]);
   const [isPain, setIsPain] = useState(false); // Estado para manejar si hay dolor
@@ -160,7 +160,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
     <div className="flex flex-col">
       <details open={defaultOpen}>
         <summary className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
-          <div/>
+          <div />
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
@@ -168,8 +168,8 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
               <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
-          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
-            <IconArrowDetailDown/>
+          <div className={isOpen || defaultOpen === true ? "rotate-180" : ""}>
+            <IconArrowDetailDown />
           </div>
         </summary>
         <div className="flex flex-col items-center justify-center w-full md:flex-row md:items-start ">
@@ -220,6 +220,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
                   text={"¿Hay dolor?"}
+                  selectedOptions={bodySection.isTherePain}
                   options={[
                     { value: true, text: 'Si' },
                     { value: false, text: 'No' }
@@ -228,12 +229,13 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                   name={"isTherePain"}
                 />
               </div>
-              {isPain && (
+              {bodySection.isTherePain && (
                 <>
                   <div>
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Desde hace cuánto tiempo tiene el dolor?"}
+                      selectedOptions={bodySection.painDuration}
                       options={[
                         { value: 1, text: 'Horas' },
                         { value: 2, text: 'Días' },
@@ -311,6 +313,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <DropNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"Tipo de dolor"}
+                      selectedOptions={bodySection.painType}
                       options={[
                         { value: 1, text: 'Opresión' },
                         { value: 2, text: 'Punzante' },
@@ -332,6 +335,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Tomó analgésicos?"}
+                      selectedOptions={bodySection.isTakingAnalgesic}
                       options={[
                         { value: true, text: 'Si' },
                         { value: false, text: 'No' }
@@ -343,6 +347,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Calma con analgésicos?"}
+                      selectedOptions={bodySection.doesAnalgesicWorks}
                       options={[
                         { value: true, text: 'Si' },
                         { value: false, text: 'No' }
@@ -354,6 +359,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <DropNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"Frecuencia del dolor"}
+                      selectedOptions={bodySection.painFrequency}
                       options={[
                         { value: 1, text: 'De vez en cuando' },
                         { value: 2, text: 'Algunas veces' },
@@ -369,6 +375,7 @@ export default function InputCuerpoPre({ title, onBodyChange, defaultOpen = fals
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Es el peor dolor de su vida?"}
+                      selectedOptions={bodySection.isWorstPainEver}
                       options={[
                         { value: true, text: 'Si' },
                         { value: false, text: 'No' }

@@ -101,7 +101,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                     <textarea
                         className="w-full p-2 mt-2 border rounded"
                         placeholder="Describa el informe"
-                        value={description}
+                        value={data.description}
                         onChange={handleDescriptionChange}
                     />
                 </div>

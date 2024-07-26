@@ -9,16 +9,7 @@ import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
-  updateActive,
-  subquestionSelectedOption,
-  questionSelectedOption,
-  updateDescription,
-  updateVitalSign,
-  updateAnamnesis,
-  updateTratamiento,
-  updateBodyPainLevel,
-  updateGlycemia,
-  updateLastGlycemia,
+  updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia, updateAllFormData, updateFileUploaded, updateTestDescription, updateTestActive, updateTestSelectedOption,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
@@ -36,24 +27,13 @@ export default function PreconsultaPte({ params }) {
   const scheduleId = params.id;
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
+  const [enable, setEnable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [disabledButton, setDisabledButton] = useState(false);
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
   const [tests, setTests] = useState({
-    // abnormalGlycemia: {
-    //   title: "Glicemia anormal",
-    //   binaryOptions: true,
-    //   description: '',
-    //   active: null,
-    // },
-    // lastAbnormalGlycemia: {
-    //   title: "Última glicemia anormal",
-    //   selectedOption: null,
-    //   description: '',
-    //   active: null,
-    // },
     laboratoryResults: {
       title: "Resultados de laboratorio",
       file: null,
@@ -131,6 +111,47 @@ export default function PreconsultaPte({ params }) {
     },
   });
 
+  useEffect(() => {
+    setEnable(true);
+    if (enable) {
+      localStorage.setItem('preconsultationDraft', JSON.stringify({ ...formData, tests }));
+    }
+  }, [formData]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const draft = JSON.parse(localStorage.getItem('preconsultationDraft'));
+    if (draft) {
+      dispatch(updateAllFormData({ draft }));
+      console.log({ draft });
+    }
+    setIsLoading(false);
+    // const getPreConsultation = async () => {
+    //   try {
+    //     setIsLoading(true);
+    //     const res = await ApiSegimed.get(
+    //       `/get-preconsultation?scheduleId=${scheduleId}`,
+    //       {
+    //         headers: {
+    //           token: token,
+    //         },
+    //       }
+    //     );
+    //     if (res) {
+    //       setPreconsultationAlreadyExists(res.data);
+    //       setDisabledButton(true);
+    //       console.log({ setPreconsultationAlreadyExists: true, preconsultation: res.data });
+    //     }
+    //     setIsLoading(false);
+    //   } catch (error) {
+    //     console.log('NUEVA PRECONSULTA');
+    //     console.error("Error fetching data", error);
+    //     setIsLoading(false);
+    //   }
+    // };
+    // getPreConsultation();
+  }, []);
+
   const handleQuestionActive = (question, label, active) => {
     dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
   };
@@ -173,13 +194,14 @@ export default function PreconsultaPte({ params }) {
   };
 
   const handleUploadTestFile = (test, file) => {
-    // almacenamos los archivos subidos, en un estado local ya que en Redux no son compatible
     const studies = tests;
+    // dispatch(updateFileUploaded({ test, file }));
     setTests({ ...studies, [test]: { ...studies[test], file: file } });
   };
 
   const handleTestDescription = (test, testDescription) => {
     // almacenamos la descripción del estudio
+    dispatch(updateTestDescription({ test, testDescription }));
     const studies = tests;
     setTests({
       ...studies,
@@ -189,11 +211,13 @@ export default function PreconsultaPte({ params }) {
 
   const handleTestActive = (test, active) => {
     // para los campos binarios
+    dispatch(updateTestActive({ test, active }));
     const studies = tests;
     setTests({ ...studies, [test]: { ...studies[test], active: active } });
   };
 
   const handleTestSelectedOption = (test, value) => {
+    dispatch(updateTestSelectedOption({ test, value }));
     const studies = tests;
     setTests({
       ...studies,
@@ -247,28 +271,19 @@ export default function PreconsultaPte({ params }) {
       appointmentSchedule: Number(scheduleId),
       // Questions
       lackOfAir: formData.questions.lackOfAir.active,
-      lackOfAirIncremented:
-        formData.questions.lackOfAir.subquestions.lackOfAirIncremented
-          .selectedOption,
-      lackOfAirClasification:
-        formData.questions.lackOfAir.subquestions.lackOfAirClasification
-          .selectedOption,
+      lackOfAirIncremented: formData.questions.lackOfAir.subquestions.lackOfAirIncremented.selectedOption,
+      lackOfAirClasification: formData.questions.lackOfAir.subquestions.lackOfAirClasification.selectedOption,
       chestPainAtRest: formData.questions.chestPainAtRest.active,
       chestPainOnExertion: formData.questions.chestPainOnExertion.active,
-      chestPainOnExertionAmount:
-        formData.questions.chestPainOnExertion.subquestions
-          .chestPainOnExertionAmount.selectedOption,
+      chestPainOnExertionAmount: formData.questions.chestPainOnExertion.subquestions.chestPainOnExertionAmount.selectedOption,
       edemaPresence: formData.questions.edemaPresence.active,
-      edemaPresenceDescription:
-        formData.questions.edemaPresence.subquestions.edemaPresenceDescription
-          .selectedOption,
+      edemaPresenceDescription: formData.questions.edemaPresence.subquestions.edemaPresenceDescription.selectedOption,
       feelings: formData.questions.feelings.selectedOption,
       healthChanges: formData.questions.healthChanges.active,
       healthChangesDescription: formData.questions.healthChanges.description,
       healthWorsened: formData.questions.healthWorsened.selectedOption,
       mentalHealthAffected: formData.questions.mentalHealthAffected.active,
-      mentalHealthAffectedDescription:
-        formData.questions.mentalHealthAffected.description,
+      mentalHealthAffectedDescription: formData.questions.mentalHealthAffected.description,
       energyStatus: formData.questions.energyStatus.selectedOption,
       feed: formData.questions.feed.selectedOption,
       hydrationStatus: formData.questions.hydrationStatus.selectedOption,
@@ -347,6 +362,7 @@ export default function PreconsultaPte({ params }) {
             title: "Preconsulta creada con éxito",
             text: "",
           });
+          localStorage.removeItem('preconsultationDraft'); // ya no necesitamos recupera el borrador de la preconsulta
           console.log({ resupuestaCreate: response.data });
         }
         setIsLoading(false);
@@ -380,36 +396,6 @@ export default function PreconsultaPte({ params }) {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    const getPreConsultation = async () => {
-      try {
-        setIsLoading(true);
-        const res = await ApiSegimed.get(
-          `/get-preconsultation?scheduleId=${scheduleId}`,
-          {
-            headers: {
-              token: token,
-            },
-          }
-        );
-        if (res) {
-          setPreconsultationAlreadyExists(res.data);
-          setDisabledButton(true);
-          console.log({
-            setPreconsultationAlreadyExists: true,
-            preconsultation: res.data,
-          });
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.log("NUEVA PRECONSULTA");
-        console.error("Error fetching data", error);
-        setIsLoading(false);
-      }
-    };
-    getPreConsultation();
-  }, []);
 
   if (isLoading) {
     return (
@@ -468,7 +454,7 @@ export default function PreconsultaPte({ params }) {
             </p>
           </div>
         </div>
-        {Object.keys(formData.questions).map((question, index) => (
+        {Object.keys(formData?.questions).map((question, index) => (
           <PreconsultaQuestion
             key={index}
             question={question}
@@ -489,6 +475,7 @@ export default function PreconsultaPte({ params }) {
         <InputCuerpoPre
           title={"Exploracion fisica"}
           onBodyChange={handleBodyChange}
+          bodySection={formData?.bodySection}
           defaultOpen
         />
         <InputFilePreconsultation
@@ -497,7 +484,7 @@ export default function PreconsultaPte({ params }) {
           onDescriptionChange={handleTestDescription}
           onTestActive={handleTestActive}
           onTestSelectedOption={handleTestSelectedOption}
-          tests={tests}
+          tests={formData.tests}
           defaultOpen
         />
         <AnamnesisPreconsulta

@@ -10,7 +10,7 @@ export default function InputInfo({ info, title }) {
         {title}
       </label>
       <p className="w-full h-full text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-4 py-2">
-        {info}
+        {info || "Sin especificar"}
       </p>
     </div>
   );

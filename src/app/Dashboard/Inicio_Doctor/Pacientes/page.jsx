@@ -37,6 +37,8 @@ import IconFilter from "@/components/icons/IconFilter";
 import IconTStar2 from "@/components/icons/IconStar2";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -161,8 +163,7 @@ export default function HomeDoc() {
         getFavorites({ headers: { token: token } }).catch(console.error);
         getPatients({ headers: { token: token } }).catch(console.error);
         console.log(
-          `Patient ${
-            patient.isFavorite ? "removed from" : "added to"
+          `Patient ${patient.isFavorite ? "removed from" : "added to"
           } favorites successfully.`,
           response
         );
@@ -245,16 +246,14 @@ export default function HomeDoc() {
           </button> */}
           <button
             onClick={handleFavoriteClick}
-            className={`${
-              showFavorites
-                ? "bg-bluePrimary text-white"
-                : "bg-white text-bluePrimary  border-bluePrimary"
-            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+            className={`${showFavorites
+              ? "bg-bluePrimary text-white"
+              : "bg-white text-bluePrimary  border-bluePrimary"
+              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
-              className={`hidden md:block ${
-                showFavorites ? "text-white" : "text-bluePrimary"
-              } font-bold`}>
+              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
+                } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -450,9 +449,21 @@ export default function HomeDoc() {
         </button>
       </div>
       {showMapModal && selectedPatient && (
-        <MapModalPte
+
+        <ModalModularizado
+          isOpen={showMapModal}
           onClose={() => setShowMapModal(false)}
-          patient={selectedPatient}
+          Modals={[<MapModalPte
+            onClose={() => setShowMapModal(false)}
+            patient={selectedPatient}
+            key={"map"}
+          />]}
+          title={"Geolocalizacion del paciente"}
+          button1={"hidden"}
+          button2={"bg-bluePrimary block font-font-Roboto"}
+          progessBar={"hidden"}
+          size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
+          buttonText={{ end: `Continuar` }}
         />
       )}
       <ModalConsultation
