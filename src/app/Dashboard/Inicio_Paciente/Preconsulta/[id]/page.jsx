@@ -337,7 +337,13 @@ export default function PreconsultaPte({ params }) {
       const isAnamnesisMissing = Object.values(formData.anamnesis).some(
         (item) => item.description?.trim() === ''
       );
-      if (isAnamnesisMissing) {
+      const isBodyPainMissing = Object.values(bodyPainFormat).some(
+        (item) => item === null
+      );
+      const isVitalSignMissing = vitalSignFormat.some(
+        (item) => item.measure === null
+      );
+      if (isAnamnesisMissing || isBodyPainMissing || isVitalSignMissing) {
         Swal.fire({
           icon: "error",
           title: "Error",
