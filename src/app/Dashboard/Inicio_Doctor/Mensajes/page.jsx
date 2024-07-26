@@ -85,7 +85,7 @@ export default function MensajesDoc() {
     if (lastMessage.target.userId === Number(userId)) return true;
     return false;
   };
-  console.log(getChats)
+
   const chatElements = useMemo(
     () =>
       chats.map((chat) => (
@@ -94,7 +94,7 @@ export default function MensajesDoc() {
           className="flex h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center">
           <title>{lastSegmentTextToShow}</title>
           <div className="flex gap-4 w-[65%] md:w-[80%] justify-start items-center">
-            <div className="w-12 h-12 flex justify-center items-center">
+            <div className="w-16 h-12 flex justify-center items-center">
               {handleImg(
                 chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
               )}
@@ -103,19 +103,14 @@ export default function MensajesDoc() {
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 line-clamp-2">
                 {chat?.target?.fullName}
               </p>
-              <Image src={ruteActual} alt="" className="hidden md:block" />
-              {chat.unseenMessages.length && (
-                  
-                  <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ml-10">
-                  {Fecha(
-                   chat.unseenMessages[chat.unseenMessages.length - 1].date, 4
-                 )} 
-                 <span className="mx-1">-</span>
-                  {Hora(
-                   chat.unseenMessages[chat.unseenMessages.length - 1].date
-                 )}
-                 </span>
-              )}
+              <Image src={ruteActual} alt="" className="hidden md:block mr-20 " />
+              {chat.unseenMessages.length > 0 ? (
+              <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ">
+              {Fecha(chat.unseenMessages[chat.unseenMessages.length - 1].date, 4)}
+              <span className="mx-1">-</span>
+              {Hora(chat.unseenMessages[chat.unseenMessages.length - 1].date)}
+              </span>
+              ) : null}
             </div>
           </div>
           <div className="flex gap-0 md:gap-3 items-center w-[35%] md:w-[25%]">
@@ -125,7 +120,7 @@ export default function MensajesDoc() {
             </div>
            
               <button onClick={() => handleViewMessages(chat)}
-              className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
+              className={`py-2 px-4 items-center flex rounded-lg gap-2 w-full ${chat.unseenMessages.length > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}>
                 <IconMensajeBoton className="w-6 h-6" />
                 <p className="hidden md:block text-white font-bold">
                   Ver mensajes

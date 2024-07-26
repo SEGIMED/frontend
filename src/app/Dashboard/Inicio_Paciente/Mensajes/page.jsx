@@ -92,11 +92,11 @@ export default function MensajesDoc() {
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
                 Dr. {chat?.target?.fullName} 
               </p>
-              <Image src={ruteActual} alt="" className="hidden md:block mr-10" />
+              <Image src={ruteActual} alt="" className="hidden md:block mr-20" />
               {chat.unseenMessages.length && (  
                   
                 
-                  <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ml-10">
+                  <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ">
                   {Fecha(
                    chat.unseenMessages[chat.unseenMessages.length - 1].date, 4
                  )} 

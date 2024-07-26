@@ -34,7 +34,7 @@ export default function Chat({ chat }) {
         if (Array.isArray(chat.users)) {
             const sortedUsers = [...chat.users].sort();
             const chatId = sortedUsers.join("-");
-            console.log('Dispatching markMessagesAsSeen with chatId:', chatId);
+            
 
             // Solo despacha si el chat no está marcado como visto
             if (!markedChats) {
