@@ -1,28 +1,44 @@
-"use client"
+"use client";
 
 import { useForm } from "react-hook-form";
-import Swal from 'sweetalert2';
-import Image from 'next/image';
+import Swal from "sweetalert2";
+import Image from "next/image";
 import LostPassword from "@/components/images/reset.png";
 import IconSend from "@/components/icons/IconSend";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import IconPasswordClose from "@/components/icons/IconPasswordClose";
 import IconPasswordOpen from "@/components/icons/IconPasswordOpen";
 import { NavBar } from "@/components/NavBar/navbar";
 import IconCheckBoton from "@/components/icons/iconCheckBoton";
 
 export default function AuthSelect() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm();
     const router = useRouter();
+    const [otp, setOtp] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    const searchParams = useSearchParams();
 
+    useEffect(() => {
+        if (!searchParams.get("codeOTP") || !searchParams.get("userEmail")) {
+            router.push("/");
+        }
+        searchParams.get("codeOTP") && setOtp(searchParams.get("codeOTP"));
+        searchParams.get("userEmail") &&
+            setUserEmail(searchParams.get("userEmail"));
+    }, [searchParams, router]);
     const onSubmit = async (data) => {
         try {
             const body = {
-                userEmail: data.userEmail,
-                temporaryCode: data.otp,
-                userPassword: data.newPassword
+                userEmail: userEmail,
+                temporaryCode: otp,
+                userPassword: data.newPassword,
             };
 
             const response = await ApiSegimed.post("/user/modify-password", body);
@@ -33,20 +49,18 @@ export default function AuthSelect() {
                 icon: "success",
                 confirmButtonColor: "#487FFA",
                 confirmButtonText: "Aceptar",
-            }).then(() => {
-                router.push("/");
-            });
+            }).then(() => router.push("/"));
         } catch (error) {
+            console.log(error);
             Swal.fire({
                 title: "No pudo actualizar la contraseña",
-                text: error?.response?.data?.error || error.message,
+                text: error?.response?.data.error,
                 icon: "error",
                 confirmButtonColor: "#487FFA",
                 confirmButtonText: "Aceptar",
             });
         }
     };
-
     const [showPassword, setShowPassword] = useState(false);
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -74,46 +88,20 @@ export default function AuthSelect() {
                                 Ingrese su nueva contraseña
                             </h2>
                             <p className="hidden md:flex text-center text-[#5F5F5F] font-normal text-base leading-7">
-                                Ya puede establecer una nueva contraseña para su cuenta. Por favor, asegúrese de que sea una combinación única que no haya utilizado previamente. Esto es esencial para mantener la seguridad de su cuenta.
+                                Ya puede establecer una nueva contraseña para su cuenta. Por
+                                favor, asegúrese de que sea una combinación única que no haya
+                                utilizado previamente. Esto es esencial para mantener la
+                                seguridad de su cuenta.
                             </p>
                         </header>
                         <fieldset className="px-8 pb-5">
-                            <label className="w-full">
-                                <p className="text-[#5F5F5F] pb-2 leading-3">Correo Electrónico</p>
-                                <input
-                                    {...register("userEmail", {
-                                        required: "Este campo es obligatorio",
-                                        pattern: {
-                                            value: /^\S+@\S+$/i,
-                                            message: "Ingrese un correo electrónico válido",
-                                        }
-                                    })}
-                                    type="email"
-                                    className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm 
-                                    border-[#DCDBDB] font-normal text-base focus:outline-[#808080] placeholder-truncate"
-                                    placeholder="Ingrese su correo electrónico"
-                                />
-                                {errors.userEmail && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.userEmail.message}</span>}
-                            </label>
+                            <input type="hidden" value={otp} />
+                            <input type="hidden" value={userEmail} />
 
                             <label className="w-full">
-                                <p className="text-[#5F5F5F] pb-2 leading-3 pt-10">Código OTP</p>
-                                <input
-                                    {...register("otp", {
-                                        required: "Este campo es obligatorio",
-                                        pattern: {
-                                            value: /^\d{4}$/,
-                                            message: "El código OTP debe ser un número de 6 dígitos",
-                                        }
-                                    })}
-                                    type="number"
-                                    className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
-                                    placeholder="Ingrese el código OTP"
-                                />
-                                {errors.otp && <span className="text-[#fe4848] pb-2 leading-3 text-sm">{errors.otp.message}</span>}
-                            </label>
-                            <label className="w-full">
-                                <p className="text-[#5F5F5F] pb-2 leading-3 pt-10">Nueva contraseña</p>
+                                <p className="text-[#5F5F5F] pb-2 leading-3 pt-10">
+                                    Nueva contraseña
+                                </p>
                                 <input
                                     {...register("newPassword", {
                                         required: {
@@ -122,11 +110,13 @@ export default function AuthSelect() {
                                         },
                                         minLength: {
                                             value: 6,
-                                            message: "La contraseña debe tener al menos 6 caracteres.",
+                                            message:
+                                                "La contraseña debe tener al menos 6 caracteres.",
                                         },
                                         maxLength: {
                                             value: 20,
-                                            message: "La contraseña no debe exceder los 20 caracteres.",
+                                            message:
+                                                "La contraseña no debe exceder los 20 caracteres.",
                                         },
                                         pattern: {
                                             value:
@@ -145,34 +135,61 @@ export default function AuthSelect() {
                                         className="absolute right-2 focus:outline-none pb-14"
                                         onClick={togglePasswordVisibility}
                                         style={{ top: 0, bottom: 0, margin: "auto" }}>
-                                        {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
+                                        {showPassword ? (
+                                            <IconPasswordOpen />
+                                        ) : (
+                                            <IconPasswordClose />
+                                        )}
                                     </button>
                                 </div>
                             </label>
                             <ul className="mt-2 text-sm ">
-                                <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""}`}>
-                                    {passwordCriteria.hasUpperCase && <IconCheckBoton className={"w-4"} />} Debe contener una letra mayúscula
+                                <li
+                                    className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""}`}>
+                                    {passwordCriteria.hasUpperCase && (
+                                        <IconCheckBoton className={"w-4"} />
+                                    )}{" "}
+                                    Debe contener una letra mayúscula
                                 </li>
-                                <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""}`}>
-                                    {passwordCriteria.hasLowerCase && <IconCheckBoton className={"w-4"} />} Debe contener una letra minúscula
+                                <li
+                                    className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""}`}>
+                                    {passwordCriteria.hasLowerCase && (
+                                        <IconCheckBoton className={"w-4"} />
+                                    )}{" "}
+                                    Debe contener una letra minúscula
                                 </li>
-                                <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""}`}>
-                                    {passwordCriteria.hasSpecialChar && <IconCheckBoton className={"w-4"} />} Debe contener un carácter especial
+                                <li
+                                    className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""}`}>
+                                    {passwordCriteria.hasSpecialChar && (
+                                        <IconCheckBoton className={"w-4"} />
+                                    )}{" "}
+                                    Debe contener un carácter especial
                                 </li>
-                                <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""}`}>
-                                    {passwordCriteria.hasMinLength && <IconCheckBoton className={"w-4"} />} Debe tener al menos 6 caracteres
+                                <li
+                                    className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""}`}>
+                                    {passwordCriteria.hasMinLength && (
+                                        <IconCheckBoton className={"w-4"} />
+                                    )}{" "}
+                                    Debe tener al menos 6 caracteres
                                 </li>
-                                <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.isEqual ? "text-[#70C247]" : ""}`}>
-                                    {passwordCriteria.isEqual && <IconCheckBoton className={"w-4"} />} Deben coincidir las contraseñas
+                                <li
+                                    className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.isEqual ? "text-[#70C247]" : ""}`}>
+                                    {passwordCriteria.isEqual && (
+                                        <IconCheckBoton className={"w-4"} />
+                                    )}{" "}
+                                    Deben coincidir las contraseñas
                                 </li>
                             </ul>
 
                             <label className="w-full">
-                                <p className="text-[#5F5F5F] pb-2 pt-10 leading-3">Confirme su nueva contraseña</p>
+                                <p className="text-[#5F5F5F] pb-2 pt-10 leading-3">
+                                    Confirme su nueva contraseña
+                                </p>
                                 <input
                                     {...register("confirmPassword", {
                                         required: true,
-                                        validate: value => value === newPassword || "*Las contraseñas no coinciden"
+                                        validate: (value) =>
+                                            value === newPassword || "*Las contraseñas no coinciden",
                                     })}
                                     type={showPassword ? "text" : "password"}
                                     className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
@@ -184,7 +201,11 @@ export default function AuthSelect() {
                                         className="absolute right-2 focus:outline-none pb-14"
                                         onClick={togglePasswordVisibility}
                                         style={{ top: 0, bottom: 0, margin: "auto" }}>
-                                        {showPassword ? <IconPasswordOpen /> : <IconPasswordClose />}
+                                        {showPassword ? (
+                                            <IconPasswordOpen />
+                                        ) : (
+                                            <IconPasswordClose />
+                                        )}
                                     </button>
                                 </div>
                             </label>
@@ -192,8 +213,7 @@ export default function AuthSelect() {
                         <div className="flex items-center justify-center text-center">
                             <button
                                 type="submit"
-                                className="text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center gap-2 hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1"
-                            >
+                                className="text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center gap-2 hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
                                 Establecer nueva contraseña <IconSend />
                             </button>
                         </div>
@@ -202,9 +222,16 @@ export default function AuthSelect() {
             </div>
 
             <div className="hidden md:flex md:w-1/2 h-full bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400 items-center justify-center flex-col">
-                <Image src={LostPassword} width={600} height={300} alt="Lost Password Image" />
+                <Image
+                    src={LostPassword}
+                    width={600}
+                    height={300}
+                    alt="Lost Password Image"
+                />
                 <h3 className="text-center px-8 py-2 text-lg font-normal leading-8 text-white">
-                    SEGIMED es una novedosa plataforma médica interactiva que permite una intercomunicación continua entre médicos y pacientes, generando un vínculo entre ambos donde quieras que estés.
+                    SEGIMED es una novedosa plataforma médica interactiva que permite una
+                    intercomunicación continua entre médicos y pacientes, generando un
+                    vínculo entre ambos donde quieras que estés.
                 </h3>
             </div>
         </div>
