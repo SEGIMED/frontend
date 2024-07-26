@@ -21,18 +21,21 @@ export default function AuthSelect() {
   } = useForm();
   const router = useRouter();
   const [otp, setOtp] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    searchParams.get("codeOTP") && setOtp(searchParams.get("codeOTP"));
-    if (!searchParams.get("codeOTP")) {
+    if (!searchParams.get("codeOTP") || !searchParams.get("userEmail")) {
       router.push("/");
     }
-  }, [searchParams]);
+    searchParams.get("codeOTP") && setOtp(searchParams.get("codeOTP"));
+    searchParams.get("userEmail") &&
+      setUserEmail(searchParams.get("userEmail"));
+  }, [searchParams, router]);
   const onSubmit = async (data) => {
     try {
       const body = {
-        userEmail: data.userEmail,
+        userEmail: userEmail,
         temporaryCode: otp,
         userPassword: data.newPassword,
       };
@@ -78,28 +81,7 @@ export default function AuthSelect() {
               </p>
             </header>
             <fieldset className="px-8 pb-5">
-              <label className="w-full">
-                <p className="text-[#5F5F5F] pb-2 leading-3">
-                  Correo Electrónico
-                </p>
-                <input
-                  {...register("userEmail", {
-                    required: "Este campo es obligatorio",
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: "Ingrese un correo electrónico válido",
-                    },
-                  })}
-                  type="email"
-                  className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
-                  placeholder="Ingrese su correo electrónico"
-                />
-                {errors.userEmail && (
-                  <span className="text-[#fe4848] pb-2 leading-3 text-sm">
-                    {errors.userEmail.message}
-                  </span>
-                )}
-              </label>
+              <input type="hidden" name="userEmail" value={userEmail} />
               <input type="hidden" name="otp" value={otp} />
               {/* <label className="w-full">
                                 <p className="text-[#5F5F5F] pb-2 leading-3 pt-10">Código OTP</p>
