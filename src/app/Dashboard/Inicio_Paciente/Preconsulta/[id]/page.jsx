@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
-  updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia, updateAllFormData, updateFileUploaded, updateTestDescription, updateTestActive, updateTestSelectedOption,
+  updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia, updateAllFormData, updateFileUploaded, updateTestDescription, updateTestActive, updateTestSelectedOption, resetFormData,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import SignosVitales from "@/components/preconsulta/signosVitales";
@@ -114,16 +114,20 @@ export default function PreconsultaPte({ params }) {
   useEffect(() => {
     setEnable(true);
     if (enable) {
-      localStorage.setItem('preconsultationDraft', JSON.stringify({ ...formData, tests }));
+      // almacenamos un borrador por cada cita médica
+      localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify({ ...formData, tests, scheduleId }));
     }
   }, [formData]);
 
   useEffect(() => {
     setIsLoading(true);
-    const draft = JSON.parse(localStorage.getItem('preconsultationDraft'));
+    const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
     if (draft) {
       dispatch(updateAllFormData({ draft }));
       console.log({ draft });
+    }
+    else {
+      dispatch(resetFormData()); // Reseteamos el esto global si esque no existe un borrador para esta preconsulta, para limpiar el formulario completo.
     }
     setIsLoading(false);
     // const getPreConsultation = async () => {
@@ -238,7 +242,7 @@ export default function PreconsultaPte({ params }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    const bodyOBJFormat = {
+    const bodyPainFormat = {
       patient: Number(patientId),
       patientPainMapId: Number(patientId),
       painOwnerId: Number(patientId),
@@ -322,7 +326,7 @@ export default function PreconsultaPte({ params }) {
         : null,
       vitalSignsToCreate: vitalSignFormat,
       // painRecordsToCreate
-      painRecordsToCreate: [bodyOBJFormat],
+      painRecordsToCreate: [bodyPainFormat],
     };
     try {
       if (!bodyForm) {
@@ -330,17 +334,14 @@ export default function PreconsultaPte({ params }) {
         setIsLoading(false);
         return;
       }
-      const isBodyCompleted = Object.values(bodyOBJFormat).some(
-        (item) => item === null
+      const isAnamnesisMissing = Object.values(formData.anamnesis).some(
+        (item) => item.description?.trim() === ''
       );
-      const isVitalSignCompleted = vitalSignFormat.some(
-        (item) => item.measure === null
-      );
-      if (isBodyCompleted || isVitalSignCompleted) {
+      if (isAnamnesisMissing) {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Debe completar la información del cuerpo y los signos vitales",
+          text: "Debe completar los campos de anamnesis",
         });
         setIsLoading(false);
         return;
@@ -362,33 +363,38 @@ export default function PreconsultaPte({ params }) {
             title: "Preconsulta creada con éxito",
             text: "",
           });
-          localStorage.removeItem('preconsultationDraft'); // ya no necesitamos recupera el borrador de la preconsulta
+          localStorage.removeItem(`preconsultationDraft${scheduleId}`); // ya no necesitamos recupera el borrador de la preconsulta
           console.log({ resupuestaCreate: response.data });
         }
         setIsLoading(false);
         setPreconsultationAlreadyExists(true);
         return;
       } else {
-        console.log({
-          toUpdate: {
-            ...bodyForm,
-            updateVitalSigns: bodyForm.vitalSignsToCreate,
-          },
-          preconsultationAlreadyExists: !!preconsultationAlreadyExists,
+        Swal.fire({
+          icon: "success",
+          title: "La preconsulta no puede ser modificada",
+          text: "",
         });
-        const response = await ApiSegimed.patch(
-          `/update-pre-consultation`,
-          { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate },
-          {
-            headers: {
-              token: token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response) {
-          console.log({ resupuestaPatch: response.data });
-        }
+        // console.log({
+        //   toUpdate: {
+        //     ...bodyForm,
+        //     updateVitalSigns: bodyForm.vitalSignsToCreate,
+        //   },
+        //   preconsultationAlreadyExists: !!preconsultationAlreadyExists,
+        // });
+        // const response = await ApiSegimed.patch(
+        //   `/update-pre-consultation`,
+        //   { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate },
+        //   {
+        //     headers: {
+        //       token: token,
+        //       "Content-Type": "application/json",
+        //     },
+        //   }
+        // );
+        // if (response) {
+        //   console.log({ resupuestaPatch: response.data });
+        // }
         setIsLoading(false);
       }
     } catch (error) {
@@ -397,6 +403,7 @@ export default function PreconsultaPte({ params }) {
     }
   };
 
+  // Loader mientras se cargan o envían los datos de la preconsulta
   if (isLoading) {
     return (
       <FormProvider {...methods}>
@@ -407,6 +414,7 @@ export default function PreconsultaPte({ params }) {
     );
   }
 
+  // Si la preconsulta ya fue enviada, no se muestra.
   if (preconsultationAlreadyExists) {
     return (
       <FormProvider {...methods}>
