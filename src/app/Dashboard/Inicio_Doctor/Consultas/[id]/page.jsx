@@ -414,7 +414,7 @@ const DetallePaciente = (id) => {
       diseaseId: 3,
       diagnosticNotes: data["Diagnostico"],
       medicalEventId: 5,
-      drugId: formState.selectDrug ? formState.selectDrug : null,
+      drugId: data["medications"] ? data["medications"] : null,
       prescribedDose: null,
       quantityDrug: 60,
       medicalProcedureId: 4,
@@ -723,6 +723,7 @@ const DetallePaciente = (id) => {
             <InputCuerpoPre
             title={"Exploracion fisica"}
             onBodyChange={handleBodyChange}
+            bodySection={formData?.bodySection}
             defaultOpen = {handleNav === "exploracion fisica" ? true : false}
             />
             <InputExam title={"Examen fisico"} 

@@ -220,7 +220,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
                   text={"¿Hay dolor?"}
-                  selectedOptions={bodySection.isTherePain}
+                  selectedOptions={bodySection?.isTherePain}
                   options={[
                     { value: true, text: 'Si' },
                     { value: false, text: 'No' }
@@ -229,7 +229,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                   name={"isTherePain"}
                 />
               </div>
-              {bodySection.isTherePain && (
+              {bodySection?.isTherePain && (
                 <>
                   <div>
                     <ButtonNextPreconsultation
@@ -376,6 +376,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                       onBodyChange={onBodyChange}
                       text={"¿Es el peor dolor de su vida?"}
                       selectedOptions={bodySection.isWorstPainEver}
+                      worstPainOfYourLife
                       options={[
                         { value: true, text: 'Si' },
                         { value: false, text: 'No' }
