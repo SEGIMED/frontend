@@ -8,7 +8,7 @@ import { socket } from "@/utils/socketio";
 import rutas from "@/utils/rutas";
 import { PathnameShow } from "@/components/pathname/path";
 import ruteActual from "@/components/images/ruteActual.png";
-
+import { Hora, Fecha } from "@/utils/NormaliceFechayHora";
 import mensaje from "@/components/images/mensaje.png";
 import LastLogin from "@/utils/lastLogin";
 
@@ -84,7 +84,7 @@ export default function MensajesDoc() {
           key={chat._id}
           className="flex h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center">
           <title>{lastSegmentTextToShow}</title>
-          <div className="flex gap-4 w-[65%] md:w-[80%]">
+          <div className="flex gap-4 w-[65%] md:w-[80%] justify-start items-center">
             <div className="w-12 h-12 flex justify-center items-center">
               {handleImg(
                 chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
@@ -96,11 +96,16 @@ export default function MensajesDoc() {
               </p>
               <Image src={ruteActual} alt="" className="hidden md:block" />
               {chat.unseenMessages.length && (
-                <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
-                  {LastLogin(
-                    chat.unseenMessages[chat.unseenMessages.length - 1].date
-                  )}
-                </p>
+                  
+                  <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ml-10">
+                  {Fecha(
+                   chat.unseenMessages[chat.unseenMessages.length - 1].date, 4
+                 )} 
+                 <span className="mx-1">-</span>
+                  {Hora(
+                   chat.unseenMessages[chat.unseenMessages.length - 1].date
+                 )}
+                 </span>
               )}
             </div>
           </div>
