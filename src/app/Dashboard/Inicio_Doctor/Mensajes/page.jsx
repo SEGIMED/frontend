@@ -73,8 +73,9 @@ export default function MensajesDoc() {
   };
 
   const handleViewMessages = (chat) => {
-    dispatch(markMessagesAsSeen({ chatId: chat._id }));
-    // router.push(`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`);
+    // dispatch(markMessagesAsSeen({ chatId: chat._id }));
+    router.push(`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`);
+    
   };
 
   const counterM = (message) => {

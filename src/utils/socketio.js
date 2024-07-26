@@ -54,6 +54,7 @@ class Socket {
 
     this._socket.on("updateNewChat", (data) => {
       dispatch(addChat(data));
+      dispatch(markMessagesAsSeen(data))
     });
   }
 

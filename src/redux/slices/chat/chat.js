@@ -1,7 +1,10 @@
 
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 
-const initialState = {}
+const initialState = {
+    
+   
+  };
 
 const chatSlice = createSlice({
     name: 'Chat',
@@ -31,13 +34,24 @@ const chatSlice = createSlice({
             }
         },
         markMessagesAsSeen: (state, action) => {
-            const { chatId } = action.payload;
+            const { chatId,markedChats } = action.payload;
+      
+            // Si ya se ha marcado como visto, no hacer nada
+            if (markedChats) {
+              return;
+            }
+      
             const chat = state[chatId];
             if (chat) {
-                chat.seenMessages = [...chat.seenMessages, ...chat.unseenMessages];
-                chat.unseenMessages = [];
+              chat.seenMessages = [
+                ...chat.seenMessages,
+                ...chat.unseenMessages.map(msg => ({ ...msg, state: true }))
+              ];
+              chat.unseenMessages = [];
+      
+             
             }
-        },
+          },
         dataClear: (state) => {
             return {};
         },
