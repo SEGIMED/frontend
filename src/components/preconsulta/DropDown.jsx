@@ -8,7 +8,7 @@ import {
     Button,
 } from "@nextui-org/react";
 
-export default function DropNextPreconsultation({ text, onBodyChange, options, text2, name, disabled }) {
+export default function DropNextPreconsultation({ text, onBodyChange, options, selectedOptions, text2, name, disabled }) {
     const [selectedOption, setSelectedOptionState] = useState('');
     const [selectedTextOption, setSelectedTextOption] = useState('');
     // const { setValue, register } = useFormContext();
