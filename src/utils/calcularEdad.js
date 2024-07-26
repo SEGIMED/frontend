@@ -10,5 +10,5 @@ export default function CalcularEdad(fechaNacimiento) {
         edad--;
     }
 
-    return edad ? edad : "registre su fecha de nacimiento";
+    return edad ? edad : "";
 }

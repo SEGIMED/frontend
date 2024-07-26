@@ -103,7 +103,7 @@ export default function AlarmPte() {
       </div>
       <div className="overflow-auto h-full">
         {UnsolvedAlarmas.length === 0 ? (
-          <NotFound text="No hay alarmas" />
+          <NotFound text="No hay alarmas activas" />
         ) : (
           <TableAlarmPte paciente={UnsolvedAlarmas} />
         )}

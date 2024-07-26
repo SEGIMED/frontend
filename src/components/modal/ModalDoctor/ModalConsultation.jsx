@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const {
@@ -106,11 +107,18 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
       const response = await ApiSegimed.post("/schedules", rest, headers);
 
-      if (response.data) {
-        alert("cita agendada");
-      }
 
       handleClose();
+      if (response.data) {
+        Swal.fire({
+          title: "Consulta agendada con exito!",
+          // text: "You clicked the button!",
+          icon: "success"
+        });
+      }
+
+
+
     } catch (error) {
       console.error("Error al enviar los datos:", error);
 

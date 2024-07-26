@@ -5,17 +5,49 @@ import IconArrowDetailUp from "../icons/IconArrowDetailUp";
 import IconConsulta from "../icons/IconConsulta";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 import InputInfo from "./InputInfo";
+// import Cookies from "js-cookie";
+// import { useEffect } from "react";
+// import { ApiSegimed } from "@/Api/ApiSegimed";
+
 
 export default function ExamFisico({ pacientes, subtitle }) {
   // Estado para controlar qué detalles están abiertos
   const [openDetails, setOpenDetails] = useState({});
-  
+  // const [catalog, setCatalog] = useState([]);
+
   const toggleDetail = (index) => {
     setOpenDetails((prevState) => ({
       ...prevState,
       [index]: !prevState[index],
     }));
   };
+
+
+
+
+  // const getCatalog = async (headers) => {
+  //   try {
+  //     const response = await ApiSegimed.get(
+  //       "/catalog/get-catalog?catalogName=PHYSICAL_SUBSYSTEMS",
+  //       headers
+  //     );
+  //     if (response.data) {
+  //       setCatalog(response.data);
+  //       console.log(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const token = Cookies.get("a");
+  //   const headers = { headers: { token: token } };
+  //   if (token) {
+  //     getCatalog(headers);
+
+  //   }
+  // }, []);
 
 
   return (
@@ -42,10 +74,10 @@ export default function ExamFisico({ pacientes, subtitle }) {
                     })}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                  {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
+                    {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                  {paciente?.appSch?.attendancePlace?.alias}
+                    {paciente?.appSch?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
 

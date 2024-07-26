@@ -94,9 +94,10 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
                 {category.items?.map((item, itemIndex) => (
                   <DropdownItem
                     key={itemIndex}
+                    as={item.href && Link}
                     href={item.href && item.href}
                     onClick={item.onClick && item.onClick}
-                    className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2"
+                    className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2 text-[#5F5F5F]"
                     startContent={item.icon}
                     endContent={item.iconr}
                     classNames={{
@@ -110,6 +111,7 @@ const MenuDropDown = ({ icon, iconr, label, categories, items }) => {
           : items?.map((item, index) => (
               <DropdownItem
                 key={index}
+                as={item.href && Link}
                 className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2"
                 href={item.href && item.href}
                 onClick={item.onClick && item.onClick}

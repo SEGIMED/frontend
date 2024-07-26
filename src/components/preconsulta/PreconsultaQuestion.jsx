@@ -151,7 +151,8 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
           <textarea
             className="w-[96%] p-2 h-24 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg outline-[#a8a8a8]"
             placeholder={`Ingrese aquí una descripción`}
-            value={currentDescription}
+            // value={currentDescription}
+            value={section.description}
             onChange={handleChangeDescription}
           />
         </div>

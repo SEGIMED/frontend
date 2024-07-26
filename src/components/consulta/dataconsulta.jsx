@@ -15,8 +15,9 @@ import DataPatient from "./info";
 import { useEffect, useState } from "react";
 import MapModalPte from "../modal/MapModalPte";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
+import ModalModularizado from "../modal/ModalPatient/ModalModurizado";
 
-export default function Consulta({ paciente, title, defaultOpen =false }) {
+export default function Consulta({ paciente, title, defaultOpen = false }) {
 
   const [showMapModal, setShowMapModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,7 @@ export default function Consulta({ paciente, title, defaultOpen =false }) {
     geolocation: '',
     currentLocationCountry: '',
     birthDate: ''
-    
+
   });
 
   useEffect(() => {
@@ -52,9 +53,9 @@ export default function Consulta({ paciente, title, defaultOpen =false }) {
       });
     }
   }, [paciente]);
-  
 
-  
+
+
   const handleGeolocationClick = () => {
     setShowMapModal(true);
   };
@@ -62,15 +63,15 @@ export default function Consulta({ paciente, title, defaultOpen =false }) {
     <div className="flex flex-col">
       <details open={defaultOpen}>
         <summary className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer " onClick={() => setIsOpen(!isOpen)}>
-          <div/>
+          <div />
           <div className="flex items-center">
             <Image src={circleData} alt="" />
             <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">{title}
-            <b className="font-semibold text-red-500">*</b>
+              <b className="font-semibold text-red-500">*</b>
             </p>
           </div>
-          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
-            <IconArrowDetailDown/>
+          <div className={isOpen || defaultOpen === true ? "rotate-180" : ""}>
+            <IconArrowDetailDown />
           </div>
         </summary>
         <DataPatient title="Nombre completo" info={values.fullName} />
@@ -81,14 +82,29 @@ export default function Consulta({ paciente, title, defaultOpen =false }) {
         <DataPatient title="Telefono" info={values.phone} />
         <DataPatient title="Telefono de emergencia" info={values.emergencyNumber} />
         <DataPatient title="Correo electronico" info={values.email} />
-        <DataPatient title="Dirección de domicilio" geolocation={paciente?.geolocation} openModal={handleGeolocationClick}/>
+        <DataPatient title="Dirección de domicilio" geolocation={paciente?.geolocation} openModal={handleGeolocationClick} />
         <DataPatient title="Lugar de nacimiento" info={values.currentLocationCountry} />
         <DataPatient title="Fecha de nacimiento" info={values.birthDate} />
       </details>
 
       {showMapModal === true && (
-        <MapModalPte onClose={() => setShowMapModal(false)} patient={paciente} />
+        <ModalModularizado
+          isOpen={showMapModal}
+          onClose={() => setShowMapModal(false)}
+          Modals={[<MapModalPte
+            onClose={() => setShowMapModal(false)}
+            patient={paciente}
+            key={"map"}
+          />]}
+          title={"Geolocalizacion del paciente"}
+          button1={"hidden"}
+          button2={"bg-bluePrimary block font-font-Roboto"}
+          progessBar={"hidden"}
+          size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
+          buttonText={{ end: `Continuar` }}
+        />
       )}
+
 
     </div>
   );

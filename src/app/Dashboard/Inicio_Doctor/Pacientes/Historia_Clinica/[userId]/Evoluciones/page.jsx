@@ -9,6 +9,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function HomeDoc() {
   const pathname = usePathname();
@@ -16,31 +17,8 @@ export default function HomeDoc() {
   const userId = pathArray[pathArray.length - 2];
   // const userId = 8;
 
-  const [evoluciones, setEvoluciones] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const getConsultas = async (headers) => {
-    try {
-      const response = await ApiSegimed.get(
-        `/medical-event/get-medical-event-history?patientId=${userId}`,
-        headers
-      );
-      if (response.data) {
-        setEvoluciones(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching consultas:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const token = Cookies.get("a");
-    if (token) {
-      getConsultas({ headers: { token: token } }).catch(console.error);
-    }
-  }, []);
+  const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
+  const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -65,13 +43,13 @@ export default function HomeDoc() {
         </div>
         {isLoading ? (
           <SkeletonList count={9} />
-        ) : evoluciones.length === 0 ? (
+        ) : infoPatient.length === 0 ? (
           <NotFound
             text="No hay historial de evoluciones."
             sizeText="w-[100%]"
           />
         ) : (
-          <Evoluciones pacientes={evoluciones} />
+          <Evoluciones pacientes={infoPatient} />
         )}
       </div>
     </div>

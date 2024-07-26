@@ -1,7 +1,8 @@
 import React from 'react';
 
-export default function Table({ columnNames, colum }) {
+export default function Table({ columnNames}) {
     const columnCount = columnNames.length +1
+    const colum= columnNames.length - 1
 
     return (
         <div className={`grid grid-cols-${colum} md:grid-cols-${columnCount} items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4`}>

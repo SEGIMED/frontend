@@ -7,11 +7,11 @@ import IconConsulta from "../icons/IconConsulta";
 import { useState } from "react";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
-const AnamnesisItem = ({ title, field, onAnamnesisChange }) => {
-    const [description, setDescription] = useState('');
+const AnamnesisItem = ({ title, field, description, onAnamnesisChange }) => {
+    // const [description, setDescription] = useState('');
 
     const handleDescriptionChange = (e) => {
-        setDescription(e.target.value);
+        // setDescription(e.target.value);
         onAnamnesisChange(field, e.target.value);
     }
 
@@ -47,7 +47,7 @@ function AnamnesisPreconsulta({ title, anamnesis, onAnamnesisChange, defaultOpen
                 </summary>
                 {Object.keys(anamnesis).map((field, index) => {
                     return (
-                        <AnamnesisItem key={index} field={field} title={anamnesis[field].title} onAnamnesisChange={onAnamnesisChange} />
+                        <AnamnesisItem key={index} field={field} title={anamnesis[field].title} description={anamnesis[field].description} onAnamnesisChange={onAnamnesisChange} />
                     )
                 })}
             </details>

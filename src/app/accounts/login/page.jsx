@@ -49,16 +49,16 @@ export default function Login() {
       // const result = await response.json();
       const response = await ApiSegimed.post("/user/login", postData);
       const result = response.data;
-   
+
       if (response.status !== 200) {
         throw new Error(result.error);
       }
 
       if (response.status === 200) {
         // Guardar en el localStorage
-        Cookies.set("a", result.authenticationDetails.jwtToken, { expires: 1 });
-        Cookies.set("b", result.authenticationDetails.role, { expires: 1 });
-        Cookies.set("c", result.authenticationDetails.userId, { expires: 1 });
+        Cookies.set("a", result.authenticationDetails.jwtToken, { expires: 7 });
+        Cookies.set("b", result.authenticationDetails.role, { expires: 7 });
+        Cookies.set("c", result.authenticationDetails.userId, { expires: 7 });
 
         // Verificar si el usuario y la contraseña son iguales
         if (data.userOrDni === data.password) {

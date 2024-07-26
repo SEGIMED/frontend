@@ -16,8 +16,8 @@ export default function MapPte({ positions }) {
       style={{
         width: "100%",
         height: "100%",
-        border: "4px solid #70C247",
-        borderRadius: "15px",
+        // border: "4px solid #70C247",
+        // borderRadius: "15px",
         pointerEvents: "none", // Deshabilitar eventos del mouse para el contenedor del mapa
       }}
       center={positions}

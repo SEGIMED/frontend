@@ -42,10 +42,10 @@ export default function TableCuerpo({ consultas }) {
                     })}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                  {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
+                    {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                  {paciente?.appSch?.attendancePlace?.alias}
+                    {paciente?.appSch?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
 
