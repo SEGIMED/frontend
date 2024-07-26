@@ -28,14 +28,16 @@ export default function AuthSelect() {
         text: response.data.msg,
         icon: "success",
       });
-
+      
       router.push("/accounts/password/resetMail");
     } catch (error) {
-      if (error.message) {
+      
+      console.error("Error: ", error.response);
+      if (error) {
         Swal.fire({
           icon: "error",
-          title: "Error de conexión",
-          text: error.message,
+          title: "Error",
+          text: error?.response?.data?.error || error.message,
         });
       }
     }
