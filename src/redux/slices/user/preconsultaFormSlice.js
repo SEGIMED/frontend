@@ -319,7 +319,89 @@ const initialState = {
         description: '',
         referenceValue: 100,
         unit: 'mg/dl',
-        options: {},
+        options: {
+          option0: null,
+          option1: null,
+          option2: null,
+          option3: null,
+        },
+      },
+    },
+    tests: {
+      laboratoryResults: {
+        title: "Resultados de laboratorio",
+        file: null,
+        description: '',
+        active: null,
+      },
+      electrocardiogram: {
+        title: "Electrocardiograma",
+        file: null,
+        description: '',
+        active: null,
+      },
+      rxThorax: {
+        title: "RX de Torax",
+        file: null,
+        description: '',
+        active: null,
+      },
+      echocardiogram: {
+        title: "Ecocardiograma",
+        file: null,
+        description: '',
+        active: null,
+      },
+      walkTest: {
+        title: "Test de caminata",
+        file: null,
+        description: '',
+        active: null,
+      },
+      respiratoryFunctional: {
+        title: "Funcional respiratorio",
+        file: null,
+        description: '',
+        active: null,
+      },
+      tomographies: {
+        title: "Tomografías",
+        file: null,
+        description: '',
+        active: null,
+      },
+      rightHeartCatheterization: {
+        title: "Cateterismo cardiaco derecho",
+        file: null,
+        description: '',
+        active: null,
+      },
+      ccg: {
+        title: "CCG (Coronariografia)",
+        file: null,
+        description: '',
+        active: null,
+      },
+      resonance: {
+        title: "Resonancia",
+        file: null,
+        description: '',
+        active: null,
+      },
+      leftHeartCatheterization: {
+        title: "Cateterismo cardiaco izquierdo",
+        file: null,
+        description: '',
+        active: null,
+      },
+      otherStudies: {
+        title: "Otros estudios",
+        file: null,
+        description: "",
+      },
+      pendingStudies: {
+        title: "Estudios pendientes",
+        description: "",
       },
     },
     bodySection: {
@@ -363,6 +445,11 @@ const preconsultaFormSlice = createSlice({
   name: "preconsultaForm",
   initialState,
   reducers: {
+    updateAllFormData(state, action) {
+      const { draft } = action.payload;
+      console.log(draft);
+      state.formData = draft;
+    },
     updateField(state, action) {
       const { key, field, value } = action.payload;
       state.formData.questions[key][field] = value;
@@ -371,7 +458,6 @@ const preconsultaFormSlice = createSlice({
     updateActive(state, action) {
       const { question, label, active } = action.payload;
       const currentSubquestions = state.formData.questions[question].subquestions;
-      console.log(state.formData.questions[question].active === active);
       if (state.formData.questions[question].active === active) {
         state.formData.questions[question].active = null;
         if (currentSubquestions) { // limpiamos las opciones binarias, por lo tanto desactivamos y reseteamos los checkbox de las subpreguntas
@@ -414,10 +500,6 @@ const preconsultaFormSlice = createSlice({
       const { field, description } = action.payload;
       state.formData.anamnesis[field].description = description;
     },
-    updateFileUploaded(state, action) {
-      const { field, file } = action.payload;
-      state.formData.estudios[field].file = file;
-    },
     updateTratamiento(state, action) {
       const { field, item, description } = action.payload;
       state.formData.tratamiento[field].selectedOptions[item] = description;
@@ -453,10 +535,31 @@ const preconsultaFormSlice = createSlice({
     resetForm(state) {
       state.formData = initialState.formData;
     },
+
+    updateFileUploaded(state, action) {
+      const { test, file } = action.payload;
+      state.formData.tests[test].file = file;
+    },
+
+    updateTestDescription(state, action) {
+      const { test, testDescription } = action.payload;
+      state.formData.tests[test].description = testDescription;
+    },
+
+    updateTestActive(state, action) {
+      const { test, active } = action.payload;
+      state.formData.tests[test].active = active;
+    },
+
+    updateTestSelectedOption(state, action) {
+      const { test, value } = action.payload;
+      state.formData.tests[test].selectedOption = value;
+    },
   },
 });
 
 export const {
+  updateAllFormData,
   updateField,
   updateActive,
   updateGlycemia,
@@ -471,6 +574,9 @@ export const {
   updateSubquestion,
   setFormData,
   resetForm,
-  updateFileUploaded
+  updateFileUploaded,
+  updateTestDescription,
+  updateTestActive,
+  updateTestSelectedOption
 } = preconsultaFormSlice.actions;
 export default preconsultaFormSlice.reducer;
