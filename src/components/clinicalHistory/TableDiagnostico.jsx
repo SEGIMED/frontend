@@ -33,19 +33,19 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
                 <div className="grid text-center grid-cols-3 w-[90%] md:text-left md:grid-cols-5 items-center  py-2 bg-white z-10">
 
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
+                    {new Date(paciente.timestamp).toLocaleTimeString()}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
+                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
                       day: "numeric",
                       month: "numeric",
                     })}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                  {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
+                    {paciente?.physician?.name} {paciente?.physician?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                  {paciente?.appSch?.attendancePlace?.alias}
+                    {paciente?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
 

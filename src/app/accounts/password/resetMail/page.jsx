@@ -31,6 +31,8 @@ export default function AuthSelect() {
                 title: "¡Contraseña actualizada correctamente!",
                 text: response.data.msg,
                 icon: "success",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
             }).then(() => {
                 router.push("/");
             });
@@ -38,7 +40,9 @@ export default function AuthSelect() {
             Swal.fire({
                 title: "No pudo actualizar la contraseña",
                 text: error?.response?.data?.error || error.message,
-                icon: "error"
+                icon: "error",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
             });
         }
     };

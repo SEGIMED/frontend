@@ -53,7 +53,7 @@ export default function DoctoresPte() {
         // `/all-physicians?page=${pagination.currentPage}&limit=7`,
         { headers: { token: token } }
       );
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data) {
         setDoctors(response.data.user);
         setPagination((prev) => ({

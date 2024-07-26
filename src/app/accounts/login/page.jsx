@@ -83,6 +83,8 @@ export default function Login() {
           icon: "error",
           title: "Error",
           text: errorMessage,
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
         });
       }
     }
@@ -131,9 +133,8 @@ export default function Login() {
                 id="userOrDni"
                 name="userOrDni"
                 placeholder="Ingrese su correo electrónico o DNI"
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none ${
-                  errors.userOrDni ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.userOrDni ? "border-red-500" : "border-gray-300"
+                  }`}
                 {...register("userOrDni", {
                   required: true,
                   validate: (value) =>
@@ -157,9 +158,8 @@ export default function Login() {
                 id="password"
                 name="password"
                 placeholder="Ingrese su contraseña"
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
                 {...register("password", { required: true })}
               />
               <div className="relative">
@@ -197,11 +197,10 @@ export default function Login() {
           <div className="text-center  flex justify-center">
             <button
               type="submit"
-              className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${
-                Object.keys(errors).length === 0
+              className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
                   ? ""
                   : "cursor-not-allowed opacity-50"
-              }`}
+                }`}
               disabled={Object.keys(errors).length !== 0}>
               Iniciar Sesión <IconSend className="m" />
             </button>

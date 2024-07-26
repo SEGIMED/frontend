@@ -27,16 +27,20 @@ export default function AuthSelect() {
         title: "¡Email enviado correctamente!",
         text: response.data.msg,
         icon: "success",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
-      
+
       router.push("/accounts/password/resetMail");
     } catch (error) {
-      
+
       console.error("Error: ", error.response);
       if (error) {
         Swal.fire({
           icon: "error",
           title: "Error",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
           text: error?.response?.data?.error || error.message,
         });
       }

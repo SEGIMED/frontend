@@ -117,7 +117,6 @@ export default function HomeDoc() {
       medicalSpecialtyIds: selectedSpecialties.map((spec) => spec.id),
       specialties: selectedSpecialties,
     };
-    console.log(updatedData);
     dispatch(adduser({ ...doctor, ...updatedData }));
 
     try {
@@ -133,6 +132,8 @@ export default function HomeDoc() {
         title: "¡Datos actualizados correctamente!",
         text: "",
         icon: "success",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
     } catch (error) {
       console.error("Error fetching data:", error);

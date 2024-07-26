@@ -51,7 +51,7 @@ export const SidePte = ({ search }) => {
     .substring(pathname.lastIndexOf("/") + 1)
     .replace(/_/g, " ");
 
-  console.log(lastSegment);
+  // console.log(lastSegment);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -73,8 +73,8 @@ export const SidePte = ({ search }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const dispatch = useAppDispatch();
@@ -360,7 +360,7 @@ export const SidePte = ({ search }) => {
               name={
                 !isMobile ? `${user?.name ?? ""} ${user?.lastname ?? ""}` : ""
               }
-              // name={user ? `${user?.name} ${user?.lastname}` : ''}
+            // name={user ? `${user?.name} ${user?.lastname}` : ''}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="User Actions" variant="flat">
@@ -389,9 +389,8 @@ export const SidePte = ({ search }) => {
           </button>
           <button
             onClick={handleNotificationClick}
-            className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-              showNotifications && "bg-[#E73F3F]"
-            }`}>
+            className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+              }`}>
             <IconNotificaciones
               className="w-6 h-6"
               color={showNotifications && "white"}

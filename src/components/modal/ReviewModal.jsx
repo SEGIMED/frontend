@@ -24,6 +24,8 @@ export default function ReviewModal({ onClose, idDoc }) {
         title: "Review?",
         text: "Es necesario ingresar una calificacion y un comentario",
         icon: "question",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
       return;
     }
@@ -33,6 +35,8 @@ export default function ReviewModal({ onClose, idDoc }) {
         title: "Review?",
         text: "Es necesario ingresar una calificacion y un comentario",
         icon: "question",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
       return;
     }
@@ -59,6 +63,8 @@ export default function ReviewModal({ onClose, idDoc }) {
           title: "Review enviada con exito!",
           text: "",
           icon: "success",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
         });
       }
     } catch (error) {

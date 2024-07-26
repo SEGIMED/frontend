@@ -31,14 +31,14 @@ export default function ClincalCuerpo({ info }) {
             : [],
         }));
         setSelectedMuscles(muscleData);
-        console.log(muscleData);
+        // console.log(muscleData);
       }
     };
 
     getMuscleNames();
   }, [info]);
 
-  console.log(info);
+  // console.log(info);
   const handlePainSelection = (selection) => {
     setIsPain(selection === "Si");
   };
@@ -89,7 +89,7 @@ export default function ClincalCuerpo({ info }) {
                 handleSelection={handlePainSelection}
                 name={"pain"}
                 disabled={true}
-                selectedOptions={"No"}
+                selectedOptions={info?.painMap?.isTherePain}
               />
             </div>
             {isPain && (

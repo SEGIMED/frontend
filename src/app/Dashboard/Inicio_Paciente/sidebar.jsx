@@ -60,8 +60,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -271,6 +271,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
             title: "Notificación leída",
             showConfirmButton: false,
             timer: 1500,
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
           });
         }
       });
@@ -346,9 +348,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            showNotifications && "bg-[#E73F3F]"
-          }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={showNotifications && "white"}
