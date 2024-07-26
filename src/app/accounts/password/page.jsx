@@ -25,11 +25,12 @@ export default function AuthSelect() {
 
       Swal.fire({
         title: "¡Email enviado correctamente!",
-        text: response.data.msg,
+        text: "Se ha enviado un correo electrónico con las instrucciones para restablecer su contraseña.",
         icon: "success",
+        allowOutsideClick: false,
+      }).then(() => {
+        router.push("/");
       });
-
-      router.push("/accounts/password/resetMail");
     } catch (error) {
       if (error.message) {
         Swal.fire({
@@ -105,7 +106,6 @@ export default function AuthSelect() {
               height={200}
             />
           </div>
-
         </div>
         <p className="text-center px-24 pb-2 text-lg font-normal leading-8 text-white">
           SEGIMED es una novedosa plataforma médica interactiva que permite una

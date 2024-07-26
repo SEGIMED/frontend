@@ -38,7 +38,7 @@ export const FormUser = ({ formData, setFormData }) => {
 
       const user = response.data;
 
-      router.push(`/accounts/verify/${user.id}`);
+      router.push(`/accounts/register/success`);
 
       reset();
     } catch (error) {
