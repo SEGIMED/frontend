@@ -78,7 +78,7 @@ export default function Chat({ chat }) {
     return <div>Cargando...</div>;
   }
  
-  console.log(chat)
+ 
   return (
     <div className="text-[#686868] w-full flex h-full flex-col bg-[#FAFAFC]">
       {/* ACA INICIA EL CHAT */}
