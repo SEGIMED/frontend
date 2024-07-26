@@ -11,13 +11,13 @@ import ruteActual from "@/components/images/ruteActual.png";
 import { Hora, Fecha } from "@/utils/NormaliceFechayHora";
 import mensaje from "@/components/images/mensaje.png";
 import LastLogin from "@/utils/lastLogin";
-
+import { markMessagesAsSeen } from "@/redux/slices/chat/chat";
 import Cookies from "js-cookie";
 import Elboton from "@/components/Buttons/Elboton";
 import IconMas from "@/components/icons/iconMas";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
-
+import { useRouter } from "next/navigation";
 import IconOrder from "@/components/icons/IconOrder";
 import avatar from "@/utils/defaultAvatar";
 import IconSendMensaje from "@/components/icons/iconSendMensaje";
@@ -31,6 +31,7 @@ export default function MensajesDoc() {
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
+  const router=useRouter()
 
   useEffect(() => {
     // if (!socket.isConnected()) {
@@ -42,6 +43,8 @@ export default function MensajesDoc() {
     //   if (listChats) setChats(listChats)
     //   if (counter === 0) setCounter(1) && window.location.reload()
     //   if (getChats.length !== 0) setIsLoading(false);
+
+    //PARA MOSTRAR CHATS ACTUALIZADOS CON UN RELOAD
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");
       const navigationType =
@@ -69,6 +72,11 @@ export default function MensajesDoc() {
     }
   };
 
+  const handleViewMessages = (chat) => {
+    dispatch(markMessagesAsSeen({ chatId: chat._id }));
+    // router.push(`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`);
+  };
+
   const counterM = (message) => {
     if (!message.length) return false;
     const userId = Cookies.get("c");
@@ -76,7 +84,7 @@ export default function MensajesDoc() {
     if (lastMessage.target.userId === Number(userId)) return true;
     return false;
   };
-
+  console.log(getChats)
   const chatElements = useMemo(
     () =>
       chats.map((chat) => (
@@ -114,15 +122,15 @@ export default function MensajesDoc() {
               {counterM(chat.unseenMessages) ? chat.unseenMessages.length : 0}
               <Image src={mensaje} alt="" />
             </div>
-            <Link
-              href={`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`}>
-              <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
+           
+              <button onClick={() => handleViewMessages(chat)}
+              className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
                 <IconMensajeBoton className="w-6 h-6" />
                 <p className="hidden md:block text-white font-bold">
                   Ver mensajes
                 </p>
               </button>
-            </Link>
+           
           </div>
         </div>
       )),
