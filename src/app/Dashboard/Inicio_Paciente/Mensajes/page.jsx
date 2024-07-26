@@ -76,11 +76,7 @@ export default function MensajesDoc() {
     return false;
   };
 
-  const handleViewMessages = (chat) => {
-   
-    router.push(`${rutas.PacienteDash}${rutas.Mensajes}/${chat.target.userId}`);
-    
-  };
+  
 
   const chatElements = useMemo(
     () =>
