@@ -76,6 +76,12 @@ export default function MensajesDoc() {
     return false;
   };
 
+  const handleViewMessages = (chat) => {
+   
+    router.push(`${rutas.PacienteDash}${rutas.Mensajes}/${chat.target.userId}`);
+    
+  };
+
   const chatElements = useMemo(
     () =>
       chats.map((chat) => (
@@ -93,21 +99,13 @@ export default function MensajesDoc() {
                 Dr. {chat?.target?.fullName} 
               </p>
               <Image src={ruteActual} alt="" className="hidden md:block mr-20" />
-              {chat.unseenMessages.length && (  
-                  
-                
-                  <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ">
-                  {Fecha(
-                   chat.unseenMessages[chat.unseenMessages.length - 1].date, 4
-                 )} 
-                 <span className="mx-1">-</span>
-                  {Hora(
-                   chat.unseenMessages[chat.unseenMessages.length - 1].date
-                 )}
-                 </span>
-                 
-                 
-              )}
+              {chat.unseenMessages.length > 0 ? (
+              <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ">
+              {Fecha(chat.unseenMessages[chat.unseenMessages.length - 1].date, 4)}
+              <span className="mx-1">-</span>
+              {Hora(chat.unseenMessages[chat.unseenMessages.length - 1].date)}
+              </span>
+              ) : null}
             </div>
           </div>
           <div className="flex gap-0 md:gap-3 items-center">
@@ -121,6 +119,7 @@ export default function MensajesDoc() {
               nombre={"Mensajes"}
               size={"sm"}
               icon={<IconMensajeBoton />}
+              className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${chat.unseenMessages.length > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
             />
           </div>
         </div>
