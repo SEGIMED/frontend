@@ -51,7 +51,8 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                   </span>
                   <input
                     type="number"
-                    value={data.measure === 0 ? '' : data.measure}
+                    value={data.measure}
+                    // defaultValue={}
                     min={0}
                     className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
                     onChange={(e) => handleInput(sign, Number(e.target.value))}
@@ -84,7 +85,8 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                       <input
                         key={index}
                         type="number"
-                        value={data.options[option] === 0 ? '' : data.options[option]}
+                        value={data.options[option]}
+                        // defaultValue={}
                         className="w-full text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
                         onChange={(e) => onVitalSignChange(sign, Number(e.target.value), null, option)}
                       />

@@ -27,7 +27,7 @@ export default function PreconsultaPte({ params }) {
   const scheduleId = params.id;
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
-  const [enable, setEnable] = useState(false);
+  const [draftEnabled, setDraftEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [disabledButton, setDisabledButton] = useState(false);
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
@@ -112,48 +112,52 @@ export default function PreconsultaPte({ params }) {
   });
 
   useEffect(() => {
-    setEnable(true);
-    if (enable) {
-      // almacenamos un borrador por cada cita médica
+    // almacenamos un borrador por cada cita médica
+    if (draftEnabled) {
       localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify({ ...formData, tests, scheduleId }));
     }
+    setDraftEnabled(true);
   }, [formData]);
 
   useEffect(() => {
-    setIsLoading(true);
+    // Verificamos si existe un borrador de esta preconsulta en el local storage
     const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
     if (draft) {
+      console.log('Se ha encontrado un BORRADOR de esta preconsulta');
       dispatch(updateAllFormData({ draft }));
-      console.log({ draft });
     }
     else {
-      dispatch(resetFormData()); // Reseteamos el esto global si esque no existe un borrador para esta preconsulta, para limpiar el formulario completo.
+      console.log('Nueva preconsulta, formulario limpio');
+      dispatch(resetFormData()); // Reseteamos el esto global si no existe un borrador para esta preconsulta, así limpiamos cualquier campo que haya quedado completo por consultas anteriores.
     }
-    setIsLoading(false);
-    // const getPreConsultation = async () => {
-    //   try {
-    //     setIsLoading(true);
-    //     const res = await ApiSegimed.get(
-    //       `/get-preconsultation?scheduleId=${scheduleId}`,
-    //       {
-    //         headers: {
-    //           token: token,
-    //         },
-    //       }
-    //     );
-    //     if (res) {
-    //       setPreconsultationAlreadyExists(res.data);
-    //       setDisabledButton(true);
-    //       console.log({ setPreconsultationAlreadyExists: true, preconsultation: res.data });
-    //     }
-    //     setIsLoading(false);
-    //   } catch (error) {
-    //     console.log('NUEVA PRECONSULTA');
-    //     console.error("Error fetching data", error);
-    //     setIsLoading(false);
-    //   }
-    // };
-    // getPreConsultation();
+  }, []);
+
+  useEffect(() => {
+    const getPreConsultation = async () => {
+      try {
+        setIsLoading(true);
+        //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
+        const res = await ApiSegimed.get(
+          `/get-preconsultation?scheduleId=${scheduleId}`,
+          {
+            headers: {
+              token: token,
+            },
+          }
+        );
+        // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
+        if (res) {
+          setPreconsultationAlreadyExists(res.data);
+          setDisabledButton(true);
+          console.log('Esta preconsulta ya existe en la bd', res.data);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data", error);
+        setIsLoading(false);
+      }
+    };
+    getPreConsultation();
   }, []);
 
   const handleQuestionActive = (question, label, active) => {
