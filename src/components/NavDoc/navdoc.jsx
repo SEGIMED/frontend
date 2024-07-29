@@ -31,6 +31,7 @@ export const NavDoctor = ({ toggleSidebar, isOpen }) => {
     Cookies.remove("a");
     Cookies.remove("b");
     Cookies.remove("c");
+    Cookies.remove("d");
 
     try {
       socket.disconnect();

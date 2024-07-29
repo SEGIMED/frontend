@@ -24,7 +24,6 @@ export default function DoctorForm() {
         <div className="text-center">
           <p className="text-xl">Complete sus datos.</p>
         </div>
-
         <Form />
         <FooterAccount />
       </div>

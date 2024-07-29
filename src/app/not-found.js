@@ -1,7 +1,6 @@
 import Elboton from "@/components/Buttons/Elboton";
 import Image404 from "@/components/icons/Image404";
 import LogoSegimed from "@/components/logo/LogoSegimed";
-import Link from "next/link";
 
 export default function NotFound() {
   return (

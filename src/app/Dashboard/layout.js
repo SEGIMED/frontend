@@ -1,8 +1,10 @@
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 import { NextUIProvider } from "@nextui-org/react";
+import { AuthProvider } from "@/contexts/Auth";
 
 export default function RootLayout({ children }) {
-  return <NextUIProvider>{children}</NextUIProvider>;
+  return (
+    <NextUIProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </NextUIProvider>
+  );
 }
