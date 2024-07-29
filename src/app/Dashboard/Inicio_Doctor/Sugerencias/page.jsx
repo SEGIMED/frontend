@@ -32,6 +32,8 @@ export default function HomePte() {
         Swal.fire({
           icon: "success",
           title: "Sugerencia enviada con éxito",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
           text: "Cada sugerencia será considerada cuidadosamente para mejorar nuestro sitio web y los servicios que ofrecemos. ¡Gracias!",
         });
       }
@@ -39,6 +41,8 @@ export default function HomePte() {
       if (error) {
         Swal.fire({
           icon: "error",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
           title: "Error al enviar la sugerencia",
           text: error.message,
         });

@@ -113,7 +113,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
         Swal.fire({
           title: "Consulta agendada con exito!",
           // text: "You clicked the button!",
-          icon: "success"
+          icon: "success",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
         });
       }
 

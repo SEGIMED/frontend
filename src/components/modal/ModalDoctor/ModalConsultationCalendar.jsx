@@ -100,6 +100,8 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
 
                 Swal.fire({
                     title: "Consulta agendada con exito!",
+                    confirmButtonColor: "#487FFA",
+                    confirmButtonText: "Aceptar",
                     // text: "You clicked the button!",
                     icon: "success"
                 });

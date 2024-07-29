@@ -232,6 +232,8 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
             icon: "success",
             title: "Notificación leída",
             showConfirmButton: false,
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
             timer: 1500,
           });
         }
@@ -313,9 +315,8 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            showNotifications && "bg-[#E73F3F]"
-          }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={showNotifications && "white"}

@@ -31,10 +31,10 @@ export default function Evoluciones({ pacientes }) {
 
                 <div className="grid grid-cols-3 w-[90%] md:w-[90%]   md:grid-cols-5 text-center md:text-left px-2 md:px-0 items-center  py-2   h-fit">
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
+                    {new Date(paciente.timestamp).toLocaleTimeString()}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
+                    {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
                       month: "2-digit",
                       day: "2-digit",
                       year: "numeric",
@@ -42,10 +42,10 @@ export default function Evoluciones({ pacientes }) {
                   </div>
 
                   <div className="text-[#FF8300]">
-                    {paciente?.appSch?.physicianThatAttend?.name} {paciente?.appSch?.physicianThatAttend?.lastname}
+                    {paciente?.physician?.name} {paciente?.physician?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
-                    {paciente?.appSch?.attendancePlace?.alias}
+                    {paciente?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
                     {paciente?.chiefComplaint}
