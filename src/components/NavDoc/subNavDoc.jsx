@@ -11,7 +11,12 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setLoading, addClinicalHistory, clearClinicalHistory, addUserHistory } from "@/redux/slices/doctor/HistorialClinico";
+import {
+  setLoading,
+  addClinicalHistory,
+  clearClinicalHistory,
+  addUserHistory,
+} from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
@@ -31,14 +36,63 @@ export default function SubNavbar({ id }) {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.clinicalHistory);
 
+  const combineDetails = (details, defaultDetails) => {
+    return details.length > 0 ? details : defaultDetails;
+  };
+
+  const combineVitalSigns = (vitalSigns, defaultVitalSigns) => {
+    return defaultVitalSigns.map((defaultSign) => {
+      const existingSign = vitalSigns.find(
+        (sign) => sign.measureType === defaultSign.measureType && sign.measure !== null
+      );
+      return existingSign || defaultSign;
+    });
+  };
+
   const getConsultas = async (headers) => {
     try {
       const response = await ApiSegimed.get(
         `/medical-event/get-medical-event-history?patientId=${userId}`,
         headers
       );
+
       if (response.data) {
-        dispatch(addClinicalHistory(response.data));
+        const defaultAnthropometricDetails = [
+          { measureType: "Estatura", measureUnit: "Cm", measure: "-" },
+          { measureType: "Peso", measureUnit: "Kg", measure: "-" },
+          { measureType: "Índice de Masa Corporal", measureUnit: "Kg/m²", measure: "-" },
+        ];
+
+        const defaultVitalSigns = [
+          { measureType: "Temperatura", measureUnit: "°C", measure: "-" },
+          { measureType: "Frecuencia Cardiaca", measureUnit: "bpm", measure: "-" },
+          { measureType: "Presión Arterial Sistólica", measureUnit: "mmHg", measure: "-" },
+          { measureType: "Presión Arterial Diastólica", measureUnit: "mmHg", measure: "-" },
+          { measureType: "Frecuencia Respiratoria", measureUnit: "rpm", measure: "-" },
+          { measureType: "Saturación de Oxígeno", measureUnit: "%", measure: "-" },
+          // { measureType: "Estatura", measureUnit: "Cm", measure: "-" },
+          // { measureType: "Peso", measureUnit: "Kg", measure: "-" },
+          // { measureType: "IMC", measureUnit: "Kg/m²", measure: "-" },
+        ];
+
+        const combinedConsultas = response.data.map((consulta) => {
+          const combinedAnthropometricDetails = combineDetails(
+            consulta.anthropometricDetails || [],
+            defaultAnthropometricDetails
+          );
+          const combinedVitalSigns = combineVitalSigns(
+            consulta.vitalSigns || [],
+            defaultVitalSigns
+          );
+
+          return {
+            ...consulta,
+            anthropometricDetails: combinedAnthropometricDetails,
+            vitalSigns: combinedVitalSigns,
+          };
+        });
+        console.log(combinedConsultas);
+        dispatch(addClinicalHistory(combinedConsultas));
       }
     } catch (error) {
       console.error("Error fetching consultas:", error);
@@ -50,6 +104,7 @@ export default function SubNavbar({ id }) {
       `/patient-details?id=${userId}`,
       headers
     );
+    console.log(response.data, `user`);
     dispatch(addUserHistory(response.data));
   };
 
@@ -71,6 +126,7 @@ export default function SubNavbar({ id }) {
       dispatch(clearClinicalHistory());
     };
   }, [userId, dispatch]);
+
 
   return (
     <div className="border-b border-b-[#cecece] bg-[#fafafc] flex flex-row-reverse md:flex-row justify-around items-center md:pr-6">
@@ -193,7 +249,7 @@ export default function SubNavbar({ id }) {
                     <p>Examen Fisico</p>
                   </Link>
                 </DropdownItem>
-                {/* <DropdownItem
+                <DropdownItem
                   className={getLinkClass(rutas.SignosVitales)}
                   key="copy"
                   textValue="Signos Vitales"
@@ -205,7 +261,7 @@ export default function SubNavbar({ id }) {
                   >
                     <p>Signos Vitales</p>
                   </Link>
-                </DropdownItem> */}
+                </DropdownItem>
                 <DropdownItem
                   className={getLinkClass(rutas.Diagnostico)}
                   key="edit"

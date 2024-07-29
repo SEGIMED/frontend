@@ -65,16 +65,15 @@ export default function HomeDoc() {
   );
 
   // Ordenar pacientes si es necesario
-  const sortedPatients = isSorted
-    ? [...filteredPatients].sort((a, b) =>
-        a.patientUser.name.localeCompare(b.patientUser.name)
+  const sortedPatients =[...filteredPatients].sort((b,a) =>
+        a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
       )
-    : filteredPatients;
 
-  const handleSortClick = () => {
-    setIsSorted(!isSorted);
-  };
+  // const handleSortClick = () => {
+  //   setIsSorted(!isSorted);
+  // };
 
+  
   const lastSegmentTextToShow = PathnameShow();
 
   const handleRiskFilterClick = (risk) => {

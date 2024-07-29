@@ -94,7 +94,8 @@ export default function CuerpoPatient() {
             let timerInterval;
             await Swal.fire({
                 title: "Autoevaluacion enviada con exito!",
-
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
                 icon: "success",
                 timer: 2000,
                 timerProgressBar: true,

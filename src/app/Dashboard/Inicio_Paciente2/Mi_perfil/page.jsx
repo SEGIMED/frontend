@@ -124,6 +124,8 @@ export default function HomePte() {
         title: "¡Datos actualizados correctamente!",
         text: "",
         icon: "success",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
     } catch (error) {
       console.error("Error updating data:", error);
@@ -143,9 +145,8 @@ export default function HomePte() {
     <div className="h-full overflow-y-scroll flex flex-col">
       <title>{lastSegmentTextToShow}</title>
       <div
-        className={`flex ${
-          edit ? "flex-col md:flex-row" : "md:flex-row"
-        } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
+        className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"
+          } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
         <div
           className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
           <Image src={ruteActual} alt="ruta actual" />
@@ -285,9 +286,8 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <select
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${
-                  errors.genreId ? "red" : "#DCDBDB"
-                }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.genreId ? "red" : "#DCDBDB"
+                  }]`}
                 defaultValue={
                   paciente.sociodemographicDetails?.genre === "Masculino"
                     ? 2
@@ -320,9 +320,8 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${
-                  errors.birthDate ? "red" : "#DCDBDB"
-                }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${errors.birthDate ? "red" : "#DCDBDB"
+                  }]`}
                 type="date"
                 defaultValue={paciente.sociodemographicDetails?.birthDate}
                 {...register("birthDate", {
@@ -349,9 +348,8 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
-                  errors.cellphone ? "red" : "#DCDBDB"
-                }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"
+                  }]`}
                 type="text"
                 defaultValue={paciente?.cellphone}
                 {...register("cellphone", {
@@ -390,9 +388,8 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${
-                  errors.emergencyContactPhone ? "red" : "#DCDBDB"
-                }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"
+                  }]`}
                 type="text"
                 defaultValue={
                   paciente.sociodemographicDetails?.emergencyContactPhone

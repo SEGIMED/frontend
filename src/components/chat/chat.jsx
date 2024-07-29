@@ -4,31 +4,54 @@ import { useState, useEffect, useRef } from "react";
 import IconSendMensaje from "../icons/iconSendMensaje";
 import { socket } from "@/utils/socketio";
 import Cookies from "js-cookie";
-import Image from "next/image";
-import ImageChat from "@/components/images/imageChat.png";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { markMessagesAsSeen } from "@/redux/slices/chat/chat";
 import Avatars from "../avatar/avatarChat";
+
 export default function Chat({ chat }) {
+  const dispatch = useAppDispatch(); 
   const userId = Number(Cookies.get("c"));
   const [messageInput, setMessageInput] = useState("");
-  const [infoChat, setInfoChat] = useState("");
+  const [infoChat, setInfoChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const mensajesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
-
+  const [markedChats, setMarkedChats] = useState(false);
   const user = useAppSelector((state) => state.user);
+
   useEffect(() => {
     if (chat) {
-      setInfoChat(chat);
-      const updated = [...chat.seenMessages, ...chat.unseenMessages];
-      setMessages(updated);
+        // Solo actualiza infoChat si ha cambiado realmente
+        if (infoChat !== chat) {
+            setInfoChat(chat);
+        }
+
+        // Actualiza los mensajes
+        const updated = [...chat.seenMessages, ...chat.unseenMessages];
+        setMessages(updated);
+
+        // Verifica y despacha la acción solo si chat.users es un array
+        if (Array.isArray(chat.users)) {
+            const sortedUsers = [...chat.users].sort();
+            const chatId = sortedUsers.join("-");
+            
+
+            // Solo despacha si el chat no está marcado como visto
+            if (!markedChats) {
+                dispatch(markMessagesAsSeen({ chatId,markedChats }));
+                setMarkedChats(true);
+            }
+        } else {
+            console.error('chat.users is not an array:', chat.users);
+        }
     }
-  }, [chat]);
+  }, [chat, dispatch, infoChat, markedChats]);
+  
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  console.log;
+
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -54,7 +77,8 @@ export default function Chat({ chat }) {
   if (!chat) {
     return <div>Cargando...</div>;
   }
-
+ 
+ 
   return (
     <div className="text-[#686868] w-full flex h-full flex-col bg-[#FAFAFC]">
       {/* ACA INICIA EL CHAT */}
