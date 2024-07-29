@@ -176,6 +176,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       Cookies.remove("a");
       Cookies.remove("b");
       Cookies.remove("c");
+      Cookies.remove("d");
 
       dispatch(resetApp());
 
@@ -189,12 +190,12 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     }
 
     if (token) {
-      getUser({ headers: { token: token } }).catch(console.error);
-      getPatients({ headers: { token: token } }).catch(console.error);
-      getSchedules({ headers: { token: token } }).catch(console.error);
-      getActivesAlarms({ headers: { token: token } });
-      getActivesPacientes({ headers: { token: token } });
-      getDoctorNotifications({ headers: { token: token } });
+      getUser().catch(console.error);
+      getPatients().catch(console.error);
+      getSchedules().catch(console.error);
+      getActivesAlarms().catch(console.error);
+      getActivesPacientes().catch(console.error);
+      getDoctorNotifications().catch(console.error);
       if (!socket.isConnected()) {
         socket.setSocket(token, dispatch);
         socket.emit("onJoin", { id: idUser });

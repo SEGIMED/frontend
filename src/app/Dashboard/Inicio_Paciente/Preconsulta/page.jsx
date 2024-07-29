@@ -33,7 +33,9 @@ export default function HomePte() {
   const scheduledConsultas = consultas?.filter(
     (consulta) => consulta.schedulingStatus === 1
   );
-
+  const sortedConsultas =[...scheduledConsultas].sort((b,a) =>
+    a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
+  )
   const handleSortClick = () => {
     setIsSorted(!isSorted);
   };
@@ -88,7 +90,7 @@ export default function HomePte() {
           <NotFound 
           text="No hay historial de preconsultas."
           sizeText="w-[100%]"/>}
-        {scheduledConsultas.map((doc) => (
+        {sortedConsultas.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
             doctor={doc}

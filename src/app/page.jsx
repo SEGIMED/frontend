@@ -52,7 +52,12 @@ export default function Home() {
 
       if (response.status === 200) {
         // Guardar en el localStorage
-        Cookies.set("a", result.authenticationDetails.jwtToken, { expires: 1 });
+        Cookies.set("a", result.authenticationDetails.accessToken, {
+          expires: 1,
+        });
+        Cookies.set("d", result.authenticationDetails.refreshToken, {
+          expires: 7,
+        });
         Cookies.set("b", result.authenticationDetails.role, { expires: 1 });
         Cookies.set("c", result.authenticationDetails.userId, { expires: 1 });
 
