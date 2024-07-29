@@ -23,8 +23,8 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
                             variant="bordered"
                             key={index}
                             style={{
-                                backgroundColor: selectedOptions === opcion.value ? '#487FFA' : 'white',
-                                color: selectedOptions === opcion.value ? 'white' : '#487FFA',
+                                backgroundColor: selectedOption === opcion.value ? '#487FFA' : 'white',
+                                color: selectedOption === opcion.value ? 'white' : '#487FFA',
                                 borderColor: "#487FFA",
                                 border: '2px solid #487FFA'  // Asegura que el borde tenga un valor válido
                             }}
