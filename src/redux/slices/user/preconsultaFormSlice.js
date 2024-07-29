@@ -885,7 +885,6 @@ const preconsultaFormSlice = createSlice({
   reducers: {
     updateAllFormData(state, action) {
       const { draft } = action.payload;
-      console.log(draft);
       state.formData = draft;
     },
     updateField(state, action) {
