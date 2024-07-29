@@ -32,6 +32,8 @@ const ExamenFisico = "/Examen_Fisico";
 const Diagnostico = "/Diagnostico";
 const Mis_turnos = "/Mis_turnos";
 const Pasadas = "/Pasadas";
+const Ordenes = "/Ordenes_Medicas";
+const Generar = "/Generar_Orden";
 
 const rutas = {
   Diagnostico,
@@ -40,6 +42,8 @@ const rutas = {
   Datos,
   Anamnesis,
   Evaluacion,
+  Generar,
+  Ordenes,
   Evoluciones,
   resueltas,
   Doctor,
