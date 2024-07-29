@@ -82,16 +82,6 @@ const DetallePaciente = (id) => {
     doesAnalgesicWorks: formData.bodySection?.doesAnalgesicWorks || null,
     isWorstPainEver: formData.bodySection?.isWorstPainEver || null,
   };
-
-  /*useEffect(() => {
-    if (formData) {
-      setBodySection(formData.bodySection);
-  }else if(preconsult){
-    setBodySection(preconsult?.provisionalPreConsultationPainMap);
-    
-  }
-
-  }, [preconsult, formData]);*/
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
@@ -665,7 +655,7 @@ const DetallePaciente = (id) => {
     if (allSuccessful) {
       const data = await ApiSegimed.patch(`/schedule/${scheduleId}`, { schedulingStatus: 2 }, { headers: { token: token } });
       console.log(data);
-      //setLoading(false);
+      setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -673,7 +663,7 @@ const DetallePaciente = (id) => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-      //router.push(`/Dashboard/Inicio_Doctor/Consultas`);
+      router.push(`/Dashboard/Inicio_Doctor/Consultas`);
     } else {
       setLoading(false);
       Swal.fire({
