@@ -247,7 +247,7 @@ export default function HomeDoc() {
                     ) : (
                         filteredPatients.map((paciente) => (
 
-                            <div className="w-[100%] h-14 flex border-b items-center  border-b-[#cecece]  bg-white">
+                            <div key={paciente.id} className="w-[100%] h-14 flex border-b items-center  border-b-[#cecece]  bg-white">
                                 <div className="justify-center w-[5%] items-center hidden md:flex">
                                     <IconConsulta />
                                 </div>
