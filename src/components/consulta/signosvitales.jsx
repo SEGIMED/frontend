@@ -52,9 +52,9 @@ export default function SignosVitalesInfo({
         : defaultAnthropometricDetails
     );
 
-    const combinedVitalSigns = combineVitalSigns(paciente?.vitalSigns ?? [], defaultVitalSigns);
+    const combinedVitalSigns = combineVitalSigns(preconsult?.ProvisionalPreConsultationSchedule?.vitalSignDetailsScheduling ?? [], defaultVitalSigns);
     setVitalSigns(combinedVitalSigns);
-  }, [paciente]);
+  }, [preconsult]);
 
   const combineVitalSigns = (patientVitalSigns, defaultVitalSigns) => {
     return defaultVitalSigns.map(defaultVital => {
@@ -176,7 +176,7 @@ export default function SignosVitalesInfo({
               Clase funcional
             </label>
             <div className="flex justify-start w-1/2 gap-4">
-              <DropClaseFuncional options={['Clase funcional I', 'Clase funcional II', 'Clase funcional III', 'Clase funcional IV']} text2={"Seleccione clase funcional"} name={"HeartFailureRisk"} />
+              <DropClaseFuncional options={['Clase funcional I', 'Clase funcional II', 'Clase funcional III', 'Clase funcional IV']} text2={"Seleccione clase funcional"} name={"HeartFailureRisk"} selectedOptions={paciente?.patientPulmonaryHypertensionRisks?.risk}/>
             </div>
         </div>
         <div className="flex justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10">

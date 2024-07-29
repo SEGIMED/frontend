@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+"use client";
+import React, { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/react';
 
 export default function ButtonNextPreconsultationWorst({ text, options, onBodyChange, handleSelection, name, disabled, selectedOptions,worstPainOfYourLife}) {
     const opcionRecibida = selectedOptions ? selectedOptions : "";
     const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+
+    useEffect(() => {
+        if (selectedOptions !== undefined) {
+            setSelectedOptionState(selectedOptions);
+        }
+    }, [selectedOptions]);
 
     const handleClick = (option) => {
         setSelectedOptionState(option);

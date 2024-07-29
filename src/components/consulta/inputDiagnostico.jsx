@@ -21,10 +21,9 @@ export default function InputDiagnostico({
   const { register, setValue, watch } = useFormContext();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [inputs, setInputs] = useState([""]); // Inicializa con un solo input vacío
-  const [valueDiagnosticoSubtitle, setValueDiagnosticoSubtitle] = useState([
-    "",
-  ])
-
+  const [valueDiagnosticoSubtitle, setValueDiagnosticoSubtitle] = useState([])
+  const [valueDiagnosticoSubtitle2, setValueDiagnosticoSubtitle2] = useState([])
+  const [valueDiagnosticoSubtitle3, setValueDiagnosticoSubtitle3] = useState([])
   const handleAddNewItem = (e) => {
     e.preventDefault(); // Evita el comportamiento predeterminado del botón
     setInputs((prevInputs) => [...prevInputs, ""]); // Agrega un nuevo input vacío al array
@@ -39,8 +38,16 @@ export default function InputDiagnostico({
     setValue(`medications[${index}]`, value); // Guarda el valor en react-hook-form
   };
   useEffect(() => {
+    setValueDiagnosticoSubtitle2([
+      diagnostico?.diagnostics[0]?.diagnosticNotes,
+      "",
+    ])
+    setValueDiagnosticoSubtitle3([
+      "","",
+    ])
     setValueDiagnosticoSubtitle([
-      
+      diagnostico?.conducta,
+      diagnostico?.treatmentPlan,
       diagnostico?.alarmPattern
     ])
   },[diagnostico])
@@ -79,6 +86,7 @@ export default function InputDiagnostico({
               className="w-full md:w-1/2 h-11 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 md:py-1 outline-[#a8a8a8]"
               placeholder={`Escribe el ${sub}`}
               {...register(sub)}
+              defaultValue={valueDiagnosticoSubtitle2[index] || ""}
             />
           </div>
         ))}
@@ -116,6 +124,8 @@ export default function InputDiagnostico({
               className="w-full h-40 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]"
               placeholder="Ingrese aquí sus anotaciones"
               {...register(sub)}
+              defaultValue={
+                valueDiagnosticoSubtitle[index] || "" }
             />
           </div>
         ))}

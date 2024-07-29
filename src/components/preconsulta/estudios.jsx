@@ -9,7 +9,6 @@ import { useState } from "react";
 
 export default function InputFilePreconsultation({ tests, title, onTestSelectedOption, onTestActive, onUploadFile, onDescriptionChange, defaultOpen = false }) {
     const [isOpen, setIsOpen] = useState(false);
-    console.log(tests);
     return (
         <div className="flex flex-col ">
             <details open={defaultOpen}>

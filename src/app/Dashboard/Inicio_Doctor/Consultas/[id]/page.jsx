@@ -28,6 +28,7 @@ import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import { usePathname } from "next/navigation";
 
 const DetallePaciente = (id) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
   const userId = Cookies.get("patientId");
@@ -415,7 +416,7 @@ const DetallePaciente = (id) => {
       patientId: Number(userId),
       diseaseId: 3,
       diagnosticNotes: data["Diagnostico"],
-      medicalEventId: 5,
+      medicalEventId: Number(medicalEventId),
       drugId: data["medications"] ? data["medications"] : null,
       prescribedDose: null,
       quantityDrug: 60,
@@ -595,12 +596,13 @@ const DetallePaciente = (id) => {
   */
     // Riesgo de insuficiencia cardíaca
     let response6;
-    if (patient?.patientPulmonaryHypertensionRisks === null && heartFailureRisk.heartFailureRiskId > 0) {
+    if (patient?.patientPulmonaryHypertensionRisks === null ) {
       response6 = await ApiSegimed.post(`/patient-new-nyha-classification`, heartFailureRisk, { headers: { token: token } });
     } else if (heartFailureRisk.heartFailureRiskId > 0) {
       response6 = await ApiSegimed.patch(`/patient-update-nyha-classification`, heartFailureRisk, { headers: { token: token } });
     }
     if (response6 !== undefined) { responses.push(response6); }
+    console.log(response6);
 
     // Preconsulta
     let response7;

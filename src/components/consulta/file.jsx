@@ -30,7 +30,6 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                 const selectedFile = e.target.files[0].name;
                 setFile(selectedFile);
                 const file = e.target.files[0];
-                console.log(file);
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     onUploadFile(test, event.target.result);

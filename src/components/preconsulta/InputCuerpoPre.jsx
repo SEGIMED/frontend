@@ -25,7 +25,6 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
   const [painLevel, setPainLevel] = useState(1);
 
   const { register } = useFormContext();
-  console.log(bodySection);
   const muscleTranslations = {
     /* Back */
     trapezius: "Trapecio",
@@ -112,7 +111,6 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
 };
   useEffect(() => {
     const getMuscleNames = (painAreas) => {
-      console.log(painAreas);
       if (painAreas) {
           const muscleData = painAreas.map((area) => ({
               name: "Musculo",
@@ -272,7 +270,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                   name={"isTherePain"}
                 />
               </div>
-              {bodySection?.isTherePain || valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain && (
+              {bodySection?.isTherePain || valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain ? (
                 <>
                   <div>
                     <ButtonNextPreconsultation
@@ -402,7 +400,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                     <DropNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"Frecuencia del dolor"}
-                      selectedOptions={bodySection.painFrequency || valuePreconsultation?.provisionalPreConsultationPainMap?.painFrequency}
+                      selectedOptions={bodySection?.painFrequency || valuePreconsultation?.provisionalPreConsultationPainMap?.painFrequency}
                       options={[
                         { value: 1, text: 'De vez en cuando' },
                         { value: 2, text: 'Algunas veces' },
@@ -418,7 +416,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                     <ButtonNextPreconsultationWorst
                       onBodyChange={onBodyChange}
                       text={"¿Es el peor dolor de su vida?"}
-                      selectedOptions={bodySection.isWorstPainEver || valuePreconsultation?.provisionalPreConsultationPainMap?.isWorstPainEver}
+                      selectedOptions={bodySection?.isWorstPainEver || valuePreconsultation?.provisionalPreConsultationPainMap?.isWorstPainEver}
                       worstPainOfYourLife
                       options={[
                         { value: true, text: 'Si' },
@@ -427,8 +425,8 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                       name={"isWorstPainEver"}
                     />
                   </div>
-                </>
-              )}
+                </> 
+              ): null}
             </div>
           </div>
         </div>
