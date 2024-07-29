@@ -15,8 +15,7 @@ ApiSegimed.interceptors.request.use(
     if (
       config.url === "/user/login" ||
       config.url === "/user/refresh" ||
-      config.url === "/user/register-user" ||
-      config.url === "/patientsfilter"
+      config.url === "/user/register-user"
     ) {
       return config;
     }
