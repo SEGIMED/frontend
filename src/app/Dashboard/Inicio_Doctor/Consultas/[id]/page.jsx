@@ -628,6 +628,7 @@ const DetallePaciente = (id) => {
       response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, { headers: { token: token } });
     }
     if (response8 !== undefined) { responses.push(response8); }
+    console.log(response8);
 
     // Evento médico
     /*let response9; //no se hace post por q para que funcione se precrea el medical event
