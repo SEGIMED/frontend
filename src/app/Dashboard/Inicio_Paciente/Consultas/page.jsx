@@ -32,7 +32,10 @@ export default function HomeDocAll() {
   const scheduledConsultas = consultas?.filter(
     (consulta) => consulta.schedulingStatus !== 1
   );
-
+  //ordenamiento por fecha desde el front por ahora 
+  const sortedConsultas =[...scheduledConsultas].sort((b,a) =>
+    a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
+  )
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
@@ -78,7 +81,7 @@ export default function HomeDocAll() {
         {scheduledConsultas.length === 0 && (
           <NotFound text="No hay consultas registradas" />
         )}
-        {scheduledConsultas?.map((doc) => (
+        {sortedConsultas?.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
             doctor={doc}
