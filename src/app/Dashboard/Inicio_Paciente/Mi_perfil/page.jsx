@@ -101,12 +101,16 @@ export default function HomePte() {
         title: "¡Datos actualizados correctamente!",
         text: "",
         icon: "success",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
     } catch (error) {
       Swal.fire({
         title: "Error!",
         text: "No se pudieron actualizar los datos",
         icon: "error",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
     }
   };

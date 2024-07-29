@@ -27,16 +27,23 @@ export default function AuthSelect() {
         title: "¡Email enviado correctamente!",
         text: "Se ha enviado un correo electrónico con las instrucciones para restablecer su contraseña.",
         icon: "success",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
         allowOutsideClick: false,
       }).then(() => {
         router.push("/");
       });
+
+      router.push("/accounts/password/resetMail");
     } catch (error) {
+
       console.error("Error: ", error.response);
       if (error) {
         Swal.fire({
           icon: "error",
           title: "Error",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
           text: error?.response?.data?.error || error.message,
         });
       }

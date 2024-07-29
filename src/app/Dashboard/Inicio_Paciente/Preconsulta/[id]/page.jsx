@@ -341,6 +341,8 @@ export default function PreconsultaPte({ params }) {
           icon: "error",
           title: "Error",
           text: "Debe completar la información del cuerpo y los signos vitales",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
         });
         setIsLoading(false);
         return;
@@ -361,6 +363,8 @@ export default function PreconsultaPte({ params }) {
             icon: "success",
             title: "Preconsulta creada con éxito",
             text: "",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
           });
           localStorage.removeItem('preconsultationDraft'); // ya no necesitamos recupera el borrador de la preconsulta
           console.log({ resupuestaCreate: response.data });

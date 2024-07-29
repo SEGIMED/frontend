@@ -20,9 +20,9 @@ export const FormUser = ({ formData, setFormData }) => {
     setError,
   } = useForm({
     defaultValues: {
-        password: "",
+      password: "",
     },
-});
+  });
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -51,6 +51,8 @@ export const FormUser = ({ formData, setFormData }) => {
           icon: "error",
           title: "Error",
           text: error.response.data.error,
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
         });
       }
     }
@@ -88,7 +90,7 @@ export const FormUser = ({ formData, setFormData }) => {
     return () => clearTimeout(delayDebounceFn);
   }, [emailValue, setError]);
 
-  
+
 
   const passwordCriteria = {
     hasUpperCase: /[A-Z]/.test(passwordValue),
@@ -162,26 +164,26 @@ export const FormUser = ({ formData, setFormData }) => {
                     "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial.",
                 },
               })}
-             
+
             />
 
             {/* Mostrar los criterios solo si el usuario ha empezado a escribir */}
-       
-              <ul className="mt-2 text-sm ">
-                <li className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""}`}>
-                  {passwordCriteria.hasUpperCase && <IconCheckBoton className={"w-4"} />} Debe contener una letra mayúscula
-                </li>
-                <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""}`}>
-                  {passwordCriteria.hasLowerCase && <IconCheckBoton className={"w-4"} />} Debe contener una letra minúscula
-                </li>
-                <li className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""}`}>
-                  {passwordCriteria.hasSpecialChar && <IconCheckBoton className={"w-4"} />} Debe contener un carácter especial
-                </li>
-                <li className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""}`}>
-                  {passwordCriteria.hasMinLength && <IconCheckBoton className={"w-4"} />} Debe tener al menos 6 caracteres
-                </li>
-              </ul>
-           
+
+            <ul className="mt-2 text-sm ">
+              <li className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""}`}>
+                {passwordCriteria.hasUpperCase && <IconCheckBoton className={"w-4"} />} Debe contener una letra mayúscula
+              </li>
+              <li className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""}`}>
+                {passwordCriteria.hasLowerCase && <IconCheckBoton className={"w-4"} />} Debe contener una letra minúscula
+              </li>
+              <li className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""}`}>
+                {passwordCriteria.hasSpecialChar && <IconCheckBoton className={"w-4"} />} Debe contener un carácter especial
+              </li>
+              <li className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""}`}>
+                {passwordCriteria.hasMinLength && <IconCheckBoton className={"w-4"} />} Debe tener al menos 6 caracteres
+              </li>
+            </ul>
+
           </div>
 
           {/* Resto del formulario */}
