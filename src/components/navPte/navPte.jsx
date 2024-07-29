@@ -32,6 +32,7 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
     Cookies.remove("a");
     Cookies.remove("b");
     Cookies.remove("c");
+    Cookies.remove("d");
 
     socket.disconnect();
 
