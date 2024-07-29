@@ -417,13 +417,13 @@ const DetallePaciente = (id) => {
       diseaseId: 3,
       diagnosticNotes: data["Diagnostico"],
       medicalEventId: Number(medicalEventId),
-      drugId: data["medications"] ? data["medications"] : null,
+      drugId: data["medications"] ? data["medications"] : null, // pedir que cambie
       prescribedDose: null,
       quantityDrug: 60,
-      medicalProcedureId: 4,
+      medicalProcedureId: 4, // pedir que cambie
       //diagnosticNotes: data["Procedimientos"],
       therapyId: 2,
-      descriptionTherapy: data["Conducta terapeutica"],
+      descriptionTherapy: data["Conducta terapeutica"], // donde aparece en medical event
       quantityTherapy: 10,
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
