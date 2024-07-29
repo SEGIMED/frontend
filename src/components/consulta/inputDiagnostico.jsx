@@ -7,7 +7,7 @@ import IconConsulta from "../icons/IconConsulta";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
 import { useFormContext } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 
 export default function InputDiagnostico({
@@ -16,10 +16,14 @@ export default function InputDiagnostico({
   subtitle2,
   subtitle3,
   defaultOpen = false,
+  diagnostico
 }) {
   const { register, setValue, watch } = useFormContext();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [inputs, setInputs] = useState([""]); // Inicializa con un solo input vacío
+  const [valueDiagnosticoSubtitle, setValueDiagnosticoSubtitle] = useState([
+    "",
+  ])
 
   const handleAddNewItem = (e) => {
     e.preventDefault(); // Evita el comportamiento predeterminado del botón
@@ -34,7 +38,12 @@ export default function InputDiagnostico({
     });
     setValue(`medications[${index}]`, value); // Guarda el valor en react-hook-form
   };
-
+  useEffect(() => {
+    setValueDiagnosticoSubtitle([
+      
+      diagnostico?.alarmPattern
+    ])
+  },[diagnostico])
   // Observa cambios en los inputs de medications
   const medicationValues = watch('medications', inputs);
 

@@ -29,8 +29,6 @@ import { usePathname } from "next/navigation";
 
 const DetallePaciente = (id) => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
-  const pathname= usePathname()
   const token = Cookies.get("a");
   const userId = Cookies.get("patientId");
   console.log(userId);
@@ -59,7 +57,9 @@ const DetallePaciente = (id) => {
   const [medicalEventPatch, setMedicalEventPatch] = useState();
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
+  const [bodySection, setBodySection] = useState({});
 
+  console.log(bodySection);
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
@@ -82,6 +82,16 @@ const DetallePaciente = (id) => {
     doesAnalgesicWorks: formData.bodySection?.doesAnalgesicWorks || null,
     isWorstPainEver: formData.bodySection?.isWorstPainEver || null,
   };
+
+  /*useEffect(() => {
+    if (formData) {
+      setBodySection(formData.bodySection);
+  }else if(preconsult){
+    setBodySection(preconsult?.provisionalPreConsultationPainMap);
+    
+  }
+
+  }, [preconsult, formData]);*/
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
@@ -217,6 +227,7 @@ const DetallePaciente = (id) => {
       },
     });
   }, [preconsult]);
+  console.log(preconsult);
   
   const onSubmit = (data) => {
     console.log(data);
@@ -459,7 +470,6 @@ const DetallePaciente = (id) => {
       
       // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
       setMedicalEventPatch(medicalEventPatch);
-  
   };
 
   useEffect(() => {
@@ -578,16 +588,17 @@ const DetallePaciente = (id) => {
     if(response4 !== undefined){responses.push(response4);}
   
     // Examen físico
+    /*
     let response5;
     console.log(physicalExamination);
-    if(!physicalExamination?.physicalSubsystemId === 0){
-    if(medicalEventExist?.physicalExaminations?.length === 0 || medicalEventExist?.physicalExaminations === null) {
+    if(physicalExamination?.physicalSubsystemId !== 0){
+    if(medicalEventExist?.data?.physicalExaminations?.length === 0 || medicalEventExist?.data?.physicalExaminations === null) {
       response5 = await ApiSegimed.post(`/patient-physical-examination`, physicalExamination, { headers: { token: token } });
     } else {
       response5 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`, physicalExaminationPatch, { headers: { token: token } });
     }}
     if(response5 !== undefined){responses.push(response5);}
-  
+  */
     // Riesgo de insuficiencia cardíaca
     let response6;
     if(patient?.patientPulmonaryHypertensionRisks === null && heartFailureRisk.heartFailureRiskId > 0) {
@@ -712,6 +723,7 @@ const DetallePaciente = (id) => {
                 "Sintomas importantes",
               ]}
               preconsult={preconsult}
+              diagnostico={medicalEventExist?.data}
               defaultOpen = {handleNav === "anamnesis" ? true : false}
             />
             <SignosVitalesInfo
@@ -725,6 +737,7 @@ const DetallePaciente = (id) => {
             onBodyChange={handleBodyChange}
             bodySection={formData?.bodySection}
             defaultOpen = {handleNav === "exploracion fisica" ? true : false}
+            valuePreconsultation={preconsult}
             />
             <InputExam title={"Examen fisico"} 
             defaultOpen = {handleNav === "examen fisico" ? true : false}
@@ -742,10 +755,12 @@ const DetallePaciente = (id) => {
             />
             <InputConsulta
               title={"Evolucion"}
+              diagnostico={medicalEventExist?.data}
               subtitle={["Anotaciones sobre la consulta"]}
               defaultOpen = {handleNav === "evolucion" ? true : false}
             />
             <InputDiagnostico
+              diagnostico={medicalEventExist?.data}
               title={"Diagnósticos y tratamiento"}
               subtitle={[
                 "Conducta terapeutica",

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
 
-export default function ButtonNextPreconsultation({ text, options, onBodyChange, handleSelection, name, disabled, selectedOptions }) {
+export default function ButtonNextPreconsultationWorst({ text, options, onBodyChange, handleSelection, name, disabled, selectedOptions,worstPainOfYourLife}) {
     const opcionRecibida = selectedOptions ? selectedOptions : "";
     const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
 
@@ -12,7 +12,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
             handleSelection(option);
         }
     };
-
+    
     return (
         <div>
             <div className="mb-2 text-sm font-semibold">{text}</div>
@@ -23,10 +23,10 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
                             variant="bordered"
                             key={index}
                             style={{
-                                backgroundColor: selectedOptions === opcion.value ? '#487FFA' : 'white',
-                                color: selectedOptions === opcion.value ? 'white' : '#487FFA',
-                                borderColor: "#487FFA",
-                                border: '2px solid #487FFA'  // Asegura que el borde tenga un valor válido
+                                backgroundColor:  worstPainOfYourLife && opcion.text === "Si" && selectedOption === opcion.value ? 'red' : selectedOption === opcion.value ? '#487FFA' : 'white',
+                                color: worstPainOfYourLife && opcion.text === "Si"  && selectedOption !== opcion.value ? 'red' : opcion.text === "Si"  && selectedOption === opcion.value ? 'white' : selectedOption === opcion.value &&  opcion.text === "No" ? 'white' : '#487FFA',
+                                borderColor: worstPainOfYourLife && opcion.text === "Si"  ? 'red' : "#487FFA",
+                                border: worstPainOfYourLife && opcion.text === "Si" ? '2px solid red' : '2px solid #487FFA'  // Asegura que el borde tenga un valor válido
                             }}
                             onClick={() => handleClick(opcion.value)}
                         >

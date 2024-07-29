@@ -25,8 +25,10 @@ import IconOptions from "@/components/icons/IconOptions";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import IconDelete from "@/components/icons/IconDelete";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function HomeDoc() {
+  const token = Cookies.get("a");
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
@@ -112,8 +114,8 @@ export default function HomeDoc() {
       text: "Una vez emilinada no podras recuperar esta informacion!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: "Si, eliminar!",
+      cancelButtonText: "No, cancelar!",
       reverseButtons: true
     }).then(async(result) => {
       if (result.isConfirmed) {

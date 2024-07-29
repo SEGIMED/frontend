@@ -54,7 +54,6 @@ export default function HomeDoc() {
       setIsLoading(false);
     }
   }, [consultas]);
-  console.log(consultas.scheduledEndTimestamp  );
 
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
@@ -116,8 +115,8 @@ export default function HomeDoc() {
       text: "Una vez emilinada no podras recuperar esta informacion!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: "Si, eliminar!",
+      cancelButtonText: "No, cancelar!",
       reverseButtons: true
     }).then(async(result) => {
       if (result.isConfirmed) {
@@ -125,8 +124,7 @@ export default function HomeDoc() {
         const data = await ApiSegimed.patch(`/schedule/${patient.id}`, { schedulingStatus: 5 }, { headers: { token: token } });
         console.log(data);
         swalWithBootstrapButtons.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
+          title: "Eliminada!",
           icon: "success"
         });
       } else if (
@@ -134,8 +132,7 @@ export default function HomeDoc() {
         result.dismiss === Swal.DismissReason.cancel
       ) {
         swalWithBootstrapButtons.fire({
-          title: "Cancelled",
-          text: "Your imaginary file is safe :)",
+          title: "Concelado!",
           icon: "error"
         });
       }
