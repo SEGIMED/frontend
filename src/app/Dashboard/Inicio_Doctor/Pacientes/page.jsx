@@ -57,14 +57,18 @@ export default function HomeDoc() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [patients, setPatients] = useState([]);
   const [patientsFavorites, setPatientsFavorites] = useState([]);
+  const [ordenMedica, setOrdenMedica] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const ordenMedica = searchParams.get('ordenMedica');
-  console.log(searchParams);
-  console.log(ordenMedica);
 
+
+  useEffect(() => {
+    if (searchParams.get("ordenMedica")) {
+      setOrdenMedica(searchParams.get('ordenMedica'))
+    }
+  }, [searchParams]);
 
   const [pagination, setPagination] = useState({
     totalUsers: 0,
