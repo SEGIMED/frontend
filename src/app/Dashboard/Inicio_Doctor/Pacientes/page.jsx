@@ -4,6 +4,7 @@ import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { Suspense } from "react";
 import {
   setSearchTerm,
   toggleFavorite,
@@ -242,12 +243,13 @@ export default function HomeDoc() {
   };
 
   return (
-    <div className="flex flex-col h-full ">
-      <title>{lastSegmentTextToShow}</title>
-      <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
-        <div className="flex gap-2 md:gap-4">
-          {/* Se comenta por falta de funcionalidad */}
-          {/* <button
+    <Suspense fallback={<SkeletonList count={10} />}>
+      <div className="flex flex-col h-full ">
+        <title>{lastSegmentTextToShow}</title>
+        <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
+          <div className="flex gap-2 md:gap-4">
+            {/* Se comenta por falta de funcionalidad */}
+            {/* <button
             className={
               "bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2 w-fit transition duration-300 ease-in-out"
             }>
@@ -258,255 +260,256 @@ export default function HomeDoc() {
               Agregar Paciente
             </p>
           </button> */}
-          {ordenMedica ? <button
-            type="button"
-            className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
-            onClick={() => {
-              router.push(`${rutas.Doctor}${rutas.Ordenes}`);
-            }}>
-            <IconRegresar />
-            <p className="text-start hidden md:block text-white font-bold text-base leading-5">
-              {" "}
-              Regresar
-            </p>
-          </button> : null}
+            {ordenMedica ? <button
+              type="button"
+              className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+              onClick={() => {
+                router.push(`${rutas.Doctor}${rutas.Ordenes}`);
+              }}>
+              <IconRegresar />
+              <p className="text-start hidden md:block text-white font-bold text-base leading-5">
+                {" "}
+                Regresar
+              </p>
+            </button> : null}
 
-          <button
-            onClick={handleFavoriteClick}
-            className={`${showFavorites
-              ? "bg-bluePrimary text-white"
-              : "bg-white text-bluePrimary  border-bluePrimary"
-              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
-            {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
-            <p
-              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
-                } font-bold`}>
-              Favoritos
-            </p>
-          </button>
-          {/* <FiltrosPaciente
+            <button
+              onClick={handleFavoriteClick}
+              className={`${showFavorites
+                ? "bg-bluePrimary text-white"
+                : "bg-white text-bluePrimary  border-bluePrimary"
+                } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+              {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
+              <p
+                className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
+                  } font-bold`}>
+                Favoritos
+              </p>
+            </button>
+            {/* <FiltrosPaciente
               isOpen={isFilterOpen}
               toggleMenu={toggleFilterMenu}
               onClickSort={handleSortClick}
           /> */}
+          </div>
+
+          <h1 className="font-bold ml-4">Listado de pacientes</h1>
+          <MenuDropDown
+            label="Filtrar"
+            iconr={<IconFilter />}
+            categories={[
+              {
+                title: "Nivel de riesgo",
+                icon: <IconHooter />,
+                items: [
+                  {
+                    label: "Alto",
+                    onClick: () => setRiskFilter("Alto"),
+                    icon: <IconRisk color="#E73F3F" />,
+                  },
+                  {
+                    label: "Medio",
+                    onClick: () => setRiskFilter("Moderado"),
+                    icon: <IconRisk color="#F5E400" />,
+                  },
+                  {
+                    label: "Bajo",
+                    onClick: () => setRiskFilter("Bajo"),
+                    icon: <IconRisk color="#70C247" />,
+                  },
+                  {
+                    label: "Ninguno",
+                    onClick: () => setRiskFilter(""),
+                    icon: <IconRisk color="lightGray" />,
+                  },
+                ],
+              },
+              // {
+              //   title: "Orden Alfabetico",
+              //   icon: <IconAlphabetic />,
+              //   items: [
+              //     {
+              //       label: "Ver todos",
+              //       onClick: () => setRiskFilter(""),
+              //     }
+              //   ]
+              // }
+            ]}
+          />
+          {/* <div></div> */}
         </div>
 
-        <h1 className="font-bold ml-4">Listado de pacientes</h1>
-        <MenuDropDown
-          label="Filtrar"
-          iconr={<IconFilter />}
-          categories={[
-            {
-              title: "Nivel de riesgo",
-              icon: <IconHooter />,
-              items: [
-                {
-                  label: "Alto",
-                  onClick: () => setRiskFilter("Alto"),
-                  icon: <IconRisk color="#E73F3F" />,
-                },
-                {
-                  label: "Medio",
-                  onClick: () => setRiskFilter("Moderado"),
-                  icon: <IconRisk color="#F5E400" />,
-                },
-                {
-                  label: "Bajo",
-                  onClick: () => setRiskFilter("Bajo"),
-                  icon: <IconRisk color="#70C247" />,
-                },
-                {
-                  label: "Ninguno",
-                  onClick: () => setRiskFilter(""),
-                  icon: <IconRisk color="lightGray" />,
-                },
-              ],
-            },
-            // {
-            //   title: "Orden Alfabetico",
-            //   icon: <IconAlphabetic />,
-            //   items: [
-            //     {
-            //       label: "Ver todos",
-            //       onClick: () => setRiskFilter(""),
-            //     }
-            //   ]
-            // }
-          ]}
-        />
-        {/* <div></div> */}
-      </div>
-
-      <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
-        {isLoading ? (
-          <SkeletonList count={10} />
-        ) : sortedPatients.length === 0 ? (
-          <NotFound
-            text={
-              showFavorites ? "No hay pacientes favoritos " : "No hay pacientes"
-            }
-            sizeText={"w-[100%]"}
-          />
-        ) : (
-          filteredPatients.map((paciente) => (
-            <div
-              key={paciente.id}
-              className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
-              <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
-                {paciente.patientPulmonaryHypertensionRisks?.risk ? (
-                  <RealColorRisk
-                    risk={paciente.patientPulmonaryHypertensionRisks.risk}
-                  />
-                ) : (
-                  <IconRisk color="lightGray" />
-                )}
-
-                <div className="flex justify-center items-center">
-                  <img
-                    src={paciente?.avatar !== null ? paciente.avatar : avatar}
-                    alt={paciente?.name}
-                    className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
-                  />
-                </div>
-                <p className="text-base">
-                  {paciente.name} {paciente.lastname}
-                </p>
-                <div onClick={() => changeFavorite(paciente)}>
-                  {paciente.isFavorite ? (
-                    <IconFavoriteYellow />
+        <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
+          {isLoading ? (
+            <SkeletonList count={10} />
+          ) : sortedPatients.length === 0 ? (
+            <NotFound
+              text={
+                showFavorites ? "No hay pacientes favoritos " : "No hay pacientes"
+              }
+              sizeText={"w-[100%]"}
+            />
+          ) : (
+            filteredPatients.map((paciente) => (
+              <div
+                key={paciente.id}
+                className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
+                <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
+                  {paciente.patientPulmonaryHypertensionRisks?.risk ? (
+                    <RealColorRisk
+                      risk={paciente.patientPulmonaryHypertensionRisks.risk}
+                    />
                   ) : (
-                    <IconFavoriteBlue />
+                    <IconRisk color="lightGray" />
                   )}
-                </div>
 
-                {/* aca verificar si es favorite es true y poner IconFavoriteYellow sino nada y aplicar logica de skeleton y de notfound, haz las importaciones y todo para que funcione, usa las mismas que antes */}
-              </div>
-              <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
-                <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
-                  <div className="text-sm md:text-base text-bluePrimary flex gap-1">
-                    <p className="hidden md:block">Grupo HTP:</p>
-                    <p className="font-bold">
-                      {paciente.patientPulmonaryHypertensionRisks?.group || "-"}
-                    </p>
+                  <div className="flex justify-center items-center">
+                    <img
+                      src={paciente?.avatar !== null ? paciente.avatar : avatar}
+                      alt={paciente?.name}
+                      className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
+                    />
                   </div>
+                  <p className="text-base">
+                    {paciente.name} {paciente.lastname}
+                  </p>
+                  <div onClick={() => changeFavorite(paciente)}>
+                    {paciente.isFavorite ? (
+                      <IconFavoriteYellow />
+                    ) : (
+                      <IconFavoriteBlue />
+                    )}
+                  </div>
+
+                  {/* aca verificar si es favorite es true y poner IconFavoriteYellow sino nada y aplicar logica de skeleton y de notfound, haz las importaciones y todo para que funcione, usa las mismas que antes */}
                 </div>
-                {/* <OpcionesDocPacientes
+                <div className="flex justify-end md:justify-between items-center  min-w-[20%] md:gap-6 2xl:gap-14">
+                  <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
+                    <div className="text-sm md:text-base text-bluePrimary flex gap-1">
+                      <p className="hidden md:block">Grupo HTP:</p>
+                      <p className="font-bold">
+                        {paciente.patientPulmonaryHypertensionRisks?.group || "-"}
+                      </p>
+                    </div>
+                  </div>
+                  {/* <OpcionesDocPacientes
                 paciente={paciente}
                 onConsultationClick={() => openModal(paciente.id)}
                 onToggleFavorite={handleToggleFavorite}
                 isOpen={openOptionsPatientId === paciente.id}
                 toggleOptions={() => toggleOptionMenu(paciente.id)}
               /> */}
-                {ordenMedica ? <Elboton
-                  href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
-                  icon={<IconSelect color={"#487ffa"} />}
-                  nombre={"Seleccionar "}
-                  size={"md"}
-                  className={"bg-white border border-bluePrimary text-bluePrimary "}
-                  onPress={() => { dispatch(setSelectedOption({ name: "patient", option: paciente.id })); }}
-                // icon={<IconMas />}
-                /> : <MenuDropDown
-                  label="Opciones"
-                  icon={<IconOptions color="#FFFFFF" />}
-                  categories={[
-                    {
-                      title: "Acciones",
-                      items: [
-                        {
-                          label: "Agendar Consulta",
-                          onClick: () => openModal(paciente.id),
-                          icon: <IconMiniCalendar />,
-                        },
-                        {
-                          label: paciente.isFavorite
-                            ? "Quitar de Favoritos"
-                            : "Agregar a Favoritos",
-                          onClick: () => changeFavorite(paciente),
-                          icon: (
-                            <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
-                          ),
-                        },
-                      ],
-                    },
-                    {
-                      title: "Información",
-                      items: [
-                        {
-                          label: "Ver Historia Clínica",
-                          href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
-                          icon: <IconClinicalHistory />,
-                        },
-                        {
-                          label: "Ver datos Personales",
-                          href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
-                          icon: <IconPersonalData />,
-                        },
-                        {
-                          label: "Ver antiguas consultas",
-                          href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
-                          icon: <IconClinicalHistory />,
-                        },
-                        {
-                          label: "Ver Mensajes",
-                          href: `${rutas.Doctor}${rutas.Mensajes}`,
-                          icon: <IconMessages />,
-                        },
-                        {
-                          label: "Ver Geolocalización",
-                          onClick: () => handleGeolocationClick(paciente),
-                          icon: <IconGeolocation />,
-                        },
-                      ],
-                    },
-                  ]}
-                />}
+                  {ordenMedica ? <Elboton
+                    href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
+                    icon={<IconSelect color={"#487ffa"} />}
+                    nombre={"Seleccionar "}
+                    size={"md"}
+                    className={"bg-white border border-bluePrimary text-bluePrimary "}
+                    onPress={() => { dispatch(setSelectedOption({ name: "patient", option: paciente.id })); }}
+                  // icon={<IconMas />}
+                  /> : <MenuDropDown
+                    label="Opciones"
+                    icon={<IconOptions color="#FFFFFF" />}
+                    categories={[
+                      {
+                        title: "Acciones",
+                        items: [
+                          {
+                            label: "Agendar Consulta",
+                            onClick: () => openModal(paciente.id),
+                            icon: <IconMiniCalendar />,
+                          },
+                          {
+                            label: paciente.isFavorite
+                              ? "Quitar de Favoritos"
+                              : "Agregar a Favoritos",
+                            onClick: () => changeFavorite(paciente),
+                            icon: (
+                              <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
+                            ),
+                          },
+                        ],
+                      },
+                      {
+                        title: "Información",
+                        items: [
+                          {
+                            label: "Ver Historia Clínica",
+                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
+                            icon: <IconClinicalHistory />,
+                          },
+                          {
+                            label: "Ver datos Personales",
+                            href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
+                            icon: <IconPersonalData />,
+                          },
+                          {
+                            label: "Ver antiguas consultas",
+                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
+                            icon: <IconClinicalHistory />,
+                          },
+                          {
+                            label: "Ver Mensajes",
+                            href: `${rutas.Doctor}${rutas.Mensajes}`,
+                            icon: <IconMessages />,
+                          },
+                          {
+                            label: "Ver Geolocalización",
+                            onClick: () => handleGeolocationClick(paciente),
+                            icon: <IconGeolocation />,
+                          },
+                        ],
+                      },
+                    ]}
+                  />}
+                </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
-      <div className="flex justify-center items-center gap-5  bg-[#FAFAFC] font-bold h-[15%]">
-        <button
-          onClick={() => handlePageChange(pagination.currentPage - 1)}
-          disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
-          <IconPrev /> Anterior
-        </button>
-        <p>
-          {pagination.currentPage} de {pagination.totalPages}{" "}
-        </p>
-        <button
-          onClick={() => handlePageChange(pagination.currentPage + 1)}
-          disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
-          Siguiente
-          <IconNext />
-        </button>
-      </div>
-      {showMapModal && selectedPatient && (
+            ))
+          )}
+        </div>
+        <div className="flex justify-center items-center gap-5  bg-[#FAFAFC] font-bold h-[15%]">
+          <button
+            onClick={() => handlePageChange(pagination.currentPage - 1)}
+            disabled={pagination.currentPage === 1}
+            className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+            <IconPrev /> Anterior
+          </button>
+          <p>
+            {pagination.currentPage} de {pagination.totalPages}{" "}
+          </p>
+          <button
+            onClick={() => handlePageChange(pagination.currentPage + 1)}
+            disabled={pagination.currentPage === pagination.totalPages}
+            className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+            Siguiente
+            <IconNext />
+          </button>
+        </div>
+        {showMapModal && selectedPatient && (
 
-        <ModalModularizado
-          isOpen={showMapModal}
-          onClose={() => setShowMapModal(false)}
-          Modals={[<MapModalPte
+          <ModalModularizado
+            isOpen={showMapModal}
             onClose={() => setShowMapModal(false)}
-            patient={selectedPatient}
-            key={"map"}
-          />]}
-          title={"Geolocalizacion del paciente"}
-          button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
-          progessBar={"hidden"}
-          size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
-          buttonText={{ end: `Continuar` }}
+            Modals={[<MapModalPte
+              onClose={() => setShowMapModal(false)}
+              patient={selectedPatient}
+              key={"map"}
+            />]}
+            title={"Geolocalizacion del paciente"}
+            button1={"hidden"}
+            button2={"bg-bluePrimary block font-font-Roboto"}
+            progessBar={"hidden"}
+            size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
+            buttonText={{ end: `Continuar` }}
+          />
+        )}
+        <ModalConsultation
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          doctorId={userId}
+          patientId={selectedPatientId}
         />
-      )}
-      <ModalConsultation
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        doctorId={userId}
-        patientId={selectedPatientId}
-      />
-    </div>
+      </div>
+    </Suspense>
   );
 }
