@@ -33,7 +33,7 @@ const ProgressBar = ({ steps, currentIndex, progessBar }) => {
     );
 };
 
-const ModalModularizado = ({ isOpen, onClose, Modals, title, ruta, button1, button2, progessBar, size, verification, buttonText }) => {
+const ModalModularizado = ({ isOpen, onClose, Modals, title, ruta, button1, button2, progessBar, size, verification, buttonText, funcion }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
 
@@ -100,7 +100,7 @@ const ModalModularizado = ({ isOpen, onClose, Modals, title, ruta, button1, butt
                         </button>
                         <button
                             disabled={disabled}
-                            onClick={handleNext}
+                            onClick={funcion ? funcion : handleNext}
                             className={` py-2 px-4 items-center flex rounded-lg gap-2 w-fit ${button2} disabled:bg-gray-400`}>
                             <p className=" text-white font-bold flex gap-2 items-center">{index === Modals.length - 1 ? buttonText.end : buttonText.start}<IconArrowRight /></p>
                         </button>

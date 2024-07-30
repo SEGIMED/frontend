@@ -41,8 +41,7 @@ export default function HomeDoc() {
             text: "Se ha creado la nueva orden",
             confirmButtonColor: "#487FFA",
             confirmButtonText: "Aceptar",
-        });
-        router.push(`${rutas.Doctor}${rutas.Ordenes}`);
+        }).then(router.push(`${rutas.Doctor}${rutas.Ordenes}`))
     };
 
 
@@ -55,7 +54,7 @@ export default function HomeDoc() {
                         type="button"
                         className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
                         onClick={() => {
-                            router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Pacientes}`);
+                            router.push(`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true`);
                         }}>
                         <IconRegresar />
                         <p className="text-start hidden md:block text-white font-bold text-base leading-5">
@@ -81,17 +80,20 @@ export default function HomeDoc() {
                     title={"Diagnóstico"}
                     placeholder={"Ingrese aquí el diagnóstico"}
                     onChange={(e) => handleChange("diagnostic", e.target.value)}
+                    className={'md:px-6 py-2 px-3'}
                 />
                 <InputInfoText
                     text={true}
                     title={"Indicaciones"}
                     placeholder={"Ingrese aquí las indicaciones para el paciente"}
                     onChange={(e) => handleChange("indication", e.target.value)}
+                    className={'md:px-6 py-2 px-3'}
                 />
                 <InputInfoText
                     title={"Medicamentos"}
                     placeholder={"Buscar medicamento..."}
                     onChange={(e) => handleChange("drug", e.target.value)}
+                    className={'md:px-6 py-2 px-3'}
                 />
                 <div className="flex flex-col gap-2 md:px-6 py-2 px-3  bg-[#fafafc]">
                     <label className="flex items-center gap-2">
@@ -109,6 +111,7 @@ export default function HomeDoc() {
                     title={"Texto adicional (opcional)"}
                     placeholder={"Ingrese aquí cualquier otra aclaración"}
                     onChange={(e) => handleChange("comments", e.target.value)}
+                    className={'md:px-6 py-2 px-3'}
                 />
             </div>
         </div >

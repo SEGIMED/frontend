@@ -38,7 +38,12 @@ import IconTStar2 from "@/components/icons/IconStar2";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
-
+import { useSearchParams } from 'next/navigation'
+import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import Elboton from "@/components/Buttons/Elboton";
+import IconRegresar from "@/components/icons/iconRegresar";
+import IconSelect from "@/components/icons/IconSelect";
+import { useRouter } from "next/navigation";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -51,6 +56,15 @@ export default function HomeDoc() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [patients, setPatients] = useState([]);
   const [patientsFavorites, setPatientsFavorites] = useState([]);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const ordenMedica = searchParams.get('ordenMedica');
+  console.log(searchParams);
+  console.log(ordenMedica);
+
+
   const [pagination, setPagination] = useState({
     totalUsers: 0,
     totalPages: 0,
@@ -244,6 +258,19 @@ export default function HomeDoc() {
               Agregar Paciente
             </p>
           </button> */}
+          {ordenMedica ? <button
+            type="button"
+            className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+            onClick={() => {
+              router.push(`${rutas.Doctor}${rutas.Ordenes}`);
+            }}>
+            <IconRegresar />
+            <p className="text-start hidden md:block text-white font-bold text-base leading-5">
+              {" "}
+              Regresar
+            </p>
+          </button> : null}
+
           <button
             onClick={handleFavoriteClick}
             className={`${showFavorites
@@ -370,7 +397,15 @@ export default function HomeDoc() {
                 isOpen={openOptionsPatientId === paciente.id}
                 toggleOptions={() => toggleOptionMenu(paciente.id)}
               /> */}
-                <MenuDropDown
+                {ordenMedica ? <Elboton
+                  href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
+                  icon={<IconSelect color={"#487ffa"} />}
+                  nombre={"Seleccionar "}
+                  size={"md"}
+                  className={"bg-white border border-bluePrimary text-bluePrimary "}
+                  onPress={() => { dispatch(setSelectedOption({ name: "patient", option: paciente.id })); }}
+                // icon={<IconMas />}
+                /> : <MenuDropDown
                   label="Opciones"
                   icon={<IconOptions color="#FFFFFF" />}
                   categories={[
@@ -424,7 +459,7 @@ export default function HomeDoc() {
                       ],
                     },
                   ]}
-                />
+                />}
               </div>
             </div>
           ))

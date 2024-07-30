@@ -1,5 +1,4 @@
 export default function IconCheckBoton({ className, color }) {
-  console.log(color);
   return (
     <svg className={className} viewBox="0 0 23 23" fill="none">
       <g clipPath="url(#clip0_86_2)">

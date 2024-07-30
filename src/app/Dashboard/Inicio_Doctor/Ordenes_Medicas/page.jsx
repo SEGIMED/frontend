@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import OrdenType from "@/components/modal/ModalDoctor/modalOrden";
 import IconMas from "@/components/icons/iconMas";
 import IconConsulta from "@/components/icons/IconConsulta";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -59,7 +60,7 @@ export default function HomeDoc() {
                 return { ...paciente, lastLogin: fechaFormateada };
             });
             console.log(pacientesFormateados);
-            setPatients(pacientesFormateados);
+            setPatients(response.data.user);
             setPagination((prev) => ({
                 ...prev,
                 totalUsers: response.data.totalUsers,
@@ -89,7 +90,7 @@ export default function HomeDoc() {
                 return { ...paciente, lastLogin: fechaFormateada };
             });
 
-            setPatientsFavorites(pacientesFormateados);
+            setPatientsFavorites(response.data.user);
             setPagination((prev) => ({
                 ...prev,
                 totalUsers: response.data.totalUsers,
@@ -187,6 +188,7 @@ export default function HomeDoc() {
             <title>{lastSegmentTextToShow}</title>
             <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
                 <div className="flex gap-2 md:gap-4">
+
                     <button
                         onClick={handleFavoriteClick}
                         className={`${showFavorites
@@ -224,8 +226,8 @@ export default function HomeDoc() {
 
 
                 <div className="w-[100%] border-b border-b-[#cecece] flex">
-                    <div className="w-[5%] h-8"></div>
-                    <div className="grid grid-cols-3 w-[80%] items-center  text-center md:text-start  bg-white static md:sticky top-14 z-10 md:z-4 ">
+                    <div className="w-[5%] md:block hidden h-8"></div>
+                    <div className="grid grid-cols-3 w-[100%] md:w-[80%] items-center  text-center md:text-start  bg-white static md:sticky top-14 z-10 md:z-4 ">
                         <p className=" text-[#5F5F5F]">Paciente</p>
                         <p className=" text-[#5F5F5F]">Tipo</p>
                         <p className=" text-[#5F5F5F]">Fecha</p>
@@ -247,11 +249,11 @@ export default function HomeDoc() {
                     ) : (
                         filteredPatients.map((paciente) => (
 
-                            <div key={paciente.id} className="w-[100%] h-14 flex border-b items-center  border-b-[#cecece]  bg-white">
-                                <div className="justify-center w-[5%] items-center hidden md:flex">
+                            <div key={paciente.id} className="w-[100%] h-fit flex border-b items-center  border-b-[#cecece]  bg-white">
+                                <div className="justify-center w-[5%] hidden md:flex items-center ">
                                     <IconConsulta />
                                 </div>
-                                <div className="grid text-center grid-cols-3 w-[80%] md:text-left md:grid-cols-3 items-center  py-2 bg-white z-10">
+                                <div className="grid text-center grid-cols-3 w-[100%] justify-center md:w-[80%] md:text-left md:grid-cols-3 items-center  py-2 bg-white z-10">
 
                                     <div className="text-[#5F5F5F] ">
                                         {paciente?.name} {paciente?.lastname}
@@ -260,8 +262,8 @@ export default function HomeDoc() {
                                         {paciente?.name}
                                     </div>
 
-                                    <div className="text-[#5F5F5F]">
-                                        {paciente?.lastLogin}
+                                    <div className="text-[#5F5F5F] md:gap-3 block md:flex ">
+                                        {Fecha(paciente.lastLogin, 4)} <span className="hidden md:block"> {Hora(paciente.lastLogin)}</span>
                                     </div>
 
 
@@ -299,7 +301,7 @@ export default function HomeDoc() {
                     key="orden-type"
 
                 />]}
-                ruta={`${rutas.Doctor}${rutas.Ordenes}${rutas.Pacientes}`}
+                ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true`}
                 title={"Generar nueva órden médica"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary block font-font-Roboto"}
