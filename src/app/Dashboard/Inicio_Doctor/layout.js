@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
       <div className="flex flex-col w-full h-full">
         <SideDoctor search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
-        <Suspense fallback={<SkeletonList count={10} />}>
+        <Suspense>
           <div className="h-[88%] w-full">{children}</div>
         </Suspense>
       </div>
