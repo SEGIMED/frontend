@@ -65,9 +65,10 @@ export default function HomeDoc() {
 
 
   useEffect(() => {
-    if (searchParams.get("ordenMedica")) {
-      setOrdenMedica(searchParams.get('ordenMedica'))
+    if (!searchParams.get("ordenMedica")) {
+      return
     }
+    setOrdenMedica(searchParams.get('ordenMedica'))
   }, [searchParams]);
 
   const [pagination, setPagination] = useState({
