@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+
 // const url = "https://segimed-backend.onrender.com/api";
 const url = "https://develop.api.segimed.com/api";
 const local = "http://localhost:5000/api"; 
