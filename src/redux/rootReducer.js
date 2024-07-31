@@ -13,6 +13,7 @@ import alarms from "./slices/alarms/alarms";
 import activePtes from "./slices/activePtes/activePtes";
 import notifications from "./slices/user/notifications";
 import clinicalHistory from "./slices/doctor/HistorialClinico";
+import chatBot from "./slices/chat/chatBot";
 enableMapSet();
 // Define a reset action type
 const RESET_ACTION_TYPE = "root/reset";
@@ -31,7 +32,8 @@ const appReducer = combineReducers({
   alarms,
   activePtes,
   notifications,
-  clinicalHistory
+  clinicalHistory,
+  chatBot,
 });
 
 // Create a root reducer that handles the reset action
