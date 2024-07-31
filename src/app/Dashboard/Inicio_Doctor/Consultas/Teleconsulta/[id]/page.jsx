@@ -1,5 +1,5 @@
 "use client"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import IconCamera from "@/components/icons/IconCamera";
 import IconData from "@/components/icons/IconData";
 import IconFinish from "@/components/icons/IconFinish";
@@ -9,18 +9,25 @@ import { useAppSelector } from "@/redux/hooks";
 import { socket } from "@/utils/socketio";
 
 export default function TeleconsultaId (id) {
-  
-    const idConsulta = id.params.id;
+    
+    const consultId = Number(id.params.id);
+    const [videoData, setVideoData]=useState(null)
     // const consultasTodas=useAppSelector(state=>state.schedules)
     // const user=useAppSelector(state=>state.user)
     // const patientsList=useAppSelector(state=>state.allPatients.patients)
+    const prueba= async ()=>{
+       socket.emit("joinRoom", consultId, (data) => {
+            setVideoData(data);
+        });
+    }
+    
 
     useEffect(() => {
+       
+        prueba()
         
-        return () => {
-            
-        };
-    }, []);
+       
+    }, [prueba]);
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
@@ -29,9 +36,9 @@ export default function TeleconsultaId (id) {
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconLive/> Datos de consulta
                     </button>
-                    <botton className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
+                    <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconData/> Datos del paciente
-                    </botton>
+                    </button>
                 </div>
                 <button className="flex justify-center items-center gap-3 bg-[#E73F3F] text-white py-2 px-6 rounded-xl mr-6">
                     <IconFinish/> Finalizar
@@ -42,7 +49,7 @@ export default function TeleconsultaId (id) {
             </div>
             <div className="h-full w-full flex justify-between items-center flex-col py-5">
                 <div className="h-full w-[40rem] flex justify-center items-center bg-white rounded-xl border">
-                    video
+                   {videoData !== null ? JSON.stringify(videoData) : "Video"  } 
                 </div>
                 <div className="pt-3 flex justify-center items-center gap-5">
                     <button className="bg-[#0060FF] p-3 rounded-full">
