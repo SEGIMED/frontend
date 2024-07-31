@@ -21,7 +21,7 @@ export const MessageSegi = ({ key, message, sender, name, avatar }) => {
           height={36}
         />
         <span className="text-bluePrimary text-lg font-medium">
-          {sender != "bot" ? name : "SegiBot"}
+          {sender != "bot" ? name : "Segi"}
         </span>
       </div>
       <div
