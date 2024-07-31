@@ -27,9 +27,11 @@ export default function InputConsulta({
   onRiskChange,
   onRiskChange2,
   onGroupChange,
+  diagnostico,
 }) {
   const [valuesAmnesis, setValuesAmnesis] = useState([]);
   const [valuesBackground, setValuesBackground] = useState([]);
+  const [valueEvolution, setValueEvolution] = useState([]);
   const [riskCardiovascularButton, setRiskCardiovascularButton] = useState();
   const [riskSurgicalButton, setRiskSurgicalButton] = useState();
   const [
@@ -65,10 +67,13 @@ export default function InputConsulta({
   useEffect(() => {
     setValuesAmnesis([
       preconsult?.consultationReason,
-      "",
+      diagnostico?.historyOfPresentIllness || "",
       preconsult?.importantSymptoms,
     ]);
-  }, [preconsult]);
+  }, [preconsult, diagnostico]);
+  useEffect(() => {
+    setValueEvolution(diagnostico?.physicianComments );
+  },[diagnostico])
 
   const handleOption = (sub) => {
     setRiskCardiovascularButton(sub);
@@ -263,7 +268,7 @@ const handleGroupChange = (sub) => {
               placeholder="Ingrese aqui sus anotaciones"
               {...register(sub)}
               defaultValue={
-                valuesAmnesis[index] || valuesBackground[index] || ""
+                valuesAmnesis[index] || valuesBackground[index] || valueEvolution || ""
               }
             />
           </div>

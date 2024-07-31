@@ -23,8 +23,12 @@ import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import IconRegresar from "@/components/icons/iconRegresar";
 import IconOptions from "@/components/icons/IconOptions";
+import IconDelete from "@/components/icons/IconDelete";
+import Swal from "sweetalert2";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function HomeDoc() {
+  const token = Cookies.get("a");
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
@@ -64,13 +68,18 @@ export default function HomeDoc() {
   );
 
   // Ordenar pacientes si es necesario
-  const sortedPatients =[...filteredPatients].sort((b,a) =>
-    a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
-  )
+  /*const sortedPatients = isSorted
+    ? [...filteredPatients].sort((a, b) =>
+        a.patientUser.name.localeCompare(b.patientUser.name)
+      )
+    : filteredPatients;*/ // dejo este codigo pero no lo uso - ordeno a los pacientes por fecha
 
-  // const handleSortClick = () => {
-  //   setIsSorted(!isSorted);
-  // };
+    const sortedPatients = filteredPatients.sort((a, b) => 
+      new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
+    );
+  const handleSortClick = () => {
+    setIsSorted(!isSorted);
+  };
 
   const lastSegmentTextToShow = PathnameShow();
 
@@ -86,15 +95,58 @@ export default function HomeDoc() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
+  const isLessThan24HoursAgo = (timestamp) => {
+    const currentDate = new Date();
+    const consultationDate = new Date(timestamp);
+    const differenceInHours = (currentDate - consultationDate) / 1000 / 3600;
+    return differenceInHours < 24;
+  };
+
+  const handleDeleteClick = (patient) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: true
+    });
+    swalWithBootstrapButtons.fire({
+      title: "Eliminar consulta con el paciente: " + patient.patientUser.name + " " + patient.patientUser.lastname,
+      text: "Una vez emilinada no podras recuperar esta informacion!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, eliminar!",
+      cancelButtonText: "No, cancelar!",
+      reverseButtons: true
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        // falta agregar el numero 5 de eliminado en el catalogo
+        const data = await ApiSegimed.patch(`/schedule/${patient.id}`, { schedulingStatus: 5 }, { headers: { token: token } });
+        console.log(data);
+        swalWithBootstrapButtons.fire({
+          title: "Eliminada!",
+          icon: "success"
+        });
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Concelado!",
+          icon: "error"
+        });
+      }
+    });
+  };
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
-      <div className="h-full w-full flex flex-col">
+      <div className="flex flex-col w-full h-full">
         <div className="w-full flex justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
           {/* <Ordenar /> */}
           <div></div>
-          <h1 className="font-bold md:text-xl hidden md:block">Pasadas</h1>
+          <h1 className="hidden font-bold md:text-xl md:block">Pasadas</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
@@ -106,14 +158,14 @@ export default function HomeDoc() {
             <Link href={`${rutas.Doctor}${rutas.Historial}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid bg-[#487FFA] border-2 ">
                 <IconRegresar />
-                <p className="text-start text-white font-bold text-sm md:text-base leading-5">
+                <p className="text-sm font-bold leading-5 text-white text-start md:text-base">
                   Regresar
                 </p>
               </button>
             </Link>
           </div>
         </div>
-        <div className="md:overflow-y-auto h-full">
+        <div className="h-full md:overflow-y-auto">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
             <div className="w-[10%] md:w-[5%] md:block"></div>
             <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-4 py-2 z-10">
@@ -136,6 +188,7 @@ export default function HomeDoc() {
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
               {sortedPatients?.map((paciente) => (
+                console.log(paciente),
                 <PatientCardConsulta1
                   key={paciente.id}
                   paciente={paciente}
@@ -153,12 +206,17 @@ export default function HomeDoc() {
                               icon: <IconCorazonMini />,
                               onClick: () => handleReviewClick(paciente),
                             },
-                            // {
-                            //   label: "Ver consultas",
-                            //   icon: <IconPersonalData />,
-                            //   href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
-                            // },
-                          ],
+                            isLessThan24HoursAgo(paciente.scheduledEndTimestamp) && {
+                              label: "Ver consultas",
+                              icon: <IconPersonalData />,
+                              href: `${rutas.Doctor}${rutas.Historial}/${paciente.patient}`,
+                            },
+                            isLessThan24HoursAgo(paciente.scheduledEndTimestamp) && {
+                              label: "Eliminar consulta",
+                              icon: <IconDelete color="#B2B2B2"/>,
+                              onClick: () => handleDeleteClick(paciente),
+                            },
+                          ].filter(Boolean), // Elimina los valores nulos
                         },
                       ]}
                     />

@@ -28,9 +28,8 @@ import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import { usePathname } from "next/navigation";
 
 const DetallePaciente = (id) => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
-  const pathname = usePathname()
+  const dispatch = useAppDispatch();
   const token = Cookies.get("a");
   const userId = Cookies.get("patientId");
   console.log(userId);
@@ -59,7 +58,9 @@ const DetallePaciente = (id) => {
   const [medicalEventPatch, setMedicalEventPatch] = useState();
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
+  const [bodySection, setBodySection] = useState({});
 
+  console.log(bodySection);
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
@@ -217,7 +218,8 @@ const DetallePaciente = (id) => {
       },
     });
   }, [preconsult]);
-
+  console.log(preconsult);
+  
   const onSubmit = (data) => {
     console.log(data);
     //Antecedentes
@@ -414,14 +416,14 @@ const DetallePaciente = (id) => {
       patientId: Number(userId),
       diseaseId: 3,
       diagnosticNotes: data["Diagnostico"],
-      medicalEventId: 5,
-      drugId: formState.selectDrug ? formState.selectDrug : null,
+      medicalEventId: Number(medicalEventId),
+      drugId: data["medications"] ? data["medications"] : null, // pedir que cambie
       prescribedDose: null,
       quantityDrug: 60,
-      medicalProcedureId: 4,
+      medicalProcedureId: 4, // pedir que cambie
       //diagnosticNotes: data["Procedimientos"],
       therapyId: 2,
-      descriptionTherapy: data["Conducta terapeutica"],
+      descriptionTherapy: data["Conducta terapeutica"], // donde aparece en medical event
       quantityTherapy: 10,
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
@@ -437,30 +439,29 @@ const DetallePaciente = (id) => {
       pendingDiagnosticTest: null, // test pendientes
       alarmPattern: data["Pauta de alarma"] ? data["Pauta de alarma"] : null, // patron de alarma
     });
-    const medicalEvent = {
-      id: Number(medicalEventExist?.data.medicalEventId) || medicalEvent?.id,
-    };
-
-    // Función para agregar campos condicionalmente al objeto
-    const medicalEventPatch = {};
-    medicalEventPatch.id = medicalEvent.id;
-    const addMedicalEventField = (field, fieldName) => {
-      if (data[field] && data[field] !== "") {
-        medicalEventPatch[fieldName] = data[field];
-      }
-    };
-
-    // Agregar cada campo condicionalmente
-    addMedicalEventField("Anotaciones de la consulta", "physicianComments");
-    addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
-    addMedicalEventField("Pauta de alarma", "alarmPattern");
-    addMedicalEventField("Sintomas importantes", "reviewOfSystems");
-    addMedicalEventField("Motivo de consulta", "chiefComplaint");
-    addMedicalEventField("Tratamientos no farmacológicos", "treatmentPlan");
-
-    // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
-    setMedicalEventPatch(medicalEventPatch);
-
+      const medicalEvent = {
+        id: Number(medicalEventExist?.data.medicalEventId) || medicalEvent?.id,
+      };
+      
+      // Función para agregar campos condicionalmente al objeto
+      const medicalEventPatch = {};
+      medicalEventPatch.id = medicalEvent.id;
+      const addMedicalEventField = (field, fieldName) => {
+        if (data[field] && data[field] !== "") {
+          medicalEventPatch[fieldName] = data[field];
+        }
+      };
+      
+      // Agregar cada campo condicionalmente
+      addMedicalEventField("Anotaciones de la consulta", "physicianComments");
+      addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
+      addMedicalEventField("Pauta de alarma", "alarmPattern");
+      addMedicalEventField("Sintomas importantes", "reviewOfSystems");
+      addMedicalEventField("Motivo de consulta", "chiefComplaint");
+      addMedicalEventField("Tratamientos no farmacológicos", "treatmentPlan");
+      
+      // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
+      setMedicalEventPatch(medicalEventPatch);
   };
 
   useEffect(() => {
@@ -582,25 +583,26 @@ const DetallePaciente = (id) => {
     if (response4 !== undefined) { responses.push(response4); }
 
     // Examen físico
+    /*
     let response5;
     console.log(physicalExamination);
-    if (!physicalExamination?.physicalSubsystemId === 0) {
-      if (medicalEventExist?.physicalExaminations?.length === 0 || medicalEventExist?.physicalExaminations === null) {
-        response5 = await ApiSegimed.post(`/patient-physical-examination`, physicalExamination, { headers: { token: token } });
-      } else {
-        response5 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`, physicalExaminationPatch, { headers: { token: token } });
-      }
-    }
-    if (response5 !== undefined) { responses.push(response5); }
-
+    if(physicalExamination?.physicalSubsystemId !== 0){
+    if(medicalEventExist?.data?.physicalExaminations?.length === 0 || medicalEventExist?.data?.physicalExaminations === null) {
+      response5 = await ApiSegimed.post(`/patient-physical-examination`, physicalExamination, { headers: { token: token } });
+    } else {
+      response5 = await ApiSegimed.patch(`/patient-physical-examination?id=${userId}`, physicalExaminationPatch, { headers: { token: token } });
+    }}
+    if(response5 !== undefined){responses.push(response5);}
+  */
     // Riesgo de insuficiencia cardíaca
     let response6;
-    if (patient?.patientPulmonaryHypertensionRisks === null && heartFailureRisk.heartFailureRiskId > 0) {
+    if (patient?.patientPulmonaryHypertensionRisks === null ) {
       response6 = await ApiSegimed.post(`/patient-new-nyha-classification`, heartFailureRisk, { headers: { token: token } });
     } else if (heartFailureRisk.heartFailureRiskId > 0) {
       response6 = await ApiSegimed.patch(`/patient-update-nyha-classification`, heartFailureRisk, { headers: { token: token } });
     }
     if (response6 !== undefined) { responses.push(response6); }
+    console.log(response6);
 
     // Preconsulta
     let response7;
@@ -618,6 +620,7 @@ const DetallePaciente = (id) => {
       response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, { headers: { token: token } });
     }
     if (response8 !== undefined) { responses.push(response8); }
+    console.log(response8);
 
     // Evento médico
     /*let response9; //no se hace post por q para que funcione se precrea el medical event
@@ -654,7 +657,7 @@ const DetallePaciente = (id) => {
     if (allSuccessful) {
       const data = await ApiSegimed.patch(`/schedule/${scheduleId}`, { schedulingStatus: 2 }, { headers: { token: token } });
       console.log(data);
-      //setLoading(false);
+      setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -662,7 +665,7 @@ const DetallePaciente = (id) => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-      //router.push(`/Dashboard/Inicio_Doctor/Consultas`);
+      router.push(`/Dashboard/Inicio_Doctor/Consultas`);
     } else {
       setLoading(false);
       Swal.fire({
@@ -721,7 +724,8 @@ const DetallePaciente = (id) => {
                 "Sintomas importantes",
               ]}
               preconsult={preconsult}
-              defaultOpen={handleNav === "anamnesis" ? true : false}
+              diagnostico={medicalEventExist?.data}
+              defaultOpen = {handleNav === "anamnesis" ? true : false}
             />
             <SignosVitalesInfo
               title={"Signos vitales"}
@@ -730,9 +734,11 @@ const DetallePaciente = (id) => {
               defaultOpen={handleNav === "signos vitales" ? true : false}
             />
             <InputCuerpoPre
-              title={"Exploracion fisica"}
-              onBodyChange={handleBodyChange}
-              defaultOpen={handleNav === "exploracion fisica" ? true : false}
+            title={"Exploracion fisica"}
+            onBodyChange={handleBodyChange}
+            bodySection={formData?.bodySection}
+            defaultOpen = {handleNav === "exploracion fisica" ? true : false}
+            valuePreconsultation={preconsult}
             />
             <InputExam title={"Examen fisico"}
               defaultOpen={handleNav === "examen fisico" ? true : false}
@@ -750,10 +756,12 @@ const DetallePaciente = (id) => {
             />
             <InputConsulta
               title={"Evolucion"}
+              diagnostico={medicalEventExist?.data}
               subtitle={["Anotaciones sobre la consulta"]}
               defaultOpen={handleNav === "evolucion" ? true : false}
             />
             <InputDiagnostico
+              diagnostico={medicalEventExist?.data}
               title={"Diagnósticos y tratamiento"}
               subtitle={[
                 "Conducta terapeutica",

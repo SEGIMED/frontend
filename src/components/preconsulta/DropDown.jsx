@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dropdown,
     DropdownTrigger,
@@ -12,6 +12,15 @@ export default function DropNextPreconsultation({ text, onBodyChange, options, s
     const [selectedOption, setSelectedOptionState] = useState('');
     const [selectedTextOption, setSelectedTextOption] = useState('');
     // const { setValue, register } = useFormContext();
+
+    useEffect(() => {
+        if (selectedOptions) {
+            setSelectedOptionState(selectedOptions.toString());
+            const selectText = options.find(item => item.value === selectedOptions);
+            if (selectText) setSelectedTextOption(selectText.text);
+        }
+    }, [selectedOptions, options]);
+
     const handleSelectionChange = (key) => {
         const selectedOption = key;
         setSelectedOptionState(selectedOption);
@@ -25,7 +34,7 @@ export default function DropNextPreconsultation({ text, onBodyChange, options, s
 
     return (
         <div>
-            <div className="mb-2 font-semibold text-sm">{text}</div>
+            <div className="mb-2 text-sm font-semibold">{text}</div>
             <Dropdown className="emptyContent">
                 <DropdownTrigger
                     style={{
