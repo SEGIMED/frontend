@@ -54,7 +54,7 @@ export default function DetallePaciente() {
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? <SkeletonList count={13} /> : (
         <>
-          <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b bg-white border-b-[#cecece] py-2">
+          <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
             <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
             <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />} />
           </div>

@@ -16,8 +16,8 @@ import Cookies from "js-cookie";
 import { useAppSelector } from "@/redux/hooks";
 import Swal from "sweetalert2";
 
-const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) => {
-    const listaPacientes = useAppSelector(state => state.allPatients.patients);
+const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect, lista, title, patient, stateName }) => {
+
     const {
         register,
         handleSubmit,
@@ -51,6 +51,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
         if (!isOpen) {
             reset({
                 patient: "",
+                physician: "",
                 typeOfMedicalConsultation: "",
                 reasonForConsultation: "",
                 healthCenter: "",
@@ -94,25 +95,35 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
             setDisabled(true);
             const token = Cookies.get("a");
             const headers = { headers: { token } };
-            const response = await ApiSegimed.post("/schedules", { ...data, physician }, headers);
+
+            const payload = patient ? { ...data, patient } : { ...data, physician };
+
+
+            const response = await ApiSegimed.post("/schedules", payload, headers);
+
             if (response.data) {
                 handleClose();
 
                 Swal.fire({
-                    title: "Consulta agendada con exito!",
+                    title: "Consulta agendada con éxito!",
                     confirmButtonColor: "#487FFA",
                     confirmButtonText: "Aceptar",
-                    // text: "You clicked the button!",
                     icon: "success"
                 });
-
             }
         } catch (error) {
-            setDisabled(false);
             console.error("Error al enviar los datos:", error);
+            Swal.fire({
+                title: "Error al agendar la consulta",
+                text: "Ocurrió un error al intentar agendar la consulta. Por favor, intenta nuevamente.",
+                icon: "error",
+                confirmButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+            });
+        } finally {
+            setDisabled(false);
         }
     };
-
     const handleClose = () => onClose();
 
     return isOpen ? (
@@ -135,16 +146,16 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
                     <div className="p-3 flex flex-col gap-3 justify-center items-center ">
                         <div className="flex flex-col gap-2 ">
                             <label className="flex items-center gap-3 text-sm font-semibold">
-                                <IconCenterAtenttion /> Paciente
+                                <IconCenterAtenttion /> {title}
 
                             </label>
                             <select
-                                id="patient"
+                                id={stateName}
                                 className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.patient ? "border-red-500" : ""}`}
-                                {...register("patient", { required: "*Debe elegir un paciente *" })}
+                                {...register(stateName, { required: `*Debe elegir un ${title} *` })}
                             >
-                                <option value="">Seleccione un paciente</option>
-                                {listaPacientes.map(paciente => (
+                                <option value="">{`Seleccione un ${title} `}</option>
+                                {lista.map(paciente => (
                                     <option key={paciente.id} value={paciente.id}>
                                         {paciente.name} {paciente.lastname}
                                     </option>
@@ -221,7 +232,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
                                             type="date"
                                             defaultValue={date}
                                             className=" md:w-60 w-full p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                                            disabled
+                                        // disabled
                                         />
                                         {errors.date && <span className="text-red-500 text-sm">{errors.date.message}</span>}
                                     </div>
@@ -252,8 +263,8 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect }) =
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
+            </div >
+        </div >
     ) : null;
 };
 

@@ -252,7 +252,7 @@ export default function HomeDoc() {
     <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
       <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
-        <div className="flex gap-2 md:gap-4">
+        <div className="flex gap-2 md:gap-4 items-center">
           {/* Se comenta por falta de funcionalidad */}
           {/* <button
             className={
@@ -299,49 +299,51 @@ export default function HomeDoc() {
         </div>
 
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
-        <MenuDropDown
-          label="Filtrar"
-          iconr={<IconFilter />}
-          categories={[
-            {
-              title: "Nivel de riesgo",
-              icon: <IconHooter />,
-              items: [
-                {
-                  label: "Alto",
-                  onClick: () => setRiskFilter("Alto"),
-                  icon: <IconRisk color="#E73F3F" />,
-                },
-                {
-                  label: "Medio",
-                  onClick: () => setRiskFilter("Moderado"),
-                  icon: <IconRisk color="#F5E400" />,
-                },
-                {
-                  label: "Bajo",
-                  onClick: () => setRiskFilter("Bajo"),
-                  icon: <IconRisk color="#70C247" />,
-                },
-                {
-                  label: "Ninguno",
-                  onClick: () => setRiskFilter(""),
-                  icon: <IconRisk color="lightGray" />,
-                },
-              ],
-            },
-            // {
-            //   title: "Orden Alfabetico",
-            //   icon: <IconAlphabetic />,
-            //   items: [
-            //     {
-            //       label: "Ver todos",
-            //       onClick: () => setRiskFilter(""),
-            //     }
-            //   ]
-            // }
-          ]}
-        />
-        {/* <div></div> */}
+        <div className="flex items-center">
+          <MenuDropDown
+            label="Filtrar"
+            iconr={<IconFilter />}
+            categories={[
+              {
+                title: "Nivel de riesgo",
+                icon: <IconHooter />,
+                items: [
+                  {
+                    label: "Alto",
+                    onClick: () => setRiskFilter("Alto"),
+                    icon: <IconRisk color="#E73F3F" />,
+                  },
+                  {
+                    label: "Medio",
+                    onClick: () => setRiskFilter("Moderado"),
+                    icon: <IconRisk color="#F5E400" />,
+                  },
+                  {
+                    label: "Bajo",
+                    onClick: () => setRiskFilter("Bajo"),
+                    icon: <IconRisk color="#70C247" />,
+                  },
+                  {
+                    label: "Ninguno",
+                    onClick: () => setRiskFilter(""),
+                    icon: <IconRisk color="lightGray" />,
+                  },
+                ],
+              },
+              // {
+              //   title: "Orden Alfabetico",
+              //   icon: <IconAlphabetic />,
+              //   items: [
+              //     {
+              //       label: "Ver todos",
+              //       onClick: () => setRiskFilter(""),
+              //     }
+              //   ]
+              // }
+            ]}
+          />
+        </div>
+
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
