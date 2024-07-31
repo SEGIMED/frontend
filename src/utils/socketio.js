@@ -55,6 +55,9 @@ class Socket {
         dispatch(addChat(newChat));
       });
     });
+    this._socket.emit("joinRoom", data, () => {
+      });
+  
 
     this._socket.on("newAccessToken", ({ newAccessToken }) => {
       Cookies.set("a", newAccessToken);

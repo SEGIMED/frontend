@@ -16,18 +16,19 @@ export default function TeleconsultaId (id) {
     // const user=useAppSelector(state=>state.user)
     // const patientsList=useAppSelector(state=>state.allPatients.patients)
     const prueba= async ()=>{
-       socket.emit("joinRoom", consultId, (data) => {
+        socket._socket.emit("joinRoom", consultId, (data) => {
             setVideoData(data);
         });
     }
     
 
     useEffect(() => {
+    //    prueba()
+    if(consultId) socket._socket.emit("joinRoom", consultId, (data) => {
+        setVideoData(data);
+    });
        
-        prueba()
-        
-       
-    }, [prueba]);
+    }, [consultId]);
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
