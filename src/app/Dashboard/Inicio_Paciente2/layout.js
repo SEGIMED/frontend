@@ -2,7 +2,7 @@
 
 import { SidePte } from "./sidebar";
 import { useState } from "react";
-import { SegiBot } from "@/components/InicioPaciente/SegiBot";
+import { SegiBot } from "@/components/InicioPaciente/chatSegi/SegiBot";
 
 export default function RootLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);

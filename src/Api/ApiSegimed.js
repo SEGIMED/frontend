@@ -78,6 +78,11 @@ ApiSegimed.interceptors.request.use(
 
 ApiSegimed.interceptors.response.use(
   (response) => {
+    if (response.status === 200 && response.headers["token"] !== undefined) {
+      let token = response.headers["token"];
+      //Si la respuesta es 200 y el header contiene token se actualiza el token en las cookies
+      Cookies.set("a", token);
+    }
     return response;
   },
   async (error) => {
