@@ -359,7 +359,7 @@ export default function HomeDoc() {
             <div
               key={paciente.id}
               className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
-              <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
+              <div className="flex gap-2 pr-4 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
                 {paciente.patientPulmonaryHypertensionRisks?.risk ? (
                   <RealColorRisk
                     risk={paciente.patientPulmonaryHypertensionRisks.risk}
@@ -375,7 +375,7 @@ export default function HomeDoc() {
                     className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
                   />
                 </div>
-                <p className="text-base">
+                <p className="text-base w-fit">
                   {paciente.name} {paciente.lastname}
                 </p>
                 <div onClick={() => changeFavorite(paciente)}>
@@ -411,6 +411,7 @@ export default function HomeDoc() {
                   size={"md"}
                   className={"bg-white border border-bluePrimary text-bluePrimary "}
                   onPress={() => { dispatch(setSelectedOption({ name: "patient", option: paciente.id })); }}
+                  classNameText={"hidden md:block "}
                 // icon={<IconMas />}
                 /> : <MenuDropDown
                   label="Opciones"

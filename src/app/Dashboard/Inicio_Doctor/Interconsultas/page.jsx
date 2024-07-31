@@ -139,7 +139,7 @@ export default function HomeDoc() {
         <h1 className="font-bold w-1/3 md:w-3/4 text-center">
           Solicitar interconsulta
         </h1>
-        <button className="flex items-center  px-1 md:px-6 py-2 bg-bluePrimary rounded-xl text-white font-bold w-1/2 md:w-1/5">
+        <button className="flex items-center  px-1 md:px-4 py-2 bg-bluePrimary rounded-xl text-white font-bold w-1/2 md:w-fit">
           <p className="text-center w-full">Ver Interconsultas</p>
         </button>
       </div>
@@ -159,6 +159,7 @@ export default function HomeDoc() {
                 justifyContent: "flex-start",
                 opacity: "1",
                 color: "#686868",
+                background: "white"
               }}
               variant="bordered">
               {selectedSpecialtiesValue || "Selecciona especialidades"}
@@ -197,6 +198,7 @@ export default function HomeDoc() {
                   justifyContent: "flex-start",
                   opacity: "1",
                   color: "#686868",
+                  background: "white"
                 }}
                 variant="bordered">
                 {selectedDoctorName || "Selecciona un médico"}
@@ -210,6 +212,7 @@ export default function HomeDoc() {
                   justifyContent: "flex-start",
                   opacity: "1",
                   color: "#686868",
+                  background: "white"
                 }}
                 disabled
                 variant="bordered">

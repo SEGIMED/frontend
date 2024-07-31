@@ -12,7 +12,7 @@ export default function BotonInterconsulta({
 }) {
   return type === "green" ? (
     <div
-      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border border-[#cecece] cursor-pointer ${active ? "bg-[#70C247]" : ""
+      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border bg-white border-[#cecece] cursor-pointer ${active ? "bg-[#70C247]" : ""
         }`}
       onClick={onClick}>
       <p className={`text-sm font-normal leading-4 ${active && "text-white"}`}>
@@ -21,21 +21,21 @@ export default function BotonInterconsulta({
       {Icon ? (
         <Icon />
       ) : (
-        <IconCheckBoton color={active && "white"} className="w-8" />
+        <IconCheckBoton color={active && "white"} className="w-6" />
       )}
     </div>
   ) : (
     <div
-      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border border-[#cecece] cursor-pointer ${active ? "bg-red-500" : ""
+      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border bg-white border-[#cecece] cursor-pointer ${active ? "bg-red-500" : ""
         }`}
       onClick={onClick}>
       <p className={`text-sm font-normal leading-4 ${active && "text-white"}`}>
         {label}
       </p>
       {Icon ? (
-        <Icon className="w-8" color={active && "white"} />
+        <Icon className="w-6" color={active && "white"} />
       ) : (
-        <IconCloseBoton className={`w-7`} color={active && "white"} />
+        <IconCloseBoton className={`w-6`} color={active && "white"} />
       )}
       {/* Usa el icono correspondiente */}
     </div>

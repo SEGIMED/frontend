@@ -11,7 +11,7 @@ export default function InputInterconsulta({ name, title }) {
       </label>
 
       <textarea
-        className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-3 md:px-4 py-2 outline-[#a8a8a8]"
+        className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-3 md:px-4 py-2 outline-[#a8a8a8]"
         placeholder="Describa toda la información posible"
       //  {...register("inputSubsistema")}
       />
