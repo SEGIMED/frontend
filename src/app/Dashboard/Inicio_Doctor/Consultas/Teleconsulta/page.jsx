@@ -24,7 +24,7 @@ export default function HomeDoc() {
   // Obtener consultas del estado
   const consultas = useAppSelector((state) => state.schedules);
   const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
-
+  console.log(consultas)
   // Obtener pacientes del estado
   const listaPacientes = useAppSelector((state) => state.allPatients.patients);
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -35,32 +35,15 @@ export default function HomeDoc() {
 
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
-    (consulta) => consulta.schedulingStatus === 2 && consulta.physician === myID
+    (consulta) => consulta.typeOfMedicalConsultation  === 2 && consulta.physician === myID
   );
-
+  console.log(scheduledConsultas)
   // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
-  const filteredPatients = listaPacientes?.filter(
-    (paciente) =>
-      scheduledConsultas.some((consulta) => consulta.patient === paciente.id) &&
-      (paciente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        paciente.lastname.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (riskFilter ? paciente.risk === riskFilter : true)
-  );
-
-  // Asociar consultas a los pacientes
-  const patientsWithConsultas = filteredPatients.map((paciente) => {
-    const consulta = scheduledConsultas.find(
-      (consulta) =>
-        consulta.patient === paciente.id &&
-        consulta.typeOfMedicalConsultation === 2
-    );
-    return { ...paciente, consulta };
-  });
 
   // Ordenar pacientes si es necesario
   const sortedPatients = isSorted
-    ? [...patientsWithConsultas].sort((a, b) => a.name.localeCompare(b.name))
-    : patientsWithConsultas;
+    ? [...scheduledConsultas].sort((a, b) => a.name.localeCompare(b.name))
+    : scheduledConsultas;
 
   const handleSortClick = () => {
     setIsSorted(!isSorted);
