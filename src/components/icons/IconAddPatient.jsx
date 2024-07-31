@@ -13,7 +13,7 @@ const IconAddPatient = ({ className }) => {
           />
         </clipPath>
       </defs>
-      <g clip-path="url(#clip1238_878)">
+      <g clipPath="url(#clip1238_878)">
         <path
           id="path"
           d="M0 0L24 0L24 24L0 24L0 0Z"
