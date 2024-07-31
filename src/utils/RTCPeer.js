@@ -67,7 +67,7 @@ class RTCPeer{
     sendInvite(targetId){
         socket.emit("sendInvite",targetId,(data)=>{
             if(data?.sent){
-                this.state = "Invitación Enviada."
+                this.state = "Invitación Enviada." 
             }
         });
     }
