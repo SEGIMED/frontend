@@ -1,17 +1,26 @@
 "use client"
-
+import { useEffect } from "react";
 import IconCamera from "@/components/icons/IconCamera";
 import IconData from "@/components/icons/IconData";
 import IconFinish from "@/components/icons/IconFinish";
 import IconLive from "@/components/icons/IconLive";
 import IconMicrophone from "@/components/icons/IconMicrophone";
 import { useAppSelector } from "@/redux/hooks";
+import { socket } from "@/utils/socketio";
 
-export default function TeleconsultaId () {
-    
-    const consultasTodas=useAppSelector(state=>state.schedules)
-    const user=useAppSelector(state=>state.user)
-    const patientsList=useAppSelector(state=>state.allPatients.patients)
+export default function TeleconsultaId (id) {
+  
+    const idConsulta = id.params.id;
+    // const consultasTodas=useAppSelector(state=>state.schedules)
+    // const user=useAppSelector(state=>state.user)
+    // const patientsList=useAppSelector(state=>state.allPatients.patients)
+
+    useEffect(() => {
+        
+        return () => {
+            
+        };
+    }, []);
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">

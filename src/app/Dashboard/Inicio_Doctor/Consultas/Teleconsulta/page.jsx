@@ -34,10 +34,16 @@ export default function HomeDoc() {
   }, [dispatch]);
 
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
+ 
   const scheduledConsultas = consultas.filter(
-    (consulta) => consulta.typeOfMedicalConsultation  === 2 && consulta.physician === myID
+    (consulta) => {
+      
+      return consulta.typeOfMedicalConsultation  === 2 && consulta.physician === myID
+
+    }
   );
-  console.log(scheduledConsultas)
+  
+  
   // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
 
   // Ordenar pacientes si es necesario
@@ -63,7 +69,7 @@ export default function HomeDoc() {
     }
     return <MensajeSkeleton />;
   }
-
+  console.log(sortedPatients)
   return (
     <div className="h-full text-[#686868] w-full flex flex-col">
       <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
@@ -100,15 +106,14 @@ export default function HomeDoc() {
         </Link>
       </div>
       <div className="flex flex-col items-start justify-center w-full">
-        {sortedPatients?.map((paciente) => (
+        {sortedPatients?.map((consulta) => (
           <PatientCardConsulta
-            key={paciente.id}
-            paciente={paciente}
-            consulta={paciente.consulta}
+            key={consulta.id}
+            paciente={consulta}
             button={
               <OptPteHistorial
-                id={paciente.id}
-                ruta={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}/${paciente.id}`}
+                id={consulta.id}
+                ruta={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}/${consulta.id}`}
               />
             }
           />
