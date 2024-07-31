@@ -60,12 +60,13 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-      pathBeforeLastSegment.lastIndexOf("/") + 1
-    )
+        pathBeforeLastSegment.lastIndexOf("/") + 1
+      )
     : lastSegment;
 
   const id = Cookies.get("c");
   const token = Cookies.get("a");
+  const refreshToken = Cookies.get("d");
   const rol = Cookies.get("b");
 
   const [latitud, setLatitud] = useState(null);
@@ -233,7 +234,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         console.error
       );
       if (!socket.isConnected()) {
-        socket.setSocket(token, dispatch);
+        socket.setSocket(token, refreshToken, dispatch);
         socket.emit("onJoin", { id: idUser });
       }
     }
@@ -348,8 +349,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
-            }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            showNotifications && "bg-[#E73F3F]"
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={showNotifications && "white"}

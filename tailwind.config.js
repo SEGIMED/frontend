@@ -59,5 +59,6 @@ module.exports = {
     nextui({
       addCommonColors: true,
     }),
+    require("tailwind-scrollbar"),
   ],
 };

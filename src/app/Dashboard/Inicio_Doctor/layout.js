@@ -3,6 +3,7 @@
 import { NavDoctor } from "@/components/NavDoc/navdoc";
 import { SideDoctor } from "./sidebar";
 import { useState } from "react";
+import { SegiBot } from "@/components/InicioPaciente/chatSegi/SegiBot";
 
 export default function RootLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
         {/* Contenido principal */}
         <div className="h-[88%] w-full">{children}</div>
       </div>
+      <SegiBot />
     </div>
   );
 }
