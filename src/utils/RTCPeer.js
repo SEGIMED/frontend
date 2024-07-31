@@ -28,7 +28,7 @@ class RTCPeer{
     }
 
     defineUserObj(userobj){
-        if(!userobj) this.userObj = userobj;
+        if(!userobj) this.userObj = userobj; 
     }
 
 
