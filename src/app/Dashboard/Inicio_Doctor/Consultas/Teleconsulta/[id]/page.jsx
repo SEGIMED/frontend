@@ -12,18 +12,10 @@ export default function TeleconsultaId (id) {
     
     const consultId = Number(id.params.id);
     const [videoData, setVideoData]=useState(null)
-    // const consultasTodas=useAppSelector(state=>state.schedules)
-    // const user=useAppSelector(state=>state.user)
-    // const patientsList=useAppSelector(state=>state.allPatients.patients)
-    const prueba= async ()=>{
-        socket._socket.emit("joinRoom", consultId, (data) => {
-            setVideoData(data);
-        });
-    }
     
 
     useEffect(() => {
-    //    prueba()
+    
     if(consultId) socket._socket.emit("joinRoom", consultId, (data) => {
         setVideoData(data);
     });
