@@ -53,6 +53,21 @@ class RTCPeer{
         });
     }
 
+    async createAsw (id){
+        const asw = await this.peerConnection.createAnswer();
+        await this.peerConnection.setLocalDescription(asw);
+        socket.emit('sendAsw',{id,asw});
+
+        this.peerConnection.addEventListener('icecandidate', event => {
+            if (event.candidate) {
+                socket.emit("newCandidate",{id, candidate: event.candidate});
+            }
+        });
+        this.peerConnection.addEventListener('connectionstatechange', event => {
+           console.log('nuevo evento ',peerConnection.connectionState);
+        });  
+    }
+
     async setRemoteDescription(description){
         const remoteDesc = new RTCSessionDescription(description);
         await this.peerConnection.setRemoteDescription(remoteDesc);

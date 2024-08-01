@@ -7,6 +7,7 @@ import IconLive from "@/components/icons/IconLive";
 import IconMicrophone from "@/components/icons/IconMicrophone";
 import { useAppSelector } from "@/redux/hooks";
 import { socket } from "@/utils/socketio";
+import rtcPer from "@/utils/RTCPeer";
 import Cookies from "js-cookie";
 
 export default function TeleconsultaId (id) {
@@ -15,24 +16,55 @@ export default function TeleconsultaId (id) {
     const [stream, setStream] = useState(null)
     const myVideo=useRef()
     const targetVideo=useRef()
-    const myId= Cookies.get("c")
+    
 
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-           
-            setStream(stream)
-            myVideo.current.srcObject = stream
-        })
-    }, []);
+    // useEffect(() => {
+        // navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+    
+        //         setStream(stream)
+        //         myVideo.current.srcObject = stream
+        //         const myId = Cookies.get("c"); 
+        //         const conection = rtcPer.init();
+        //         rtcPer.defineUserObj(myId);    
+        //     stream.getTracks().forEach(track => {
+        //         conection.addTrack(track,stream);
+        //     });
+
+        // })
+    // }, []);
 
 
     useEffect(() => {
     
-    if(consultId) socket._socket.emit("joinRoom", consultId, (data) => {
-        console.log(data)
+    if(consultId) socket._socket.emit("joinRoom", consultId, async (data) => {
         setRoomData(data);
+       
     });
 
+        socket._socket.on("onOffer",async (offer) =>{
+            console.log(offer)
+            const conection = rtcPer.init();
+            await rtcPer.setRemoteDescription(offer);
+            
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+                
+                setStream(stream)
+                myVideo.current.srcObject = stream
+                const myId = Cookies.get("c"); 
+               
+                rtcPer.defineUserObj(myId);    
+            stream.getTracks().forEach(track => {
+                conection.addTrack(track,stream);
+            });
+    
+        })
+            await rtcPer.createAsw(consultId);
+        })
+        socket._socket.on("newCandidate",async (candidate) =>{
+            console.log(candidate)
+            await rtcPer.setCandidateRemote(candidate);
+        })
+        
     }, [consultId]);
 
     return (
@@ -40,7 +72,7 @@ export default function TeleconsultaId (id) {
             <div className="w-full flex justify-between items-center border-b-2">
                 <div className="flex justify-start items-center">
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
-                        <IconLive/> Datos de consultasss
+                        <IconLive/> Datos de consultas
                     </button>
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconData/> Datos del paciente
