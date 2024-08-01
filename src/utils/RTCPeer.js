@@ -5,13 +5,9 @@ class RTCPeer{
         this.configuration = {
             iceServers: [
               {
-                urls: [
-                  'stun:stun1.l.google.com:19302',
-                  'stun:stun2.l.google.com:19302',
-                ],
+                'urls': 'stun:stun.l.google.com:19302'
               },
             ],
-            iceCandidatePoolSize: 3,
           };
          this.peerConnection = null;
          this.userObj = null;
@@ -44,7 +40,12 @@ class RTCPeer{
         await this.peerConnection.setLocalDescription(offer);
         socket.emit('sendOffer',{id,offer});
 
+        this.peerConnection.addEventListener('icegatheringstatechange', event => {
+            console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
+        });
+        
         this.peerConnection.addEventListener('icecandidate', event => {
+            console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
             if (event.candidate) {
                 socket.emit("newCandidate",{id, candidate: event.candidate});
             }
@@ -59,8 +60,12 @@ class RTCPeer{
         await this.peerConnection.setLocalDescription(asw);
         socket.emit('sendAsw',{id,asw});
 
+        this.peerConnection.addEventListener('icegatheringstatechange', event => {
+            console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
+        });
+
         this.peerConnection.addEventListener('icecandidate', event => {
-            console.log("esto es candidate event",event)
+            console.log("esto es candidate event createAsw",event)  //no entra el eventListener
             if (event.candidate) {
                 socket.emit("newCandidate",{id, candidate: event.candidate});
             }
