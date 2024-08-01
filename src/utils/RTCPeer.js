@@ -60,6 +60,7 @@ class RTCPeer{
         socket.emit('sendAsw',{id,asw});
 
         this.peerConnection.addEventListener('icecandidate', event => {
+            console.log("esto es candidate event",event)
             if (event.candidate) {
                 socket.emit("newCandidate",{id, candidate: event.candidate});
             }

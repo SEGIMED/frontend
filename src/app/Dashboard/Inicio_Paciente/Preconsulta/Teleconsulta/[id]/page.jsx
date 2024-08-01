@@ -61,7 +61,7 @@ export default function TeleconsultaId (id) {
             await rtcPer.createAsw(consultId);
         })
         socket._socket.on("newCandidate",async (candidate) =>{
-            console.log(candidate)
+            console.log("CANDIDATE PAGE",candidate)
             await rtcPer.setCandidateRemote(candidate);
         })
         
