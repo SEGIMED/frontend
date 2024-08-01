@@ -123,7 +123,7 @@ export default function DoctoresPte() {
   if (isLoading) {
     return <MensajeSkeleton />;
   }
- console.log(doctors)
+
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex md:h-[8%] h-[5%] items-center justify-center border-b border-b-[#cecece] px-6">

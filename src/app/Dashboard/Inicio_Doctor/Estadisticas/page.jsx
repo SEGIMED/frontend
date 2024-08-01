@@ -115,23 +115,23 @@ export default function Estadisticas() {
             <IconCurrentRouteNav className="w-4" />
             Alarmas activas
           </p>
-          <div className="flex items-center justify-center">
-            <div className="flex w-full mt-10 gap-10">
-              <div className="w-full text-small flex flex-col items-center ">
-                <IconAlarmRed />
-                prioridad alta
+          <div className="flex items-center justify-center ">
+            <div className="flex w-full mt-10 gap-2 md:gap-10">
+              <div className="w-full text-small flex flex-col items-center">
+                <IconAlarmRed className={"w-20 md:w-40"}/>
+                <div className="text-xs md:text-lg whitespace-nowrap">prioridad alta</div>
                 <div className=" text-4xl  md:text-7xl">{alarm?.Alta}</div>
               </div>
 
-              <div className="w-full text-small flex flex-col items-center ">
-                <IconAlarmYellow />
-                prioridad media
+              <div className="w-full md:text-small flex flex-col items-center ">
+                <IconAlarmYellow className={"w-20 md:w-40"} />
+                <div className="text-xs md:text-lg whitespace-nowrap">prioridad media</div>
                 <div className=" text-4xl  md:text-7xl">{alarm?.Media}</div>
               </div>
 
               <div className="w-full text-small flex flex-col items-center ">
-                <IconAlarmGreen />
-                prioridad baja
+                <IconAlarmGreen className={"w-20 md:w-40"}/>
+                <div className="text-xs md:text-lg whitespace-nowrap">prioridad baja</div>
                 <div className="text-4xl  md:text-7xl">{alarm?.Baja}</div>
               </div>
             </div>
