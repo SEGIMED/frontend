@@ -38,9 +38,34 @@ class RTCPeer{
         return this.peerConnection;
     }
 
+    async createOffer(id){
+        const offer = await this.peerConnection.createOffer();
+        await this.peerConnection.setLocalDescription(offer);
+        socket.emit('sendOffer',{id,offer});
+
+        this.peerConnection.addEventListener('icecandidate', event => {
+            if (event.candidate) {
+                socket.emit("newCandidate",{id, candidate: event.candidate});
+            }
+        });
+        this.peerConnection.addEventListener('connectionstatechange', event => {
+           console.log('nuevo evento ',peerConnection.connectionState);
+        });
+    }
+
+    async setRemoteDescription(description){
+        const remoteDesc = new RTCSessionDescription(description);
+        await this.peerConnection.setRemoteDescription(remoteDesc);
+    }
+
+    async setCandidateRemote(candidate){
+       await this.peerConnection.addIceCandidate(candidate);
+    }
+
     async createRoom(){
         const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
+        await this.peerConnection.setLocalDescription(offer);
+
 
         socket.emit('createRoom',null,(dataChannel) => {
             this.dataChannel = dataChannel;

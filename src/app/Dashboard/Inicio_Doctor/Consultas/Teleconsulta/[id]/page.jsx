@@ -7,9 +7,10 @@ import IconLive from "@/components/icons/IconLive";
 import IconMicrophone from "@/components/icons/IconMicrophone";
 import { useAppSelector } from "@/redux/hooks";
 import { socket } from "@/utils/socketio";
+import rtcPer from "@/utils/RTCPeer";
+import Cookies from "js-cookie";
 
 export default function TeleconsultaId (id) {
-    
     const consultId = Number(id.params.id);
     const [roomData, setRoomData]=useState(null)
     const [stream, setStream] = useState(null)
@@ -18,19 +19,36 @@ export default function TeleconsultaId (id) {
 
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-           
-            setStream(stream)
-            myVideo.current.srcObject = stream
+    
+                setStream(stream)
+                myVideo.current.srcObject = stream
+                const myId = Cookies.get("c"); 
+                const conection = rtcPer.init();
+                rtcPer.defineUserObj(myId);    
+            stream.getTracks().forEach(track => {
+                conection.addTrack(track,stream);
+            });
+
         })
     }, []);
 
 
     useEffect(() => {
     
-    if(consultId) socket._socket.emit("joinRoom", consultId, (data) => {
+    if(consultId) socket._socket.emit("joinRoom", consultId, async (data) => {
         setRoomData(data);
+        await rtcPer.createOffer(consultId);
     });
 
+        socket._socket.on("onAsw",async (asw) =>{
+            console.log(asw)
+            await rtcPer.setRemoteDescription(asw);
+        })
+        socket._socket.on("newCandidate",async (candidate) =>{
+            console.log(candidate)
+            await rtcPer.setCandidateRemote(candidate);
+        })
+        
     }, [consultId]);
 
     return (
