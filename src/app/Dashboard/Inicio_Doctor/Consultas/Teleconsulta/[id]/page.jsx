@@ -17,26 +17,24 @@ export default function TeleconsultaId (id) {
     const myVideo=useRef()
     const targetVideo=useRef()
 
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-    
-                setStream(stream)
-                myVideo.current.srcObject = stream
-                const myId = Cookies.get("c"); 
-                const conection = rtcPer.init();
-                rtcPer.defineUserObj(myId);    
-            stream.getTracks().forEach(track => {
-                conection.addTrack(track,stream);
-            });
-
-        })
-    }, []);
 
 
     useEffect(() => {
     
     if(consultId) socket._socket.emit("joinRoom", consultId, async (data) => {
         setRoomData(data);
+        const conection = rtcPer.init();
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+    
+            setStream(stream)
+            myVideo.current.srcObject = stream
+            const myId = Cookies.get("c"); 
+            rtcPer.defineUserObj(myId);    
+        stream.getTracks().forEach(track => {
+            conection.addTrack(track,stream);
+        });
+
+    })
         await rtcPer.createOffer(consultId);
     });
 
@@ -48,7 +46,7 @@ export default function TeleconsultaId (id) {
             console.log(candidate)
             await rtcPer.setCandidateRemote(candidate);
         })
-        
+
     }, [consultId]);
 
     return (
