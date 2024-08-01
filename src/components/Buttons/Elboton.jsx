@@ -10,7 +10,8 @@ export default function Elboton({
   size,
   href,
   className,
-  disabled
+  disabled,
+  classNameText
 }) {
   return (
     <Button
@@ -24,7 +25,7 @@ export default function Elboton({
         " " +
         className
       }>
-      {icon} {nombre} {icon2}
+      {icon}<span className={`${classNameText}`}>{nombre} </span> {icon2}
     </Button>
   );
 }

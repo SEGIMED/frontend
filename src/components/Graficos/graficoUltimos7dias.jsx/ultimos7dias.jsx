@@ -56,7 +56,7 @@ export const BarChart = () => {
           labels: dayNames,
           datasets: [
             {
-              label: "Pacientes Activos",
+              label: "Pacientes Nuevos",
               data: lastSevenDays,
               backgroundColor: "#70C247",
             },

@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText, handleOptionChange}) {
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText, handleOptionChange }) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +27,6 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
 
   const handleSelectionChange = (key) => {
     const selectedIndex = options.findIndex(option => option === key);
-    console.log(selectedIndex);
     setSelectedOptionState(key);
 
     if (handleDisabled) { handleDisabled() }
@@ -38,7 +37,8 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
     } else {
       dispatch(setSelectedOption({ name, option: key }));
     }
-    handleOptionChange(name, key);
+    if (handleOptionChange) { handleOptionChange(name, key); }
+
   };
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
@@ -61,17 +61,17 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
               variant="bordered"
               className="capitalize"
               style={{
-                backgroundColor: colorBackground || "none", 
+                backgroundColor: colorBackground || "none",
                 color: colorText || "#487FFA",
                 borderColor: "#487FFA",
                 border: "2px solid",
-                
+
               }}
               onClick={handleButtonClick}
-              >
+            >
               {selectedOption || text2}
-              {icon && <div className={ isOpen===true ? "rotate-180" : ""}>
-              {icon}
+              {icon && <div className={isOpen === true ? "rotate-180" : ""}>
+                {icon}
               </div>}
             </Button>
           ) : (

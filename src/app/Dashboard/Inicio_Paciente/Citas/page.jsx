@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import Elboton from "@/components/Buttons/Elboton";
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
+import IconMas from "@/components/icons/iconMas";
+import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
 
 dayjs.locale("es");
 
@@ -21,14 +23,17 @@ export default function Citas({ title }) {
   const localizer = dayjsLocalizer(dayjs);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const userId= Cookies.get("c")
+  const userId = Cookies.get("c")
+  const doctoresLista = useAppSelector(state => state.doctores.doctores)
 
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState("month");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dateSelected, setDateSelected] = useState();
 
   const getSchedules = async (headers) => {
     try {
-      const response = await ApiSegimed.get( `/schedules?patientId=${userId}`, headers);
+      const response = await ApiSegimed.get(`/schedules?patientId=${userId}`, headers);
 
       if (response.data) {
         dispatch(addSchedules(response.data));
@@ -45,11 +50,23 @@ export default function Citas({ title }) {
     }
   }, []);
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+  const handleNewAppointment = () => {
+    const today = new Date();
+
+    setDateSelected(today);
+    setIsModalOpen(true);
+  };
+
   const shedules = useAppSelector((state) => state.schedules);
 
   function mapSchedules(appointments) {
     const myID = Number(Cookies.get("c"));
-   
+
     const citas = appointments
       .filter((appointment) => appointment.patient === myID && appointment.schedulingStatus === 1)
       .map((appointment, index) => ({
@@ -84,6 +101,15 @@ export default function Citas({ title }) {
         break;
     }
   };
+
+  const handleSelectSlot = ({ start, end }) => {
+    if (dayjs(start).isBefore(dayjs(), "minute")) {
+      return;
+    }
+    setDateSelected(start);
+    setIsModalOpen(true);
+  };
+
 
   const dayStyle = (date) => {
     const today = dayjs().startOf("day");
@@ -190,12 +216,26 @@ export default function Citas({ title }) {
           view={view}
           onView={handleView}
           onNavigate={handleNavigation}
+          onSelectSlot={handleSelectSlot}
           date={date}
+          selectable
           dayPropGetter={dayStyle}
           components={{
             toolbar: CustomToolbar,
           }}
           firstDay={1}
+        />
+        <div className="w-full flex justify-center px-6 py-3 ">
+          <button onClick={handleNewAppointment} className=" w-fit text-white px-4 py-2 gap-2 bg-greenPrimary items-center  rounded-3xl justify-center flex"> <IconMas />Nueva consulta</button>
+        </div>
+        <ModalConsultationCalendar
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          patient={userId}
+          dateSelect={dateSelected}
+          lista={doctoresLista}
+          title={"Medico "}
+          stateName={"physician"}
         />
       </div>
     </div>

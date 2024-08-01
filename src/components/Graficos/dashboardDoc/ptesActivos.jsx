@@ -11,7 +11,7 @@ export default function PtesActivos() {
       try {
         const token = Cookies.get("a");
         const response = await ApiSegimed.get("/statistics-patient-activity", { headers: { 'token': token } });
-        
+
         setDataActives(response.data);
 
       } catch (error) {
@@ -20,7 +20,7 @@ export default function PtesActivos() {
     };
 
     getActives();
-    
+
   }, []);
 
   const data = {
@@ -36,13 +36,13 @@ export default function PtesActivos() {
 
   return (
     <div className="w-full h-auto lg:w-[25vw] p-5 flex items-center justify-center">
-      <Doughnut 
-        data={data} 
+      <Doughnut
+        data={data}
         options={{
           plugins: {
             legend: {
               display: true,
-              position: 'bottom', 
+              position: 'bottom',
               labels: {
                 usePointStyle: true,
                 padding: 20,
