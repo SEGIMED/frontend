@@ -40,7 +40,7 @@ export default function TeleconsultaId (id) {
             <div className="w-full flex justify-between items-center border-b-2">
                 <div className="flex justify-start items-center">
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
-                        <IconLive/> Datos de consulta
+                        <IconLive/> Datos de consultasss
                     </button>
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconData/> Datos del paciente
