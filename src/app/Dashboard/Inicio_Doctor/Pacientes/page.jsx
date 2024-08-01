@@ -45,6 +45,7 @@ import Elboton from "@/components/Buttons/Elboton";
 import IconRegresar from "@/components/icons/iconRegresar";
 import IconSelect from "@/components/icons/IconSelect";
 import { useRouter } from "next/navigation";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -83,6 +84,13 @@ export default function HomeDoc() {
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
   const lastSegmentTextToShow = PathnameShow();
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(

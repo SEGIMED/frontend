@@ -26,6 +26,7 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconDelete from "@/components/icons/IconDelete";
 import Swal from "sweetalert2";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -43,6 +44,13 @@ export default function HomeDoc() {
 
   // Obtener pacientes del estado
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
@@ -74,9 +82,9 @@ export default function HomeDoc() {
       )
     : filteredPatients;*/ // dejo este codigo pero no lo uso - ordeno a los pacientes por fecha
 
-    const sortedPatients = filteredPatients.sort((a, b) => 
-      new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
-    );
+  const sortedPatients = filteredPatients.sort((a, b) =>
+    new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
+  );
   const handleSortClick = () => {
     setIsSorted(!isSorted);
   };
@@ -118,7 +126,7 @@ export default function HomeDoc() {
       confirmButtonText: "Si, eliminar!",
       cancelButtonText: "No, cancelar!",
       reverseButtons: true
-    }).then(async(result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         // falta agregar el numero 5 de eliminado en el catalogo
         const data = await ApiSegimed.patch(`/schedule/${patient.id}`, { schedulingStatus: 5 }, { headers: { token: token } });
@@ -213,7 +221,7 @@ export default function HomeDoc() {
                             },
                             isLessThan24HoursAgo(paciente.scheduledEndTimestamp) && {
                               label: "Eliminar consulta",
-                              icon: <IconDelete color="#B2B2B2"/>,
+                              icon: <IconDelete color="#B2B2B2" />,
                               onClick: () => handleDeleteClick(paciente),
                             },
                           ].filter(Boolean), // Elimina los valores nulos

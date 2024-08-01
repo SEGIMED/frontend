@@ -1,101 +1,78 @@
-'use client'
+"use client";
 
-import { usePathname, useRouter } from 'next/navigation';
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-
-import LogoSegimed from "../logo/LogoSegimed"
+import { useAppDispatch } from "@/redux/hooks";
+import { resetApp } from "@/redux/rootReducer";
+import { socket } from "@/utils/socketio";
+import NavItem from "./NavbarItems";
+import Elboton from "../Buttons/Elboton";
+import rutas from "@/utils/rutas";
+import LogoSegimed from "../logo/LogoSegimed";
 import IconOut from "../icons/iconOut";
 
-import IconPatientNav from "../icons/IconPatientNav"
-
-import IconCube from "../icons/IconCube"
-import IconDoctorNav from "../icons/IconDoctorNav"
-
-import SoporteTecnico from "../icons/IconSoporte";
-import Sugerencias from "../icons/IconSugerencias";
-import rutas from "@/utils/rutas";
-export const NavAdmin = () => {
-    
-    const pathname = usePathname()
-    const router = useRouter()
+export const NavModularizada = ({ toggleSidebar, isOpen, buttons }) => {
+    const pathname = usePathname();
+    const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const handleLogout = () => {
-        Cookies.remove('a')
-        Cookies.remove('b')
-        Cookies.remove('c')
+        Cookies.remove("a");
+        Cookies.remove("b");
+        Cookies.remove("c");
+        Cookies.remove("d");
 
-        router.push('/');
+        try {
+            socket.disconnect();
+        } catch (e) {
+            console.log(e);
+        }
+        dispatch(resetApp());
+
+        router.push("/");
+
+        setTimeout(() => {
+            window.location.reload(true);
+        }, 2000);
     };
 
     return (
-
-        <div className="h-screen w-fit px-6 py-5 border-r-2 border-[#cecece] flex flex-col justify-between" >
-            <div className="flex flex-col justify-center gap-5 ">            
-                <Link href="/" >
-                    <LogoSegimed/>
-                </Link>
-
-                <div className="justify-center">
-                    <ul className="flex flex-col gap-4" >
-                        <Link 
-                            href={rutas.Admin} 
-                            className={`flex items-center gap-4 ${pathname === rutas.Admin ? 'text-[#487FFA]' : ''}`}>
-                            <IconCube 
-                                className="w-5" 
-                                    iconColor={`${pathname === rutas.Admin ? '#487FFA' : '#B2B2B2'}`} />
-                            <li >Tablero</li>
-                        </Link>
-
-                        <Link 
-                            href={`${rutas.Admin}${rutas.Mi_Perfil}`} 
-                            className={`flex items-center gap-4 ${pathname === `${rutas.Doctor}${rutas.Mi_Perfil}` ? 'text-[#487FFA]' : ''}`}>
-                            <IconDoctorNav 
-                                className="w-6" 
-                                color={`${pathname === `${rutas.Admin}${rutas.Mi_Perfil}` ? '#487FFA' : '#B2B2B2'}`} />
-                            <li>Mi perfil</li>
-                        </Link>
-
-                
-                       
-
-                        <Link 
-                            href={`${rutas.Admin}${rutas.Pacientes}`} 
-                            className={`flex items-center gap-4 ${pathname === `${rutas.Admin}${rutas.Pacientes}` ? 'text-[#487FFA]' : ''}`}>
-                            <IconPatientNav 
-                                className="w-6" 
-                                color={`${pathname === `${rutas.Admin}${rutas.Pacientes}` ? '#487FFA' : '#B2B2B2'}`} />
-                            <li>Pacientes</li>
-                        </Link>
-
-                        <Link 
-                            href={`${rutas.Admin}${rutas.Doctores}`} 
-                            className={`flex items-center gap-4 ${pathname === `${rutas.Admin}${rutas.Doctores}` ? 'text-[#487FFA]' : ''}`}>
-                            <SoporteTecnico 
-                                className="w-6" 
-                                color={`${pathname === `${rutas.Admin}${rutas.Doctores}` ? '#487FFA' : '#B2B2B2'}`} />
-                            <li>Doctores</li>
-                        </Link>
-
-                        <Link 
-                            href={`${rutas.Admin}${rutas.Sugerencias}`} 
-                            className={`flex items-center gap-4 ${pathname === `${rutas.Admin}${rutas.Sugerencias}` ? 'text-[#487FFA]' : ''}`}>
-                            <Sugerencias 
-                                className="w-6" 
-                                color={`${pathname === `${rutas.Admin}${rutas.Sugerencias}` ? '#487FFA' : '#B2B2B2'}`} />
-                            <li>Sugerencias</li>
-                        </Link>
+        <div
+            className={`flex ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"} lg:flex`}
+        >
+            <div className="h-screen overflow-y-auto gap-2 w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white flex flex-col justify-between shadow-lg md:shadow-none">
+                <div className="flex flex-col justify-center gap-4 sm:gap-10">
+                    {/* <Link href={`${rutas.Doctor}`} className="block"> */}
+                    <LogoSegimed className="w-40 md:w-[80%]" />
+                    {/* </Link> */}
+                    <ul className="flex flex-col gap-3 md:gap-4">
+                        {buttons.map((button) => (
+                            <NavItem
+                                key={button.path}
+                                name={button.name}
+                                path={button.path}
+                                icon={button.icon}
+                                isActive={pathname === button.path}
+                                onClick={toggleSidebar}
+                                external={button.external} // Añade soporte para enlaces externos
+                            />
+                        ))}
+                        <Elboton
+                            icon={<IconOut />}
+                            className={"font-bold h-[52px] flex sm:hidden text-[15px]"}
+                            nombre={"Cerrar sesión"}
+                            onPress={handleLogout}
+                        />
                     </ul>
                 </div>
-                
+                <Elboton
+                    icon={<IconOut />}
+                    className={"font-bold min-h-[45px] h-[52px] hidden sm:flex text-[15px]"}
+                    nombre={"Cerrar sesión"}
+                    onPress={handleLogout}
+                />
             </div>
-            
-            <button 
-                className="w-full flex items-center justify-center gap-3 text-white bg-[#487FFA] p-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1" 
-                onClick={handleLogout}
-            >
-                <IconOut/>Cerrar sesión
-            </button>            
-        </div >
-    )
-}
+            <div className="flex-1 bg-black opacity-50" onClick={toggleSidebar}></div>
+        </div>
+    );
+};

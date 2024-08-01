@@ -24,6 +24,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import IconHooter from "@/components/icons/IconHooter";
 import IconRisk from "@/components/icons/iconRisk";
 import IconAlphabetic from "@/components/icons/IconAlphabetic";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function DoctoresPte() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -42,6 +43,14 @@ export default function DoctoresPte() {
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
   const lastSegmentTextToShow = PathnameShow();
+
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
@@ -139,7 +148,7 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-    socket.emit("createChat", { id }, (response) => {});
+    socket.emit("createChat", { id }, (response) => { });
   };
 
   return (

@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import IconDelete from "@/components/icons/IconDelete";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -36,6 +37,13 @@ export default function HomeDoc() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   const consultas = useAppSelector((state) => state.schedules);
   // Obtener consultas del estado
@@ -76,7 +84,7 @@ export default function HomeDoc() {
     : filteredPatients;
 */ // dejo este codigo pero no lo uso - ordeno a los pacientes por fecha
 
-  const sortedPatients = filteredPatients.sort((a, b) => 
+  const sortedPatients = filteredPatients.sort((a, b) =>
     new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
   );
   const handleSortClick = () => {
@@ -97,7 +105,7 @@ export default function HomeDoc() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
-  const handleCokiePatient = (schedule,id) => {
+  const handleCokiePatient = (schedule, id) => {
     Cookies.set('patientId', id, { expires: 7 }); // La cookie expirará en 7 días
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`);
   }
@@ -117,7 +125,7 @@ export default function HomeDoc() {
       confirmButtonText: "Si, eliminar!",
       cancelButtonText: "No, cancelar!",
       reverseButtons: true
-    }).then(async(result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         // falta agregar el numero 5 de eliminado en el catalogo
         const data = await ApiSegimed.patch(`/schedule/${patient.id}`, { schedulingStatus: 5 }, { headers: { token: token } });
@@ -213,7 +221,7 @@ export default function HomeDoc() {
                             },
                             {
                               label: "Eliminar consulta",
-                              icon: <IconDelete color="#B2B2B2"/>,
+                              icon: <IconDelete color="#B2B2B2" />,
                               onClick: () => handleDeleteClick(paciente),
                             },
                           ],

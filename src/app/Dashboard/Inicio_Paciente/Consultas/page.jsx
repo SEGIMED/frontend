@@ -13,6 +13,7 @@ import IconCorazonMini from "@/components/icons/iconCorazon";
 import ReviewModal from "@/components/modal/ReviewModal";
 import IconOptions from "@/components/icons/IconOptions";
 import NotFound from "@/components/notFound/notFound";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDocAll() {
   const dispatch = useAppDispatch();
@@ -29,11 +30,18 @@ export default function HomeDocAll() {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
+
   const scheduledConsultas = consultas?.filter(
     (consulta) => consulta.schedulingStatus !== 1
   );
   //ordenamiento por fecha desde el front por ahora 
-  const sortedConsultas =[...scheduledConsultas].sort((b,a) =>
+  const sortedConsultas = [...scheduledConsultas].sort((b, a) =>
     a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
   )
   const toggleFilterMenu = () => {

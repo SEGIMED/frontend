@@ -13,6 +13,7 @@ import { socket } from "@/utils/socketio";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
 import IconRegresar from "@/components/icons/iconRegresar";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function DoctoresPte() {
   const dispatch = useAppDispatch();
@@ -26,6 +27,14 @@ export default function DoctoresPte() {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
+
   const filteredDoctor = doctores?.filter(
     (doc) =>
       doc.name.toLowerCase().includes(searchTerm1.toLowerCase()) ||
@@ -37,7 +46,7 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-    socket.emit("createChat", { id }, (response) => {});
+    socket.emit("createChat", { id }, (response) => { });
   };
 
   return (
