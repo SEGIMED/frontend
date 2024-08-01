@@ -200,10 +200,15 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const getAllDoc = async (headers) => {
-    const response = await ApiSegimed.get("/all-physicians", headers);
+    try {
+      const response = await ApiSegimed.get("/all-physicians", headers);
     if (response.data) {
       dispatch(getAllDoctores(response.data));
     }
+    } catch (error) {
+      console.error(error)
+    }
+    
   };
 
   useEffect(() => {

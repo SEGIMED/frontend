@@ -25,18 +25,16 @@ export default function HomePte() {
     const consultas = useAppSelector(state => state.schedules);
     const myID = Number(Cookies.get("c")); 
   
-    // Obtener docs del estado
-    const listaDocs = useAppSelector(state => state.doctores.doctores);
-    const searchTerm1 = useAppSelector(state => state.doctores.searchTerm1);
-   
     
+   
+    console.log(consultas)
     useEffect(() => {
         dispatch(setSearchTerm1(''));
     }, [dispatch]);
 
     // Filtrar consultas con schedulingStatus = 1 y paciente = myID, y extraer los IDs de los docs
     const scheduledConsultas = consultas.filter(
-        consulta => consulta.schedulingStatus === 1 && consulta.patient === myID && consulta.typeOfMedicalConsultation === 2
+        consulta => consulta.typeOfMedicalConsultation === 2 
     );
 
     // Filtrar docs que tienen consulta programada y aplicar filtro de búsqueda
@@ -94,9 +92,9 @@ export default function HomePte() {
                 <p className="font-bold text-[#5F5F5F] hidden md:block">Motivo de consulta</p>
             </div>
              <div className="overflow-auto h-full">
-                {scheduledConsultas?.map(doc => (
-                    <DoctorCardConsulta key={doc.id} doctor={doc}  button={<Ver id={doc.id} 
-                    ruta={`${rutas.PacienteDash}${rutas.Preconsulta}/Teleconsulta/${doc.id}`}/>} />
+                {scheduledConsultas?.map(consulta => (
+                    <DoctorCardConsulta key={consulta.id} doctor={consulta}  button={<Ver id={consulta.id} 
+                    ruta={`${rutas.PacienteDash}${rutas.Preconsulta}${rutas.Teleconsulta}/${consulta.id}`}/>} />
                 ))}
             </div>
         </div>

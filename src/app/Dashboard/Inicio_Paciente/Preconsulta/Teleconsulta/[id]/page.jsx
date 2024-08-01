@@ -1,17 +1,39 @@
 "use client"
-
+import { useEffect, useRef, useState } from "react";
 import IconCamera from "@/components/icons/IconCamera";
 import IconData from "@/components/icons/IconData";
 import IconFinish from "@/components/icons/IconFinish";
 import IconLive from "@/components/icons/IconLive";
 import IconMicrophone from "@/components/icons/IconMicrophone";
 import { useAppSelector } from "@/redux/hooks";
+import { socket } from "@/utils/socketio";
+import Cookies from "js-cookie";
 
-export default function TeleconsultaId () {
+export default function TeleconsultaId (id) {
+    const consultId = Number(id.params.id);
+    const [roomData, setRoomData]=useState(null)
+    const [stream, setStream] = useState(null)
+    const myVideo=useRef()
+    const targetVideo=useRef()
+    const myId= Cookies.get("c")
+
+    useEffect(() => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+           
+            setStream(stream)
+            myVideo.current.srcObject = stream
+        })
+    }, []);
+
+
+    useEffect(() => {
     
-    const consultasTodas= useAppSelector(state=>state.schedules)
-    const doctoresLista= useAppSelector(state=>state.doctores.doctores)
-    const user= useAppSelector(state=>state.user)
+    if(consultId) socket._socket.emit("joinRoom", consultId, (data) => {
+        console.log(data)
+        setRoomData(data);
+    });
+
+    }, [consultId]);
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
@@ -20,9 +42,9 @@ export default function TeleconsultaId () {
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconLive/> Datos de consulta
                     </button>
-                    <botton className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
+                    <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconData/> Datos del paciente
-                    </botton>
+                    </button>
                 </div>
                 <button className="flex justify-center items-center gap-3 bg-[#E73F3F] text-white py-2 px-6 rounded-xl mr-6">
                     <IconFinish/> Finalizar
@@ -31,10 +53,15 @@ export default function TeleconsultaId () {
             <div className="flex justify-center py-2 border-b-2">
                 <p>Dr. Kevin Lado</p>
             </div>
-            <div className="h-full w-full flex justify-between items-center flex-col py-5">
-                <div className="h-full w-[40rem] flex justify-center items-center bg-white rounded-xl border">
-                    video
-                </div>
+            <div  className="h-full w-full flex justify-between items-center flex-col m-6">
+                <video
+                playsInline 
+                muted 
+                autoPlay 
+                ref={myVideo}  
+                className="h-full w-1/2 flex justify-center items-center bg-white rounded-xl border">
+                    
+                </video>
                 <div className="pt-3 flex justify-center items-center gap-5">
                     <button className="bg-[#0060FF] p-3 rounded-full">
                         <IconMicrophone/>

@@ -18,9 +18,9 @@ export default function TeleconsultaId (id) {
 
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-            console.log(stream)
+           
             setStream(stream)
-                myVideo.current.srcObject = stream
+            myVideo.current.srcObject = stream
         })
     }, []);
 
@@ -51,13 +51,13 @@ export default function TeleconsultaId (id) {
             <div className="flex justify-center py-2 border-b-2">
                 <p>Dr. Kevin Lado</p>
             </div>
-            <div  className="h-full w-full flex justify-between items-center flex-col py-5">
+            <div  className="h-full w-full flex justify-between items-center flex-col m-6">
                 <video
                 playsInline 
                 muted 
                 autoPlay 
                 ref={myVideo}  
-                className="h-full w-[40rem] flex justify-center items-center bg-white rounded-xl border">
+                className="h-full w-1/2 flex justify-center items-center bg-white rounded-xl border">
                     
                 </video>
                 <div className="pt-3 flex justify-center items-center gap-5">
