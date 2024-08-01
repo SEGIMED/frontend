@@ -39,6 +39,7 @@ class RTCPeer{
     }
 
     async createOffer(id){
+        console.log(this.peerConnection);
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
         socket.emit('sendOffer',{id,offer});
