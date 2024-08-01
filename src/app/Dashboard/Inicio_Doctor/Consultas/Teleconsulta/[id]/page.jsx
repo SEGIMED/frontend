@@ -40,6 +40,15 @@ export default function TeleconsultaId (id) {
         await rtcPer.createOffer(consultId);
     });
 
+        socket._socket.on("onAsw",async (asw) =>{
+            console.log(asw)
+            await rtcPer.setRemoteDescription(asw);
+        })
+        socket._socket.on("newCandidate",async (candidate) =>{
+            console.log(candidate)
+            await rtcPer.setCandidateRemote(candidate);
+        })
+        
     }, [consultId]);
 
     return (
