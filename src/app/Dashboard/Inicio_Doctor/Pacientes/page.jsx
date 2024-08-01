@@ -4,6 +4,7 @@ import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+
 import {
   setSearchTerm,
   toggleFavorite,
@@ -38,7 +39,12 @@ import IconTStar2 from "@/components/icons/IconStar2";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
-
+import { useSearchParams } from 'next/navigation'
+import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import Elboton from "@/components/Buttons/Elboton";
+import IconRegresar from "@/components/icons/iconRegresar";
+import IconSelect from "@/components/icons/IconSelect";
+import { useRouter } from "next/navigation";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -51,6 +57,20 @@ export default function HomeDoc() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [patients, setPatients] = useState([]);
   const [patientsFavorites, setPatientsFavorites] = useState([]);
+  const [ordenMedica, setOrdenMedica] = useState(false);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+
+
+  useEffect(() => {
+    if (!searchParams.get("ordenMedica")) {
+      return
+    }
+    setOrdenMedica(searchParams.get('ordenMedica'))
+  }, [searchParams]);
+
   const [pagination, setPagination] = useState({
     totalUsers: 0,
     totalPages: 0,
@@ -228,10 +248,11 @@ export default function HomeDoc() {
   };
 
   return (
+
     <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
       <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
-        <div className="flex gap-2 md:gap-4">
+        <div className="flex gap-2 md:gap-4 items-center">
           {/* Se comenta por falta de funcionalidad */}
           {/* <button
             className={
@@ -244,6 +265,19 @@ export default function HomeDoc() {
               Agregar Paciente
             </p>
           </button> */}
+          {ordenMedica ? <button
+            type="button"
+            className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+            onClick={() => {
+              router.push(`${rutas.Doctor}${rutas.Ordenes}`);
+            }}>
+            <IconRegresar />
+            <p className="text-start hidden md:block text-white font-bold text-base leading-5">
+              {" "}
+              Regresar
+            </p>
+          </button> : null}
+
           <button
             onClick={handleFavoriteClick}
             className={`${showFavorites
@@ -265,49 +299,51 @@ export default function HomeDoc() {
         </div>
 
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
-        <MenuDropDown
-          label="Filtrar"
-          iconr={<IconFilter />}
-          categories={[
-            {
-              title: "Nivel de riesgo",
-              icon: <IconHooter />,
-              items: [
-                {
-                  label: "Alto",
-                  onClick: () => setRiskFilter("Alto"),
-                  icon: <IconRisk color="#E73F3F" />,
-                },
-                {
-                  label: "Medio",
-                  onClick: () => setRiskFilter("Moderado"),
-                  icon: <IconRisk color="#F5E400" />,
-                },
-                {
-                  label: "Bajo",
-                  onClick: () => setRiskFilter("Bajo"),
-                  icon: <IconRisk color="#70C247" />,
-                },
-                {
-                  label: "Ninguno",
-                  onClick: () => setRiskFilter(""),
-                  icon: <IconRisk color="lightGray" />,
-                },
-              ],
-            },
-            // {
-            //   title: "Orden Alfabetico",
-            //   icon: <IconAlphabetic />,
-            //   items: [
-            //     {
-            //       label: "Ver todos",
-            //       onClick: () => setRiskFilter(""),
-            //     }
-            //   ]
-            // }
-          ]}
-        />
-        {/* <div></div> */}
+        <div className="flex items-center">
+          <MenuDropDown
+            label="Filtrar"
+            iconr={<IconFilter />}
+            categories={[
+              {
+                title: "Nivel de riesgo",
+                icon: <IconHooter />,
+                items: [
+                  {
+                    label: "Alto",
+                    onClick: () => setRiskFilter("Alto"),
+                    icon: <IconRisk color="#E73F3F" />,
+                  },
+                  {
+                    label: "Medio",
+                    onClick: () => setRiskFilter("Moderado"),
+                    icon: <IconRisk color="#F5E400" />,
+                  },
+                  {
+                    label: "Bajo",
+                    onClick: () => setRiskFilter("Bajo"),
+                    icon: <IconRisk color="#70C247" />,
+                  },
+                  {
+                    label: "Ninguno",
+                    onClick: () => setRiskFilter(""),
+                    icon: <IconRisk color="lightGray" />,
+                  },
+                ],
+              },
+              // {
+              //   title: "Orden Alfabetico",
+              //   icon: <IconAlphabetic />,
+              //   items: [
+              //     {
+              //       label: "Ver todos",
+              //       onClick: () => setRiskFilter(""),
+              //     }
+              //   ]
+              // }
+            ]}
+          />
+        </div>
+
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
@@ -325,7 +361,7 @@ export default function HomeDoc() {
             <div
               key={paciente.id}
               className="w-full flex justify-between items-center border-b border-b-[#cecece] px-3 md:px-6 py-2">
-              <div className="flex gap-2 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
+              <div className="flex gap-2 pr-4 md:gap-4 items-center justify-start md:w-[40%] xl:w-[70%]">
                 {paciente.patientPulmonaryHypertensionRisks?.risk ? (
                   <RealColorRisk
                     risk={paciente.patientPulmonaryHypertensionRisks.risk}
@@ -341,7 +377,7 @@ export default function HomeDoc() {
                     className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
                   />
                 </div>
-                <p className="text-base">
+                <p className="text-base w-fit">
                   {paciente.name} {paciente.lastname}
                 </p>
                 <div onClick={() => changeFavorite(paciente)}>
@@ -370,7 +406,16 @@ export default function HomeDoc() {
                 isOpen={openOptionsPatientId === paciente.id}
                 toggleOptions={() => toggleOptionMenu(paciente.id)}
               /> */}
-                <MenuDropDown
+                {ordenMedica ? <Elboton
+                  href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
+                  icon={<IconSelect color={"#487ffa"} />}
+                  nombre={"Seleccionar "}
+                  size={"md"}
+                  className={"bg-white border border-bluePrimary text-bluePrimary "}
+                  onPress={() => { dispatch(setSelectedOption({ name: "patient", option: paciente.id })); }}
+                  classNameText={"hidden md:block "}
+                // icon={<IconMas />}
+                /> : <MenuDropDown
                   label="Opciones"
                   icon={<IconOptions color="#FFFFFF" />}
                   categories={[
@@ -424,7 +469,7 @@ export default function HomeDoc() {
                       ],
                     },
                   ]}
-                />
+                />}
               </div>
             </div>
           ))
@@ -473,5 +518,6 @@ export default function HomeDoc() {
         patientId={selectedPatientId}
       />
     </div>
+
   );
 }

@@ -41,7 +41,8 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     // pathname === "/Dashboard/Inicio_Doctor/Mensajes" ||
     pathname === "/Dashboard/Inicio_Doctor/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Doctor/Historial" ||
-    pathname === "/Dashboard/Inicio_Doctor/Historial/HistorialR";
+    pathname === "/Dashboard/Inicio_Doctor/Historial/HistorialR" ||
+    pathname === "/Dashboard/Inicio_Doctor/Ordenes_Medicas/Pacientes"
   // reemplazar pathname por adjustedPathname
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
   const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
