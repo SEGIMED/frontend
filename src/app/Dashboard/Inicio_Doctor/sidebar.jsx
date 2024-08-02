@@ -21,12 +21,15 @@ import { resetApp } from "@/redux/rootReducer";
 import { socket } from "@/utils/socketio";
 import { addAlarms } from "@/redux/slices/alarms/alarms";
 import { addActivePtes } from "@/redux/slices/activePtes/activePtes";
-import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
-import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
+import { NotificacionElement } from "@/components/InicioPaciente/notificaciones/NotificacionElement";
+import { IconNotificaciones } from "@/components/InicioPaciente/notificaciones/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
+import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
+import { IconPoint } from "@/components/InicioPaciente/notificaciones/IconPoint";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
+  const [showNotifications, setShowNotifications] = useState(false);
   const pathname = usePathname();
   const notifications = useAppSelector((state) => state.notifications);
   const user = useAppSelector((state) => state.user);
@@ -203,7 +206,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       }
     }
   }, []);
-  const [showNotifications, setShowNotifications] = useState(false);
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
@@ -216,9 +218,6 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       ApiSegimed.patch("/notification-seen", null, {
         params: {
           notification_Id: id,
-        },
-        headers: {
-          token: token,
         },
       }).then((response) => {
         if (response.data) {
@@ -319,42 +318,22 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         <button
           onClick={handleNotificationClick}
           className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            showNotifications && "bg-[#E73F3F]"
+            (showNotifications || unreadNotifications.length > 0) &&
+            "bg-[#E73F3F]"
           }`}>
           <IconNotificaciones
             className="w-6 h-6"
-            color={showNotifications && "white"}
+            color={
+              (showNotifications || unreadNotifications.length > 0) && "white"
+            }
           />
         </button>
         {showNotifications && (
-          <div
-            onClick={handleNotificationClick}
-            className="fixed top-0 left-0 w-screen h-screen z-40">
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
-              <p className="text-2xl text-bluePrimary font-semibold py-2">
-                Notificaciones
-              </p>
-              <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-                {unreadNotifications && unreadNotifications.length > 0 ? (
-                  unreadNotifications.map((notificacion) => (
-                    <NotificacionElement
-                      key={notificacion._id}
-                      notificacion={notificacion}
-                      onClick={() =>
-                        handleNotificationElementClick(notificacion._id)
-                      }
-                    />
-                  ))
-                ) : (
-                  <p className="text-lg text-[#5F5F5F] text-center py-2">
-                    No hay notificaciones por leer
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+          <NotificacionesContainer
+            handleNotificationElementClick={handleNotificationElementClick}
+            handleNotificationClick={handleNotificationClick}
+            unreadNotifications={unreadNotifications}
+          />
         )}
       </div>
     </div>
