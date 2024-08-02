@@ -27,7 +27,7 @@ export default function MensajesDoc() {
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
   const router = useRouter();
-
+  console.log("esto es chat",getChats)
   useEffect(() => {
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");

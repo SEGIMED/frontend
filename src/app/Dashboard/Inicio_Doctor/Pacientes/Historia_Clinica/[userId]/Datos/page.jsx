@@ -22,6 +22,7 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import GeneratePDF from "@/components/pdf/pdfgenerator";
 import PdfPreview from "@/components/pdf/pdfPreview";
+import { consultas } from "@/utils/generatePDFDataUtil";
 
 export default function DetallePaciente() {
   const pathname = usePathname();
@@ -52,7 +53,7 @@ export default function DetallePaciente() {
     console.log(dataImportar)
     setIsModalOpen(false);
   };
-  console.log("esto es user", user, "esto es info patien", infoPatient)
+  
   return (
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? <SkeletonList count={13} /> : (
@@ -60,7 +61,7 @@ export default function DetallePaciente() {
           <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
             <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
             <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />} 
-            funcion={() => GeneratePDF(user, infoPatient)}/>
+            funcion={() => GeneratePDF(user, consultas)}/>
           </div>
           <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
