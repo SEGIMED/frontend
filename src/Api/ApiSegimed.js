@@ -6,7 +6,7 @@ const url = "https://develop.api.segimed.com/api";
 const local = "http://localhost:5000/api";
 
 export const ApiSegimed = axios.create({
-  baseURL: url,
+  baseURL: local,
 });
 //Se agrega el interceptor para agregar el refresh token al header
 ApiSegimed.interceptors.request.use(

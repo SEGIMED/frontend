@@ -167,7 +167,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect, lis
                                 <label className="flex items-center gap-3 text-sm font-semibold">
                                     <IconTypeQueries /> Tipo de consultas
                                 </label>
-                                <div className="flex gap-3 justify-around items-center">
+                                <div className="flex gap-3  justify-start items-start">
                                     <label className="flex items-center gap-3">
                                         <input
                                             id="consultaFisica"
@@ -177,7 +177,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect, lis
                                         />
                                         Consulta Física
                                     </label>
-                                    <label className="flex items-center gap-3">
+                                    {/* <label className="flex items-center gap-3">
                                         <input
                                             id="teleconsulta"
                                             type="radio"
@@ -185,7 +185,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, physician, dateSelect, lis
                                             {...register("typeOfMedicalConsultation", { required: "* Debes seleccionar una opción *" })}
                                         />
                                         Teleconsulta
-                                    </label>
+                                    </label> */}
                                 </div>
                                 {errors.typeOfMedicalConsultation && <span className="text-red-500 text-sm">{errors.typeOfMedicalConsultation.message}</span>}
                             </div>

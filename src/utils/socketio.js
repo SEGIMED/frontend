@@ -31,7 +31,8 @@ class Socket {
     this._token = token;
     this._refreshToken = refreshToken;
     this._dispatch = dispatch;
-    this._socket = io(`https://develop.api.segimed.com/room-consult`, {
+    // this._socket = io(`https://develop.api.segimed.com/room-consult`, {
+    this._socket = io(`http://localhost:5000/room-consult`, {  
       query: {
         token: token,
         refreshToken: refreshToken,
