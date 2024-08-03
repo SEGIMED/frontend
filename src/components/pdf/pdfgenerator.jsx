@@ -3,12 +3,15 @@ import 'jspdf-autotable';
 import CalcularEdad from '@/utils/calcularEdad';
 import avatar from '@/utils/defaultAvatar';
 
+
+
+
 // Función para redondear la imagen en un canvas
 async function getCircularImageDataURL(imageUrl, size) {
     const img = new Image();
-    img.crossOrigin = 'Anonymous'; // Para manejar imágenes de otros dominios
+    img.crossOrigin = 'Anonymous';
     img.src = imageUrl || avatar;
-
+   
     return new Promise((resolve) => {
         img.onload = () => {
             const canvas = document.createElement('canvas');
@@ -31,6 +34,8 @@ async function getCircularImageDataURL(imageUrl, size) {
         };
     });
 }
+
+
 
 
 
@@ -64,8 +69,9 @@ export default async function GeneratePDF(user, consultas) {
     const avatarUrl = user.avatar;
     const imageSize = 400; // Ajustar según sea necesario
     const circularAvatarDataURL = await getCircularImageDataURL(avatarUrl, imageSize);
-
-
+    
+   
+    
     // Título centrado
     doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
@@ -82,7 +88,7 @@ export default async function GeneratePDF(user, consultas) {
 
     y += 20;
 
-    // Insertar avatar del usuario a la izquierda
+    // Insertar avatar del usuario a la izquierda, ajustar ancho y alto
     if (circularAvatarDataURL) {
         const x = 20;
         const height = 40;
@@ -123,7 +129,7 @@ export default async function GeneratePDF(user, consultas) {
     doc.text(antecedentesTitle, xTitle, y);
 
     y += 10;
-    const datos="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat tincidunt ex sed dictum. Ut et nulla vehicula, scelerisque dolor ac, aliquet urna. Suspendisse potenti. Morbi ut metus et ipsum cursus fringilla eget quis ex. Maecenas id feugiat turpis. Suspendisse aliquam mauris ut mi vulputate ultricies.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat tincidunt ex sed dictum. Ut et nulla vehicula, scelerisque dolor ac, aliquet urna. Suspendisse potenti. Morbi ut metus et ipsum cursus fringilla eget quis ex. Maecenas id feugiat turpis. Suspendisse aliquam mauris ut mi vulputate ultricies.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat tincidunt ex sed dictum. Ut et nulla vehicula, scelerisque dolor ac, aliquet urna. Suspendisse potenti. Morbi ut metus et ipsum cursus fringilla eget quis ex. Maecenas id feugiat turpis. Suspendisse aliquam mauris ut mi vulputate ultricies.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat tincidunt ex sed dictum. Ut et nulla vehicula, scelerisque dolor ac, aliquet urna. Suspendisse potenti. Morbi ut metus et ipsum cursus fringilla eget quis ex. Maecenas id feugiat turpis. Suspendisse aliquam mauris ut mi vulputate ultricies."
+    
 
     const antecedentes = [
         { title: 'Riesgo cardiovascular:', data: user.patientPulmonaryHypertensionRisks?.risk || '-' },
@@ -134,7 +140,7 @@ export default async function GeneratePDF(user, consultas) {
         { title: 'Antecedentes familiares:', data: user.backgrounds?.familyBackground || '-' },
         { title: 'Antecedentes de infancia:', data: user.backgrounds?.pediatricBackground || '-' },
         { title: 'Medicación actual:', data: user.backgrounds?.pharmacologicalBackground || '-' },
-        { title: 'Alergias:', data: datos || '-' },
+        { title: 'Alergias:', data: user.backgrounds?.allergicBackground || '-' },
         { title: 'Vacunas:', data: user.backgrounds?.vaccinationBackground || '-' }
     ];
 
