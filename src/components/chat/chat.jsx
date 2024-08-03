@@ -17,30 +17,31 @@ export default function Chat({ chat }) {
   const mensajesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const [markedChats, setMarkedChats] = useState({});
-  const user = useAppSelector((state) => state.user);
   
   useEffect(() => {
     if (chat) {
         // Solo actualiza infoChat si ha cambiado realmente
+        const myId = Number(Cookies.get("c"));
         if (infoChat !== chat) {
             setInfoChat(chat);
           }
           const unseenMessages= chat.messages.filter(message => !message.state && !message._id.startsWith("Message-"))
           if(unseenMessages.length ){
-            if(unseenMessages[unseenMessages.length - 1].target.userId === userId  ) setMarkedChats(unseenMessages)
-            }
+            if(unseenMessages[unseenMessages.length - 1].target.userId === myId  ) 
+            setMarkedChats(unseenMessages)
+          } else { setMarkedChats([])}
 
         // Actualiza los mensajes
         setMessages(chat.messages);
 
         
     }
-  }, [chat, infoChat]);
+  }, [chat]);
 
   useEffect(() => {
     if(markedChats.length){
     socket._socket.emit("markedMessages", {unseenMessages: markedChats, chat} , (data)=>{
-      dispatch(addChat(data))
+      dispatch(addChat({chat:data}))
     })
   }
   }, [markedChats]);
