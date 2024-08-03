@@ -35,7 +35,6 @@ export default function HomeDoc() {
   const [isSorted, setIsSorted] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const consultas = useAppSelector((state) => state.schedules);
   // Obtener consultas del estado
@@ -48,13 +47,6 @@ export default function HomeDoc() {
   useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
-
-  useEffect(() => {
-    // Actualizar isLoading según la llegada de consultas
-    if (consultas.length > 0) {
-      setIsLoading(false);
-    }
-  }, [consultas]);
 
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
@@ -76,8 +68,9 @@ export default function HomeDoc() {
     : filteredPatients;
 */ // dejo este codigo pero no lo uso - ordeno a los pacientes por fecha
 
-  const sortedPatients = filteredPatients.sort((a, b) => 
-    new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
+  const sortedPatients = filteredPatients.sort(
+    (a, b) =>
+      new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
   );
   const handleSortClick = () => {
     setIsSorted(!isSorted);
@@ -97,46 +90,62 @@ export default function HomeDoc() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
-  const handleCokiePatient = (schedule,id) => {
-    Cookies.set('patientId', id, { expires: 7 }); // La cookie expirará en 7 días
-    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`);
-  }
+  const handleCokiePatient = (schedule, id) => {
+    Cookies.set("patientId", id, { expires: 7 }); // La cookie expirará en 7 días
+    router.push(
+      `${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`
+    );
+  };
   const handleDeleteClick = (patient) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+        cancelButton: "btn btn-danger",
       },
-      buttonsStyling: true
+      buttonsStyling: true,
     });
-    swalWithBootstrapButtons.fire({
-      title: "Eliminar consulta con el paciente: " + patient.patientUser.name + " " + patient.patientUser.lastname,
-      text: "Una vez emilinada no podras recuperar esta informacion!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Si, eliminar!",
-      cancelButtonText: "No, cancelar!",
-      reverseButtons: true
-    }).then(async(result) => {
-      if (result.isConfirmed) {
-        // falta agregar el numero 5 de eliminado en el catalogo
-        const data = await ApiSegimed.patch(`/schedule/${patient.id}`, { schedulingStatus: 5 }, { headers: { token: token } });
-        console.log(data);
-        swalWithBootstrapButtons.fire({
-          title: "Eliminado!",
-          text: "La consulta con el paciente: " + patient.patientUser.name + " " + patient.patientUser.lastname + " ha sido eliminada.",
-          icon: "success"
-        });
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          icon: "error"
-        });
-      }
-    });
+    swalWithBootstrapButtons
+      .fire({
+        title:
+          "Eliminar consulta con el paciente: " +
+          patient.patientUser.name +
+          " " +
+          patient.patientUser.lastname,
+        text: "Una vez eliminada no podrás recuperar esta informacion!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Si, eliminar!",
+        cancelButtonText: "No, cancelar!",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          // falta agregar el numero 5 de eliminado en el catalogo
+          const data = await ApiSegimed.patch(
+            `/schedule/${patient.id}`,
+            { schedulingStatus: 5 },
+            { headers: { token: token } }
+          );
+          swalWithBootstrapButtons.fire({
+            title: "Eliminado!",
+            text:
+              "La consulta con el paciente: " +
+              patient.patientUser.name +
+              " " +
+              patient.patientUser.lastname +
+              " ha sido eliminada.",
+            icon: "success",
+          });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelado",
+            icon: "error",
+          });
+        }
+      });
   };
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
@@ -178,7 +187,7 @@ export default function HomeDoc() {
               </p>
             </div>
           </div>
-          {isLoading ? (
+          {consultas?.length == 0 ? (
             <SkeletonList count={9} />
           ) : filteredPatients.length === 0 ? (
             <NotFound
@@ -209,11 +218,15 @@ export default function HomeDoc() {
                             {
                               label: "Ver consultas",
                               icon: <IconPersonalData />,
-                              onClick: () => handleCokiePatient(paciente.id, paciente.patient),
+                              onClick: () =>
+                                handleCokiePatient(
+                                  paciente.id,
+                                  paciente.patient
+                                ),
                             },
                             {
                               label: "Eliminar consulta",
-                              icon: <IconDelete color="#B2B2B2"/>,
+                              icon: <IconDelete color="#B2B2B2" />,
                               onClick: () => handleDeleteClick(paciente),
                             },
                           ],
