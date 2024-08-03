@@ -138,7 +138,7 @@ export default function PreconsultaPte({ params }) {
         setIsLoading(true);
         //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
         const res = await ApiSegimed.get(
-          `/get-preconsultation?scheduleId=${scheduleId}`,
+          `/get-preconsultation?scheduleId=${scheduleId}&status=2`,
           {
             headers: {
               token: token,
@@ -329,8 +329,8 @@ export default function PreconsultaPte({ params }) {
         ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options)
         : null,
       vitalSignsToCreate: vitalSignFormat,
-      // painRecordsToCreate
-      painRecordsToCreate: [bodyPainFormat],
+      // painRecordsToUpdate
+      painRecordsToUpdate: [bodyPainFormat],
     };
     try {
       if (!bodyForm) {
@@ -363,7 +363,7 @@ export default function PreconsultaPte({ params }) {
           toCreate: bodyForm,
           preconsultationAlreadyExists: !!preconsultationAlreadyExists,
         });
-        const response = await ApiSegimed.post(`/pre-consultation`, bodyForm, {
+        const response = await ApiSegimed.patch(`/update-pre-consultation`, bodyForm, {
           headers: {
             token: token,
             "Content-Type": "application/json",
@@ -377,11 +377,9 @@ export default function PreconsultaPte({ params }) {
             confirmButtonColor: "#487FFA",
             confirmButtonText: "Aceptar",
           });
-          localStorage.removeItem(`preconsultationDraft${scheduleId}`); // ya no necesitamos recupera el borrador de la preconsulta
           console.log({ resupuestaCreate: response.data });
         }
         setIsLoading(false);
-        setPreconsultationAlreadyExists(true);
         return;
       } else {
         Swal.fire({
