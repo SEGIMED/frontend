@@ -46,6 +46,6 @@ jobs:
           script: |
             docker-compose -f /home/segimed/app/docker-compose.yml down
             docker pull segimed/frontend:latest
-            docker-compose -f /home/segimed/app/docker-compose.yml up -d --build
+            docker-compose -f /home/segimed/app/docker-compose.yml up -d
             # Cleanup: Remove old Docker images
             docker image prune -f
