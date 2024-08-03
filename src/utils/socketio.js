@@ -2,6 +2,7 @@ import io from "socket.io-client";
 import { setChats, updateChat, addChat } from "@/redux/slices/chat/chat";
 import { dataClear } from "@/redux/slices/chat/chat";
 import Cookies from "js-cookie";
+import { baseURL } from "@/Api/ApiSegimed";
 
 class Socket {
   constructor() {
@@ -31,8 +32,7 @@ class Socket {
     this._token = token;
     this._refreshToken = refreshToken;
     this._dispatch = dispatch;
-    // this._socket = io(`https://develop.api.segimed.com/room-consult`, {
-    this._socket = io(`http://localhost:5000/room-consult`, {  
+    this._socket = io(`${baseURL}/room-consult`, {
       query: {
         token: token,
         refreshToken: refreshToken,

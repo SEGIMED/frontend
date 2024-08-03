@@ -1,7 +1,6 @@
 "use client";
 
 import IconVerify from "@/components/icons/IconVerify";
-import IconSend from "@/components/icons/IconSend";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
