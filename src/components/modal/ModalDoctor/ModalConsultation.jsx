@@ -96,6 +96,28 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      const selectedTime = new Date(
+        combineDateTime(data.date, data.scheduledStartTimestamp)
+      );
+
+      // Definir los límites de tiempo
+      const startLimit = new Date(data.date);
+      startLimit.setHours(8, 0, 0);
+
+      const endLimit = new Date(data.date);
+      endLimit.setHours(20, 0, 0);
+
+      // Comprobar si la hora seleccionada está dentro de los límites
+      if (selectedTime < startLimit || selectedTime >= endLimit) {
+        Swal.fire({
+          title: "Hora no válida",
+          text: "Por favor, selecciona una hora entre las 8:00 y las 20:00",
+          icon: "error",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
+        });
+        return;
+      }
       setDisabled(true);
       const { date, time, ...rest } = data;
 
@@ -234,8 +256,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                errors.healthCenter ? "border-red-500" : ""
+              }`}
               {...register("healthCenter", {
                 required: {
                   value: true,
@@ -298,6 +321,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 <input
                   id="time"
                   type="time"
+                  min="08:00"
+                  max="20:00"
                   placeholder=""
                   className="w-60 py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
                   {...register("time", {

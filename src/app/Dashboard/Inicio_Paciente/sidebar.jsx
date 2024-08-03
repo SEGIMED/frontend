@@ -21,15 +21,18 @@ import { resetApp } from "@/redux/rootReducer";
 import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
 
 import rutas from "@/utils/rutas";
-import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
-import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
+import { NotificacionElement } from "@/components/InicioPaciente/notificaciones/NotificacionElement";
+import { IconNotificaciones } from "@/components/InicioPaciente/notificaciones/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
 
 
 import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
+import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
+import { IconPoint } from "@/components/InicioPaciente/notificaciones/IconPoint";
 
 export const SidePte = ({ search, toggleSidebar }) => {
+  const [showNotifications, setShowNotifications] = useState(false);
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const notifications = useAppSelector((state) => state.notifications);
@@ -222,11 +225,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
       Cookies.remove("a");
       Cookies.remove("b");
       Cookies.remove("c");
-
       dispatch(resetApp());
-
       router.push("/");
-
       setTimeout(() => {
         // Realizar la recarga de la página para limpiar todos los datos
         window.location.reload(true);
@@ -259,7 +259,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
       }
   }, [user]);
 
-  const [showNotifications, setShowNotifications] = useState(false);
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
@@ -301,6 +300,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       console.error(error);
     }
   };
+
   return (
     <div className=" flex  items-center justify-between h-[12%] bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="lg:hidden p-4">
@@ -369,42 +369,22 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+            "bg-[#E73F3F]"
             }`}>
           <IconNotificaciones
             className="w-6 h-6"
-            color={showNotifications && "white"}
+            color={
+              (showNotifications || unreadNotifications.length > 0) && "white"
+            }
           />
         </button>
         {showNotifications && (
-          <div
-            onClick={handleNotificationClick}
-            className="fixed top-0 left-0 w-screen h-screen z-40">
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
-              <p className="text-2xl text-bluePrimary font-semibold py-2">
-                Notificaciones
-              </p>
-              <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-                {unreadNotifications && unreadNotifications.length > 0 ? (
-                  unreadNotifications.map((notificacion) => (
-                    <NotificacionElement
-                      key={notificacion._id}
-                      notificacion={notificacion}
-                      onClick={() =>
-                        handleNotificationElementClick(notificacion._id)
-                      }
-                    />
-                  ))
-                ) : (
-                  <p className="text-lg text-[#5F5F5F] text-center py-2">
-                    No hay notificaciones por leer
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+          <NotificacionesContainer
+            handleNotificationElementClick={handleNotificationElementClick}
+            handleNotificationClick={handleNotificationClick}
+            unreadNotifications={unreadNotifications}
+          />
         )}
       </div>
 

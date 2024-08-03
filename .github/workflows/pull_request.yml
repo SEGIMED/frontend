@@ -32,7 +32,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t segimed/frontend:${{ github.sha }} .
+        run: docker build --build-arg NEXT_PUBLIC_API_URL=${{ secrets.API_URL_DEVELOP }} -t segimed/frontend:${{ github.sha }} .
 
       - name: Push Docker image to Docker Hub
         run: docker push segimed/frontend:${{ github.sha }}
