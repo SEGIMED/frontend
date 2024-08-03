@@ -37,7 +37,7 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-    socket.emit("createChat", { id }, (response) => {});
+    socket.emit("createChat", { id });
   };
 
   return (
@@ -62,7 +62,7 @@ export default function DoctoresPte() {
                 nombre={"Enviar Mensaje"}
                 icon={<IconMensajeBoton />}
                 size={"md"}
-                onPress={crearChat(doctor.id)}
+                onPress={()=>crearChat(doctor.id)}
               />
             }
           />

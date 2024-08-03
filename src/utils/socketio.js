@@ -51,7 +51,7 @@ class Socket {
     this._socket.on("updateMessage", async (data) => {
       //event listener client recived info of a chat.
       dispatch(updateChat(data));
-
+      console.log("que mierda es esto",data.chat)
       this._socket.emit("persistChat", { chat:data.chat, lastMessage: data.lastMessage }, (newChat) => {
         dispatch(addChat(newChat));
       });

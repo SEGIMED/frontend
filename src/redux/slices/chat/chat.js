@@ -34,25 +34,6 @@ const chatSlice = createSlice({
                 return { ...state, [key]: chat };
             }
         },
-        // markMessagesAsSeen: (state, action) => {
-        //     const { chatId,markedChats } = action.payload;
-      
-        //     // Si ya se ha marcado como visto, no hacer nada
-        //     if (markedChats) {
-        //       return;
-        //     }
-      
-        //     const chat = state[chatId];
-        //     if (chat) {
-        //       chat.seenMessages = [
-        //         ...chat.seenMessages,
-        //         ...chat.unseenMessages.map(msg => ({ ...msg, state: true }))
-        //       ];
-        //       chat.unseenMessages = [];
-      
-             
-        //     }
-        //   },
         dataClear: (state) => {
             return {};
         },
