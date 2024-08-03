@@ -3,6 +3,8 @@
 import { NavDoctor } from "@/components/NavDoc/navdoc";
 import { SideDoctor } from "./sidebar";
 import { useState } from "react";
+import { Suspense } from "react";
+import { SegiBot } from "@/components/InicioPaciente/chatSegi/SegiBot";
 
 export default function RootLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +19,11 @@ export default function RootLayout({ children }) {
       <div className="flex flex-col w-full h-full">
         <SideDoctor search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
-        <div className="h-[88%] w-full">{children}</div>
+        <Suspense>
+          <div className="h-[88%] w-full">{children}</div>
+        </Suspense>
       </div>
+      <SegiBot />
     </div>
   );
 }

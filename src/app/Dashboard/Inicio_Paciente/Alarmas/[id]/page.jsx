@@ -70,12 +70,14 @@ const AlarmSelector = () => {
       // Realizar la solicitud POST al servidor
       const response = await ApiSegimed.post("/alarm", body, headers);
 
-   
+
       if (response.status === 200 || 201) {
         Swal.fire({
           icon: "success",
           title: "Alarma creada con éxito",
           text: "Un profesional se pondrá en contacto a la brevedad",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
         });
         router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
       } else {
@@ -87,6 +89,8 @@ const AlarmSelector = () => {
         icon: "error",
         title: "Error",
         text: error.message || "Ha ocurrido un error al crear la alarma",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
       });
     }
   };

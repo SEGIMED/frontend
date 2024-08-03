@@ -9,33 +9,46 @@ import {
 } from "@nextui-org/react";
 import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
-import { useFormContext } from "react-hook-form";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
 import IconPreConsulta from "../icons/iconPreconsulta";
-import { style } from "d3-selection";
+
+// Mapeo de riesgo a clase funcional
+const riskToFunctionalClass = {
+  'bajo': 'Clase funcional I',
+  'moderado': 'Clase funcional II',
+  'alto': 'Clase funcional III',
+  'muy alto': 'Clase funcional IV'
+};
+
+function getFunctionalClass(riskLevel) {
+  return riskToFunctionalClass[riskLevel.toLowerCase()] || 'Clase funcional desconocida';
+}
 
 export default function DropClaseFuncional({ text, options, text2, name, selectedOptions, type, handleDisabled }) {
-  const opcionRecibida = selectedOptions ? selectedOptions : "";
-  const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+  const [selectedOption, setSelectedOptionState] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (selectedOptions) {
-      setSelectedOptionState(selectedOptions);
-      if (handleDisabled)
+      const functionalClass = getFunctionalClass(selectedOptions);
+      setSelectedOptionState(functionalClass);
+      if (handleDisabled) {
         handleDisabled();
+      }
     }
   }, [selectedOptions]);
 
+  const dispatch = useAppDispatch();
+
   const handleSelectionChange = (key) => {
-    const selectedIndex = options.findIndex(option => option === key);
-    console.log(selectedIndex);
     setSelectedOptionState(key);
 
-    if (handleDisabled) { handleDisabled() }
-    // setValue(name, selectedOption);
+    if (handleDisabled) {
+      handleDisabled();
+    }
+    
+    const selectedIndex = options.findIndex(option => option === key);
     if (type) {
       dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
       dispatch(setSelectedOption({ name: `${name}2`, option: key }));
@@ -43,68 +56,68 @@ export default function DropClaseFuncional({ text, options, text2, name, selecte
       dispatch(setSelectedOption({ name, option: key }));
     }
   };
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <div className="w-full">
-      <div className='flex items-center justify-center'>
+      <div className="flex items-center justify-center">
         <div className="mb-2 font-bold ">{text}</div>
       </div>
-      <Dropdown className=" emptyContent">
+      <Dropdown className="emptyContent">
         <DropdownTrigger
           style={{
             color: "#5F5F5F",
             width: "100px",
           }}
           onClick={toggleDropdown}
+        >
+          <Button
+            variant="bordered"
+            className="capitalize max-sm:w-48"
+            style={{
+              color: "#5F5F5F",
+              borderColor: "#DCDBDB",
+              border: "2px solid",
+              backgroundColor: "white",
+            }}
           >
-
-            <Button
-              variant="bordered"
-              className="capitalize max-sm:w-48"
-              style={{
-                color: "#5F5F5F",
-                borderColor: "#DCDBDB",
-                border: "2px solid",
-                backgroundColor: "white",
-              }}>
-              {selectedOption || text2}
-              {isOpen ?  <IconArrowDetailUp/>: <IconArrowDetailDown/> }
-            </Button>
+            {selectedOption || text2}
+            {isOpen ? <IconArrowDetailUp /> : <IconArrowDetailDown />}
+          </Button>
         </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Options menu"
-            variant="flat"
-            disallowEmptySelection
-            selectionMode="single"
-            selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
-            classNames="w-full"
-            onSelectionChange={(keys) =>
-              handleSelectionChange(Array.from(keys)[0])
-            
-            }>
-            {options?.map((option, index) => (
-              <DropdownItem key={option} aria-label={option} >
-                <div className="flex w-full gap-2">
-              <IconPreConsulta
-                    color={
-                      option === "Clase funcional I"
-                        ? "#70c247"
-                        : option === "Clase funcional II"
-                        ? "#f5e400"
-                        : option === "Clase funcional III"
-                        ? "#e73f3f"
-                        : option === "Clase funcional IV"
-                        ? "#9e193b"
-                        : null
-                    }
-                  />  
+        <DropdownMenu
+          aria-label="Options menu"
+          variant="flat"
+          disallowEmptySelection
+          selectionMode="single"
+          selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
+          className="w-full"
+          onSelectionChange={(keys) => handleSelectionChange(Array.from(keys)[0])}
+        >
+          {options?.map((option) => (
+            <DropdownItem key={option} aria-label={option}>
+              <div className="flex w-full gap-2">
+                <IconPreConsulta
+                  color={
+                    option === "Clase funcional I"
+                      ? "#70c247"
+                      : option === "Clase funcional II"
+                      ? "#f5e400"
+                      : option === "Clase funcional III"
+                      ? "#e73f3f"
+                      : option === "Clase funcional IV"
+                      ? "#9e193b"
+                      : null
+                  }
+                />
                 {option}
-                </div>
-              </DropdownItem>
-            ))}
-          </DropdownMenu>
+              </div>
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
       </Dropdown>
     </div>
   );

@@ -1,10 +1,9 @@
 "use client";
 import Image from "next/image";
-import Segi from "@/components/InicioPaciente/segi.png";
+import Segi from "@/components/InicioPaciente/chatSegi/segi.png";
 import { useRef, useState } from "react";
 import { ChatSegi } from "./ChatSegi";
 import Draggable from "react-draggable";
-import SoporteTecnico from "../icons/IconSoporte";
 
 export const SegiBot = () => {
   const [showChat, setShowChat] = useState(false);
@@ -31,6 +30,9 @@ export const SegiBot = () => {
     }
   };
   const handleStop = (e, data) => {
+    if (position.x - data.x < 2 || position.y - data.y < 2) {
+      toggleChat();
+    }
     setPosition({ x: data.x, y: data.y });
   };
 
@@ -48,11 +50,12 @@ export const SegiBot = () => {
           <div
             onClick={toggleChat}
             //Quitar margin y padding cuando se use el segi
-            className="fixed z-30 h-[5rem] flex items-center justify-center w-[5rem] md:h-auto md:w-[7%] md:p-2 bottom-[4%] right-[2%] rounded-full bg-[#487FFA] cursor-pointer">
+            className="fixed z-30 h-[5rem] flex items-center justify-center w-[5rem] md:h-auto md:w-[7%] p-2 bottom-[4%] right-[2%] rounded-full bg-[#487FFA] cursor-pointer">
             {/* <Image src={Segi} alt="SegiBot" /> */}
-            <SoporteTecnico
-              className="md:w-20 md:h-20 w-16 h-16 "
-              color="white"
+            <Image
+              src={Segi}
+              alt="SegiBot"
+              onDragStart={(e) => e.preventDefault()}
             />
           </div>
         </Draggable>

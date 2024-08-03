@@ -20,6 +20,8 @@ export default function HomeDoc() {
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
+  console.log(infoPatient);
+
   return (
     <div className="h-full w-full flex flex-col">
       <div className="w-full flex justify-center px-5 items-center border-b bg-white border-b-[#cecece] pb-2 pt-2">

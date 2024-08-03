@@ -1,7 +1,8 @@
 import io from "socket.io-client";
 import { setChats, updateChat, addChat } from "@/redux/slices/chat/chat";
 import { dataClear } from "@/redux/slices/chat/chat";
-import { local, url } from "@/Api/ApiSegimed2";
+import Cookies from "js-cookie";
+import { baseURL } from "@/Api/ApiSegimed";
 
 class Socket {
   constructor() {
@@ -27,12 +28,16 @@ class Socket {
     this._observer[eventType](eventData);
   }
 
-  setSocket(token, dispatch) {
+  setSocket(token, refreshToken, dispatch) {
     this._token = token;
+    this._refreshToken = refreshToken;
     this._dispatch = dispatch;
-    this._socket = io(
-      `https://develop.api.segimed.com/room-consult?token=${token}`
-    );
+    this._socket = io(`${baseURL}/room-consult`, {
+      query: {
+        token: token,
+        refreshToken: refreshToken,
+      },
+    });
     this._socket.on("connect", () => {});
 
     // Escuchar el evento 'disconnect' para saber cuando el socket se desconecta
@@ -50,6 +55,12 @@ class Socket {
       this._socket.emit("persistChat", data.chat, (newChat) => {
         dispatch(addChat(newChat));
       });
+    });
+
+    this._socket.on("newAccessToken", ({ newAccessToken }) => {
+      Cookies.set("a", newAccessToken);
+      // También puedes actualizar el token en el cliente
+      this._token = newAccessToken;
     });
 
     this._socket.on("updateNewChat", (data) => {
@@ -78,6 +89,7 @@ class Socket {
     }
   }
   disconnect() {
+    this._socket.emit("destroyChatBot");
     this._dispatch(dataClear());
   }
 }

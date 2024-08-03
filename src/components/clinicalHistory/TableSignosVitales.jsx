@@ -41,7 +41,7 @@ export default function SignosVitales({ pacientes, subtitle }) {
                     })}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {paciente.HTP || "Sin asignar"}
+                    {paciente?.physician?.name} {paciente?.physician?.lastname}
                   </div>
                   <div className="text-[#5F5F5F]">
                     {paciente?.attendancePlace?.alias}
@@ -59,43 +59,27 @@ export default function SignosVitales({ pacientes, subtitle }) {
               </div>
             </summary>
             <div className="bg-[#FBFBFB]">
-              {paciente.anthropometricDetails
-                ? paciente.anthropometricDetails.map((detail, detailIndex) => (
-                  <div key={detailIndex}>
-                    <DataPatient
-                      title={detail.measureType}
-                      info={`${detail.measure} ${detail.measureUnit}`}
-                    />
-                  </div>
-                ))
-                : anthropometricDetails.map((detail, detailIndex) => (
-                  <div key={detailIndex}>
-                    <DataPatient
-                      title={detail.measureType}
-                      info={`${detail.measure} ${detail.measureUnit}`}
-                    />
-                  </div>
-                ))}
+              {paciente.anthropometricDetails?.map((detail, detailIndex) => (
+                <div key={detailIndex}>
+                  <DataPatient
+                    title={detail.measureType}
+                    info={`${detail.measure} ${detail.measureUnit}`}
+                  />
+                </div>
+              ))
+              }
 
-              {paciente.vitalSigns
-                ? paciente.vitalSigns.map((vital, vitalIndex) => (
-                  <div key={vitalIndex}>
-                    <DataPatient
-                      title={vital.measureType}
-                      info={`${vital.measure} ${vital.measureUnit}`}
-                    />
-                  </div>
-                ))
-                : vitalSigns.map((vital, vitalIndex) => (
-                  <div key={vitalIndex}>
-                    <DataPatient
-                      title={vital.measureType}
-                      info={`${vital.measure} ${vital.measureUnit}`}
-                    />
-                  </div>
-                ))}
+              {paciente.vitalSigns?.map((vital, vitalIndex) => (
+                <div key={vitalIndex}>
+                  <DataPatient
+                    title={vital.measureType}
+                    info={`${vital.measure} ${vital.measureUnit}`}
+                  />
+                </div>
+              ))
+              }
 
-              <div className="flex justify-start items-center gap-2 px-3 border-b border-b-[#cecece] md:pr-10">
+              <div className="flex justify-start items-center px-2  md:px-6 md:pr-10">
                 <label className="flex w-[60%] md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">
                   <Image
                     src={circleData}
@@ -114,7 +98,7 @@ export default function SignosVitales({ pacientes, subtitle }) {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-start items-center md:gap-2 px-3 border-b border-b-[#cecece] md:pr-10">
+              <div className="flex justify-start items-center md:gap-2 py-2 px-2  md:px-6 border-b border-b-[#cecece] md:pr-10">
                 <label className="flex w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">
                   <Image
                     src={circleData}
@@ -124,18 +108,18 @@ export default function SignosVitales({ pacientes, subtitle }) {
                   Escriba los últimos 4 valores mas anormales que tuvo.
                 </label>
                 <div className="md:flex grid grid-cols-2 justify-start w-1/2 md:gap-4 gap-1">
-                  <button className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-[15%]">
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
                     150 mg/dl
-                  </button>
-                  <button className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-[15%]">
+                  </p>
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
                     75 mg/dl
-                  </button>
-                  <button className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-[15%]">
+                  </p>
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
                     77 mg/dl
-                  </button>
-                  <button className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-[15%]">
+                  </p>
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
                     143 mg/dl
-                  </button>
+                  </p>
                 </div>
               </div>
             </div>

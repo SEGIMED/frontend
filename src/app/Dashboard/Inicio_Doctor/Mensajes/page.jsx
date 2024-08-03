@@ -1,26 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Link from "next/link";
-import { socket } from "@/utils/socketio";
-import rutas from "@/utils/rutas";
-import { PathnameShow } from "@/components/pathname/path";
-import ruteActual from "@/components/images/ruteActual.png";
-
-import mensaje from "@/components/images/mensaje.png";
-import LastLogin from "@/utils/lastLogin";
-
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { PathnameShow } from "@/components/pathname/path";
 import Elboton from "@/components/Buttons/Elboton";
-import IconMas from "@/components/icons/iconMas";
-import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import IconMensajeBoton from "@/components/icons/IconMensajeBoton";
-
-import IconOrder from "@/components/icons/IconOrder";
+import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
+import ruteActual from "@/components/images/ruteActual.png";
+import mensaje from "@/components/images/mensaje.png";
 import avatar from "@/utils/defaultAvatar";
-import IconSendMensaje from "@/components/icons/iconSendMensaje";
+import rutas from "@/utils/rutas";
+import { socket } from "@/utils/socketio";
+import IconMas from "@/components/icons/iconMas";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -31,30 +26,19 @@ export default function MensajesDoc() {
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
+  const router = useRouter();
 
   useEffect(() => {
-    // if (!socket.isConnected()) {
-    //   socket.setSocket(token, dispatch);
-    //   socket.emit("onJoin", { id: idUser });
-    // }
-
-    //   const listChats = Object.values(getChats);
-    //   if (listChats) setChats(listChats)
-    //   if (counter === 0) setCounter(1) && window.location.reload()
-    //   if (getChats.length !== 0) setIsLoading(false);
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");
-      const navigationType =
-        navigationEntries.length > 0 ? navigationEntries[0].type : null;
+      const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
 
       if (navigationType === "reload") {
-        // Page was reloaded
         const listChats = Object.values(getChats);
         if (listChats) setChats(listChats);
 
         if (getChats.length !== 0) setIsLoading(false);
       } else {
-        // First load, trigger a reload
         window.location.reload();
         setReload(true);
       }
@@ -69,6 +53,10 @@ export default function MensajesDoc() {
     }
   };
 
+  const handleViewMessages = (chat) => {
+    router.push(`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`);
+  };
+
   const counterM = (message) => {
     if (!message.length) return false;
     const userId = Cookies.get("c");
@@ -77,52 +65,52 @@ export default function MensajesDoc() {
     return false;
   };
 
-  const chatElements = useMemo(
-    () =>
-      chats.map((chat) => (
-        <div
-          key={chat._id}
-          className="flex h-fit w-full border-b border-b-[#cecece] md:px-6 p-2 items-center">
-          <title>{lastSegmentTextToShow}</title>
-          <div className="flex gap-4 w-[65%] md:w-[80%]">
-            <div className="w-12 h-12 flex justify-center items-center">
-              {handleImg(
-                chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
-              )}
-            </div>
-            <div className="flex flex-col h-fit md:flex-row md:items-center ">
-              <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 line-clamp-2">
-                {chat?.target?.fullName}
-              </p>
-              <Image src={ruteActual} alt="" className="hidden md:block" />
-              {chat.unseenMessages.length && (
-                <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
-                  {LastLogin(
-                    chat.unseenMessages[chat.unseenMessages.length - 1].date
-                  )}
-                </p>
-              )}
-            </div>
+  const chatElements = useMemo(() => {
+    const sortedChats = chats.sort((a, b) => {
+      const dateA = a.unseenMessages.length > 0 ? new Date(a.unseenMessages[a.unseenMessages.length - 1].date) : new Date(0);
+      const dateB = b.unseenMessages.length > 0 ? new Date(b.unseenMessages[b.unseenMessages.length - 1].date) : new Date(0);
+      return dateB - dateA;
+    });
+
+    return sortedChats.map((chat) => (
+      <div
+        key={chat._id}
+        className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
+        <title>{lastSegmentTextToShow}</title>
+        <div className="flex gap-4 items-center">
+          <div className="w-8 h-8 flex justify-center items-center">
+            {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
           </div>
-          <div className="flex gap-0 md:gap-3 items-center w-[35%] md:w-[25%]">
-            <div className="flex md:px4 p-2 gap-1 items-center w-14 md:w-fit">
-              {counterM(chat.unseenMessages) ? chat.unseenMessages.length : 0}
-              <Image src={mensaje} alt="" />
-            </div>
-            <Link
-              href={`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`}>
-              <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
-                <IconMensajeBoton className="w-6 h-6" />
-                <p className="hidden md:block text-white font-bold">
-                  Ver mensajes
-                </p>
-              </button>
-            </Link>
+          <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
+            <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
+              {chat?.target?.fullName}
+            </p>
+            <Image src={ruteActual} alt="" className="hidden md:block mr-20 " />
+            {chat.unseenMessages.length > 0 ? (
+              <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
+                {Fecha(chat.unseenMessages[chat.unseenMessages.length - 1].date, 4)}
+                <span className="mx-1">-</span>
+                {Hora(chat.unseenMessages[chat.unseenMessages.length - 1].date)}
+              </span>
+            ) : null}
           </div>
         </div>
-      )),
-    [chats]
-  );
+        <div className="flex gap-0 md:gap-3 items-center">
+          <div className="flex md:px-6 p-2 gap-1 items-center w-14 md:w-1/3">
+            {counterM(chat.unseenMessages) ? chat.unseenMessages.length : 0}
+            <Image src={mensaje} alt="" />
+          </div>
+          <Elboton
+            onPress={() => handleViewMessages(chat)}
+            nombre={"Mensajes"}
+            size={"sm"}
+            icon={<IconMensajeBoton />}
+            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${chat.unseenMessages.length > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
+          />
+        </div>
+      </div>
+    ));
+  }, [chats]);
 
   if (isLoading) {
     return <MensajeSkeleton />;
@@ -138,7 +126,6 @@ export default function MensajesDoc() {
           icon={<IconMas />}
         />
         <div></div>
-        {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder />} /> */}
       </div>
       <div className="gap-2 items-start justify-center w-full md:overflow-y-auto">
         {chatElements}

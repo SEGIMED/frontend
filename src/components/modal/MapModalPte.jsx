@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import MapPte from "../../../component/MapPte/index";
 
 export default function MapModalPte({ onClose, patient }) {
-  console.log(patient);
   const geolocationNumbers = patient?.geolocation?.map(parseFloat);
 
   useEffect(() => {

@@ -57,3 +57,4 @@ export const mapPainAreas = ({ data, formStateGlobal }) => {
 };
 
 
+

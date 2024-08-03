@@ -48,7 +48,9 @@ export default function TableAlarm({ pacientes }) {
         await Swal.fire({
           title: "Alarma resuelta",
           icon: "success",
-          confirmButtonText: "Ok",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
+
         });
         router.push(`${rutas.Doctor}${rutas.Mensajes}/${id}`)
       }
@@ -56,7 +58,7 @@ export default function TableAlarm({ pacientes }) {
       console.error("Error al intentar actualizar la alarma:", error);
     }
   };
-  console.log(pacientes)
+  // console.log(pacientes)
   return (
     <div className="flex flex-col">
       <div className="">

@@ -1,11 +1,10 @@
+// DetallePaciente.jsx
 "use client";
 
 import Link from "next/link";
-
 import { useEffect, useState } from "react";
 import IconFatArrow from "@/components/icons/iconFatarrowDash";
 import Cookies from "js-cookie";
-
 import AntecedenteDash from "@/components/dashPte/antecedentesDash";
 import BotonDashPte from "@/components/Buttons/ElBotonDashPte";
 import AvatarDashPte from "@/components/avatar/avatarDashPte";
@@ -16,24 +15,49 @@ import LastLogin from "@/utils/lastLogin";
 import { useAppSelector } from "@/redux/hooks";
 import Skeleton from "react-loading-skeleton";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
+import IconExportar from "@/components/icons/IconExportar";
+import IconImportar from "@/components/icons/IconImportar";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 
 export default function DetallePaciente() {
   const pathname = usePathname();
+
   const pathArray = pathname.split("/");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dataImportar, setDataImportar] = useState({});
+
   const user = useAppSelector((state) => state.clinicalHistory.user);
-  console.log(user);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalData = (data) => {
+    setDataImportar(data);
+  };
 
 
-
+  const submitModalData = () => {
+    console.log(dataImportar)
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? <SkeletonList count={13} /> : (
         <>
-
+          <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
+            <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
+            <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />} />
+          </div>
           <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
               <div>
@@ -185,6 +209,24 @@ export default function DetallePaciente() {
               }
             />
           </div>  </>)}
+
+      <ModalModularizado
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        Modals={[
+          <ImportarHC
+            key={"importar hc"}
+            onData={handleModalData}
+          />,
+        ]}
+        title={"Importar Historia Clínica"}
+        button1={"hidden"}
+        button2={"bg-greenPrimary block"}
+        progessBar={"hidden"}
+        size={"h-[35rem] md:h-[33rem] md:w-[35rem]"}
+        buttonText={{ end: `Importar` }}
+        funcion={submitModalData}
+      />
     </div>
   );
 }

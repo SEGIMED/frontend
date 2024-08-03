@@ -40,18 +40,18 @@ export default function TableConsultas({ consultas }) {
           </div>
           <div className="text-center w-[75%] md:w-[90%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
             <div className="text-[#5F5F5F]">
-              {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleDateString("es-ES", {
+              {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
               })}
             </div>
             <div className="text-[#5F5F5F] hidden md:block">
-              {new Date(paciente.appSch?.scheduledStartTimestamp).toLocaleTimeString()}
+              {new Date(paciente.timestamp).toLocaleTimeString()}
             </div>
-            <p className="text-[#FF8300] ">{paciente?.appSch?.patientUser?.userHpGroups[0]?.catHpGroup?.name}</p>
+            <p className="text-[#FF8300] ">{paciente?.patientHpGroups[0]?.group}</p>
             <div className="text-[#5F5F5F]">
-              {paciente?.appSch?.attendancePlace?.alias}
+              {paciente?.attendancePlace?.alias}
             </div>
             <div className="text-[#5F5F5F] hidden md:block line-clamp-2">
               {paciente?.chiefComplaint}

@@ -16,6 +16,7 @@ import { PathnameShow } from "@/components/pathname/path";
 import Elboton from "@/components/Buttons/Elboton";
 import IconNext from "@/components/icons/IconNext";
 import IconPrev from "@/components/icons/IconPrev";
+import IconMas from "@/components/icons/iconMas";
 
 dayjs.locale("es");
 
@@ -69,9 +70,44 @@ export default function Citas({ title }) {
     setDateSelected(start);
     setIsModalOpen(true);
   };
+
+
+  const eventStyleGetter = (event, start, end, isSelected) => {
+    let backgroundColor = "#eaf4ff"; // Fondo claro
+    let borderColor = "#487ffa"; // Borde izquierdo azul
+
+    if (isSelected) {
+      backgroundColor = "#dce9ff"; // Fondo claro cuando está seleccionado
+      borderColor = "#77A6F7"; // Borde izquierdo azul claro cuando está seleccionado
+    }
+
+    return {
+      style: {
+        backgroundColor: backgroundColor,
+        borderLeft: `5px solid ${borderColor}`, // Borde izquierdo de 5px
+        borderRadius: '5px',
+        opacity: 1,
+        color: 'black',
+        border: '0px',
+        display: 'block',
+        padding: '5px' // Espaciado interno
+      }
+    };
+  };
+
+
+  const handleNewAppointment = () => {
+    const today = new Date();
+
+
+    setDateSelected(today);
+    setIsModalOpen(true);
+  };
+
   const userId = Cookies.get("c");
 
   const shedules = useAppSelector((state) => state.schedules);
+  const listaPacientes = useAppSelector(state => state.allPatients.patients);
 
   function mapSchedules(appointments) {
     const myID = Number(Cookies.get("c"));
@@ -117,7 +153,14 @@ export default function Citas({ title }) {
     if (currentDay.isSame(today)) {
       return {
         style: {
-          backgroundColor: "#A0C4FF",
+          backgroundColor: `5px solid white`,
+          borderLeft: `5px solid #487ffa`, // Borde izquierdo de 5px
+          borderRadius: '5px',
+          opacity: 1,
+          color: 'black',
+          border: '0px',
+          display: 'block',
+          padding: '5px' // Espaciado interno
         },
       };
     }
@@ -206,7 +249,7 @@ export default function Citas({ title }) {
             />
           </div>
         </div>
-        <div className="flex justify-center text-lg font-semibold">
+        <div className={`flex justify-center text-lg font-semibold`}>
           {view === "day" ? formatLabel(label) : capitalizeFirstLetter(label)}
         </div>
       </div>
@@ -227,6 +270,7 @@ export default function Citas({ title }) {
           onView={handleViewChange}
           onNavigate={handleNavigation}
           date={date}
+          // eventPropGetter={eventStyleGetter} // Aquí se añaden los estilos
           onSelectSlot={handleSelectSlot}
           selectable
           className="h-full w-full"
@@ -237,11 +281,18 @@ export default function Citas({ title }) {
           firstDay={1}
         />
       </div>
+      {!title ? <div className="w-full flex justify-center px-6 py-3 ">
+        <button onClick={handleNewAppointment} className=" w-fit text-white px-4 py-2 gap-2 bg-greenPrimary items-center  rounded-3xl justify-center flex"> <IconMas />Nueva consulta</button>
+      </div> : null}
+
       <ModalConsultationCalendar
         isOpen={isModalOpen}
         onClose={closeModal}
         physician={userId}
         dateSelect={dateSelected}
+        lista={listaPacientes}
+        title={"Paciente"}
+        stateName={"patient"}
       />
     </div>
   );

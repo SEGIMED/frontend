@@ -20,7 +20,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
 
     useEffect(() => {
         // Solo establece orderedLinks la primera vez que Links cambie
-        if (!Link === "" && orderedLinks.length === 0) {// Captura el primer estado de Links
+        if (Link && Link.length > 0 && orderedLinks.length === 0) {// Captura el primer estado de Links
             setOrderedLinks(Link);
         }
     }, [Link]);
@@ -30,7 +30,6 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
                 const selectedFile = e.target.files[0].name;
                 setFile(selectedFile);
                 const file = e.target.files[0];
-                console.log(file);
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     onUploadFile(test, event.target.result);
@@ -109,7 +108,7 @@ const FileUpload = ({ label, test, data, onTestSelectedOption, onTestActive, onU
             {orderedLinks && orderedLinks.length > 0 && (
                 <a href={orderedLinks} className='mt-4'>
                     <div className='flex items-center justify-between gap-3 pt-4 text-base border-b-transparent border-b-2 hover:border-[#5F5F5F] w-min'>
-                        {orderedLinks}
+                       <p className='text-[#5F5F5F] font-bold text-nowrap'>Ver archivo cargado</p> 
                     </div>
                 </a>
             )}

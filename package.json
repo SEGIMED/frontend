@@ -24,7 +24,6 @@
     "leaflet-control-geocoder": "^2.4.0",
     "mapkick": "^0.2.6",
     "next": "^14.2.3",
-    "node": "^18.20.3",
     "plotly.js-dist": "^2.33.0",
     "postcss": "8.4.38",
     "prop-types": "^15.8.1",
@@ -37,10 +36,14 @@
     "react-hook-form": "^7.51.4",
     "react-leaflet": "^4.2.1",
     "react-loading-skeleton": "^3.4.0",
+    "react-markdown": "^9.0.1",
     "react-redux": "^9.1.2",
     "sass": "^1.77.2",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.10.8",
     "tailwindcss": "3.4.3"
+  },
+  "devDependencies": {
+    "tailwind-scrollbar": "^3.1.0"
   }
 }

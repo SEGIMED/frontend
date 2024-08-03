@@ -51,12 +51,7 @@ export default function HomeDoc() {
         ) : (
           <TableDiagnostico
             pacientes={infoPatient}
-            subtitle={[
-              "Conducta terapeutica",
-              "Tratamiento no farmacológico",
-              "Pauta de alarma",
-            ]}
-            subtitle2={["Diagnostico", "Medicamento", "Procedimiento"]}
+
           />
         )}
       </div>

@@ -16,7 +16,7 @@ import AvatarSideBar from "@/components/avatar/avatarSideBar";
 import paciente from "@/utils/paciente";
 import LogoSegimed from "@/components/logo/LogoSegimed";
 import { IconChat } from "@/components/InicioPaciente/IconChat";
-import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
+import { IconNotificaciones } from "@/components/InicioPaciente/notificaciones/IconNotificaciones";
 import IconRegresar from "@/components/icons/iconRegresar";
 import rutas from "@/utils/rutas";
 import {
@@ -33,8 +33,9 @@ import { useRouter } from "next/navigation";
 
 import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 
-import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
+import { NotificacionElement } from "@/components/InicioPaciente/notificaciones/NotificacionElement";
 import { addNotifications } from "@/redux/slices/user/notifications";
+import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
 
 export const SidePte = ({ search }) => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -51,7 +52,7 @@ export const SidePte = ({ search }) => {
     .substring(pathname.lastIndexOf("/") + 1)
     .replace(/_/g, " ");
 
-  console.log(lastSegment);
+  // console.log(lastSegment);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -80,6 +81,7 @@ export const SidePte = ({ search }) => {
   const dispatch = useAppDispatch();
   const id = Cookies.get("c");
   const token = Cookies.get("a");
+  const refreshToken = Cookies.get("d");
 
   const [latitud, setLatitud] = useState(null);
   const [longitud, setLongitud] = useState(null);
@@ -255,41 +257,52 @@ export const SidePte = ({ search }) => {
         console.error
       );
       if (!socket.isConnected()) {
-        socket.setSocket(token, dispatch);
+        socket.setSocket(token, refreshToken, dispatch);
       }
     }
   }, []);
 
+  const unreadNotifications = notifications?.filter(
+    (notificacion) => !notificacion.state
+  );
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
   };
-  const Notificaciones = [
-    {
-      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 14:30 hs",
-      id: 1,
-      leida: false,
-    },
-    {
-      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 18:30 hs",
-      id: 2,
-    },
-    {
-      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
-      id: 3,
-    },
-    {
-      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
-      id: 3,
-    },
-    {
-      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
-      id: 4,
-    },
-    {
-      text: "Su turno con el Dr. Tomas Vanegas fue postergado para el dia 19/7/2024 a las 20:30 hs",
-      id: 5,
-    },
-  ];
+
+  const handleNotificationElementClick = (id) => {
+    try {
+      ApiSegimed.patch("/notification-seen", null, {
+        params: {
+          notification_Id: id,
+        },
+        headers: {
+          token: token,
+        },
+      }).then((response) => {
+        if (response.data) {
+          dispatch(
+            addNotifications(
+              notifications.map((notificacion) =>
+                notificacion._id === id
+                  ? { ...notificacion, state: true }
+                  : notificacion
+              )
+            )
+          );
+          Swal.fire({
+            icon: "success",
+            title: "Notificación leída",
+            showConfirmButton: false,
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+            timer: 1500,
+          });
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className=" flex  items-center justify-between h-[12%] w-full  border-b-[1px] border-b-[#cecece] p-4 md:px-8">
@@ -390,35 +403,22 @@ export const SidePte = ({ search }) => {
           <button
             onClick={handleNotificationClick}
             className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-              showNotifications && "bg-[#E73F3F]"
+              (showNotifications || unreadNotifications.length > 0) &&
+              "bg-[#E73F3F]"
             }`}>
             <IconNotificaciones
               className="w-6 h-6"
-              color={showNotifications && "white"}
+              color={
+                (showNotifications || unreadNotifications.length > 0) && "white"
+              }
             />
           </button>
           {showNotifications && (
-            <div
-              onClick={handleNotificationClick}
-              className="fixed top-0 left-0 w-screen h-screen z-40">
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
-                <p className="text-2xl text-bluePrimary font-semibold py-2">
-                  Notificaciones
-                </p>
-                <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-                  {notifications
-                    .filter((notificacion) => !notificacion.state)
-                    .map((notificacion) => (
-                      <NotificacionElement
-                        key={notificacion.id}
-                        notificacion={notificacion}
-                      />
-                    ))}
-                </div>
-              </div>
-            </div>
+            <NotificacionesContainer
+              handleNotificationElementClick={handleNotificationElementClick}
+              handleNotificationClick={handleNotificationClick}
+              unreadNotifications={unreadNotifications}
+            />
           )}
         </div>
       </div>

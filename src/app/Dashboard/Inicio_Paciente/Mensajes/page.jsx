@@ -21,6 +21,7 @@ import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
 import avatar from "@/utils/defaultAvatar";
 import AsociarMedico from "@/components/asociarMedico/AsociarMedico";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -75,6 +76,8 @@ export default function MensajesDoc() {
     return false;
   };
 
+  
+
   const chatElements = useMemo(
     () =>
       chats.map((chat) => (
@@ -89,16 +92,16 @@ export default function MensajesDoc() {
             </div>
             <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
               <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
-                {chat?.target?.fullName} - {chat?.target?.role}
+                Dr. {chat?.target?.fullName} 
               </p>
-              <Image src={ruteActual} alt="" className="hidden md:block" />
-              {chat.unseenMessages.length && (
-                <p className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
-                  {LastLogin(
-                    chat.unseenMessages[chat.unseenMessages.length - 1].date
-                  )}
-                </p>
-              )}
+              <Image src={ruteActual} alt="" className="hidden md:block mr-20" />
+              {chat.unseenMessages.length > 0 ? (
+              <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6 ">
+              {Fecha(chat.unseenMessages[chat.unseenMessages.length - 1].date, 4)}
+              <span className="mx-1">-</span>
+              {Hora(chat.unseenMessages[chat.unseenMessages.length - 1].date)}
+              </span>
+              ) : null}
             </div>
           </div>
           <div className="flex gap-0 md:gap-3 items-center">
@@ -112,6 +115,7 @@ export default function MensajesDoc() {
               nombre={"Mensajes"}
               size={"sm"}
               icon={<IconMensajeBoton />}
+              className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${chat.unseenMessages.length > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
             />
           </div>
         </div>
