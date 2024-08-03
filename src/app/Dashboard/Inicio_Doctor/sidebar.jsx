@@ -25,6 +25,10 @@ import { NotificacionElement } from "@/components/InicioPaciente/NotificacionEle
 import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
+import rutas from "@/utils/rutas";
+
+
+import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 
 export const SideDoctor = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -34,6 +38,14 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const id = Cookies.get("c");
   const token = Cookies.get("a");
   const refreshToken = Cookies.get("d");
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
 
   // reemplazar pathname por adjustedPathname
   const showSearch =
@@ -203,6 +215,15 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (user.name)
+      if (!user.medicalRegistries?.Nacional?.registryId) {
+        router.push(rutas.Doctor)
+        setIsModalOpen(true);
+      }
+  }, [user]);
+
   const [showNotifications, setShowNotifications] = useState(false);
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
@@ -318,9 +339,8 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            showNotifications && "bg-[#E73F3F]"
-          }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={showNotifications && "white"}
@@ -357,6 +377,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           </div>
         )}
       </div>
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Doctor"} />
     </div>
   );
 };

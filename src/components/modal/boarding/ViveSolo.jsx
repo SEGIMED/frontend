@@ -8,10 +8,10 @@ export default function ViveSolo({ handleDisabled, state }) {
             </p>
             <div>
                 <ButtonNext
-                    selectedOptions={state.ViveSolo}
+                    selectedOptions={state.liveAlone}
                     handleDisabled={handleDisabled}
                     options={["Si", "No"]}
-                    name={"ViveSolo"}
+                    name={"liveAlone"}
                 />
             </div>
         </div>

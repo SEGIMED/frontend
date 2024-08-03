@@ -1,26 +1,6 @@
 import { Doughnut } from "react-chartjs-2";
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
-import { ApiSegimed } from "@/Api/ApiSegimed";
 
-export default function Alarmas() {
-  const [dataAlarms, setDataAlarms] = useState({ actives: 0, inactives: 0 });
-
-  useEffect(() => {
-    const getActives = async () => {
-      try {
-        const token = Cookies.get("a");
-        const response = await ApiSegimed.get("/alarms-by-patient", { headers: { 'token': token } });
-        const data = {actives: response.data?.priorityCounts?.Activas, inactives: response.data?.priorityCounts?.Inactivas};
-        setDataAlarms(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    getActives();
-  }, []);
-
+const Alarmas = ({ dataAlarms }) => {
   const data = {
     labels: ['Respondidas', 'Sin Responder'],
     datasets: [{
@@ -34,13 +14,13 @@ export default function Alarmas() {
 
   return (
     <div className="w-full h-auto lg:w-[25vw] p-5 flex items-center justify-center">
-      <Doughnut 
-        data={data} 
+      <Doughnut
+        data={data}
         options={{
           plugins: {
             legend: {
               display: true,
-              position: 'bottom', 
+              position: 'bottom',
               labels: {
                 usePointStyle: true,
                 padding: 20,
@@ -61,4 +41,4 @@ export default function Alarmas() {
   );
 };
 
-
+export default Alarmas;
