@@ -38,6 +38,7 @@ export default async function GeneratePDF(user, consultas) {
     const doc = new jsPDF();
     let y = 30; // Posición inicial
 
+    //para los saltos de pagina
     function addPageIfNeeded(extraSpace = 20) {
         const pageHeight = doc.internal.pageSize.height;
         const bottomMargin = 10; // Margen inferior
@@ -46,11 +47,8 @@ export default async function GeneratePDF(user, consultas) {
             y = 20; // Reiniciar la posición vertical después de agregar una página
         }
     }
-
-    const avatarUrl = user.avatar;
-    const imageSize = 400; // Ajustar según sea necesario
-    const circularAvatarDataURL = await getCircularImageDataURL(avatarUrl, imageSize);
-    function splitTextIntoParagraphs(text, maxChars = 620) {
+    // si el texto de la data es muy largo lo divide en cuantos caracteres se necesite 
+    function splitTextIntoParagraphs(text, maxChars) {
         const paragraphs = [];
         let startIndex = 0;
     
@@ -62,9 +60,11 @@ export default async function GeneratePDF(user, consultas) {
     
         return paragraphs;
     }
-    
 
-  
+    const avatarUrl = user.avatar;
+    const imageSize = 400; // Ajustar según sea necesario
+    const circularAvatarDataURL = await getCircularImageDataURL(avatarUrl, imageSize);
+
 
     // Título centrado
     doc.setFontSize(20);
@@ -142,7 +142,7 @@ export default async function GeneratePDF(user, consultas) {
         addPageIfNeeded(30); // Asegurar espacio para el título y contenido
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(12);
-        doc.text(section.title, 20, y);
+        doc.text(section.title, 12, y);
         y += 10;
         const paragraphs = splitTextIntoParagraphs(section.data, 310);
         paragraphs.forEach(paragraph => {
@@ -242,6 +242,8 @@ export default async function GeneratePDF(user, consultas) {
                     });
                 });
             });
+
+            //linea horizontal despues de cada consulta 
             doc.line(20, y, doc.internal.pageSize.width - 20, y);
             y += 10;
         });
