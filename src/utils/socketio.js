@@ -52,7 +52,7 @@ class Socket {
       //event listener client recived info of a chat.
       dispatch(updateChat(data));
 
-      this._socket.emit("persistChat", data.chat, (newChat) => {
+      this._socket.emit("persistChat", { chat:data.chat, lastMessage: data.lastMessage }, (newChat) => {
         dispatch(addChat(newChat));
       });
     });

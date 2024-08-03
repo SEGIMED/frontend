@@ -5,7 +5,7 @@ import IconSendMensaje from "../icons/iconSendMensaje";
 import { socket } from "@/utils/socketio";
 import Cookies from "js-cookie";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { markMessagesAsSeen } from "@/redux/slices/chat/chat";
+// import { markMessagesAsSeen } from "@/redux/slices/chat/chat";
 import Avatars from "../avatar/avatarChat";
 
 export default function Chat({ chat }) {
@@ -27,8 +27,7 @@ export default function Chat({ chat }) {
         }
 
         // Actualiza los mensajes
-        const updated = [...chat.seenMessages, ...chat.unseenMessages];
-        setMessages(updated);
+        setMessages(chat.messages);
 
         // Verifica y despacha la acción solo si chat.users es un array
         if (Array.isArray(chat.users)) {
@@ -37,10 +36,10 @@ export default function Chat({ chat }) {
             
 
             // Solo despacha si el chat no está marcado como visto
-            if (!markedChats) {
-                dispatch(markMessagesAsSeen({ chatId,markedChats }));
-                setMarkedChats(true);
-            }
+            // if (!markedChats) {
+            //     dispatch(markMessagesAsSeen({ chatId,markedChats }));
+            //     setMarkedChats(true);
+            // }
         } else {
             console.error('chat.users is not an array:', chat.users);
         }
