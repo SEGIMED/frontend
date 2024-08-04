@@ -76,6 +76,7 @@ export default function InputConsulta({
   },[diagnostico])
 
   const handleOption = (sub) => {
+    console.log(sub);
     setRiskCardiovascularButton(sub);
     if (onRiskChange) onRiskChange(IdRiskCardiovascular(sub));
   };
@@ -139,7 +140,7 @@ const handleGroupChange = (sub) => {
                         ? "bg-[#f5e400] text-white"
                         : riskCardiovascularButton === "Alto"
                         ? "bg-[#e73f3f] text-white"
-                        : riskCardiovascularButton === " Muy Alto"
+                        : riskCardiovascularButton === "Muy alto"
                         ? "bg-[#9e193b] text-white"
                         : "bg-white"
                       : "bg-white"
@@ -157,7 +158,7 @@ const handleGroupChange = (sub) => {
                         ? "#f5e400"
                         : option === "Alto"
                         ? "#e73f3f"
-                        : option === " Muy Alto"
+                        : option === "Muy alto"
                         ? "#9e193b"
                         : null)
                     }

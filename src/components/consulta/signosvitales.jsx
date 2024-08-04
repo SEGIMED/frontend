@@ -14,26 +14,31 @@ export default function SignosVitalesInfo({
   defaultOpen = false,
   preconsult,
 }) {
-  const defaultAnthropometricDetails = [
-    { measureType: "Estatura", measureUnit: "Cm", measure: "" },
-    { measureType: "Peso", measureUnit: "Kg", measure: "" },
-    { measureType: "Índice de Masa Corporal", measureUnit: "Kg/m²", measure: "" },
-  ];
+  /*const defaultAnthropometricDetails = [
+    { measureType: "Estatura",mesureExample: "1.80 m", measureUnit: "Cm", measure: "" },
+    { measureType: "Peso",mesureExample: "76 kg", measureUnit: "Kg", measure: "" },
+    { measureType: "Índice de Masa Corporal",mesureExample: "24.69 kg/m2", measureUnit: "Kg/m²", measure: "" },
+  ];*/
 
   const defaultVitalSigns = [
-    { measureType: "Temperatura", measureUnit: "°C", measure: "" },
-    { measureType: "Frecuencia Cardiaca", measureUnit: "bpm", measure: "" },
-    { measureType: "Presión Arterial Sistólica", measureUnit: "mmHg", measure: "" },
-    { measureType: "Presión Arterial Diastólica", measureUnit: "mmHg", measure: "" },
-    { measureType: "Frecuencia Respiratoria", measureUnit: "rpm", measure: "" },
-    { measureType: "Saturación de Oxígeno", measureUnit: "%", measure: "" },
+    //antropometricDetails que esta en vital sings
+    { measureType: "Estatura",mesureExample: "1.80 m", measureUnit: "Cm", measure: "" },
+    { measureType: "Peso",mesureExample: "76 kg", measureUnit: "Kg", measure: "" },
+    { measureType: "Índice de Masa Corporal",mesureExample: "24.69 kg/m2", measureUnit: "Kg/m²", measure: "" },
+    //vitalSigns
+    { measureType: "Temperatura",mesureExample: "37 °C", measureUnit: "°C", measure: "" },
+    { measureType: "Frecuencia Cardiaca",mesureExample: "80 bpm", measureUnit: "bpm", measure: "" },
+    { measureType: "Presión Arterial Sistólica",mesureExample: "120 mmHg", measureUnit: "mmHg", measure: "" },
+    { measureType: "Presión Arterial Diastólica",mesureExample: "80 mmHg", measureUnit: "mmHg", measure: "" },
+    { measureType: "Frecuencia Respiratoria",mesureExample: "17 r/m", measureUnit: "rpm", measure: "" },
+    { measureType: "Saturación de Oxígeno",mesureExample: "80%", measureUnit: "%", measure: "" },
   ];
 
   const [anthropometricDetails, setAnthropometricDetails] = useState([]);
   const [vitalSigns, setVitalSigns] = useState([]);
   const [glucemiaElevada, setGlucemiaElevada] = useState(null);
   const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState([
-    "50",
+    "",
     "",
     "",
     "",
@@ -46,12 +51,12 @@ export default function SignosVitalesInfo({
   }, [glucemiaElevada, setValue]);
 
   useEffect(() => {
-    setAnthropometricDetails(
+    /*setAnthropometricDetails(
       paciente?.anthropometricDetails?.length > 0
         ? paciente.anthropometricDetails
         : defaultAnthropometricDetails
     );
-
+    */
     const combinedVitalSigns = combineVitalSigns(preconsult?.ProvisionalPreConsultationSchedule?.vitalSignDetailsScheduling ?? [], defaultVitalSigns);
     setVitalSigns(combinedVitalSigns);
   }, [preconsult]);
@@ -60,17 +65,17 @@ export default function SignosVitalesInfo({
     return defaultVitalSigns.map(defaultVital => {
       const patientVital = patientVitalSigns.find(
         vital => vital.measureType === defaultVital.measureType
+
       );
-      return patientVital ? patientVital : defaultVital;
+      return patientVital ? { ...patientVital, mesureExample: patientVital.mesureExample || defaultVital.mesureExample } : defaultVital;
     });
   };
-
-  const handleDetailChange = (index, value) => {
+  /*const handleDetailChange = (index, value) => {
     const updatedDetails = [...anthropometricDetails];
     updatedDetails[index].measure = value;
     setAnthropometricDetails(updatedDetails);
   };
-
+*/
   const handleVitalChange = (index, value) => {
     const updatedVitalSigns = [...vitalSigns];
     updatedVitalSigns[index].measure = value;
@@ -126,13 +131,16 @@ export default function SignosVitalesInfo({
           <div
             key={detailIndex}
             className="flex items-center justify-start gap-2 px-3 bg-[#fafafc] md:pr-10 ">
-            <label className="flex w-2/3 md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">
+            <label className="flex w-2/3 md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2 text-nowrap">
               <Image
                 src={circleData}
                 alt="circulo informacion"
                 className="w-6 h-6"
               />{" "}
+              <div className="w-full">
               {detail.measureType}
+              </div>
+              {detail.mesureExample}
             </label>
             <input
               type="text"
@@ -148,13 +156,16 @@ export default function SignosVitalesInfo({
           <div
             key={vitalIndex}
             className="flex justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10">
-            <label className="flex  w-2/3 md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2">
+            <label className="flex  w-2/3 md:w-1/2 text-start text-[#5F5F5F] font-medium text-base leading-6 px-2 py-2 text-nowrap">
               <Image
                 src={circleData}
                 alt="circulo informacion"
                 className="w-6 h-6"
               />{" "}
+              <div className="w-full">
               {vital.measureType}
+              </div>
+              {vital.mesureExample}
             </label>
             <input
               type="text"
