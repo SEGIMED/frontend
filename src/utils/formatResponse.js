@@ -1,7 +1,9 @@
 export const draftFormat = (data) => {
     console.log(data);
-    let medications = {};
-    data?.currentMedications?.map((item, index) => {
+    let medications = {
+        item0: '',
+    };
+    data?.currentMedications && data?.currentMedications?.map((item, index) => {
         const key = `item${index}`;
         medications = { ...medications, [key]: item };
         return;
@@ -11,7 +13,7 @@ export const draftFormat = (data) => {
         questions: {
             lackOfAir: {
                 title: "¿Tiene falta de aire (Disnea)?",
-                active: data.lackOfAir,
+                active: data?.lackOfAir || null,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
@@ -19,7 +21,7 @@ export const draftFormat = (data) => {
                     lackOfAirIncremented: {
                         title: "Se ha incrementado en las últimas:",
                         display: 'row',
-                        selectedOption: data.lackOfAirIncremented,
+                        selectedOption: data?.lackOfAirIncremented || null,
                         options: [
                             { label: "Horas" },
                             { label: "Días" },
@@ -28,7 +30,7 @@ export const draftFormat = (data) => {
                     },
                     lackOfAirClasification: {
                         title: "Califique su falta de aire",
-                        selectedOption: data.lackOfAirClasification,
+                        selectedOption: data?.lackOfAirClasification || null,
                         orientation: "column",
                         options: [
                             {
@@ -49,20 +51,20 @@ export const draftFormat = (data) => {
             },
             chestPainAtRest: {
                 title: "¿Tiene dolor de pecho en reposo?",
-                active: data.chestPainAtRest,
+                active: data?.chestPainAtRest || null,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
             },
             chestPainOnExertion: {
                 title: "¿Tiene dolor de pecho al hacer esfuerzos físicos?",
-                active: data.chestPainOnExertion,
+                active: data?.chestPainOnExertion || null,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
                 subquestions: {
                     chestPainOnExertionAmount: {
-                        selectedOption: data.chestPainOnExertionAmount,
+                        selectedOption: data?.chestPainOnExertionAmount || null,
                         options: [
                             { label: "Con poco esfuerzo físico" },
                             { label: "Con esfuerzo físico moderado" },
@@ -73,13 +75,13 @@ export const draftFormat = (data) => {
             },
             edemaPresence: {
                 title: "¿Ha notado edemas (hinchazón) o aumento del edema previo?",
-                active: data.edemaPresence,
+                active: data?.edemaPresence || null,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
                 subquestions: {
                     edemaPresenceDescription: {
-                        selectedOption: data.edemaPresenceDescription,
+                        selectedOption: data?.edemaPresenceDescription || null,
                         options: [
                             { label: "Hinchazón en los pies" },
                             { label: "Hinchazón por debajo de las rodillas" },
@@ -93,7 +95,7 @@ export const draftFormat = (data) => {
                 title: "¿Cómo se encuentra el día de hoy?",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data.feelings,
+                selectedOption: data?.feelings || null,
                 showRowOptions: true,
                 description: '',
                 options: [
@@ -105,18 +107,18 @@ export const draftFormat = (data) => {
             },
             healthChanges: {
                 title: "¿Ha notado algún cambio en su salud?",
-                active: data.healthChanges,
+                active: data?.healthChanges || null,
                 binaryOptions: true,
                 selectedOption: null,
                 showTextInput: true,
-                description: data.healthChangesDescription,
+                description: data?.healthChangesDescription || null,
                 // healthChangesDescription: ''
             },
             healthWorsened: {
                 title: "Siente que su salud se ha empeorado en las últimas:",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data.healthWorsened,
+                selectedOption: data?.healthWorsened || null,
                 showRowOptions: true,
                 description: '',
                 options: [
@@ -135,18 +137,18 @@ export const draftFormat = (data) => {
             },
             mentalHealthAffected: {
                 title: "¿Su salud mental está afectada?",
-                active: data.mentalHealthAffected,
+                active: data?.mentalHealthAffected || null,
                 binaryOptions: true,
                 selectedOption: null,
                 showTextInput: true,
-                description: data.mentalHealthAffectedDescription,
+                description: data?.mentalHealthAffectedDescription,
                 // mentalHealthAffectedDescription: ''
             },
             energyStatus: {
                 title: "Califique su estado de energía - Fatiga",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data.energyStatus,
+                selectedOption: data?.energyStatus || null,
                 showSlider: true,
                 description: '',
             },
@@ -154,7 +156,7 @@ export const draftFormat = (data) => {
                 title: "Califique su alimentación",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data.feed,
+                selectedOption: data?.feed || null,
                 showRowOptions: true,
                 description: '',
                 options: [
@@ -168,7 +170,7 @@ export const draftFormat = (data) => {
                 title: "Califique su hidratación diaria (todos los líquidos ingeridos)",
                 active: true,
                 binaryOptions: false,
-                selectedOption: data.hydrationStatus,
+                selectedOption: data?.hydrationStatus || null,
                 description: '',
                 options: [
                     { label: "Poca ingesta < de 1.5 litros (menos de 5 vasos aprox.) " },
@@ -180,7 +182,7 @@ export const draftFormat = (data) => {
                 title: "Califique su estado de orina (diuresis)",
                 active: true,
                 binaryOptions: false,
-                selectedOption: data.urineStatus,
+                selectedOption: data?.urineStatus || null,
                 description: '',
                 options: [
                     { label: "Orino normal (entre 500 ml y 1 litro al día)" },
@@ -194,7 +196,7 @@ export const draftFormat = (data) => {
                 title: "Califique su estado de ejercicio físico",
                 active: true,
                 binaryOptions: false,
-                selectedOption: data.exerciseStatus,
+                selectedOption: data?.exerciseStatus || null,
                 description: '',
                 options: [
                     { label: "Ninguno: no puedo, no quiero, no recomendado por el médico, contraindicado." },
@@ -411,27 +413,27 @@ export const draftFormat = (data) => {
             },
         },
         bodySection: {
-            isTherePain: data.provisionalPreConsultationPainMap.isTherePain,
-            painDuration: data.provisionalPreConsultationPainMap.painDuration,
-            painScale: data.provisionalPreConsultationPainMap.painScale,
-            painType: data.provisionalPreConsultationPainMap.painType,
+            isTherePain: data?.provisionalPreConsultationPainMap?.isTherePain ? data.provisionalPreConsultationPainMap.isTherePain : null,
+            painDuration: data?.provisionalPreConsultationPainMap?.painDuration ? data.provisionalPreConsultationPainMap.painDuration : null,
+            painScale: data?.provisionalPreConsultationPainMap?.painScale ? data.provisionalPreConsultationPainMap.painScale : null,
+            painType: data?.provisionalPreConsultationPainMap?.painType ? data.provisionalPreConsultationPainMap.painType : null,
             painAreas: null, // Reseteamos los músculos seleccionados
-            painFrequency: data.provisionalPreConsultationPainMap.painFrequency,
-            isTakingAnalgesic: data.provisionalPreConsultationPainMap.isTakingAnalgesic,
-            doesAnalgesicWorks: data.provisionalPreConsultationPainMap.doesAnalgesicWorks,
-            isWorstPainEver: data.provisionalPreConsultationPainMap.isWorstPainEver,
-            painOwner: data.provisionalPreConsultationPainMap.painOwner,
-            scheduling: data.provisionalPreConsultationPainMap.scheduling,
-            medicalEvent: data.provisionalPreConsultationPainMap.medicalEvent,
+            painFrequency: data?.provisionalPreConsultationPainMap?.painFrequency ? data.provisionalPreConsultationPainMap.painFrequency : null,
+            isTakingAnalgesic: data?.provisionalPreConsultationPainMap?.isTakingAnalgesic ? data.provisionalPreConsultationPainMap.isTakingAnalgesic : null,
+            doesAnalgesicWorks: data?.provisionalPreConsultationPainMap?.doesAnalgesicWorks || null,
+            isWorstPainEver: data?.provisionalPreConsultationPainMap?.isWorstPainEver || null,
+            painOwner: data?.provisionalPreConsultationPainMap?.painOwner || null,
+            scheduling: data?.provisionalPreConsultationPainMap?.scheduling || null,
+            medicalEvent: data?.provisionalPreConsultationPainMap?.medicalEvent || null,
         },
         anamnesis: {
             consultationReason: {
                 title: '¿Por qué solicitó la consulta?',
-                description: data.consultationReason
+                description: data?.consultationReason || ''
             },
             importantSymptoms: {
                 title: 'Síntomas importantes',
-                description: data.importantSymptoms
+                description: data?.importantSymptoms || ''
             },
         },
         tratamiento: {
