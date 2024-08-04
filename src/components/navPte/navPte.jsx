@@ -29,21 +29,19 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    Cookies.remove("a");
-    Cookies.remove("b");
-    Cookies.remove("c");
-    Cookies.remove("d");
-
     socket.disconnect();
 
     dispatch(resetApp());
 
     router.push("/");
-
+    Cookies.remove("a");
+    Cookies.remove("b");
+    Cookies.remove("c");
+    Cookies.remove("d");
     setTimeout(() => {
       // Realizar la recarga de la página para limpiar todos los datos
       window.location.reload(true);
-    }, 2000);
+    }, 1000);
   };
 
   return (
