@@ -22,6 +22,7 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { draftFormat } from "@/utils/formatResponse";
+import { setLoading } from "@/redux/slices/doctor/HistorialClinico";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -30,7 +31,7 @@ export default function PreconsultaPte({ params }) {
   const patientId = Cookies.get("c");
   const [draftEnabled, setDraftEnabled] = useState(false);
   const [available, setAvailable] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [enableButton, setEnableButton] = useState(false);
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
@@ -113,146 +114,66 @@ export default function PreconsultaPte({ params }) {
     },
   });
 
-  /* useEffect(() => {
-    // almacenamos un borrador por cada cita médica
+  useEffect(() => {
+    // almacenamos cada cambio en un borrador en el local storage
     if (draftEnabled) {
       localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify({ ...formData, tests, scheduleId }));
     }
-    setDraftEnabled(true);
-  }, [formData]); */
-
-  // useEffect(() => {
-  //   // Verificamos si existe un borrador de esta preconsulta en el local storage
-  //   const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
-  //   if (draft) {
-  //     dispatch(updateAllFormData({ draft }));
-  //   }
-  //   else {
-  //     dispatch(resetFormData()); // Reseteamos el esto global si no existe un borrador para esta preconsulta, así limpiamos cualquier campo que haya quedado completo por consultas anteriores.
-  //   }
-  // }, []);
+  }, [formData]);
 
   useEffect(() => {
-    const getPreConsultation = async () => {
-      try {
-        setIsLoading(true);
-        //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
-        const res = await ApiSegimed.get(
-          `/get-preconsultation?scheduleId=${scheduleId}&status=1`,
-          {
-            headers: {
-              token: token,
-            },
-          }
-        );
-        // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
-        if (res) {
-          setEnableButton(true);
-          setAvailable(true);
-          const formatResponse = draftFormat(res.data);
-          dispatch(updateAllFormData({ draft: formatResponse }));
-          // console.log({ ...formatResponse, tests, scheduleId });
-          // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
-        }
-        else {
-          setEnableButton(false);
-          setAvailable(false);
-          console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching data", error);
-        setEnableButton(false);
-        setAvailable(false);
-        console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
-        setIsLoading(false);
-      }
-    };
-    getPreConsultation();
+    // Verificamos si existe un borrador de esta preconsulta en el local storage
+    const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
+    if (draft) {
+      setEnableButton(true);
+      setAvailable(true);
+      setDraftEnabled(true);
+      dispatch(updateAllFormData({ draft }));
+      setLoading(false);
+    }
+    else { // Si no existe un borrador en el local storage, entonces buscamos un borrador en la base de datos
+      getPreConsultation();
+    }
   }, []);
 
-  const handleQuestionActive = (question, label, active) => {
-    dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
-  };
-
-  const handleSubquestionOption = (question, subquestion, selectedOption) => {
-    dispatch(
-      subquestionSelectedOption({ question, subquestion, selectedOption })
-    ); // guardamos la opción seleccionada de la subpregunta
-  };
-
-  const handleQuestionOption = (question, selectedOption) => {
-    dispatch(questionSelectedOption({ question, selectedOption })); // guardamos la opción seleccionada
-  };
-
-  const handleDescription = (question, description) => {
-    dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
-  };
-
-  const handleVitalSign = (vitalSign, value, active, key) => {
-    if (vitalSign === "abnormalGlycemia") {
-      dispatch(updateGlycemia({ vitalSign, active }));
+  const getPreConsultation = async () => {
+    try {
+      setIsLoading(true);
+      //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
+      const res = await ApiSegimed.get(
+        `/get-preconsultation?scheduleId=${scheduleId}&status=1`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
+      if (res) {
+        setEnableButton(true);
+        setAvailable(true);
+        setDraftEnabled(true);
+        const formatResponse = draftFormat(res.data);
+        dispatch(updateAllFormData({ draft: formatResponse }));
+        // console.log({ ...formatResponse, tests, scheduleId });
+        // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
+      }
+      else {
+        setEnableButton(false);
+        setAvailable(false);
+        setDraftEnabled(true);
+        console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching data", error);
+      setEnableButton(false);
+      setAvailable(false);
+      setDraftEnabled(true);
+      console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
+      setIsLoading(false);
     }
-    if (vitalSign === "lastAbnormalGlycemia") {
-      console.log({ vitalSign, key, value });
-      dispatch(updateLastGlycemia({ vitalSign, key, value }));
-    } else {
-      dispatch(
-        updateVitalSign({
-          vitalSign,
-          value,
-          number: Number(patientId),
-          schedulingId: Number(scheduleId),
-        })
-      ); // actualizamos los signos vitales en el estado global
-    }
   };
-
-  const handleAnamnesis = (field, description) => {
-    dispatch(updateAnamnesis({ field, description })); // actualizamos la descripción de la anamnesis en el estado global
-  };
-
-  const handleUploadTestFile = (test, file) => {
-    const studies = tests;
-    // dispatch(updateFileUploaded({ test, file }));
-    setTests({ ...studies, [test]: { ...studies[test], file: file } });
-  };
-
-  const handleTestDescription = (test, testDescription) => {
-    // almacenamos la descripción del estudio
-    dispatch(updateTestDescription({ test, testDescription }));
-    const studies = tests;
-    setTests({
-      ...studies,
-      [test]: { ...studies[test], description: testDescription },
-    });
-  };
-
-  const handleTestActive = (test, active) => {
-    // para los campos binarios
-    dispatch(updateTestActive({ test, active }));
-    const studies = tests;
-    setTests({ ...studies, [test]: { ...studies[test], active: active } });
-  };
-
-  const handleTestSelectedOption = (test, value) => {
-    dispatch(updateTestSelectedOption({ test, value }));
-    const studies = tests;
-    setTests({
-      ...studies,
-      [test]: { ...studies[test], selectedOption: value },
-    });
-  };
-
-  const handleTratamientoDescription = (field, item, description) => {
-    dispatch(updateTratamiento({ field, item, description })); // almacenamos los distintos tratamientos en el estado global
-  };
-
-  const handleBodyChange = (name, value) => {
-    dispatch(updateBodyPainLevel({ name, option: value }));
-  };
-
-  const methods = useForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -407,6 +328,89 @@ export default function PreconsultaPte({ params }) {
       setIsLoading(false);
     }
   };
+
+  const handleQuestionActive = (question, label, active) => {
+    dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
+  };
+
+  const handleSubquestionOption = (question, subquestion, selectedOption) => {
+    dispatch(
+      subquestionSelectedOption({ question, subquestion, selectedOption })
+    ); // guardamos la opción seleccionada de la subpregunta
+  };
+
+  const handleQuestionOption = (question, selectedOption) => {
+    dispatch(questionSelectedOption({ question, selectedOption })); // guardamos la opción seleccionada
+  };
+
+  const handleDescription = (question, description) => {
+    dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
+  };
+
+  const handleVitalSign = (vitalSign, value, active, key) => {
+    if (vitalSign === "abnormalGlycemia") {
+      dispatch(updateGlycemia({ vitalSign, active }));
+    }
+    if (vitalSign === "lastAbnormalGlycemia") {
+      console.log({ vitalSign, key, value });
+      dispatch(updateLastGlycemia({ vitalSign, key, value }));
+    } else {
+      dispatch(
+        updateVitalSign({
+          vitalSign,
+          value,
+          number: Number(patientId),
+          schedulingId: Number(scheduleId),
+        })
+      ); // actualizamos los signos vitales en el estado global
+    }
+  };
+
+  const handleAnamnesis = (field, description) => {
+    dispatch(updateAnamnesis({ field, description })); // actualizamos la descripción de la anamnesis en el estado global
+  };
+
+  const handleUploadTestFile = (test, file) => {
+    const studies = tests;
+    // dispatch(updateFileUploaded({ test, file }));
+    setTests({ ...studies, [test]: { ...studies[test], file: file } });
+  };
+
+  const handleTestDescription = (test, testDescription) => {
+    // almacenamos la descripción del estudio
+    dispatch(updateTestDescription({ test, testDescription }));
+    const studies = tests;
+    setTests({
+      ...studies,
+      [test]: { ...studies[test], description: testDescription },
+    });
+  };
+
+  const handleTestActive = (test, active) => {
+    // para los campos binarios
+    dispatch(updateTestActive({ test, active }));
+    const studies = tests;
+    setTests({ ...studies, [test]: { ...studies[test], active: active } });
+  };
+
+  const handleTestSelectedOption = (test, value) => {
+    dispatch(updateTestSelectedOption({ test, value }));
+    const studies = tests;
+    setTests({
+      ...studies,
+      [test]: { ...studies[test], selectedOption: value },
+    });
+  };
+
+  const handleTratamientoDescription = (field, item, description) => {
+    dispatch(updateTratamiento({ field, item, description })); // almacenamos los distintos tratamientos en el estado global
+  };
+
+  const handleBodyChange = (name, value) => {
+    dispatch(updateBodyPainLevel({ name, option: value }));
+  };
+
+  const methods = useForm();
 
   // Loader mientras se cargan o envían los datos de la preconsulta
   if (isLoading) {
