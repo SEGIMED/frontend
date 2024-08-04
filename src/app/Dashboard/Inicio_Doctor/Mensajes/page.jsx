@@ -16,6 +16,7 @@ import avatar from "@/utils/defaultAvatar";
 import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
+import NotFound from "@/components/notFound/notFound";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -30,7 +31,8 @@ export default function MensajesDoc() {
   useEffect(() => {
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");
-      const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
+      const navigationType =
+        navigationEntries.length > 0 ? navigationEntries[0].type : null;
 
       if (navigationType === "reload") {
         const listChats = Object.values(getChats);
@@ -81,7 +83,9 @@ export default function MensajesDoc() {
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-4 items-center">
           <div className="w-8 h-8 flex justify-center items-center">
-            {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
+            {handleImg(
+              chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
+            )}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
             <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
@@ -130,8 +134,9 @@ export default function MensajesDoc() {
         <div></div>
       </div>
       <div className="gap-2 items-start justify-center w-full md:overflow-y-auto">
-        {chatElements}
+        {chats.length !== 0 && chatElements}
       </div>
+      {chats.length == 0 && <NotFound text="No hay mensajes" />}
     </div>
   );
 }
