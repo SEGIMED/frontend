@@ -13,6 +13,7 @@ import IconCorazonMini from "@/components/icons/iconCorazon";
 import ReviewModal from "@/components/modal/ReviewModal";
 import IconOptions from "@/components/icons/IconOptions";
 import NotFound from "@/components/notFound/notFound";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function HomeDocAll() {
   const dispatch = useAppDispatch();
@@ -20,22 +21,33 @@ export default function HomeDocAll() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedDocId, setSelectedDocId] = useState(null);
   const consultas = useAppSelector((state) => state.schedules);
+  const [scheduledConsultas, setScheduledConsultas] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [isSorted, setIsSorted] = useState(false);
 
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
-
+  const getSchedulesByUserId = async () => {
+    try {
+      const response = await ApiSegimed.get("/schedulesByUserId");
+      setScheduledConsultas(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    setLoading(true);
+    getSchedulesByUserId();
+  }, []);
   useEffect(() => {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
-  const scheduledConsultas = consultas?.filter(
-    (consulta) => consulta.schedulingStatus !== 1
-  );
-  //ordenamiento por fecha desde el front por ahora 
-  const sortedConsultas =[...scheduledConsultas].sort((b,a) =>
+  //ordenamiento por fecha desde el front por ahora
+  const sortedConsultas = [...scheduledConsultas].sort((b, a) =>
     a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
-  )
+  );
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
@@ -78,7 +90,8 @@ export default function HomeDocAll() {
         </p>
       </div>
       <div className="overflow-auto h-full">
-        {scheduledConsultas.length === 0 && (
+        {loading && <MensajeSkeleton />}
+        {scheduledConsultas.length === 0 && !loading && (
           <NotFound text="No hay consultas registradas" />
         )}
         {sortedConsultas?.map((doc) => (

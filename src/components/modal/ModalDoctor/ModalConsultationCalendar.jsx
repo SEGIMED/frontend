@@ -107,7 +107,6 @@ const ModalConsultationCalendar = ({
       const selectedTime = new Date(
         combineDateTime(data.date, data.scheduledStartTimestamp)
       );
-
       // Definir los límites de tiempo
       const startLimit = new Date(data.date);
       startLimit.setHours(8, 0, 0);
