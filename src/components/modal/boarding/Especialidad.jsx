@@ -1,23 +1,9 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 import DropNext from "@/components/consulta/dropdown";
 
-export default function Especialidad({ handleDisabled, state }) {
-
-    const options = [
-        "Centro gallego",
-        "María Ferrer",
-        "Mater Dei",
-        "Dupuytren",
-        "Hospital Rivadavia",
-        "Trinidad de Quilmes",
-        "Trinidad Ramos Mejía",
-        "Trinidad San Isidro",
-        "Trinidad de Mitre",
-        "Hospital Garraham",
-        "Otro"
-    ];
+export default function Especialidad({ handleDisabled, state, options }) {
 
 
     return (
@@ -30,7 +16,7 @@ export default function Especialidad({ handleDisabled, state }) {
                 selectedOptions={state.espcialty2}
                 handleDisabled={handleDisabled}
                 type={true}
-                options={options}
+                options={options ? options : []}
                 text2={"Seleccione su centro de atención"}
                 name={"espcialty"}
 

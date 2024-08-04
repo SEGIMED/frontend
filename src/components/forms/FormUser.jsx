@@ -67,6 +67,8 @@ export const FormUser = ({ formData, setFormData }) => {
     hasMinLength: passwordValue?.length >= 6,
   };
 
+  const noEmptySpaces = (value) => value.trim() !== "";
+
   return (
     <div className="pb-36">
       <form onSubmit={onSubmit}>
@@ -86,6 +88,11 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                   message:
                     "Introduce una dirección de correo electrónico válida",
+                },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 100,
+                  message: "El correo electrónico no debe exceder los 100 caracteres.",
                 },
               })}
             />
@@ -137,36 +144,32 @@ export const FormUser = ({ formData, setFormData }) => {
 
             <ul className="mt-2 text-sm ">
               <li
-                className={`flex gap-2 items-center whitespace-nowrap ${
-                  passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
-                }`}>
+                className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
+                  }`}>
                 {passwordCriteria.hasUpperCase && (
                   <IconCheckBoton className={"w-4"} />
                 )}{" "}
                 Debe contener una letra mayúscula
               </li>
               <li
-                className={`flex gap-2  items-center whitespace-nowrap ${
-                  passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
-                }`}>
+                className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
+                  }`}>
                 {passwordCriteria.hasLowerCase && (
                   <IconCheckBoton className={"w-4"} />
                 )}{" "}
                 Debe contener una letra minúscula
               </li>
               <li
-                className={`flex gap-2 items-center whitespace-nowrap ${
-                  passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
-                }`}>
+                className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
+                  }`}>
                 {passwordCriteria.hasSpecialChar && (
                   <IconCheckBoton className={"w-4"} />
                 )}{" "}
                 Debe contener un carácter especial
               </li>
               <li
-                className={`flex gap-2 items-center whitespace-nowrap ${
-                  passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
-                }`}>
+                className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
+                  }`}>
                 {passwordCriteria.hasMinLength && (
                   <IconCheckBoton className={"w-4"} />
                 )}{" "}
@@ -209,6 +212,11 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 20,
+                  message: "El número de identificación no debe exceder los 20 caracteres.",
+                },
               })}
             />
             {errors.idNumber && (
@@ -229,6 +237,11 @@ export const FormUser = ({ formData, setFormData }) => {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
+                },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 50,
+                  message: "El nombre no debe exceder los 50 caracteres.",
                 },
               })}
             />
@@ -251,6 +264,11 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 50,
+                  message: "El apellido no debe exceder los 50 caracteres.",
+                },
               })}
             />
             {errors.lastname && (
@@ -271,6 +289,11 @@ export const FormUser = ({ formData, setFormData }) => {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
+                },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 15,
+                  message: "El número de celular no debe exceder los 15 caracteres.",
                 },
               })}
             />

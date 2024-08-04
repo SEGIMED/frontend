@@ -19,6 +19,7 @@ import MatriculaNumber from "../boarding/Matricula";
 import MatriculaProvNumber from "../boarding/MatriculaProv";
 import Especialidad from "../boarding/Especialidad";
 import IconArrowRight from "@/components/icons/iconArrowRight";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const ProgressBar = ({ steps, currentIndex }) => {
     return (
@@ -36,6 +37,7 @@ const ProgressBar = ({ steps, currentIndex }) => {
 const ModalBoarding = ({ isOpen, onClose, rol }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
+    const [catalog, setCatalog] = useState([]);
 
     const formStateGlobal = useAppSelector((state) => state.formSlice.selectedOptions);
     const user = useAppSelector((state) => state.user);
@@ -44,12 +46,32 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         setDisabled(false);
     };
 
+    const getCatalog = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(
+                "/catalog/get-catalog?catalogName=medical_specialties",
+                headers
+            );
+            if (response.data) {
+                setCatalog(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (rol === "Medico") {
+            getCatalog();
+        }
+    }, [rol]);
+
+
     useEffect(() => {
         if (index === 0) {
             setDisabled(false);
         }
     }, [index]);
-
 
     const Modals = rol === "Paciente" ? [
         <Bienvenida key="bienvenida" />,
@@ -69,24 +91,28 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         <Nacimiento key="nacimiento" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Domicilio key="domicilio" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Especialidad key="Especialidad" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Especialidad key="Especialidad" handleDisabled={handleDisabled} state={formStateGlobal} options={catalog} />,
         <MatriculaNumber key="MatriculaNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <MatriculaProvNumber key="MatriculaProvNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
     ];
 
-
-
-
-
-    const handleNext = () => {
+    const handleNext = async () => {
         if (index < Modals.length - 1) {
             setIndex(index + 1);
             setDisabled(true);
         } else {
             const infoSend = mapBoolean(formStateGlobal);
-            console.log({ ...infoSend, userId: user?.id });
-            onClose();
+            try {
+                const response = await ApiSegimed.post(
+                    `/onboarding?tipo=${rol === "Medico" ? 3 : 2}&userId=${user.id}`,
+                    infoSend
+                );
+                console.log(response.data);
+                onClose();
+            } catch (error) {
+                console.error("Error al enviar la información:", error);
+            }
         }
     };
 
