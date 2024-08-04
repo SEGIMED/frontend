@@ -887,6 +887,9 @@ const preconsultaFormSlice = createSlice({
       const { draft } = action.payload;
       state.formData = draft;
     },
+    resetFormData(state) {
+      state.formData = initialState.formDataReset;
+    },
     updateField(state, action) {
       const { key, field, value } = action.payload;
       state.formData.questions[key][field] = value;
@@ -971,9 +974,6 @@ const preconsultaFormSlice = createSlice({
     },
     resetForm(state) {
       state.formData = initialState.formData;
-    },
-    resetFormData(state) {
-      state.formData = initialState.formDataReset;
     },
 
     updateFileUploaded(state, action) {

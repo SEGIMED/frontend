@@ -5,7 +5,7 @@ export const baseURL = process.env.NEXT_PUBLIC_API_URL;
 const url = `${baseURL}/api`;
 
 export const ApiSegimed = axios.create({
-  baseURL: local,
+  baseURL: url,
 });
 //Se agrega el interceptor para agregar el refresh token al header
 ApiSegimed.interceptors.request.use(

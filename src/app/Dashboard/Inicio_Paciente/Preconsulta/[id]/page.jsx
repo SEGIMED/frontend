@@ -21,6 +21,7 @@ import TratamientoPreconsulta from "@/components/preconsulta/Tratamiento";
 import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
+import { draftFormat } from "@/utils/formatResponse";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -28,8 +29,9 @@ export default function PreconsultaPte({ params }) {
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
   const [draftEnabled, setDraftEnabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [disabledButton, setDisabledButton] = useState(false);
+  const [available, setAvailable] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [enableButton, setEnableButton] = useState(false);
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
@@ -111,26 +113,24 @@ export default function PreconsultaPte({ params }) {
     },
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     // almacenamos un borrador por cada cita médica
     if (draftEnabled) {
       localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify({ ...formData, tests, scheduleId }));
     }
     setDraftEnabled(true);
-  }, [formData]);
+  }, [formData]); */
 
-  useEffect(() => {
-    // Verificamos si existe un borrador de esta preconsulta en el local storage
-    const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
-    if (draft) {
-      console.log('Se ha encontrado un BORRADOR de esta preconsulta');
-      dispatch(updateAllFormData({ draft }));
-    }
-    else {
-      console.log('Nueva preconsulta, formulario limpio');
-      dispatch(resetFormData()); // Reseteamos el esto global si no existe un borrador para esta preconsulta, así limpiamos cualquier campo que haya quedado completo por consultas anteriores.
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Verificamos si existe un borrador de esta preconsulta en el local storage
+  //   const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
+  //   if (draft) {
+  //     dispatch(updateAllFormData({ draft }));
+  //   }
+  //   else {
+  //     dispatch(resetFormData()); // Reseteamos el esto global si no existe un borrador para esta preconsulta, así limpiamos cualquier campo que haya quedado completo por consultas anteriores.
+  //   }
+  // }, []);
 
   useEffect(() => {
     const getPreConsultation = async () => {
@@ -138,7 +138,7 @@ export default function PreconsultaPte({ params }) {
         setIsLoading(true);
         //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
         const res = await ApiSegimed.get(
-          `/get-preconsultation?scheduleId=${scheduleId}&status=2`,
+          `/get-preconsultation?scheduleId=${scheduleId}&status=1`,
           {
             headers: {
               token: token,
@@ -147,13 +147,24 @@ export default function PreconsultaPte({ params }) {
         );
         // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
         if (res) {
-          setPreconsultationAlreadyExists(res.data);
-          setDisabledButton(true);
-          console.log('Esta preconsulta ya existe en la bd', res.data);
+          setEnableButton(true);
+          setAvailable(true);
+          const formatResponse = draftFormat(res.data);
+          dispatch(updateAllFormData({ draft: formatResponse }));
+          // console.log({ ...formatResponse, tests, scheduleId });
+          // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
+        }
+        else {
+          setEnableButton(false);
+          setAvailable(false);
+          console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
         }
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data", error);
+        setEnableButton(false);
+        setAvailable(false);
+        console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
         setIsLoading(false);
       }
     };
@@ -246,6 +257,7 @@ export default function PreconsultaPte({ params }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    console.log(formData);
     const bodyPainFormat = {
       patient: Number(patientId),
       patientPainMapId: Number(patientId),
@@ -328,7 +340,7 @@ export default function PreconsultaPte({ params }) {
       ).length
         ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options)
         : null,
-      vitalSignsToCreate: vitalSignFormat,
+      updateVitalSigns: vitalSignFormat,
       // painRecordsToUpdate
       painRecordsToUpdate: [bodyPainFormat],
     };
@@ -358,7 +370,7 @@ export default function PreconsultaPte({ params }) {
         setIsLoading(false);
         return;
       }
-      if (!preconsultationAlreadyExists) {
+      if (available) {
         console.log({
           toCreate: bodyForm,
           preconsultationAlreadyExists: !!preconsultationAlreadyExists,
@@ -387,26 +399,7 @@ export default function PreconsultaPte({ params }) {
           title: "La preconsulta no puede ser modificada",
           text: "",
         });
-        // console.log({
-        //   toUpdate: {
-        //     ...bodyForm,
-        //     updateVitalSigns: bodyForm.vitalSignsToCreate,
-        //   },
-        //   preconsultationAlreadyExists: !!preconsultationAlreadyExists,
-        // });
-        // const response = await ApiSegimed.patch(
-        //   `/update-pre-consultation`,
-        //   { ...bodyForm, updateVitalSigns: bodyForm.vitalSignsToCreate },
-        //   {
-        //     headers: {
-        //       token: token,
-        //       "Content-Type": "application/json",
-        //     },
-        //   }
-        // );
-        // if (response) {
-        //   console.log({ resupuestaPatch: response.data });
-        // }
+        setAvailable(false);
         setIsLoading(false);
       }
     } catch (error) {
@@ -426,8 +419,8 @@ export default function PreconsultaPte({ params }) {
     );
   }
 
-  // Si la preconsulta ya fue enviada, no se muestra.
-  if (preconsultationAlreadyExists) {
+  // Si el paciente ya tuvo la consulta, entonces no puede volver a editar la preconsulta.
+  if (!available) {
     return (
       <FormProvider {...methods}>
         <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
@@ -448,7 +441,7 @@ export default function PreconsultaPte({ params }) {
             </div>
           </div>
           <div className="flex items-center justify-center my-2">
-            Su preconsulta ya fue enviada
+            Su preconsulta no está disponible
           </div>
         </div>
       </FormProvider>
@@ -524,7 +517,7 @@ export default function PreconsultaPte({ params }) {
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
             onPress={handleSubmit}
-            disabled={disabledButton}
+            disabled={!enableButton}
             size={"lg"}
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
