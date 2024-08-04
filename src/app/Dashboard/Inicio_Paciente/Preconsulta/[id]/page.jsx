@@ -22,7 +22,6 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { draftFormat } from "@/utils/formatResponse";
-import { setLoading } from "@/redux/slices/doctor/HistorialClinico";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -31,7 +30,7 @@ export default function PreconsultaPte({ params }) {
   const patientId = Cookies.get("c");
   const [draftEnabled, setDraftEnabled] = useState(false);
   const [available, setAvailable] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [enableButton, setEnableButton] = useState(false);
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
@@ -125,20 +124,22 @@ export default function PreconsultaPte({ params }) {
     // Verificamos si existe un borrador de esta preconsulta en el local storage
     const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
     if (draft) {
+      console.log(draft);
       setEnableButton(true);
       setAvailable(true);
       setDraftEnabled(true);
       dispatch(updateAllFormData({ draft }));
-      setLoading(false);
+      setIsLoading(false);
     }
     else { // Si no existe un borrador en el local storage, entonces buscamos un borrador en la base de datos
       getPreConsultation();
+      setIsLoading(false);
     }
+    setIsLoading(false);
   }, []);
 
   const getPreConsultation = async () => {
     try {
-      setIsLoading(true);
       //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
       const res = await ApiSegimed.get(
         `/get-preconsultation?scheduleId=${scheduleId}&status=1`,
@@ -153,25 +154,28 @@ export default function PreconsultaPte({ params }) {
         setEnableButton(true);
         setAvailable(true);
         setDraftEnabled(true);
+        setIsLoading(false);
         const formatResponse = draftFormat(res.data);
         dispatch(updateAllFormData({ draft: formatResponse }));
         // console.log({ ...formatResponse, tests, scheduleId });
         // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
+        return;
       }
       else {
         setEnableButton(false);
         setAvailable(false);
         setDraftEnabled(true);
+        setIsLoading(false);
         console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
+        return;
       }
-      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data", error);
       setEnableButton(false);
       setAvailable(false);
       setDraftEnabled(true);
-      console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
       setIsLoading(false);
+      console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
     }
   };
 
