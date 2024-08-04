@@ -16,6 +16,7 @@ import avatar from "@/utils/defaultAvatar";
 import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
+import NotFound from "@/components/notFound/notFound";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -31,7 +32,8 @@ export default function MensajesDoc() {
   useEffect(() => {
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");
-      const navigationType = navigationEntries.length > 0 ? navigationEntries[0].type : null;
+      const navigationType =
+        navigationEntries.length > 0 ? navigationEntries[0].type : null;
 
       if (navigationType === "reload") {
         const listChats = Object.values(getChats);
@@ -67,8 +69,14 @@ export default function MensajesDoc() {
 
   const chatElements = useMemo(() => {
     const sortedChats = chats.sort((a, b) => {
-      const dateA = a.unseenMessages.length > 0 ? new Date(a.unseenMessages[a.unseenMessages.length - 1].date) : new Date(0);
-      const dateB = b.unseenMessages.length > 0 ? new Date(b.unseenMessages[b.unseenMessages.length - 1].date) : new Date(0);
+      const dateA =
+        a.unseenMessages.length > 0
+          ? new Date(a.unseenMessages[a.unseenMessages.length - 1].date)
+          : new Date(0);
+      const dateB =
+        b.unseenMessages.length > 0
+          ? new Date(b.unseenMessages[b.unseenMessages.length - 1].date)
+          : new Date(0);
       return dateB - dateA;
     });
 
@@ -79,7 +87,9 @@ export default function MensajesDoc() {
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-4 items-center">
           <div className="w-8 h-8 flex justify-center items-center">
-            {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
+            {handleImg(
+              chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
+            )}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
             <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
@@ -88,7 +98,10 @@ export default function MensajesDoc() {
             <Image src={ruteActual} alt="" className="hidden md:block mr-20 " />
             {chat.unseenMessages.length > 0 ? (
               <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
-                {Fecha(chat.unseenMessages[chat.unseenMessages.length - 1].date, 4)}
+                {Fecha(
+                  chat.unseenMessages[chat.unseenMessages.length - 1].date,
+                  4
+                )}
                 <span className="mx-1">-</span>
                 {Hora(chat.unseenMessages[chat.unseenMessages.length - 1].date)}
               </span>
@@ -105,7 +118,9 @@ export default function MensajesDoc() {
             nombre={"Mensajes"}
             size={"sm"}
             icon={<IconMensajeBoton />}
-            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${chat.unseenMessages.length > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
+            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${
+              chat.unseenMessages.length > 0 ? "bg-bluePrimary" : "bg-gray-400"
+            }`}
           />
         </div>
       </div>
@@ -128,8 +143,9 @@ export default function MensajesDoc() {
         <div></div>
       </div>
       <div className="gap-2 items-start justify-center w-full md:overflow-y-auto">
-        {chatElements}
+        {chats.length !== 0 && chatElements}
       </div>
+      {chats.length == 0 && <NotFound text="No hay mensajes" />}
     </div>
   );
 }

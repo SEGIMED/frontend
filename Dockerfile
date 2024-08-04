@@ -16,6 +16,10 @@ RUN npm install --production
 
 # Stage 3: Build Applicationa
 FROM node:18-alpine AS builder
+# Define build arguments
+ARG NEXT_PUBLIC_API_URL
+# Set environment variables from build arguments
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 WORKDIR /app
 COPY . .
 RUN npm install
