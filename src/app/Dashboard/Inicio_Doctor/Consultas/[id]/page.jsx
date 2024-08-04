@@ -51,21 +51,16 @@ const DetallePaciente = (id) => {
   const [selectedRisk2, setSelectedRisk2] = useState();
   const [selectedGroup, setSelectedGroup] = useState();
   const [heartFailureRisk, setHeartFailureRisk] = useState();
-  const [medicalEvent, setMedicalEvent] = useState();
   const [medicalEventExist, setMedicalEventExist] = useState();
   const [medicalEventPatch, setMedicalEventPatch] = useState();
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
-  const [bodySection, setBodySection] = useState({});
-  
-  console.log(preconsult);
-  console.log(bodySection);
+
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
   console.log(formState);
-  console.log(hpGroup);
-  console.log(patient);
+  console.log(formData);
   const bodyOBJFormat = {
     painOwnerId: Number(userId),
     schedulingId: Number(scheduleId),
@@ -104,7 +99,7 @@ const DetallePaciente = (id) => {
     //clase funcional
     setHeartFailureRisk({
       patientId: Number(userId),
-      heartFailureClassificationId: IdHeartFailureRiskText(
+      pulmonaryHypertensionRiskId: IdHeartFailureRiskText(
         formState.HeartFailureRisk
       ),
     });
@@ -293,7 +288,7 @@ const DetallePaciente = (id) => {
       //status
       status: "sent",
       //exploracion fisica
-      painRecordsToCreate: [bodyOBJFormat],
+      painRecordsToUpdate: [bodyOBJFormat],
       //estudios
       laboratoryResults: tests.laboratoryResults.file,
       laboratoryResultsDescription: tests.laboratoryResults.description,
@@ -332,74 +327,50 @@ const DetallePaciente = (id) => {
       // se tiene que aplicar una logica que cambia segun el patch o el post
       updateVitalSigns: [
         {
-          patientId: userId,
+          id: 1344,
           measureType: 1,
-          measure: data["Temperatura"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Temperatura"]),
         },
         {
-          patientId: userId,
+          id: 1344,
           measureType: 2,
-          measure: data["Presión Arterial Sistólica"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Presión Arterial Sistólica"]),
+
         },
         {
-          patientId: Number(userId), // id del paciente
+          id: 1344, /// id del registro del signo vital correspondiente
           measureType: 3, // id del parametro "frecuencia cardiaca" en el catalogo vital signs
-          measure: data["Presión Arterial Diastólica"], // medida introducida por el médico o paciente,
-          schedulingId: null, /// id del scheduling si se crea en preconsulta
-          medicalEventId: 4, /// id del medical event si se crea durante medical event
+          measure: Number(data["Presión Arterial Diastólica"]), // medida introducida por el médico o paciente,
         },
         {
-          patientId: userId,
+          id: 1344,
           measureType: 5,
-          measure: data["Frecuencia Respiratoria"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Frecuencia Respiratoria"]),
         },
         {
-          patientId: userId,
+          id: 1344,
           measureType: 6,
-          measure: data["Saturación de Oxígeno"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Saturación de Oxígeno"]),
         },
         {
-          patientId: userId,
+          id: 1344,
           measureType: 7,
-          measure: data["Frecuencia Cardiaca"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Frecuencia Cardiaca"]),
         },
         {
-          patientId: userId,
+          id: 1344,
           measureType: 8,
-          measure: data["Talla"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Estatura"]),
         },
         {
-          patientId: userId,
-          measureType: 7,
-          measure: data["Temperatura"],
-          schedulingId: null,
-          medicalEventId: 4,
+          id: 1344,
+          measureType: 9,
+          measure: Number(data["Peso"]),
         },
         {
-          patientId: userId,
-          measureType: 7,
-          measure: data["Perímetro Abdominal"],
-          schedulingId: null,
-          medicalEventId: 4,
-        },
-        {
-          patientId: userId,
+          id: 1344,
           measureType: 10,
-          measure: data["IMC"],
-          schedulingId: null,
-          medicalEventId: 4,
+          measure: Number(data["Índice de Masa Corporal"]),
         },
       ],
     });
@@ -519,8 +490,6 @@ const DetallePaciente = (id) => {
         console.log("No se ah echo un diagnostico anteriormente:", error);
       }
     }
-    console.log(medicalEvent);
-
     fetchData();
     fetchData2();
     fetchData3();
@@ -579,16 +548,14 @@ const DetallePaciente = (id) => {
     }
     if(response5 !== undefined){responses.push(response5);}
   
-    // Riesgo de insuficiencia cardíaca - funciona patch y post pero no me lo trae el paciente, ver si se puede cambiar por /patient-new-hp-risk pero agregar en catalogo 4
-    console.log(heartFailureRisk);
+    // Riesgo de insuficiencia cardíaca - funciona patch y post se cambio la ruta por que patient-update-nyha-classification no completa en paciente
     let response6;
-    if (patient?.patientPulmonaryHypertensionRisks === null && heartFailureRisk.heartFailureClassificationId > 0) {
-      response6 = await ApiSegimed.post(`/patient-new-nyha-classification`, heartFailureRisk, { headers: { token: token } });
-    } else if (heartFailureRisk.heartFailureClassificationId > 0) {
-      response6 = await ApiSegimed.patch(`/patient-update-nyha-classification`, heartFailureRisk, { headers: { token: token } });
+    if (patient?.patientPulmonaryHypertensionRisks === null && heartFailureRisk.pulmonaryHypertensionRiskId > 0) {
+      response6 = await ApiSegimed.post(`/patient-new-hp-risk`, heartFailureRisk, { headers: { token: token } });
+    } else if (heartFailureRisk.pulmonaryHypertensionRiskId > 0) {
+      response6 = await ApiSegimed.patch(`/patient-update-hp-risk`, heartFailureRisk, { headers: { token: token } });
     }
     if (response6 !== undefined) { responses.push(response6); }
-    console.log(response6);
 
     // Preconsulta
     console.log(preconsultPhysical);
