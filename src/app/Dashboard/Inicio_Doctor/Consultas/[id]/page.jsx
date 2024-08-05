@@ -764,7 +764,7 @@ const DetallePaciente = (id) => {
       Swal.fire({
         icon: "success",
         title: "Exito",
-        text: "Se ha creado la consulta",
+        text: "Se ha realizado la consulta con exito",
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
@@ -774,7 +774,7 @@ const DetallePaciente = (id) => {
       Swal.fire({
         icon: "error",
         title: "Error ",
-        text: "Error al crear la consulta",
+        text: "Error al procesar la consulta",
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });

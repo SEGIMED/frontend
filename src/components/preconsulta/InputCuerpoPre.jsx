@@ -134,7 +134,8 @@ export default function InputCuerpoPre({
       valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain
     );
     setPainLevel(
-      valuePreconsultation?.provisionalPreConsultationPainMap?.catPainScale.name
+      valuePreconsultation?.provisionalPreConsultationPainMap?.catPainScale
+        ?.name
     );
   }, [valuePreconsultation]);
 
