@@ -388,7 +388,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         )}
       </div>
 
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} />
+      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} /> */}
     </div>
   );
 };
