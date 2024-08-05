@@ -32,13 +32,12 @@ const DetallePaciente = (id) => {
   const medicalEventId = Cookies.get("medicalEventId");
   const userId = Cookies.get("patientId");
   const scheduleId = id.params.id; // id de agendamiento
-
+  let vitalSigns;
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
   const [preconsult, setPreconsult] = useState();
   const [physicalExamination, setPhysicalExamination] = useState();
   const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
-  const [preconsultPhysical, setPreconsultPhysical] = useState();
   const [cardiovascularRisk, setCardiovascularRisk] = useState();
   const [surgicalRisk, setSurgicalRisk] = useState();
   const [hpGroup, setHpGroup] = useState();
@@ -54,30 +53,35 @@ const DetallePaciente = (id) => {
   const [medicalEventPatch, setMedicalEventPatch] = useState();
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
-
+  const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
+  const[restOfPreconsult, setRestOfPreconsult] = useState([]);
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
+  const getValue = (formValue, preconsultValue) => 
+    formValue !== undefined && formValue !== null ? formValue : preconsultValue;
+  
   const bodyOBJFormat = {
     patient: Number(userId),
     patientPainMapId: Number(userId),
     painOwnerId: Number(userId),
     schedulingId: Number(scheduleId),
-    isTherePain: formData.bodySection.isTherePain|| preconsult?.rovisionalPreConsultationPainMap?.isTherePain || null ,
-    painDurationId: formData.bodySection.painDuration|| preconsult?.rovisionalPreConsultationPainMap?.painDuration || null ,
-    painScaleId: formData.bodySection.painScale|| preconsult?.rovisionalPreConsultationPainMap?.painScale || null ,
-    painTypeId: formData.bodySection.painType|| preconsult?.rovisionalPreConsultationPainMap?.painType || null ,
-    painAreas: formData.bodySection.painAreas
-    ? Object.values(formData.bodySection.painAreas)
-    : preconsult?.rovisionalPreConsultationPainMap?.painAreas
-    ? Object.values(preconsult.rovisionalPreConsultationPainMap.painAreas)
-    : null,
-    painFrequencyId: formData.bodySection.painFrequency|| preconsult?.rovisionalPreConsultationPainMap?.painFrequency || null ,
-    isTakingAnalgesic: formData.bodySection.isTakingAnalgesic || preconsult?.rovisionalPreConsultationPainMap?.isTakingAnalgesic || null ,
-    doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks || preconsult?.rovisionalPreConsultationPainMap?.doesAnalgesicWorks || null ,
-    isWorstPainEver: formData.bodySection.isWorstPainEver || preconsult?.rovisionalPreConsultationPainMap?.isWorstPainEver || null ,
+    isTherePain: getValue(formData?.bodySection?.isTherePain, preconsult?.provisionalPreConsultationPainMap?.isTherePain) ?? null,
+    painDurationId: getValue(formData?.bodySection?.painDuration, preconsult?.provisionalPreConsultationPainMap?.painDuration) ?? null,
+    painScaleId: getValue(formData?.bodySection?.painScale, preconsult?.provisionalPreConsultationPainMap?.painScale) ?? null,
+    painTypeId: getValue(formData?.bodySection?.painType, preconsult?.provisionalPreConsultationPainMap?.painType) ?? null,
+    painAreas: [
+      ...(formData?.bodySection?.painAreas && Object.values(formData.bodySection.painAreas) || []),
+      ...(preconsult?.provisionalPreConsultationPainMap?.painAreas && Object.values(preconsult.provisionalPreConsultationPainMap.painAreas) || [])
+    ],
+    painFrequencyId: getValue(formData?.bodySection?.painFrequency, preconsult?.provisionalPreConsultationPainMap?.painFrequency) ?? null,
+    isTakingAnalgesic: getValue(formData?.bodySection?.isTakingAnalgesic, preconsult?.provisionalPreConsultationPainMap?.isTakingAnalgesic) ?? null,
+    doesAnalgesicWorks: getValue(formData?.bodySection?.doesAnalgesicWorks, preconsult?.provisionalPreConsultationPainMap?.doesAnalgesicWorks) ?? null,
+    isWorstPainEver: getValue(formData?.bodySection?.isWorstPainEver, preconsult?.provisionalPreConsultationPainMap?.isWorstPainEver) ?? null,
   };
+  console.log( formData.bodySection.doesAnalgesicWorks);
+  console.log(bodyOBJFormat);
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
@@ -213,6 +217,39 @@ const DetallePaciente = (id) => {
       },
     });
   }, [preconsult]);
+  
+  const preconsultPhysical = {
+    // ids
+  preconsultationId: Number(preconsult?.id),
+  patient: Number(userId),
+  appointmentSchedule: Number(scheduleId),
+  // status
+  status: "sent",
+  // exploracion fisica
+  painRecordsToUpdate: [bodyOBJFormat],
+  // estudios
+  laboratoryResults: tests.laboratoryResults?.file || null,
+  laboratoryResultsDescription: tests.laboratoryResults?.description || "",
+  electrocardiogram: tests.electrocardiogram?.file || null,
+  electrocardiogramDescription: tests.electrocardiogram?.description || "",
+  rxThorax: tests.rxThorax?.file || null,
+  echocardiogram: tests.echocardiogram?.file || null,
+  walkTest: tests.walkTest?.file || null,
+  respiratoryFunctional: tests.respiratoryFunctional?.file || null,
+  tomographies: tests.tomographies?.file || null,
+  rightHeartCatheterization: tests.rightHeartCatheterization?.file || null,
+  ccg: tests.ccg?.file || null,
+  resonance: tests.resonance?.file || null,
+  leftHeartCatheterization: tests.leftHeartCatheterization?.file || null,
+  otherStudies: tests.otherStudies?.file || null,
+  pendingStudies: tests.pendingStudies?.description || "",
+  // se tiene que aplicar una logica que cambia segun el patch o el post
+  updateVitalSigns:  vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+  ...restOfPreconsult,
+
+  };
+  console.log(formData);
+  console.log(preconsultPhysical);
 
   const onSubmit = (data) => {
     //Antecedentes
@@ -274,7 +311,7 @@ const DetallePaciente = (id) => {
       setBackgroundPatch(backgroundPatch);
     }
     //preconsulta
-    const vitalSigns = [
+    vitalSigns = [
       { id: 1344, measureType: 1, measure: Number(data["Temperatura"]) },
       { id: 1344, measureType: 2, measure: Number(data["Presión Arterial Sistólica"]) },
       { id: 1344, measureType: 3, measure: Number(data["Presión Arterial Diastólica"]) },
@@ -283,34 +320,11 @@ const DetallePaciente = (id) => {
       { id: 1344, measureType: 7, measure: Number(data["Frecuencia Cardiaca"]) },
       { id: 1344, measureType: 8, measure: Number(data["Estatura"]) },
       { id: 1344, measureType: 9, measure: Number(data["Peso"]) },
-      { id: 1344, measureType: 10, measure: Number(data["Índice de Masa Corporal"]) }
+      { id: 1344, measureType: 10, measure: Number(data["IMC"]) }
     ];
-    const updateVitalSigns = vitalSigns.filter(vs => !isNaN(vs.measure));
-    setPreconsultPhysical({
-      //ids
-      preconsultationId: Number(preconsult?.id),
-      patient: Number(userId),
-      appointmentSchedule: Number(scheduleId),
-      //status
-      status: "sent",
-      //exploracion fisica
-      painRecordsToUpdate: [bodyOBJFormat],
-      //estudios
-      laboratoryResults: tests.laboratoryResults.file,
-      laboratoryResultsDescription: tests.laboratoryResults.description,
-      electrocardiogram: tests.electrocardiogram.file,
-      electrocardiogramDescription: tests.electrocardiogram.description,
-      rxThorax: tests.rxThorax.file,
-      echocardiogram: tests.echocardiogram.file,
-      walkTest: tests.walkTest.file,
-      respiratoryFunctional: tests.respiratoryFunctional.file,
-      tomographies: tests.tomographies.file,
-      rightHeartCatheterization: tests.rightHeartCatheterization.file,
-      ccg: tests.ccg.file,
-      resonance: tests.resonance.file,
-      leftHeartCatheterization: tests.leftHeartCatheterization.file,
-      otherStudies: tests.otherStudies.file,
-      pendingStudies: tests.pendingStudies.description,
+    const updateVitalSigns = vitalSigns.filter(sign => sign.measure !== 0 && sign.measure !== "");;
+    setVitalSignsPreconsult(updateVitalSigns);
+    setRestOfPreconsult({
       //anamnesis sin evolucion de la enfermedad
       consultationReason:
         data["Motivo de consulta"] === ""
@@ -331,9 +345,8 @@ const DetallePaciente = (id) => {
         data["lastAbnormalGlycemia"] === ""
           ? preconsult?.lastAbnormalGlycemia
           : data["lastAbnormalGlycemia"],
-      // se tiene que aplicar una logica que cambia segun el patch o el post
-      updateVitalSigns: updateVitalSigns,
-    });
+    })
+   
     setPhysicalExamination({
       physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
@@ -372,29 +385,25 @@ const DetallePaciente = (id) => {
       descriptionIndication: data["Tratamientos no farmacológicos"],
     });
   }
-    // patch diagnostic
-    const diagnostic = {
-      id: Number(medicalEventId),
-    };
-    const diagnosticPatch = {};
-    diagnosticPatch.id = diagnostic.id;
-    const addDiagnosticField = (field, fieldName) => {
-      if (data[field] && data[field] !== "") {
-        diagnosticPatch[fieldName] = data[field];
-      }
-    };
-    addDiagnosticField("Diagnostico", "diagnosticNotes");
-    addDiagnosticField("medications", "drugName");
-    addDiagnosticField("Conducta terapeutica", "descriptionTherapy");
-    addDiagnosticField(
-      "Tratamientos no farmacológicos",
-      "descriptionIndication"
+    
+    setDiagnosticPatch(
+      //diagnosticPatch
+      {
+        id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
+        diseaseId : 3,
+        diagnosticNotes: data["Diagnostico"] !== "" ? data["Diagnostico"] || medicalEventExist.diagnostics[0].diagnosticNotes : "",
+        medicalEventId : Number(medicalEventId),
+        drugId: null,  
+        drugName: data["medications"] !== "" ? data["medications"] || medicalEventExist.drugPrescriptions: "",
+        quantityDrug: null,
+        medicalProcedureId: null,
+        medicalProcedureName: data["Procedimientos"] !== "" ? data["Procedimientos"] || medicalEventExist.medicalProcedures[0].medicalProcedureName : null,
+        therapyId: null,
+        therapyDescription: data["Conducta terapeutica"] !== "" ? data["Conducta terapeutica"] || medicalEventExist.TherapyPrescription : null, // donde aparece en medical event
+        quantityTherapy: null,
+        descriptionIndication: "Tratamientos no farmacológicos",
+        }
     );
-    if (data["medications"] && data["medications"] !== "") {
-      addDiagnosticField("medications", "drugName");
-    }
-
-    setDiagnosticPatch(diagnosticPatch);
     // patch medical event
     const medicalEvent = {
       id: Number(medicalEventId),
@@ -423,7 +432,9 @@ const DetallePaciente = (id) => {
     // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
     setMedicalEventPatch(medicalEventPatch);
   };
-
+  console.log(diagnosticPatch);
+  console.log(medicalEventExist);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -635,9 +646,10 @@ const DetallePaciente = (id) => {
       response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, {
         headers: { token: token },
       });
-    } /*else if(diagnosticPatch !== undefined){
+    } else if(diagnosticPatch !== undefined){
       response8 = await ApiSegimed.patch(`/patient-update-diagnostic`, diagnosticPatch, { headers: { token: token } });
-    }*/ // no me funciona el patch
+    }
+    
     if (response8 !== undefined) {
       responses.push(response8);
     }

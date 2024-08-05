@@ -22,6 +22,8 @@ export default function InputCuerpoPre({
   defaultOpen = false,
   valuePreconsultation,
 }) {
+  const getSelectedOption = (formValue, preconsultValue) => 
+    formValue !== undefined ? formValue : preconsultValue;
   const dispatch = useAppDispatch();
   const [selectedMuscles, setSelectedMuscles] = useState([]);
   const [isPain, setIsPain] = useState(false); // Estado para manejar si hay dolor
@@ -478,10 +480,9 @@ export default function InputCuerpoPre({
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Calma con analgésicos?"}
-                      selectedOptions={
-                        bodySection.doesAnalgesicWorks ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.doesAnalgesicWorks
+                      selectedOptions={getSelectedOption(
+                        bodySection.doesAnalgesicWorks,
+                        valuePreconsultation?.provisionalPreConsultationPainMap?.doesAnalgesicWorks)
                       }
                       options={[
                         { value: true, text: "Si" },
@@ -494,10 +495,10 @@ export default function InputCuerpoPre({
                     <DropNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"Frecuencia del dolor"}
-                      selectedOptions={
-                        bodySection?.painFrequency ||
+                      selectedOptions={getSelectedOption(
+                        bodySection?.painFrequency ,
                         valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.painFrequency
+                          ?.painFrequency)
                       }
                       options={[
                         { value: 1, text: "De vez en cuando" },
