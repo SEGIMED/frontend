@@ -145,7 +145,6 @@ export default function HomeDoc() {
         }
       });
   };
-  console.log(sortedPatients);
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
@@ -216,7 +215,8 @@ export default function HomeDoc() {
                             onClick: () =>
                               handleCokiePatient(
                                 consulta?.id,
-                                consulta?.patient
+                                consulta?.patient,
+                                consulta.medicalEvent.id
                               ),
                           },
                           {
