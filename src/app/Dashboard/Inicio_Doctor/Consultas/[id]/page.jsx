@@ -80,8 +80,7 @@ const DetallePaciente = (id) => {
     doesAnalgesicWorks: getValue(formData?.bodySection?.doesAnalgesicWorks, preconsult?.provisionalPreConsultationPainMap?.doesAnalgesicWorks) ?? null,
     isWorstPainEver: getValue(formData?.bodySection?.isWorstPainEver, preconsult?.provisionalPreConsultationPainMap?.isWorstPainEver) ?? null,
   };
-  console.log( formData.bodySection.doesAnalgesicWorks);
-  console.log(bodyOBJFormat);
+
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
@@ -248,8 +247,6 @@ const DetallePaciente = (id) => {
   ...restOfPreconsult,
 
   };
-  console.log(formData);
-  console.log(preconsultPhysical);
 
   const onSubmit = (data) => {
     //Antecedentes
@@ -391,17 +388,17 @@ const DetallePaciente = (id) => {
       {
         id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
         diseaseId : 3,
-        diagnosticNotes: data["Diagnostico"] !== "" ? data["Diagnostico"] || medicalEventExist.diagnostics[0].diagnosticNotes : "",
-        medicalEventId : Number(medicalEventId),
-        drugId: null,  
-        drugName: data["medications"] !== "" ? data["medications"] || medicalEventExist.drugPrescriptions: "",
-        quantityDrug: null,
-        medicalProcedureId: null,
-        medicalProcedureName: data["Procedimientos"] !== "" ? data["Procedimientos"] || medicalEventExist.medicalProcedures[0].medicalProcedureName : null,
-        therapyId: null,
-        therapyDescription: data["Conducta terapeutica"] !== "" ? data["Conducta terapeutica"] || medicalEventExist.TherapyPrescription : null, // donde aparece en medical event
-        quantityTherapy: null,
-        descriptionIndication: "Tratamientos no farmacológicos",
+        diagnosticNotes: data["Diagnostico"] !== "" ? data["Diagnostico"] : medicalEventExist.diagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
+  medicalEventId: Number(medicalEventId),
+  drugId: null,
+  drugName: data["medications"] !== "" ? data["medications"] : medicalEventExist?.drugPrescriptions || "", // Si está vacío, usa el valor de la receta existente
+  quantityDrug: null,
+  medicalProcedureId: null,
+  medicalProcedureName: data["Procedimientos"] !== "" ? data["Procedimientos"] : medicalEventExist?.medicalProcedures?.[0]?.medicalProcedureName || null, // Usa el valor del procedimiento existente si está vacío
+  therapyId: null,
+  therapyDescription: data["Conducta terapeutica"] !== "" ? data["Conducta terapeutica"] : medicalEventExist?.TherapyPrescription || null, // Usa la terapia existente si está vacío
+  quantityTherapy: null,
+  descriptionIndication: "Tratamientos no farmacológicos",
         }
     );
     // patch medical event
