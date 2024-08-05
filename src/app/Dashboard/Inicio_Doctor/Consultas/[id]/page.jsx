@@ -58,6 +58,7 @@ const DetallePaciente = (id) => {
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
   const [bodySection, setBodySection] = useState({});
+  const [isDisabled, setIsDisabled] = useState(true);
 
   console.log(bodySection);
   const methods = useForm();
@@ -221,6 +222,7 @@ const DetallePaciente = (id) => {
 
   const onSubmit = (data) => {
     console.log(data);
+    setIsDisabled(false);
     //Antecedentes
     setBackground({
       patientId: Number(userId),
@@ -676,8 +678,7 @@ const DetallePaciente = (id) => {
     } else {
       response7 = await ApiSegimed.patch(
         `/update-pre-consultation`,
-        preconsultPhysical,
-        { headers: { token: token } }
+        preconsultPhysical
       );
     }
     if (response7 !== undefined) {
@@ -892,9 +893,12 @@ const DetallePaciente = (id) => {
           <Elboton
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
+            disabled={isDisabled}
             onPress={handleSave}
             size={"lg"}
-            className={"bg-greenPrimary w-60 text-sm font-bold"}
+            className={`bg-greenPrimary w-60 text-sm font-bold ${
+              isDisabled ? "cursor-not-allowed bg-gray-400" : ""
+            }`}
           />
         </div>
       </div>
