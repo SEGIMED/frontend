@@ -124,14 +124,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
       const token = Cookies.get("a");
       const headers = { headers: { token: token } };
-
+      console.log(rest);
       const response = await ApiSegimed.post("/schedules", rest, headers);
 
       handleClose();
       if (response.data) {
         Swal.fire({
           title: "Consulta agendada con exito!",
-          // text: "You clicked the button!",
           icon: "success",
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
@@ -193,6 +192,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 <input
                   id="teleconsulta"
                   type="radio"
+                  disabled
                   value="2"
                   {...register("typeOfMedicalConsultation", {
                     required: {
@@ -202,7 +202,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 <label htmlFor="teleconsulta" className="">
-                  Teleconsulta
+                  Teleconsulta(Próximamente)
                 </label>
               </div>
             </div>

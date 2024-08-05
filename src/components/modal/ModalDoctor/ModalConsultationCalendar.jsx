@@ -19,11 +19,9 @@ import Swal from "sweetalert2";
 const ModalConsultationCalendar = ({
   isOpen,
   onClose,
-  physician,
   dateSelect,
   lista,
   title,
-  patient,
   stateName,
 }) => {
   const {
@@ -32,6 +30,7 @@ const ModalConsultationCalendar = ({
     setValue,
     watch,
     reset,
+    getValues,
     formState: { errors },
   } = useForm();
 
@@ -39,7 +38,8 @@ const ModalConsultationCalendar = ({
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const selectTime = watch("time");
-
+  const role = Cookies.get("b");
+  const userId = Number(Cookies.get("c"));
   const combineDateTime = (date, time) =>
     date && time ? `${date}T${time}:00` : "";
 
@@ -74,7 +74,6 @@ const ModalConsultationCalendar = ({
       setTime("");
     }
   }, [isOpen, reset]);
-
   useEffect(() => {
     const startDateTime = combineDateTime(date, selectTime);
     if (startDateTime) {
@@ -126,12 +125,13 @@ const ModalConsultationCalendar = ({
         return;
       }
       setDisabled(true);
-      const token = Cookies.get("a");
-      const headers = { headers: { token } };
-
-      const payload = patient ? { ...data, patient } : { ...data, physician };
-
-      const response = await ApiSegimed.post("/schedules", payload, headers);
+      if (role == "Paciente") {
+        data.patient = userId;
+      } else {
+        data.physician = userId;
+      }
+      const payload = data;
+      const response = await ApiSegimed.post("/schedules", payload);
 
       if (response.data) {
         handleClose();
@@ -223,13 +223,14 @@ const ModalConsultationCalendar = ({
                   <label className="flex items-center gap-3">
                     <input
                       id="teleconsulta"
+                      disabled
                       type="radio"
                       value="2"
                       {...register("typeOfMedicalConsultation", {
                         required: "* Debes seleccionar una opción *",
                       })}
                     />
-                    Teleconsulta
+                    Teleconsulta(Próximamente)
                   </label>
                 </div>
                 {errors.typeOfMedicalConsultation && (
