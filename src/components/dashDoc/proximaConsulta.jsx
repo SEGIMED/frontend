@@ -16,14 +16,16 @@ export default function ProximasConsultas() {
   const myID = Number(Cookies.get("c"));
   const [nextFiveConsultas, setNextFiveConsultas] = useState([]);
 
-
   useEffect(() => {
     const getNextFiveConsultas = () => {
       const currentDate = new Date();
 
       const filteredConsultas = consultas
         .filter(
-          (consulta) => new Date(consulta.scheduledStartTimestamp) > currentDate && consulta.schedulingStatus === 1 && consulta.physician === myID
+          (consulta) =>
+            new Date(consulta.scheduledStartTimestamp) > currentDate &&
+            consulta.schedulingStatus === 1 &&
+            consulta.physician === myID
         )
         .sort(
           (a, b) =>
@@ -38,7 +40,6 @@ export default function ProximasConsultas() {
       getNextFiveConsultas();
     }
   }, [consultas]);
-
 
   return (
     <div className="h-full w-full bg-white rounded-2xl border pb-2 border-[#DCDBDB]  ">
@@ -65,7 +66,7 @@ export default function ProximasConsultas() {
           <ProximasConsultasInfo key={consulta.id} info={consulta} />
         ))
       ) : (
-        <p>No hay próximas consultas.</p>
+        <p className="px-2 xs:px-4 md:px-6">No hay próximas consultas.</p>
       )}
     </div>
   );

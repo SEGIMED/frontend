@@ -108,24 +108,25 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
     '20': 'left-soleus',
     '21': 'head',
     '22': 'neck'
-};
+  };
   useEffect(() => {
     const getMuscleNames = (painAreas) => {
       if (painAreas) {
-          const muscleData = painAreas.map((area) => ({
-              name: "Musculo",
-              muscles: area.painArea
-                  ? [painAreaMapIngles[area.painArea]]
-                  : [],
-              painNotes: area.painNotes,
-          }));
-          setSelectedMuscles(muscleData);
-      }};
-  
+        const muscleData = painAreas.map((area) => ({
+          name: "Musculo",
+          muscles: area.painArea
+            ? [painAreaMapIngles[area.painArea]]
+            : [],
+          painNotes: area.painNotes,
+        }));
+        setSelectedMuscles(muscleData);
+      }
+    };
+
     getMuscleNames(valuePreconsultation?.provisionalPreConsultationPainMap?.painAreas);
     setIsPain(valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain)
     setPainLevel(valuePreconsultation?.provisionalPreConsultationPainMap?.catPainScale.name)
-  },[valuePreconsultation])
+  }, [valuePreconsultation])
 
   useEffect(() => {
     const colors = {
@@ -261,7 +262,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
                   text={"¿Hay dolor?"}
-                  selectedOptions={bodySection?.isTherePain || valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain}
+                  selectedOptions={bodySection?.isTherePain !== null ? bodySection?.isTherePain : null}
                   options={[
                     { value: true, text: 'Si' },
                     { value: false, text: 'No' }
@@ -294,7 +295,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                         aria-label="Nivel de dolor"
                         size="lg"
                         step={1}
-                        value={painLevel }
+                        value={painLevel}
                         onChange={handleChangePainLevel}
                         showSteps={true}
                         maxValue={10}
@@ -354,7 +355,7 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                     <DropNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"Tipo de dolor"}
-                      selectedOptions={bodySection.painType || valuePreconsultation?.provisionalPreConsultationPainMap?.painType  }
+                      selectedOptions={bodySection.painType || valuePreconsultation?.provisionalPreConsultationPainMap?.painType}
                       options={[
                         { value: 1, text: 'Opresión' },
                         { value: 2, text: 'Punzante' },
@@ -425,8 +426,8 @@ export default function InputCuerpoPre({ title, onBodyChange, bodySection, defau
                       name={"isWorstPainEver"}
                     />
                   </div>
-                </> 
-              ): null}
+                </>
+              ) : null}
             </div>
           </div>
         </div>

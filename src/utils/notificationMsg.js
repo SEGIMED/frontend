@@ -2,9 +2,9 @@ export const formatNotificationMessage = (notification) => {
   const { content, sender } = notification;
   const notificationType = content?.notificationType;
   function formatTimeWithoutSeconds(timeString) {
-    const [time, period] = timeString.split(" ");
+    const [time] = timeString.split(" ");
     const [hours, minutes] = time.split(":");
-    return `${hours}:${minutes} ${period}`;
+    return `${hours}:${minutes}`;
   }
 
   switch (notificationType) {
@@ -18,7 +18,7 @@ export const formatNotificationMessage = (notification) => {
                 } a las ${formatTimeWithoutSeconds(content.currentHour)}.`;
 
     case "appointmentCreated":
-      return `Se ha creado una nueva cita para el 
+      return `Se ha agendado una nueva cita para el 
                 ${content.date} a las ${formatTimeWithoutSeconds(
         content.hour
       )}.`;
