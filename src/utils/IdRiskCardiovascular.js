@@ -6,7 +6,7 @@ const IdRiskCardiovascular = (riskText) => {
         return 2;
       case 'Alto':
         return 3;
-      case 'Muy Alto':
+      case 'Muy alto':
         return 4;
     }
   };
