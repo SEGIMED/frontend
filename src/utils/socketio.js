@@ -43,7 +43,7 @@ class Socket {
     // Escuchar el evento 'disconnect' para saber cuando el socket se desconecta
     this._socket.on("disconnect", () => {});
 
-    this._socket.on("getHistoryChats", async (data) => {
+    this._socket.on("getHistoryChats",(data) => {
       //event listener client recived all chats of a user.
       if (data) dispatch(setChats(data));
     });
@@ -51,8 +51,7 @@ class Socket {
     this._socket.on("updateMessage", async (data) => {
       //event listener client recived info of a chat.
       dispatch(updateChat(data));
-
-      this._socket.emit("persistChat", data.chat, (newChat) => {
+      this._socket.emit("persistChat", { chat:data.chat, lastMessage: data.lastMessage }, (newChat) => {
         dispatch(addChat(newChat));
       });
     });

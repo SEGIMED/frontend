@@ -123,7 +123,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
       const token = Cookies.get("a");
       const headers = { headers: { token: token } };
-
+      console.log(rest);
       const response = await ApiSegimed.post("/schedules", rest, headers);
 
       handleClose();
@@ -178,8 +178,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             <div className="flex items-center justify-start gap-2 text-sm font-semibold">
               <IconTypeQueries /> Tipo de consultas
             </div>
-            <div className="flex items-center justify-around gap-2">
-              <div className="flex items-center justify-start gap-3">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-start gap-3 mt-2">
                 <input
                   id="consultaFisica"
                   type="radio"
@@ -200,6 +200,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 <input
                   id="teleconsulta"
                   type="radio"
+                  disabled
                   value="2"
                   {...register("typeOfMedicalConsultation", {
                     required: {
@@ -209,7 +210,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 <label htmlFor="teleconsulta" className="">
-                  Teleconsulta
+                  Teleconsulta(Próximamente)
                 </label>
               </div>
             </div>

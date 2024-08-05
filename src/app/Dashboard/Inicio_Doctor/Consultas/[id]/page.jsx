@@ -1,6 +1,5 @@
 "use client";
 
-
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -59,6 +58,7 @@ const DetallePaciente = (id) => {
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
   const [bodySection, setBodySection] = useState({});
+  const [isDisabled, setIsDisabled] = useState(true);
 
   console.log(bodySection);
   const methods = useForm();
@@ -219,17 +219,15 @@ const DetallePaciente = (id) => {
     });
   }, [preconsult]);
   console.log(preconsult);
-  
+
   const onSubmit = (data) => {
     console.log(data);
+    setIsDisabled(false);
     //Antecedentes
     setBackground({
       patientId: Number(userId),
       medicalEventId: Number(medicalEventId),
-      allergicBackground:
-        data["Alergias"] === ""
-          ? ""
-          : data["Alergias"],
+      allergicBackground: data["Alergias"] === "" ? "" : data["Alergias"],
       familyBackground:
         data["Antecedentes familiares"] === ""
           ? ""
@@ -247,17 +245,12 @@ const DetallePaciente = (id) => {
           ? ""
           : data["Antecedentes de infancia"],
       pharmacologicalBackground:
-        data["Medicación actual"] === ""
-          ? ""
-          : data["Medicación actual"],
+        data["Medicación actual"] === "" ? "" : data["Medicación actual"],
       surgicalBackground:
         data["Antecedentes quirúrgicos"] === ""
           ? ""
           : data["Antecedentes quirúrgicos"],
-      vaccinationBackground:
-        data["Vacunas"] === ""
-          ? ""
-          : data["Vacunas"],
+      vaccinationBackground: data["Vacunas"] === "" ? "" : data["Vacunas"],
       schedulingId: Number(scheduleId),
     });
     if (patient?.backgrounds) {
@@ -275,7 +268,10 @@ const DetallePaciente = (id) => {
       // Agregar cada campo condicionalmente
       addBackgroundField("Alergias", "allergicBackground");
       addBackgroundField("Antecedentes familiares", "familyBackground");
-      addBackgroundField("Antecedentes no patologicos", "nonPathologicBackground");
+      addBackgroundField(
+        "Antecedentes no patologicos",
+        "nonPathologicBackground"
+      );
       addBackgroundField("Antecedentes patologicos", "pathologicBackground");
       addBackgroundField("Antecedentes de infancia", "pediatricBackground");
       addBackgroundField("Medicación actual", "pharmacologicalBackground");
@@ -430,38 +426,47 @@ const DetallePaciente = (id) => {
     // en revision por el backend
 
     setMedicalEvent({
-      physicianComments: data["Anotaciones de la consulta"] ? data["Anotaciones de la consulta"] : null, ///evolucion
+      physicianComments: data["Anotaciones de la consulta"]
+        ? data["Anotaciones de la consulta"]
+        : null, ///evolucion
       schedulingId: Number(scheduleId), /// el id del agendamiento
-      chiefComplaint: data["Motivo de consulta"] ? data["Motivo de consulta"] : null, // motivo de consulta
-      historyOfPresentIllness: data["Evolucion de la enfermedad"] ? data["Evolucion de la enfermedad"] : null, /// enfermedad actual
+      chiefComplaint: data["Motivo de consulta"]
+        ? data["Motivo de consulta"]
+        : null, // motivo de consulta
+      historyOfPresentIllness: data["Evolucion de la enfermedad"]
+        ? data["Evolucion de la enfermedad"]
+        : null, /// enfermedad actual
       reviewOfSystems: data["Sintomas importantes"] || null, /// revision por sistemas o sintomas
       treatmentPlan: null, /// plan de tratamiento
       pendingDiagnosticTest: null, // test pendientes
       alarmPattern: data["Pauta de alarma"] ? data["Pauta de alarma"] : null, // patron de alarma
     });
-      const medicalEvent = {
-        id: Number(medicalEventExist?.data.medicalEventId) || medicalEvent?.id,
-      };
-      
-      // Función para agregar campos condicionalmente al objeto
-      const medicalEventPatch = {};
-      medicalEventPatch.id = medicalEvent.id;
-      const addMedicalEventField = (field, fieldName) => {
-        if (data[field] && data[field] !== "") {
-          medicalEventPatch[fieldName] = data[field];
-        }
-      };
-      
-      // Agregar cada campo condicionalmente
-      addMedicalEventField("Anotaciones de la consulta", "physicianComments");
-      addMedicalEventField("Evolucion de la enfermedad", "historyOfPresentIllness");
-      addMedicalEventField("Pauta de alarma", "alarmPattern");
-      addMedicalEventField("Sintomas importantes", "reviewOfSystems");
-      addMedicalEventField("Motivo de consulta", "chiefComplaint");
-      addMedicalEventField("Tratamientos no farmacológicos", "treatmentPlan");
-      
-      // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
-      setMedicalEventPatch(medicalEventPatch);
+    const medicalEvent = {
+      id: Number(medicalEventExist?.data.medicalEventId) || medicalEvent?.id,
+    };
+
+    // Función para agregar campos condicionalmente al objeto
+    const medicalEventPatch = {};
+    medicalEventPatch.id = medicalEvent.id;
+    const addMedicalEventField = (field, fieldName) => {
+      if (data[field] && data[field] !== "") {
+        medicalEventPatch[fieldName] = data[field];
+      }
+    };
+
+    // Agregar cada campo condicionalmente
+    addMedicalEventField("Anotaciones de la consulta", "physicianComments");
+    addMedicalEventField(
+      "Evolucion de la enfermedad",
+      "historyOfPresentIllness"
+    );
+    addMedicalEventField("Pauta de alarma", "alarmPattern");
+    addMedicalEventField("Sintomas importantes", "reviewOfSystems");
+    addMedicalEventField("Motivo de consulta", "chiefComplaint");
+    addMedicalEventField("Tratamientos no farmacológicos", "treatmentPlan");
+
+    // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
+    setMedicalEventPatch(medicalEventPatch);
   };
 
   useEffect(() => {
@@ -473,12 +478,12 @@ const DetallePaciente = (id) => {
           `/get-preconsultation?scheduleId=${scheduleId}`,
           { headers: { token: token } }
         );
-        console.log("estoe es preconsulta", response1)
+        console.log("estoe es preconsulta", response1);
         setPreconsult(response1.data);
       } catch (error) {
         console.log("Este agendamiento no tiene preconsulta", error);
-      };
-    }
+      }
+    };
     const fetchData2 = async () => {
       try {
         // Segunda petición utilizando el userId de la primera respuesta - esto pide el paciente
@@ -489,7 +494,7 @@ const DetallePaciente = (id) => {
         setPatient(response2.data);
       } catch (error) {
         console.log("No existe este paciente", error);
-      };
+      }
     };
     const fetchData3 = async () => {
       try {
@@ -508,26 +513,29 @@ const DetallePaciente = (id) => {
           const medicalEventPrevisional = {
             physicianComments: "-", ///evolucion
             schedulingId: Number(scheduleId), /// el id del agendamiento
-            chiefComplaint: "-",// motivo de consulta
+            chiefComplaint: "-", // motivo de consulta
             historyOfPresentIllness: "-", /// enfermedad actual
             reviewOfSystems: "-", /// revision por sistemas o sintomas
             treatmentPlan: "-", /// plan de tratamiento
             pendingDiagnosticTest: "-", // test pendientes
-            alarmPattern: "-" // patron de alarma
-          }
+            alarmPattern: "-", // patron de alarma
+          };
           // Cuarta petición se hacer un previsional de diagnostico para obtener el id de medical event
           const response4 = await ApiSegimed.post(
-            `/medical-event/create-event`, medicalEventPrevisional,
+            `/medical-event/create-event`,
+            medicalEventPrevisional,
             { headers: { token: token } }
           );
           console.log(response4.data.medicalEvent.id);
           setMedicalEventId(response4.data.medicalEvent.id);
-
         } catch (error) {
-          console.log("No se ah realizado el previsional de diagnostico:", error);
+          console.log(
+            "No se ah realizado el previsional de diagnostico:",
+            error
+          );
         }
       }
-    }
+    };
     console.log(medicalEvent);
 
     fetchData();
@@ -548,39 +556,84 @@ const DetallePaciente = (id) => {
     let response1;
     if (background !== undefined) {
       if (patient?.backgrounds?.length === 0 || patient?.backgrounds === null) {
-        response1 = await ApiSegimed.post(`/backgrounds/create-backgrounds`, background, { headers: { token: token } });
+        response1 = await ApiSegimed.post(
+          `/backgrounds/create-backgrounds`,
+          background,
+          { headers: { token: token } }
+        );
       } else {
-        response1 = await ApiSegimed.patch(`/backgrounds/update-backgrounds?id=${userId}`, backgroundPatch, { headers: { token: token } });
+        response1 = await ApiSegimed.patch(
+          `/backgrounds/update-backgrounds?id=${userId}`,
+          backgroundPatch,
+          { headers: { token: token } }
+        );
       }
     }
-    if (response1 !== undefined) { responses.push(response1); }
+    if (response1 !== undefined) {
+      responses.push(response1);
+    }
 
     // Riesgo cardiovascular
     let response2;
-    if (patient?.patientCardiovascularRisks === null && cardiovascularRisk.riskId > 0) {
-      response2 = await ApiSegimed.post(`/patient-new-cardiovascular-risk`, cardiovascularRisk, { headers: { token: token } });
+    if (
+      patient?.patientCardiovascularRisks === null &&
+      cardiovascularRisk.riskId > 0
+    ) {
+      response2 = await ApiSegimed.post(
+        `/patient-new-cardiovascular-risk`,
+        cardiovascularRisk,
+        { headers: { token: token } }
+      );
     } else if (cardiovascularRisk.riskId > 0) {
-      response2 = await ApiSegimed.patch(`/patient-update-cardiovascular-risk`, cardiovascularRisk, { headers: { token: token } });
+      response2 = await ApiSegimed.patch(
+        `/patient-update-cardiovascular-risk`,
+        cardiovascularRisk,
+        { headers: { token: token } }
+      );
     }
-    if (response2 !== undefined) { responses.push(response2); }
+    if (response2 !== undefined) {
+      responses.push(response2);
+    }
 
     // Riesgo quirúrgico
     let response3;
-    if (patient?.patientSurgicalRisks === null && surgicalRisk.surgicalRiskId > 0) {
-      response3 = await ApiSegimed.post(`/patient-new-surgical-risk`, surgicalRisk, { headers: { token: token } });
+    if (
+      patient?.patientSurgicalRisks === null &&
+      surgicalRisk.surgicalRiskId > 0
+    ) {
+      response3 = await ApiSegimed.post(
+        `/patient-new-surgical-risk`,
+        surgicalRisk,
+        { headers: { token: token } }
+      );
     } else if (surgicalRisk.surgicalRiskId > 0) {
-      response3 = await ApiSegimed.patch(`/patient-update-surgical-risk`, surgicalRisk, { headers: { token: token } });
+      response3 = await ApiSegimed.patch(
+        `/patient-update-surgical-risk`,
+        surgicalRisk,
+        { headers: { token: token } }
+      );
     }
-    if (response3 !== undefined) { responses.push(response3); }
+    if (response3 !== undefined) {
+      responses.push(response3);
+    }
 
     // Grupo de hipertensión pulmonar
     let response4;
-    if (patient?.patientPulmonaryHypertensionGroups === null && hpGroup.hpGroupId > 0) {
-      response4 = await ApiSegimed.post(`/patient-new-hp-group`, hpGroup, { headers: { token: token } });
+    if (
+      patient?.patientPulmonaryHypertensionGroups === null &&
+      hpGroup.hpGroupId > 0
+    ) {
+      response4 = await ApiSegimed.post(`/patient-new-hp-group`, hpGroup, {
+        headers: { token: token },
+      });
     } else if (hpGroup.hpGroupId > 0) {
-      response4 = await ApiSegimed.patch(`/patient-update-hp-group`, hpGroup, { headers: { token: token } });
+      response4 = await ApiSegimed.patch(`/patient-update-hp-group`, hpGroup, {
+        headers: { token: token },
+      });
     }
-    if (response4 !== undefined) { responses.push(response4); }
+    if (response4 !== undefined) {
+      responses.push(response4);
+    }
 
     // Examen físico
     /*
@@ -596,30 +649,53 @@ const DetallePaciente = (id) => {
   */
     // Riesgo de insuficiencia cardíaca
     let response6;
-    if (patient?.patientPulmonaryHypertensionRisks === null ) {
-      response6 = await ApiSegimed.post(`/patient-new-nyha-classification`, heartFailureRisk, { headers: { token: token } });
+    if (patient?.patientPulmonaryHypertensionRisks === null) {
+      response6 = await ApiSegimed.post(
+        `/patient-new-nyha-classification`,
+        heartFailureRisk,
+        { headers: { token: token } }
+      );
     } else if (heartFailureRisk.heartFailureRiskId > 0) {
-      response6 = await ApiSegimed.patch(`/patient-update-nyha-classification`, heartFailureRisk, { headers: { token: token } });
+      response6 = await ApiSegimed.patch(
+        `/patient-update-nyha-classification`,
+        heartFailureRisk,
+        { headers: { token: token } }
+      );
     }
-    if (response6 !== undefined) { responses.push(response6); }
+    if (response6 !== undefined) {
+      responses.push(response6);
+    }
     console.log(response6);
 
     // Preconsulta
     let response7;
     if (preconsult?.length === 0) {
-      response7 = await ApiSegimed.post(`/pre-consultation`, preconsultPhysical, { headers: { token: token } });
+      response7 = await ApiSegimed.post(
+        `/pre-consultation`,
+        preconsultPhysical,
+        { headers: { token: token } }
+      );
     } else {
-      response7 = await ApiSegimed.patch(`/update-pre-consultation`, preconsultPhysical, { headers: { token: token } });
+      response7 = await ApiSegimed.patch(
+        `/update-pre-consultation`,
+        preconsultPhysical
+      );
     }
-    if (response7 !== undefined) { responses.push(response7); }
+    if (response7 !== undefined) {
+      responses.push(response7);
+    }
 
     // Diagnóstico
     console.log(diagnostic);
     let response8;
     if (diagnostic !== undefined) {
-      response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, { headers: { token: token } });
+      response8 = await ApiSegimed.post(`/patient-diagnostic`, diagnostic, {
+        headers: { token: token },
+      });
     }
-    if (response8 !== undefined) { responses.push(response8); }
+    if (response8 !== undefined) {
+      responses.push(response8);
+    }
     console.log(response8);
 
     // Evento médico
@@ -641,27 +717,55 @@ const DetallePaciente = (id) => {
     let response9;
     console.log(medicalEventPatch);
     if (medicalEventPatch !== undefined) {
-      if (medicalEvent.alarmPattern === null || medicalEvent.pendingDiagnosticTest === null || medicalEvent.treatmentPlan === null || medicalEvent.reviewOfSystems === null || medicalEvent.historyOfPresentIllness === null || medicalEvent.physicianComments === null || medicalEvent.chiefComplaint === null) {
-        if (medicalEvent.alarmPattern === null && medicalEvent.pendingDiagnosticTest === null && medicalEvent.treatmentPlan === null && medicalEvent.reviewOfSystems === null && medicalEvent.historyOfPresentIllness === null && medicalEvent.physicianComments === null && medicalEvent.chiefComplaint === null) {
+      if (
+        medicalEvent.alarmPattern === null ||
+        medicalEvent.pendingDiagnosticTest === null ||
+        medicalEvent.treatmentPlan === null ||
+        medicalEvent.reviewOfSystems === null ||
+        medicalEvent.historyOfPresentIllness === null ||
+        medicalEvent.physicianComments === null ||
+        medicalEvent.chiefComplaint === null
+      ) {
+        if (
+          medicalEvent.alarmPattern === null &&
+          medicalEvent.pendingDiagnosticTest === null &&
+          medicalEvent.treatmentPlan === null &&
+          medicalEvent.reviewOfSystems === null &&
+          medicalEvent.historyOfPresentIllness === null &&
+          medicalEvent.physicianComments === null &&
+          medicalEvent.chiefComplaint === null
+        ) {
           console.log("object vacio");
         } else {
-          response9 = await ApiSegimed.patch(`/medical-event/update-event`, medicalEventPatch, { headers: { token: token } });
+          response9 = await ApiSegimed.patch(
+            `/medical-event/update-event`,
+            medicalEventPatch,
+            { headers: { token: token } }
+          );
         }
       }
     }
-    if (response9 !== undefined) { responses.push(response9); }
+    if (response9 !== undefined) {
+      responses.push(response9);
+    }
     // Verificar todas las respuestas
-    const allSuccessful = responses.every(response => response?.status === 200);
+    const allSuccessful = responses.every(
+      (response) => response?.status === 200
+    );
 
     console.log(allSuccessful);
     if (allSuccessful) {
-      const data = await ApiSegimed.patch(`/schedule/${scheduleId}`, { schedulingStatus: 2 }, { headers: { token: token } });
+      const data = await ApiSegimed.patch(
+        `/schedule/${scheduleId}`,
+        { schedulingStatus: 2 },
+        { headers: { token: token } }
+      );
       console.log(data);
       setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
-        text: "Se ha creado la consulta",
+        text: "Se ha realizado la consulta con exito",
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
@@ -671,7 +775,7 @@ const DetallePaciente = (id) => {
       Swal.fire({
         icon: "error",
         title: "Error ",
-        text: "Error al crear la consulta",
+        text: "Error al procesar la consulta",
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
@@ -691,7 +795,11 @@ const DetallePaciente = (id) => {
         <SubNavbarConsulta handleClic={handleClic} />
         {loading === false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
-            <Consulta title={"Datos del paciente"} paciente={patient} defaultOpen={handleNav === "datos del paciente" ? true : false} />
+            <Consulta
+              title={"Datos del paciente"}
+              paciente={patient}
+              defaultOpen={handleNav === "datos del paciente" ? true : false}
+            />
             <InputConsulta
               title={"Antecedentes"}
               risk={["Riesgo cardiovascular"]}
@@ -725,7 +833,7 @@ const DetallePaciente = (id) => {
               ]}
               preconsult={preconsult}
               diagnostico={medicalEventExist?.data}
-              defaultOpen = {handleNav === "anamnesis" ? true : false}
+              defaultOpen={handleNav === "anamnesis" ? true : false}
             />
             <SignosVitalesInfo
               title={"Signos vitales"}
@@ -734,13 +842,14 @@ const DetallePaciente = (id) => {
               defaultOpen={handleNav === "signos vitales" ? true : false}
             />
             <InputCuerpoPre
-            title={"Exploracion fisica"}
-            onBodyChange={handleBodyChange}
-            bodySection={formData?.bodySection}
-            defaultOpen = {handleNav === "exploracion fisica" ? true : false}
-            valuePreconsultation={preconsult}
+              title={"Exploracion fisica"}
+              onBodyChange={handleBodyChange}
+              bodySection={formData?.bodySection}
+              defaultOpen={handleNav === "exploracion fisica" ? true : false}
+              valuePreconsultation={preconsult}
             />
-            <InputExam title={"Examen fisico"}
+            <InputExam
+              title={"Examen fisico"}
               defaultOpen={handleNav === "examen fisico" ? true : false}
             />
             {/*<InputConsulta title={"Comentarios"} subtitle={["Anotaciones"]} />*/}
@@ -768,7 +877,9 @@ const DetallePaciente = (id) => {
                 "Tratamientos no farmacológicos",
                 "Pauta de alarma",
               ]}
-              defaultOpen={handleNav === "diagnostico y tratamientos" ? true : false}
+              defaultOpen={
+                handleNav === "diagnostico y tratamientos" ? true : false
+              }
               subtitle2={["Diagnostico", "Procedimientos"]}
               subtitle3={"Medicamentos"}
             />
@@ -782,9 +893,12 @@ const DetallePaciente = (id) => {
           <Elboton
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
+            disabled={isDisabled}
             onPress={handleSave}
             size={"lg"}
-            className={"bg-greenPrimary w-60 text-sm font-bold"}
+            className={`bg-greenPrimary w-60 text-sm font-bold ${
+              isDisabled ? "cursor-not-allowed bg-gray-400" : ""
+            }`}
           />
         </div>
       </div>

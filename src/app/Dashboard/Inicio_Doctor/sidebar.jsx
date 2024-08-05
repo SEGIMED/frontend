@@ -356,7 +356,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
-      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Medico"} /> */}
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Medico"} />
     </div>
   );
 };

@@ -10,7 +10,8 @@ export default function ButtonNext({
   name,
   disabled,
   selectedOptions,
-  type, handleDisabled
+  type, handleDisabled,
+  defaultValue
 }) {
   // Define the initial state based on selectedOptions
   const opcionRecibida =
@@ -21,12 +22,17 @@ export default function ButtonNext({
         : selectedOptions;
 
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     setSelectedOptionState(opcionRecibida);
     if (selectedOptions) { if (handleDisabled) handleDisabled() }
   }, [selectedOptions]);
+
+  useEffect(() => {
+    if (defaultValue?.physicalExaminations[0]?.physicalSubsystem) { setSelectedOptionState("Si") }
+  }, [defaultValue]);
 
   const handleClick = (option) => {
     setSelectedOptionState(option);
@@ -47,7 +53,7 @@ export default function ButtonNext({
   return (
     <div>
       <div className="flex items-center justify-center">
-        <div className="font-bold mb-2 ">{text}</div>
+        <div className="mb-2 font-bold ">{text}</div>
       </div>
       <div className="flex justify-center space-x-4">
         {options?.map((opcion, index) => (

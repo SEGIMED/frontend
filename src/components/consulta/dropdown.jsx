@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import { useFormContext } from "react-hook-form";
 
-export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText, handleOptionChange }) {
+export default function DropNext({ text, options, text2, name, disabled, selectedOptions, type, handleDisabled, icon, colorBackground, colorText, handleOptionChange, defaultValue }) {
   const opcionRecibida = selectedOptions ? selectedOptions : "";
   const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
   const [isOpen, setIsOpen] = useState(false);

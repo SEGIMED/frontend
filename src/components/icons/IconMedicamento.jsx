@@ -24,7 +24,7 @@ export default function IconMedicamento() {
           d="M13.05 4.05L8.55 8.55L15.44 15.44L19.94 10.94C21.85 9.04 21.85 5.95 19.94 4.05C18.04 2.14 14.95 2.14 13.05 4.05Z"
           stroke="#000000"
           strokeOpacity="0"
-          stroke-width="1.000000"
+          strokeWidth="1.000000"
         />
         <path
           id="Stroke-291"
@@ -38,8 +38,8 @@ export default function IconMedicamento() {
           d="M19.94 4.05C18.04 2.14 14.95 2.14 13.05 4.05L4.05 13.05C2.14 14.95 2.14 18.04 4.05 19.94C5.95 21.85 9.04 21.85 10.94 19.94L19.94 10.94C21.85 9.04 21.85 5.95 19.94 4.05Z"
           stroke="#808080"
           strokeOpacity="1.000000"
-          stroke-width="2.000000"
-          stroke-linejoin="round"
+          strokeWidth="2.000000"
+          strokeLinejoin="round"
         />
         <path
           id="Stroke-292"
@@ -53,9 +53,9 @@ export default function IconMedicamento() {
           d="M8.55 8.55L15.44 15.44"
           stroke="#808080"
           strokeOpacity="1.000000"
-          stroke-width="2.000000"
-          stroke-linejoin="round"
-          stroke-linecap="round"
+          strokeWidth="2.000000"
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
         <path
           id="Stroke-293"
@@ -69,9 +69,9 @@ export default function IconMedicamento() {
           d="M18.81 6.45C17.49 5.13 15.36 5.13 14.04 6.45"
           stroke="#808080"
           strokeOpacity="1.000000"
-          stroke-width="1.500000"
-          stroke-linejoin="round"
-          stroke-linecap="round"
+          strokeWidth="1.500000"
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
       </g>
     </svg>
