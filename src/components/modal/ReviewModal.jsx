@@ -43,7 +43,7 @@ export default function ReviewModal({ onClose, idDoc }) {
 
     const payload = {
       physicianId: Number(idDoc),
-      reviewsScore: Number(rating),
+      reviewScore: Number(rating),
       comments: comments,
       // patientId: Number(myId),
     };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@nextui-org/react';
 
 export default function ButtonNextPreconsultation({ text, options, onBodyChange, handleSelection, name, disabled, selectedOptions }) {
-    const opcionRecibida = selectedOptions ? selectedOptions : "";
+    const opcionRecibida = selectedOptions !== null ? selectedOptions : "";
     const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
 
     const handleClick = (option) => {
