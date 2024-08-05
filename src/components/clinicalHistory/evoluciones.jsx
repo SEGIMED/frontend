@@ -48,7 +48,7 @@ export default function Evoluciones({ pacientes }) {
                     {paciente?.attendancePlace?.alias}
                   </div>
                   <div className="text-[#5F5F5F] hidden md:block">
-                    {paciente?.historyOfPresentIllness}
+                    {paciente?.chiefComplaint}
                   </div>
 
                 </div>

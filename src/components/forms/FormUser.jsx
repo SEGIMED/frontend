@@ -50,7 +50,7 @@ export const FormUser = ({ formData, setFormData }) => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: error.response.data.error,
+          text: error.response?.data?.error,
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
         });

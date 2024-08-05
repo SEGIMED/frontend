@@ -49,6 +49,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
+  console.log(user);
+
 
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
@@ -216,14 +218,12 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getAllDoc = async (headers) => {
     try {
       const response = await ApiSegimed.get("/all-physicians", headers);
-    
       if (response.data) {
         dispatch(getAllDoctores(response.data));
       }
     } catch (error) {
       console.error(error.message)
     }
-   
   };
 
   useEffect(() => {
@@ -259,7 +259,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   useEffect(() => {
     if (user.name)
-      if (!paciente.sociodemographicDetails?.address) {
+      if (!user.sociodemographicDetails) {
         router.push(rutas.PacienteDash)
         setIsModalOpen(true);
       }
@@ -394,7 +394,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         )}
       </div>
 
-      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} /> */}
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} />
     </div>
   );
 };

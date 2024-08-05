@@ -42,6 +42,7 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
     const formStateGlobal = useAppSelector((state) => state.formSlice.selectedOptions);
     const user = useAppSelector((state) => state.user);
 
+
     const handleDisabled = () => {
         setDisabled(false);
     };
@@ -60,6 +61,21 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         }
     };
 
+    const getCenter = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(
+                "/catalog/get-catalog?catalogName=medical_specialties",
+                headers
+            );
+            if (response.data) {
+                setCatalog(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     useEffect(() => {
         if (rol === "Medico") {
             getCatalog();
@@ -73,6 +89,9 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         }
     }, [index]);
 
+
+    // <Doctor key="doctor" handleDisabled={handleDisabled} state={formStateGlobal} />,
+
     const Modals = rol === "Paciente" ? [
         <Bienvenida key="bienvenida" />,
         <Hipertension key="hipertension" handleDisabled={handleDisabled} state={formStateGlobal} />,
@@ -83,7 +102,7 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         <ViveSolo key="vive_solo" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <DispElectronicos key="disp_electronicos" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <UsoCelular key="uso_celular" handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Doctor key="doctor" handleDisabled={handleDisabled} state={formStateGlobal} />,
+
         <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
     ] : [
         <Bienvenida key="bienvenida" />,
@@ -98,16 +117,21 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
     ];
 
     const handleNext = async () => {
+
         if (index < Modals.length - 1) {
             setIndex(index + 1);
             setDisabled(true);
         } else {
             const infoSend = mapBoolean(formStateGlobal);
+            console.log(infoSend);
             try {
-                const response = await ApiSegimed.post(
-                    `/onboarding?tipo=${rol === "Medico" ? 3 : 2}&userId=${user.id}`,
+                const response = await ApiSegimed.patch(
+                    `/onboarding?tipo=${rol === "Medico" ? 2 : 3}&id=${user.userId}`,
+                    // `/onboarding?tipo=2&id=15`,
                     infoSend
                 );
+
+
                 console.log(response.data);
                 onClose();
             } catch (error) {

@@ -5,6 +5,7 @@ import DropNext from "@/components/consulta/dropdown";
 
 export default function Especialidad({ handleDisabled, state, options }) {
 
+    const optionNames = options ? options.map(option => option.name) : [];
 
     return (
         <div className=" w-full flex flex-col items-center gap-3">
@@ -13,12 +14,12 @@ export default function Especialidad({ handleDisabled, state, options }) {
             </p>
 
             <DropNext
-                selectedOptions={state.espcialty2}
+                selectedOptions={state.specialty2}
                 handleDisabled={handleDisabled}
                 type={true}
-                options={options ? options : []}
-                text2={"Seleccione su centro de atención"}
-                name={"espcialty"}
+                options={options ? optionNames : []}
+                text2={"Seleccione su especialidad"}
+                name={"specialty"}
 
             />
 

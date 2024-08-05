@@ -8,8 +8,6 @@ export default function CentroDetAtención({ handleDisabled, state }) {
     const options = [
         "Centro gallego",
         "María Ferrer",
-        "Mater Dei",
-        "Dupuytren",
         "Hospital Rivadavia",
         "Trinidad de Quilmes",
         "Trinidad Ramos Mejía",
