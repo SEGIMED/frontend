@@ -131,7 +131,6 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       if (response.data) {
         Swal.fire({
           title: "Consulta agendada con exito!",
-          // text: "You clicked the button!",
           icon: "success",
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
@@ -193,6 +192,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 <input
                   id="teleconsulta"
                   type="radio"
+                  disabled
                   value="2"
                   {...register("typeOfMedicalConsultation", {
                     required: {
@@ -202,7 +202,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                   })}
                 />
                 <label htmlFor="teleconsulta" className="">
-                  Teleconsulta
+                  Teleconsulta(Próximamente)
                 </label>
               </div>
             </div>
