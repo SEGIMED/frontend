@@ -189,7 +189,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               </div>
 
               <div className="flex items-center justify-start gap-3">
-                {/* <input
+                <input
                   id="teleconsulta"
                   type="radio"
                   disabled
