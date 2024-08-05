@@ -124,7 +124,7 @@ export default function MensajesDoc() {
             nombre={"Mensajes"}
             size={"sm"}
             icon={<IconMensajeBoton />}
-            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${!seen ? 'bg-bluePrimary' : 'bg-gray-400'}`}
+            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${counterM(chat.messages) > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
           />
         </div>
       </div>
