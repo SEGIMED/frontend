@@ -25,6 +25,9 @@ import { NotificacionElement } from "@/components/InicioPaciente/notificaciones/
 import { IconNotificaciones } from "@/components/InicioPaciente/notificaciones/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
+
+
+import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
 import { IconPoint } from "@/components/InicioPaciente/notificaciones/IconPoint";
 
@@ -38,6 +41,14 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const handleSearchChange = (e) => {
     dispatch(setSearchTerm1(e.target.value));
   };
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
 
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
@@ -63,8 +74,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -245,7 +256,15 @@ export const SidePte = ({ search, toggleSidebar }) => {
       }
     }
   }, [rol]);
-  //Notificaciones
+
+  useEffect(() => {
+    if (user.name)
+      if (!paciente.sociodemographicDetails?.address) {
+        router.push(rutas.PacienteDash)
+        setIsModalOpen(true);
+      }
+  }, [user]);
+
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
@@ -356,10 +375,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -375,6 +393,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
+
+      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} /> */}
     </div>
   );
 };

@@ -40,6 +40,8 @@ export default function ButtonNext({
     const selectedIndex = options.findIndex(opt => opt === option);
     if (type) {
       dispatch(setSelectedOption({ name, option: selectedIndex + 1 }));
+      dispatch(setSelectedOption({ name: `${name}2`, option }));
+
     } else {
       dispatch(setSelectedOption({ name, option }));
     }

@@ -12,25 +12,57 @@ import IconInactiveUsers from "@/components/icons/IconInactiveUsers";
 import IconActiveUsers from "@/components/icons/IconActiveUsers";
 import IconArrowUp from "@/components/icons/IconArrowUp";
 import { useAppSelector } from "@/redux/hooks";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PtesActivos from "@/components/Graficos/dashboardDoc/ptesActivos";
-
 import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
-import { BarChart } from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
+import BarChart from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
 import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
 import Citas from "./Citas/page";
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
+import Cookies from "js-cookie";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
 
   const [currentChart, setCurrentChart] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
+  const [barChartData, setBarChartData] = useState(null);
+  const [activeData, setActiveData] = useState(null);
+  const [alarmsData, setAlarmsData] = useState({ actives: 0, inactives: 0 });
   const dataAlarms = useAppSelector((state) => state.alarms);
-
   const dataPtesGrafic = useAppSelector((state) => state.activePtes);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = Cookies.get("a");
+
+        // Fetch data for the bar chart
+        const responseBarChart = await ApiSegimed.get("/user/login-record", { headers: { token } });
+        setBarChartData(responseBarChart.data);
+
+        // Fetch data for active patients
+        const responseActiveData = await ApiSegimed.get("/statistics-patient-activity", { headers: { 'token': token } });
+        setActiveData(responseActiveData.data);
+
+        // Fetch data for alarms
+        const responseAlarmsData = await ApiSegimed.get("/alarms-by-patient", { headers: { 'token': token } });
+        const data = { actives: responseAlarmsData.data?.priorityCounts?.Activas, inactives: responseAlarmsData.data?.priorityCounts?.Inactivas };
+        setAlarmsData(data);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setBarChartData(null);
+        setActiveData(null);
+        setAlarmsData({ actives: 0, inactives: 0 });
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handlePreviousChartTitle = () => {
     setCurrentChart((prev) => (prev === 0 ? titles.length - 1 : prev - 1));
@@ -41,6 +73,7 @@ export default function HomeDoc() {
     setCurrentChart((prev) => (prev === titles.length - 1 ? 0 : prev + 1));
     setCurrentTitle((prev) => (prev === titles.length - 1 ? 0 : prev + 1));
   };
+
   const titles = [
     <div key={0}>
       <p className="hidden md:block">Pacientes nuevos en los últimos 7 días</p>
@@ -49,17 +82,21 @@ export default function HomeDoc() {
     <p key={1}>Actividad</p>,
     <p key={2}>Alarmas</p>,
   ];
+
+  console.log(barChartData);
+
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
-      <BarChart />
+      <BarChart data={barChartData} />
     </div>,
     <div key={1} className="flex-grow flex items-center justify-center h-100% ">
-      <PtesActivos />
+      <PtesActivos dataActives={activeData} />
     </div>,
     <div key={2} className="flex-grow flex items-center justify-center h-100% ">
-      <Alarmas />
+      <Alarmas dataAlarms={alarmsData} />
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
+
   return (
     <div className="h-full flex flex-col gap-8 p-3 xs:p-6 md:p-10 bg-[#FAFAFC] md:overflow-y-scroll">
       <h2 className="text-2xl">

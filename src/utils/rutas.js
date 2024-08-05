@@ -34,8 +34,10 @@ const Mis_turnos = "/Mis_turnos";
 const Pasadas = "/Pasadas";
 const Ordenes = "/Ordenes_Medicas";
 const Generar = "/Generar_Orden";
+const Antecedentes = "/Antecedentes";
 
 const rutas = {
+  Antecedentes,
   Diagnostico,
   ExamenFisico,
   SignosVitales,
