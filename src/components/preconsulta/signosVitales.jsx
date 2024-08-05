@@ -2,15 +2,25 @@
 
 import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import BotonPreconsulta from "../Buttons/BotonPreconsulta";
+import { IMC } from "@/utils/normaliceVitalSigns";
 
 function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive, defaultOpen = false }) {
-  const [signValue, setSignValue] = useState(0);
+  const [imcValue, setImcValue] = useState(null);
+
+  useEffect(() => {
+    if (vitalSigns.weight.measure && vitalSigns.height.measure) {
+      const getImcValue = IMC(vitalSigns.weight.measure, vitalSigns.height.measure);
+      setImcValue(getImcValue);
+    }
+    else {
+      setImcValue(0);
+    }
+  }, [vitalSigns]);
 
   const handleInput = (sign, value) => {
-    setSignValue(value);
     onVitalSignChange(sign, value);
   };
 
@@ -32,6 +42,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
 
         {Object.keys(vitalSigns).map((sign, index) => {
           const data = vitalSigns[sign];
+          const defaulValueInput = data.measure > 0 ? data.measure : '';
           return (
             <div
               key={index}
@@ -51,7 +62,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                   </span>
                   <input
                     type="number"
-                    placeholder={data.measure > 0 ? data.measure : ''}
+                    placeholder={(sign === 'IMC' && imcValue) ? imcValue : defaulValueInput}
                     // defaultValue={}
                     min={0}
                     className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
