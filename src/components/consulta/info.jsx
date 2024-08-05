@@ -6,7 +6,6 @@ import IconGeolocation from "../icons/IconGeolocation";
 import Elboton from "../Buttons/Elboton";
 
 export default function DataPatient({ info, title, geolocation, openModal }) {
-
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-start px-3 md:pr-6 bg-[#fafafc]">
@@ -17,25 +16,25 @@ export default function DataPatient({ info, title, geolocation, openModal }) {
             className="w-6 h-6"
           />
           {title}
-
         </label>
-        {
-          geolocation ?
-            <Elboton
-              onPress={(e) => {
-                e.preventDefault();
-                openModal();
-              }}
-              size={"md"}
-              nombre="Mostrar Mapa"
-              icon2={<IconGeolocation color="white" />}
-            />
-            :
-            <span className="w-1/2 text-start text-[#5F5F5F] bg-white font-normal text-base leading-6  border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-3 py-1 h-[34px]">
-              {info}
-            </span>
-        }
+        {title === "Dirección de domicilio" ? (
+          <Elboton
+            onPress={(e) => {
+              e.preventDefault();
+              openModal();
+            }}
+            size={"md"}
+            nombre="Mostrar Mapa"
+            icon2={<IconGeolocation color="white" />}
+          />
+        ) : (
+          <span className="w-1/2 text-start text-[#5F5F5F] bg-white font-normal text-base leading-6 border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-3 py-1 h-[34px]">
+            {info}
+          </span>
+        )}
       </div>
     </div>
   );
 }
+
+

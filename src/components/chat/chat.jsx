@@ -9,7 +9,8 @@ import { addChat} from "@/redux/slices/chat/chat";
 import Avatars from "../avatar/avatarChat";
 
 export default function Chat({ chat }) {
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
+  const sender = useAppSelector(state=> state.user) 
   const userId = Number(Cookies.get("c"));
   const [messageInput, setMessageInput] = useState("");
   const [infoChat, setInfoChat] = useState(null);
@@ -17,7 +18,7 @@ export default function Chat({ chat }) {
   const mensajesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const [markedChats, setMarkedChats] = useState({});
-  
+  console.log(sender)
   useEffect(() => {
     if (chat) {
         // Solo actualiza infoChat si ha cambiado realmente
