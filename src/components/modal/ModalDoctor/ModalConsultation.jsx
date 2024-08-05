@@ -15,6 +15,8 @@ import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import rutas from "@/utils/rutas";
 
 const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const {
@@ -28,6 +30,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   } = useForm();
 
   const [disabled, setDisabled] = useState(false);
+  const router = useRouter();
 
   const handleClose = () => {
     onClose();
@@ -134,6 +137,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
         });
+        router.push(`${rutas.PacienteDash}${rutas.Preconsulta}`);
       }
     } catch (error) {
       handleClose();
@@ -257,9 +261,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                errors.healthCenter ? "border-red-500" : ""
-              }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
+                }`}
               {...register("healthCenter", {
                 required: {
                   value: true,
