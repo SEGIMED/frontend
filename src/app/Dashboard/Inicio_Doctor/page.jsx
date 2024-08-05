@@ -83,8 +83,8 @@ export default function HomeDoc() {
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconDashAgenda className="w-[25%] md:w-14" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
+              <span>Mi</span>
               <span>Agenda</span>
-              <span>General</span>
             </div>
           </div>
         </Link>
@@ -95,19 +95,18 @@ export default function HomeDoc() {
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconDashAgenda className="w-[25%] md:w-14" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
-              <span>Ordenes</span>
-              <span>Medicas</span>
+              <span>Consultas</span>
             </div>
           </div>
         </Link>
 
         <Link
-          href={`${rutas.Doctor}${rutas.Historial}`}
+          href={`${rutas.Doctor}${rutas.Estadisticas}`}
           className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconHomeCitas className="w-[20%] md:w-12" />
             <span className="text-[16px] lg:text-2xl font-semibold">
-              Pendientes
+              Estadisticas
             </span>
           </div>
         </Link>
