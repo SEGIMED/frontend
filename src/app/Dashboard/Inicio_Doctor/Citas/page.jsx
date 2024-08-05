@@ -355,7 +355,6 @@ export default function Citas({ title }) {
       <ModalConsultationCalendar
         isOpen={isModalOpen}
         onClose={closeModal}
-        physician={userId}
         dateSelect={dateSelected}
         lista={listaPacientes}
         title={"Paciente"}

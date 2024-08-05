@@ -5,9 +5,6 @@ import IconAlarmGreen from "../icons/iconAlarmGreen";
 import IconAlarmYellow from "../icons/IconAlarmYellow";
 import IconAlarmRed from "../icons/iconAlarmRed";
 import IconConsulta from "../icons/IconConsulta";
-import rutas from "@/utils/rutas";
-import Link from "next/link";
-import IconOptions from "../icons/IconOptions";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority.toLowerCase()) {
@@ -23,13 +20,10 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-const handleStatus = (id) => { };
-
 export default function TableConsultas({ consultas }) {
-
   return (
     <div className="h-full flex flex-col">
-      {consultas?.map((paciente, index) => (
+      {consultas?.map((consulta, index) => (
         <div
           key={index}
           className="w-[100%] border-b border-b-[#cecece] flex justify-start gap-3 md:gap-0">
@@ -40,21 +34,23 @@ export default function TableConsultas({ consultas }) {
           </div>
           <div className="text-center w-[75%] md:w-[90%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
             <div className="text-[#5F5F5F]">
-              {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
+              {new Date(consulta?.timestamp).toLocaleDateString("es-ES", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
               })}
             </div>
             <div className="text-[#5F5F5F] hidden md:block">
-              {new Date(paciente.timestamp).toLocaleTimeString()}
+              {new Date(consulta?.timestamp).toLocaleTimeString()}
             </div>
-            <p className="text-[#FF8300] ">{paciente?.patientHpGroups[0]?.group}</p>
+            <p className="text-[#FF8300] ">
+              {consulta?.patientHpGroups[0]?.group}
+            </p>
             <div className="text-[#5F5F5F]">
-              {paciente?.attendancePlace?.alias}
+              {consulta?.attendancePlace?.alias}
             </div>
             <div className="text-[#5F5F5F] hidden md:block line-clamp-2">
-              {paciente?.chiefComplaint}
+              {consulta?.chiefComplaint}
             </div>
           </div>
           <div className="w-[25%] md:w-[5%]  items-center justify-center flex">

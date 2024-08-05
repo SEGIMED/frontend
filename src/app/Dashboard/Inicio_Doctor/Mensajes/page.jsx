@@ -28,7 +28,6 @@ export default function MensajesDoc() {
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
   const router = useRouter();
-
   useEffect(() => {
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");
@@ -59,24 +58,21 @@ export default function MensajesDoc() {
     router.push(`${rutas.Doctor}${rutas.Mensajes}/${chat.target?.userId}`);
   };
 
-  const counterM = (message) => {
-    if (!message.length) return false;
-    const userId = Cookies.get("c");
-    const lastMessage = message[message.length - 1];
-    if (lastMessage.target.userId === Number(userId)) return true;
-    return false;
+  const counterM = (messages) => {
+    if (!messages.length) return false;
+    const unseenMessages = messages.filter(message => !message.state);
+    if(unseenMessages.length){
+      const lastMessage = messages[messages.length - 1];
+      const userId = Cookies.get("c");
+      if (lastMessage.target.userId === Number(userId)) return unseenMessages.length;
+    }
+    return 0
   };
 
   const chatElements = useMemo(() => {
     const sortedChats = chats.sort((a, b) => {
-      const dateA =
-        a.unseenMessages.length > 0
-          ? new Date(a.unseenMessages[a.unseenMessages.length - 1].date)
-          : new Date(0);
-      const dateB =
-        b.unseenMessages.length > 0
-          ? new Date(b.unseenMessages[b.unseenMessages.length - 1].date)
-          : new Date(0);
+      const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
+      const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
       return dateB - dateA;
     });
 
@@ -96,21 +92,18 @@ export default function MensajesDoc() {
               {chat?.target?.fullName}
             </p>
             <Image src={ruteActual} alt="" className="hidden md:block mr-20 " />
-            {chat.unseenMessages.length > 0 ? (
+            {chat.messages.length > 0 ? (
               <span className="text-start text-[#686868] font-normal text-sm md:text-base leading-6">
-                {Fecha(
-                  chat.unseenMessages[chat.unseenMessages.length - 1].date,
-                  4
-                )}
+                {Fecha(chat.messages[chat.messages.length - 1].date, 4)}
                 <span className="mx-1">-</span>
-                {Hora(chat.unseenMessages[chat.unseenMessages.length - 1].date)}
+                {Hora(chat.messages[chat.messages.length - 1].date)}
               </span>
             ) : null}
           </div>
         </div>
         <div className="flex gap-0 md:gap-3 items-center">
           <div className="flex md:px-6 p-2 gap-1 items-center w-14 md:w-1/3">
-            {counterM(chat.unseenMessages) ? chat.unseenMessages.length : 0}
+            {counterM(chat.messages)}
             <Image src={mensaje} alt="" />
           </div>
           <Elboton
@@ -118,9 +111,7 @@ export default function MensajesDoc() {
             nombre={"Mensajes"}
             size={"sm"}
             icon={<IconMensajeBoton />}
-            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${
-              chat.unseenMessages.length > 0 ? "bg-bluePrimary" : "bg-gray-400"
-            }`}
+            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${counterM(chat.messages) > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
           />
         </div>
       </div>

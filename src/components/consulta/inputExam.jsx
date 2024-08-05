@@ -10,7 +10,7 @@ import { useFormContext } from "react-hook-form";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
-export default function InputExam({ title, subtitle , defaultOpen = false }) {
+export default function InputExam({ title, subtitle , defaultOpen = false, diagnostico }) {
 
     const { register } = useFormContext()
     const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -27,6 +27,13 @@ export default function InputExam({ title, subtitle , defaultOpen = false }) {
     const handleOptionChange = (name, option) => {
         setSelectedOption(option);
     };
+
+    useEffect(() => {
+        if (diagnostico?.physicalExaminations[0]?.physicalSubsystem) {
+            setSelectedOption(diagnostico?.physicalExaminations[0]?.physicalSubsystem);
+            setSubsistemas(true);
+        }
+    }, [diagnostico]);
     return (
         <div className="flex flex-col">
             <details open={defaultOpen}>
@@ -42,10 +49,10 @@ export default function InputExam({ title, subtitle , defaultOpen = false }) {
                 </summary>
                 <div className="flex flex-col items-center justify-center w-full px-4 py-4 bg-[#fafafc]">
                     <div>
-                        <ButtonNext text={"¿Usar subsistemas?"} options={["Si", "No"]} name={"subsitemas"} handleSelection={handleSubsistemas} />
+                        <ButtonNext text={"¿Usar subsistemas?"} options={["Si", "No"]} name={"subsitemas"} handleSelection={handleSubsistemas} defaultValue={diagnostico}/>
                     </div>
                     {
-                        subsistemas && (
+                        subsistemas   && (
                             <>
                                 <div>
                                     <DropNext 
@@ -56,6 +63,7 @@ export default function InputExam({ title, subtitle , defaultOpen = false }) {
                                         colorBackground={"#487FFA"} 
                                         colorText={"white"}
                                         handleOptionChange={handleOptionChange}
+                                        selectedOptions={diagnostico?.physicalExaminations[0]?.physicalSubsystem || null}
                                         />
                                 </div>
                                 
@@ -67,7 +75,12 @@ export default function InputExam({ title, subtitle , defaultOpen = false }) {
                         {selectedOption}
                     </div>}
                     <div className="flex flex-col w-full gap-2 px-6 py-2 ">
-                        <textarea className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]" placeholder="Describa toda la información posible"  {...register("inputSubsistema")} />
+                        <textarea 
+                            className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]"
+                            placeholder="Describa toda la información posible"  
+                            {...register("inputSubsistema")} 
+                            defaultValue={diagnostico?.physicalExaminations[0]?.description || ""}                           
+                            />
                     </div>
                 </div>
             </details>
