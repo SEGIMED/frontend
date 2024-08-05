@@ -5,7 +5,7 @@ import IconSendMensaje from "../icons/iconSendMensaje";
 import { socket } from "@/utils/socketio";
 import Cookies from "js-cookie";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { markMessagesAsSeen } from "@/redux/slices/chat/chat";
+import { addChat} from "@/redux/slices/chat/chat";
 import Avatars from "../avatar/avatarChat";
 
 export default function Chat({ chat }) {
@@ -16,36 +16,35 @@ export default function Chat({ chat }) {
   const [messages, setMessages] = useState([]);
   const mensajesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
-  const [markedChats, setMarkedChats] = useState(false);
-  const user = useAppSelector((state) => state.user);
-
+  const [markedChats, setMarkedChats] = useState({});
+  
   useEffect(() => {
     if (chat) {
         // Solo actualiza infoChat si ha cambiado realmente
+        const myId = Number(Cookies.get("c"));
         if (infoChat !== chat) {
             setInfoChat(chat);
-        }
+          }
+          const unseenMessages= chat.messages.filter(message => !message.state && !message._id.startsWith("Message-"))
+          if(unseenMessages.length ){
+            if(unseenMessages[unseenMessages.length - 1].target.userId === myId  ) 
+            setMarkedChats(unseenMessages)
+          } else { setMarkedChats([])}
 
         // Actualiza los mensajes
-        const updated = [...chat.seenMessages, ...chat.unseenMessages];
-        setMessages(updated);
+        setMessages(chat.messages);
 
-        // Verifica y despacha la acción solo si chat.users es un array
-        if (Array.isArray(chat.users)) {
-            const sortedUsers = [...chat.users].sort();
-            const chatId = sortedUsers.join("-");
-            
-
-            // Solo despacha si el chat no está marcado como visto
-            if (!markedChats) {
-                dispatch(markMessagesAsSeen({ chatId,markedChats }));
-                setMarkedChats(true);
-            }
-        } else {
-            console.error('chat.users is not an array:', chat.users);
-        }
+        
     }
-  }, [chat, dispatch, infoChat, markedChats]);
+  }, [chat]);
+
+  useEffect(() => {
+    if(markedChats.length){
+    socket._socket.emit("markedMessages", {unseenMessages: markedChats, chat} , (data)=>{
+      dispatch(addChat({chat:data}))
+    })
+  }
+  }, [markedChats]);
   
 
   useEffect(() => {

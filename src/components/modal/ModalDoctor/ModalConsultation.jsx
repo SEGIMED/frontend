@@ -170,8 +170,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             <div className="flex items-center justify-start gap-2 text-sm font-semibold">
               <IconTypeQueries /> Tipo de consultas
             </div>
-            <div className="flex items-center justify-around gap-2">
-              <div className="flex items-center justify-start gap-3">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-start gap-3 mt-2">
                 <input
                   id="consultaFisica"
                   type="radio"
@@ -189,7 +189,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               </div>
 
               <div className="flex items-center justify-start gap-3">
-                <input
+                {/* <input
                   id="teleconsulta"
                   type="radio"
                   disabled
