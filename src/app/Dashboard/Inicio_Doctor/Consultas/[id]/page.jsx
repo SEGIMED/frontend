@@ -491,7 +491,11 @@ const DetallePaciente = (id) => {
           `/patient-details?id=${userId}`,
           { headers: { token: token } }
         );
-        setPatient(response2.data);
+        const response= await ApiSegimed.get(
+          `/patient/${userId}`,
+          { headers: { token: token } }
+        );
+        setPatient({...response2.data, ...response.data});
       } catch (error) {
         console.log("No existe este paciente", error);
       }
@@ -789,6 +793,7 @@ const DetallePaciente = (id) => {
       setHandleNav(title);
     }
   };
+  console.log("paciente en consulta", patient)
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">

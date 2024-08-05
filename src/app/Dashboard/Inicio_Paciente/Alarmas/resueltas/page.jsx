@@ -50,8 +50,8 @@ export default function AlarmPte() {
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 lg:z-50">
         {/* <Ordenar funcion={handleSortToggle} /> */}
-
-        <button
+        <div></div>
+        {/* <button
           className="flex items-center px-4 py-2 bg-white rounded-xl g text-[#487FFA] 
                     font-bold border-solid border-[#487FFA] border-3"
           onClick={() => {
@@ -59,9 +59,9 @@ export default function AlarmPte() {
           }}>
           <IconAlarmBlue className="w-6 hidden md:block" color={"white"} />{" "}
           Resueltas
-        </button>
+        </button> */}
 
-        <h1 className="font-bold gap-2 ml-2">Listado de Alarmas</h1>
+        <h1 className="font-bold gap-2 ml-2">Listado de Alarmas Resueltas</h1>
         <button
           // className="flex items-center px-2 py-2 bg-white rounded-xl  text-[#487FFA]
           //           font-bold border-solid border-[#487FFA] border-3"
@@ -70,7 +70,7 @@ export default function AlarmPte() {
           onClick={() => {
             router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
           }}>
-          <IconAlarmBlue className="w-6 hidden md:block" color={"white"} />{" "}
+          <IconRegresar className="w-6 hidden md:block" color={"white"} />{" "}
           Regresar
         </button>
       </div>
