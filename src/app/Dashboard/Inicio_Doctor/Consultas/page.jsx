@@ -89,11 +89,10 @@ export default function HomeDoc() {
     setIsReviewModalOpen(true);
     setSelectedPatient(patient);
   };
-  const handleCokiePatient = (schedule, id) => {
-    Cookies.set("patientId", id, { expires: 7 }); // La cookie expirará en 7 días
-    router.push(
-      `${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`
-    );
+  const handleCokiePatient = (schedule, id, idEvent) => {
+    Cookies.set("patientId", id, { expires: 7 });
+    Cookies.set("medicalEventId", idEvent, { expires: 7 });
+    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
   };
   const handleDeleteClick = (patient) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -216,7 +215,8 @@ export default function HomeDoc() {
                             onClick: () =>
                               handleCokiePatient(
                                 consulta?.id,
-                                consulta?.patient
+                                consulta?.patient,
+                                consulta.medicalEvent.id
                               ),
                           },
                           {

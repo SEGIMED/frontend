@@ -124,7 +124,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
       const token = Cookies.get("a");
       const headers = { headers: { token: token } };
-
+      console.log(rest);
       const response = await ApiSegimed.post("/schedules", rest, headers);
 
       handleClose();

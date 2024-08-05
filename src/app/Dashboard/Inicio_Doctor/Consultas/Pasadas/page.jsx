@@ -26,10 +26,12 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconDelete from "@/components/icons/IconDelete";
 import Swal from "sweetalert2";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { useRouter } from "next/navigation";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [riskFilter, setRiskFilter] = useState("");
   const [isSorted, setIsSorted] = useState(false);
@@ -151,6 +153,11 @@ export default function HomeDoc() {
         }
       });
   };
+  const handleCokiePatient = (schedule, id, idEvent) => {
+    Cookies.set("patientId", id, { expires: 7 });
+    Cookies.set("medicalEventId", idEvent, { expires: 7 });
+    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
+  };
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
@@ -218,7 +225,12 @@ export default function HomeDoc() {
                             ) && {
                               label: "Ver consultas",
                               icon: <IconPersonalData />,
-                              href: `${rutas.Doctor}${rutas.Historial}/${consulta?.patient}`,
+                              onClick: () =>
+                                handleCokiePatient(
+                                  paciente.id,
+                                  paciente.patient,
+                                  paciente.medicalEvent.id
+                                ),
                             },
                             isLessThan24HoursAgo(
                               consulta?.scheduledEndTimestamp

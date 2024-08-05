@@ -19,7 +19,7 @@ export default function HomeDoc() {
 
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
-
+  console.log("infoPatient", infoPatient);
 
   // const [isLoading, setIsLoading] = useState(true);
 
