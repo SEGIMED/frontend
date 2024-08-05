@@ -227,9 +227,9 @@ export default function HomeDoc() {
                               icon: <IconPersonalData />,
                               onClick: () =>
                                 handleCokiePatient(
-                                  paciente.id,
-                                  paciente.patient,
-                                  paciente.medicalEvent.id
+                                  consulta.id,
+                                  consulta.patient,
+                                  consulta.medicalEvent.id
                                 ),
                             },
                             isLessThan24HoursAgo(

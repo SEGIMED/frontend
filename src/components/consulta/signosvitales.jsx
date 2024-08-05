@@ -24,7 +24,7 @@ export default function SignosVitalesInfo({
     //antropometricDetails que esta en vital sings
     { measureType: "Estatura",mesureExample: "1.80 m", measureUnit: "Cm", measure: "" },
     { measureType: "Peso",mesureExample: "76 kg", measureUnit: "Kg", measure: "" },
-    { measureType: "Índice de Masa Corporal",mesureExample: "24.69 kg/m2", measureUnit: "Kg/m²", measure: "" },
+    { measureType: "IMC",mesureExample: "24.69 kg/m2", measureUnit: "Kg/m²", measure: "" },
     //vitalSigns
     { measureType: "Temperatura",mesureExample: "37 °C", measureUnit: "°C", measure: "" },
     { measureType: "Frecuencia Cardiaca",mesureExample: "80 bpm", measureUnit: "bpm", measure: "" },

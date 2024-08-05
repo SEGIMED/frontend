@@ -49,7 +49,7 @@ export default function InputDiagnostico({
 
     )
     setValueDiagnosticoSubtitle([
-      diagnostico?.conducta,
+      diagnostico?.TherapyPrescription,
       diagnostico?.treatmentPlan,
       diagnostico?.alarmPattern
     ])
