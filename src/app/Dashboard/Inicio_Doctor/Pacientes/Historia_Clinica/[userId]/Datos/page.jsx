@@ -53,7 +53,7 @@ export default function DetallePaciente() {
     console.log(dataImportar)
     setIsModalOpen(false);
   };
-  
+  console.log("data para el pdf", infoPatient)
   return (
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? <SkeletonList count={13} /> : (
@@ -61,7 +61,7 @@ export default function DetallePaciente() {
           <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
             <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
             <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />} 
-            funcion={() => GeneratePDF(user, consultas)}/>
+            funcion={() => GeneratePDF(user, infoPatient)}/>
           </div>
           <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
@@ -232,10 +232,10 @@ export default function DetallePaciente() {
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
       />
-       <div>
+       {/* <div>
             <h1>Vista Previa del PDF</h1>
             <PdfPreview user={user} />
-        </div>
+        </div> */}
     </div>
     
   );
