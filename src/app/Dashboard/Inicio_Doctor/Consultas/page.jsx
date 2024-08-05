@@ -32,7 +32,7 @@ export default function HomeDoc() {
   const dispatch = useAppDispatch();
   const [scheduledConsultas, setScheduledConsultas] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [loading, setLoading] = useState(true);
   const consultas = useAppSelector((state) => state);
   const currentDate = new Date();
@@ -85,9 +85,9 @@ export default function HomeDoc() {
 
   const lastSegmentTextToShow = PathnameShow();
 
-  const handleReviewClick = (patient) => {
+  const handleReviewClick = (consulta) => {
     setIsReviewModalOpen(true);
-    setSelectedPatient(patient);
+    setSelectedPatientId(consulta?.patient);
   };
   const handleCokiePatient = (schedule, id, idEvent) => {
     Cookies.set("patientId", id, { expires: 7 });
@@ -236,7 +236,7 @@ export default function HomeDoc() {
           {isReviewModalOpen && (
             <ReviewModalApte
               onClose={() => setIsReviewModalOpen(false)}
-              id={selectedPatient.id}
+              id={selectedPatientId}
             />
           )}
         </div>

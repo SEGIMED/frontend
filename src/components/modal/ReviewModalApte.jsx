@@ -7,6 +7,7 @@ import IconTablillaTilde from "../icons/iconTablillaTilde";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Elboton from "../Buttons/Elboton";
+import Swal from "sweetalert2";
 
 const ratingQuestions = [
   "Califique la adherencia terapéutica de su paciente",
@@ -36,7 +37,6 @@ export default function ReviewModalApte({ onClose, id }) {
   };
 
   const SendReview = async () => {
-    console.log("ratings", ratings);
     const payload = {
       physicianId: Number(myId),
       reviewScore: JSON.stringify(ratings),
@@ -47,13 +47,20 @@ export default function ReviewModalApte({ onClose, id }) {
     const token = Cookies.get("a");
 
     try {
-      await ApiSegimed.post(`/patient-review/${id}`, payload, {
+      const response = await ApiSegimed.post(`/patient-review/${id}`, payload, {
         headers: {
           token: token,
           "Content-Type": "application/json",
         },
       });
-      onClose();
+      if (response.data) {
+        Swal.fire({
+          icon: "success",
+          title: "Calificación enviada",
+          text: "La calificación ha sido enviada con éxito",
+        });
+        onClose();
+      }
     } catch (error) {
       console.error("Error sending review:", error);
     }
