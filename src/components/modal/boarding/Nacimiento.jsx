@@ -7,12 +7,12 @@ export default function Nacimiento({ handleDisabled, state }) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (state.date) { handleDisabled() }
+        if (state.birthDate) { handleDisabled() }
     }, [state]);
 
     const handleSelect = (event) => {
         const date = event.target.value;
-        dispatch(setSelectedOption({ name: 'date', option: date }));
+        dispatch(setSelectedOption({ name: 'birthDate', option: date }));
         handleDisabled()
     }
 
@@ -23,7 +23,7 @@ export default function Nacimiento({ handleDisabled, state }) {
             </p>
             <div className="flex flex-row md:flex-col w-full justify-between gap-2">
                 <input
-                    defaultValue={state.date}
+                    defaultValue={state.birthDate}
                     onChange={handleSelect}
                     id="date"
                     type="date"

@@ -9,10 +9,10 @@ export default function Hipertension({ handleDisabled, state }) {
             </p>
             <div>
                 <ButtonNext
-                    selectedOptions={state.hipertension}
+                    selectedOptions={state.hipertPulm}
                     handleDisabled={handleDisabled}
                     options={["Si", "No"]}
-                    name={"hipertension"}
+                    name={"hipertPulm"}
                 />
             </div>
         </div>

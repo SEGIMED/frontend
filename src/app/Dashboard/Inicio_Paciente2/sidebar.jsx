@@ -422,7 +422,7 @@ export const SidePte = ({ search }) => {
           )}
         </div>
       </div>
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} />
+      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} /> */}
     </div>
   );
 };

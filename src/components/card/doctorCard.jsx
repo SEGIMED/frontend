@@ -19,7 +19,7 @@ export default function DoctorCard({ doctor, button }) {
           </span>
         </p>
       </div>
-      <div className="w-[20%]">{button}</div>
+      <div className="w-[20%] flex justify-end">{button}</div>
     </div>
   );
 }
