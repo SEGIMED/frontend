@@ -18,7 +18,7 @@ export default function Chat({ chat }) {
   const mensajesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const [markedChats, setMarkedChats] = useState({});
-  console.log(sender)
+ 
   useEffect(() => {
     if (chat) {
         // Solo actualiza infoChat si ha cambiado realmente
