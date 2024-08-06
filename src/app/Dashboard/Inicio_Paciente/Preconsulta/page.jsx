@@ -47,9 +47,9 @@ export default function HomePte() {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
-  // Filtrar consultas con schedulingStatus = 1 y paciente = myID, y extraer los IDs de los docs
+  // Filtrar consultas con schedulingStatus = 1 y IsApproved = true para ver si las consultas ya estan aprobadas
   const scheduledConsultas = consultas?.filter(
-    (consulta) => consulta.schedulingStatus === 1
+    (consulta) => consulta.schedulingStatus === 1 && consulta.IsApproved
   );
 
   /* const sortedConsultas = [...scheduledConsultas].sort((b, a) =>
@@ -116,10 +116,12 @@ export default function HomePte() {
         </p>
       </div>
       <div className="h-full overflow-auto">
-        {(!loading && scheduledConsultas.length) === 0 &&
+        {(!loading && scheduledConsultas.length) === 0 && (
           <NotFound
             text="No hay historial de preconsultas."
-            sizeText="w-[100%]" />}
+            sizeText="w-[100%]"
+          />
+        )}
         {sortedConsultas.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}

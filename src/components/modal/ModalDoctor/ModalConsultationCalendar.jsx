@@ -13,7 +13,6 @@ import IconTypeQueries from "@/components/icons/IconTypeQueries";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
-import { useAppSelector } from "@/redux/hooks";
 import Swal from "sweetalert2";
 
 const ModalConsultationCalendar = ({
@@ -134,14 +133,22 @@ const ModalConsultationCalendar = ({
       const response = await ApiSegimed.post("/schedules", payload);
 
       if (response.data) {
-        handleClose();
-
-        Swal.fire({
-          title: "Consulta agendada con éxito!",
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-          icon: "success",
-        });
+        if (role !== "Paciente") {
+          Swal.fire({
+            title: "Consulta agendada con éxito!",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+          });
+        } else {
+          Swal.fire({
+            title: "Se ha solicitado la consulta con éxito",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+            text: "En menos de 24 horas recibirás una respuesta a tu solicitud.",
+          });
+        }
       }
     } catch (error) {
       console.error("Error al enviar los datos:", error);
