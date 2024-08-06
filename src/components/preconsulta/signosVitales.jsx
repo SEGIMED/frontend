@@ -60,14 +60,24 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                   <span className="w-[100px] flex md:flex-1 justify-start md:justify-end text-[#5F5F5F] font-normal text-sm">
                     {data.referenceValue} {data.unit}
                   </span>
-                  <input
-                    type="number"
-                    placeholder={(sign === 'IMC' && imcValue) ? imcValue : defaulValueInput}
-                    // defaultValue={}
-                    min={0}
-                    className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                    onChange={(e) => handleInput(sign, Number(e.target.value))}
-                  />
+                  {sign !== 'IMC' ?
+                    <input
+                      type="number"
+                      placeholder={defaulValueInput}
+                      min={0}
+                      className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                      onChange={(e) => handleInput(sign, Number(e.target.value))}
+                    />
+                    :
+                    <input
+                      type="number"
+                      placeholder={(sign === 'IMC' && imcValue) ? imcValue : defaulValueInput}
+                      value={(sign === 'IMC' && imcValue) ? imcValue : null}
+                      min={0}
+                      className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                      onChange={(e) => handleInput(sign, Number(e.target.value))}
+                    />
+                  }
                 </div>}
               {sign === 'abnormalGlycemia' &&
                 <div className="md:max-w-[50%] flex justify-end items-center gap-2 md:px-8 py-1">
