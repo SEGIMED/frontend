@@ -85,13 +85,16 @@ export default function MensajesDoc() {
   };
 
   const chatElements = useMemo(() => {
-    const sortedChats = chats.sort((a, b) => {
+    console.log(chats, "sin filtro")
+    const filterChats= chats.filter(a=>a.messages.length > 0 )
+    console.log("filterchats", filterChats)
+    const sortedChats = filterChats.sort((a, b) => {
       const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
       const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
       return dateB - dateA;
     });
 
-    return sortedChats.map((chat) => (
+    return  sortedChats.map((chat) => (
       <div
         key={chat._id}
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">

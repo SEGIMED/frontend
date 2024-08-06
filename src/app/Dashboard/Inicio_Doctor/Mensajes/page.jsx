@@ -24,6 +24,7 @@ export default function MensajesDoc() {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
+  const [seen, setSeen]= useState(false)
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
@@ -64,13 +65,19 @@ export default function MensajesDoc() {
     if(unseenMessages.length){
       const lastMessage = messages[messages.length - 1];
       const userId = Cookies.get("c");
-      if (lastMessage.target.userId === Number(userId)) return unseenMessages.length;
+      if (lastMessage.target.userId === Number(userId)) {
+        return unseenMessages.length
+
+      };
     }
+    setSeen(true)
     return 0
-  };
+    };
 
   const chatElements = useMemo(() => {
-    const sortedChats = chats.sort((a, b) => {
+    const filterChats= chats.filter(a=>a.messages.length > 0 )
+    
+    const sortedChats = filterChats.sort((a, b) => {
       const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
       const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
       return dateB - dateA;
