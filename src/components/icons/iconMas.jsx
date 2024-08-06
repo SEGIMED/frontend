@@ -1,6 +1,6 @@
-export default function IconMas({ color }) {
+export default function IconMas({ color, className }) {
 	return (
-		<svg width="25.000000" height="29.000000" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+		<svg className={className} width="25.000000" height="29.000000" viewBox="0 0 25 29" fill="none" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
 			<desc>
 				Created with Pixso.
 			</desc>
