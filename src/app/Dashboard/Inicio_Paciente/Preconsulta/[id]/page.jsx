@@ -22,6 +22,7 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { draftFormat } from "@/utils/formatResponse";
+import { IMC } from "@/utils/normaliceVitalSigns";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -203,7 +204,10 @@ export default function PreconsultaPte({ params }) {
     const vitalSignFormat = [
       formData.vitalSigns.height,
       formData.vitalSigns.weight,
-      formData.vitalSigns.IMC,
+      {
+        ...formData.vitalSigns.IMC,
+        measure: IMC(formData.vitalSigns.weight, formData.vitalSigns.height)
+      },
       formData.vitalSigns.temperature,
       formData.vitalSigns.Heart_Rate,
       formData.vitalSigns.Systolic_Blood_Pressure,
