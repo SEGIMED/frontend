@@ -19,14 +19,12 @@ export default function HomeDocAll() {
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
   const [selectedDocId, setSelectedDocId] = useState(null);
   const consultas = useAppSelector((state) => state.schedules);
   const [scheduledConsultas, setScheduledConsultas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [isSorted, setIsSorted] = useState(false);
-
-  const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const getSchedulesByUserId = async () => {
     try {
       const response = await ApiSegimed.get("/schedulesByUserId");

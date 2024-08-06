@@ -81,7 +81,7 @@ export default function HomeDoc() {
       const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
       return diffA - diffB;
     })
-    .filter((cita) => cita.schedulingStatus === 1);
+    .filter((cita) => cita.schedulingStatus === 1 && cita.IsApproved === true);
 
   const lastSegmentTextToShow = PathnameShow();
 
