@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
 
 const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
+  const role = Cookies.get("b");
   const {
     register,
     handleSubmit,
@@ -126,18 +127,26 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
       const token = Cookies.get("a");
       const headers = { headers: { token: token } };
-      console.log(rest);
       const response = await ApiSegimed.post("/schedules", rest, headers);
 
       handleClose();
       if (response.data) {
-        Swal.fire({
-          title: "Consulta agendada con éxito!",
-          icon: "success",
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-        });
-        router.push(`${rutas.PacienteDash}${rutas.Preconsulta}`);
+        if (role !== "Paciente") {
+          Swal.fire({
+            title: "Consulta agendada con éxito!",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+          });
+        } else {
+          Swal.fire({
+            title: "Se ha solicitado la consulta con éxito",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+            text: "En menos de 24 horas recibirás una respuesta a tu solicitud.",
+          });
+        }
       }
     } catch (error) {
       handleClose();
@@ -261,8 +270,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                errors.healthCenter ? "border-red-500" : ""
+              }`}
               {...register("healthCenter", {
                 required: {
                   value: true,

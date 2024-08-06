@@ -13,7 +13,6 @@ import IconTypeQueries from "@/components/icons/IconTypeQueries";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
-import { useAppSelector } from "@/redux/hooks";
 import Swal from "sweetalert2";
 
 const ModalConsultationCalendar = ({
