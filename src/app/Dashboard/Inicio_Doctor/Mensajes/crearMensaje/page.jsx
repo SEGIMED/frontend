@@ -74,6 +74,7 @@ export default function DoctoresPte() {
         { headers: { token: token } }
       );
       if (response.data) {
+        console.log(response.data, "medicos")
         setMedicos(response.data.user);
         setPagination((prev) => ({
           ...prev,
@@ -162,10 +163,10 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-    console.log('entro a la funcion este es el id',id);
+   
     socket.emit("createChat", {id});
   };
-
+  
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
@@ -212,6 +213,7 @@ export default function DoctoresPte() {
                 setFlag(false);
                 handlePageChange(1);
               }}
+              className={"mr-2"}
             />
             ):(
               <Elboton

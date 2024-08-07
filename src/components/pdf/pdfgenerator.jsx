@@ -2,9 +2,37 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import CalcularEdad from '@/utils/calcularEdad';
 import avatar from '@/utils/defaultAvatar';
+import logo from '@/utils/logoSegimed';
 import { Fecha } from '@/utils/NormaliceFechayHora';
 import { IMC } from '@/utils/normaliceVitalSigns';
 
+async function getImageDataURL(imageUrl, size) {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Para manejar imágenes de otros dominios
+    img.src = imageUrl || avatar;
+
+    return new Promise((resolve) => {
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, size, size);
+
+            // Calculamos las dimensiones para mantener la proporción de la imagen original
+            const scale = Math.min(size / img.width, size / img.height);
+            const x = (size - img.width * scale) / 2;
+            const y = (size - img.height * scale) / 2;
+
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+            const dataURL = canvas.toDataURL('image/jpeg');
+            resolve(dataURL);
+        };
+    });
+}
 
 // Función para redondear la imagen en un canvas
 async function getCircularImageDataURL(imageUrl, size) {
@@ -76,7 +104,9 @@ export default async function GeneratePDF(user, consultas) {
     const imageSize = 400; // Ajustar según sea necesario
     const circularAvatarDataURL = await getCircularImageDataURL(avatarUrl, imageSize);
 
-   
+    const logoUrl = await getImageDataURL(logo, 400)
+    //logo
+    doc.addImage(logoUrl, 'JPEG', 10, 5, 40, 40)
 
     // Título centrado
     doc.setFontSize(20);
@@ -84,14 +114,16 @@ export default async function GeneratePDF(user, consultas) {
     doc.text('Historia Clínica del Paciente', 105, y, { align: 'center' });
 
     // URL a la derecha
+    const urlColor = [72, 127, 250]; // [R, G, B] para el color #487FFA
+    doc.setTextColor(...urlColor);
     const url = 'www.segimed.com';
     doc.setFontSize(10);
-    doc.text(url, 190, y, { align: 'right' });
+    doc.text(url, 190, 25, { align: 'right' });
 
     // Línea horizontal debajo del título y la URL
     doc.setLineWidth(0.5);
     doc.line(20, y + 10, doc.internal.pageSize.width - 20, y + 10);
-
+    doc.setTextColor(0, 0, 0);
     y += 20;
 
     // Insertar avatar del usuario a la izquierda
