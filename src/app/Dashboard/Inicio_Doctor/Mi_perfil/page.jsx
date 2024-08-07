@@ -160,6 +160,8 @@ export default function HomeDoc() {
     setSelectedSpecialties(specialties);
   };
 
+  const noEmptySpaces = (value) => value.trim() !== "";
+
   return (
     <div className="h-full flex flex-col overflow-y-scroll">
       <title>{lastSegmentTextToShow}</title>
