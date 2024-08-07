@@ -113,7 +113,7 @@ export default async function GeneratePDF(user, consultas) {
     doc.setFont('helvetica', 'bold');
     doc.text('Historia Clínica del Paciente', 105, y, { align: 'center' });
 
-    // URL a la derecha
+    // URL a la derecha, azul
     const urlColor = [72, 127, 250]; // [R, G, B] para el color #487FFA
     doc.setTextColor(...urlColor);
     const url = 'www.segimed.com';
@@ -123,7 +123,8 @@ export default async function GeneratePDF(user, consultas) {
     // Línea horizontal debajo del título y la URL
     doc.setLineWidth(0.5);
     doc.line(20, y + 10, doc.internal.pageSize.width - 20, y + 10);
-    doc.setTextColor(0, 0, 0);
+    //color de texto en automatico/negro
+    doc.setTextColor(0, 0, 0); 
     y += 20;
 
     // Insertar avatar del usuario a la izquierda
