@@ -1,14 +1,14 @@
 class Observer{
     constructor(){
-        this.usersViewMedia = {}
+        this.remoteUser = null;
         this.stateRef = null;
         if(!Observer.instance){
             Observer.instance = this;
         }
         return Observer.instance
     }
-    addViewMediaUser(userId,videoRef){
-        this.usersViewMedia[userId] = videoRef;
+    addViewMediaUser(videoRef){
+        this.remoteUser = videoRef;
     }
     addViewState(stateRef){
         this.stateRef = stateRef;
@@ -19,8 +19,8 @@ class Observer{
             this.stateRef.innerText = str;
         }
     }
-    setStreamVideo(userId,data){
-        this.usersViewMedia[userId].srcObject = data;
+    setStreamVideo(data){
+        this.remoteUser.current.srcObject = data; 
     }
 }
 

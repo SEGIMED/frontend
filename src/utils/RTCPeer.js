@@ -1,3 +1,4 @@
+'use client'
 import { socket } from "./socketio.js";
 import Observer from "./observer.js";
 class RTCPeer{
@@ -35,46 +36,62 @@ class RTCPeer{
     }
 
     async createOffer(id){
-        console.log(this.peerConnection);
-        const offer = await this.peerConnection.createOffer();
-        await this.peerConnection.setLocalDescription(offer);
-        socket.emit('sendOffer',{id,offer});
+        this.peerConnection.addEventListener('track', async (event) => {
+            console.log('entro')
+            const [remoteStream] = event.streams;
+            Observer.setStreamVideo(remoteStream);
+        });
 
-        this.peerConnection.addEventListener('icegatheringstatechange', event => {
+        this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
             console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
         });
         
-        this.peerConnection.addEventListener('icecandidate', event => {
+        this.peerConnection.addEventListener('icecandidate', (event) => {
             console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
             if (event.candidate) {
                 socket.emit("newCandidate",{id, candidate: event.candidate});
             }
         });
-        this.peerConnection.addEventListener('connectionstatechange', event => {
-           console.log('nuevo evento ',peerConnection.connectionState);
+        this.peerConnection.addEventListener('connectionstatechange', (event) => {
+            console.log('nuevo evento ',peerConnection.connectionState);
         });
-    }
-
+        if(!this.state){
+            console.log('se creo una oferta'); 
+          this.state = true; 
+          const offer = await this.peerConnection.createOffer();
+          await this.peerConnection.setLocalDescription(offer); 
+          socket.emit('sendOffer',{id,offer});
+        }
+    } 
+    
     async createAsw (id){
-        const asw = await this.peerConnection.createAnswer();
-        await this.peerConnection.setLocalDescription(asw);
-        socket.emit('sendAsw',{id,asw});
 
-        this.peerConnection.addEventListener('icegatheringstatechange', event => {
+this.peerConnection.addEventListener('track', async (event) => {
+    const [remoteStream] = event.streams;
+    Observer.setStreamVideo(remoteStream);
+});
+
+        this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
             console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
         });
-
-        this.peerConnection.addEventListener('icecandidate', event => {
-            console.log("esto es candidate event createAsw",event)  //no entra el eventListener
+        
+        this.peerConnection.addEventListener('icecandidate', (event) => {
+            console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
             if (event.candidate) {
                 socket.emit("newCandidate",{id, candidate: event.candidate});
             }
         });
-        this.peerConnection.addEventListener('connectionstatechange', event => {
-           console.log('nuevo evento ',peerConnection.connectionState);
-        });  
-    }
-
+        this.peerConnection.addEventListener('connectionstatechange', (event) => {
+            console.log('nuevo evento ',peerConnection.connectionState);
+        });
+        if(!this.state){ 
+            this.state = true;    
+            const asw = await this.peerConnection.createAnswer(); 
+            await this.peerConnection.setLocalDescription(asw);
+            socket.emit('sendAsw',{id,asw});
+        }
+    } 
+        
     async setRemoteDescription(description){
         const remoteDesc = new RTCSessionDescription(description);
         await this.peerConnection.setRemoteDescription(remoteDesc);
@@ -106,7 +123,7 @@ class RTCPeer{
                 await this.peerConnection.setRemoteDescription(remoteDesc);
             }
         });
-
+        console.log(this.peerConnection);
     }
 
     
