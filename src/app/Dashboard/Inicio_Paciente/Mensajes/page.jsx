@@ -147,11 +147,15 @@ export default function MensajesDoc() {
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2 ">
+        <div className="flex gap-3"></div>
         <Elboton
-          href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}
+          href={`${rutas.PacienteDash}${rutas.Mensajes}${rutas.CrearMensaje}`}
           nombre={"Nuevo Chat"}
           className="w-full md:w-48 md:h-12 md:text-lg"
           icon={<IconMas />}
+        />
+        <Elboton
+        href={`${rutas.PacienteDash}${rutas.Mensajes}${rutas.me}`}
         />
         {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder/>}/> */}
       </div>
