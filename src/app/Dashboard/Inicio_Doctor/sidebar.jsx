@@ -44,6 +44,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -227,6 +228,10 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       }
   }, [user]);
 
+  useEffect(() => {
+    getUser().catch(console.error);
+  }, [onboarding]);
+
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
@@ -356,7 +361,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Medico"} />
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Medico"} setOnboarding={setOnboarding} />
     </div>
   );
 };

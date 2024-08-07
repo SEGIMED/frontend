@@ -34,7 +34,7 @@ const ProgressBar = ({ steps, currentIndex }) => {
     );
 };
 
-const ModalBoarding = ({ isOpen, onClose, rol }) => {
+const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
     const [catalog, setCatalog] = useState([]);
@@ -116,6 +116,8 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
     ];
 
+
+
     const handleNext = async () => {
 
         if (index < Modals.length - 1) {
@@ -130,7 +132,7 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
                     // `/onboarding?tipo=2&id=15`,
                     infoSend
                 );
-
+                setOnboarding(true)
 
                 console.log(response.data);
                 onClose();

@@ -44,6 +44,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -164,52 +165,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
     const combinedData = {
       ...response1.data,
       ...response2.data,
-      //   anthropometricDetails:
-      //     response1.data.anthropometricDetails?.length > 0
-      //       ? response1.data.anthropometricDetails
-      //       : paciente.anthropometricDetails || [],
-      //   vitalSigns:
-      //     response1.data.vitalSigns?.length > 0
-      //       ? response1.data.vitalSigns
-      //       : paciente.vitalSigns || [],
-      //   sociodemographicDetails:
-      //     response1.data.sociodemographicDetails ||
-      //     paciente.sociodemographicDetails ||
-      //     {},
-      //   backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
-      //   patientPulmonaryHypertensionGroups:
-      //     response1.data.patientPulmonaryHypertensionGroups?.length > 0
-      //       ? response1.data.patientPulmonaryHypertensionGroups
-      //       : paciente.patientPulmonaryHypertensionGroups || {},
-      //   patientPulmonaryHypertensionRisks:
-      //     response1.data.patientPulmonaryHypertensionRisks?.length > 0
-      //       ? response1.data.patientPulmonaryHypertensionRisks
-      //       : paciente.patientPulmonaryHypertensionRisks || {},
-      //   patientCardiovascularRisks:
-      //     response1.data.patientCardiovascularRisks?.length > 0
-      //       ? response1.data.patientCardiovascularRisks
-      //       : paciente.patientCardiovascularRisks || {},
-      //   patientSurgicalRisks:
-      //     response1.data.patientSurgicalRisks?.length > 0
-      //       ? response1.data.patientSurgicalRisks
-      //       : paciente.patientSurgicalRisks || {},
-      //   lastMedicalEventDate:
-      //     response1.data.lastMedicalEventDate ||
-      //     paciente.lastMedicalEventDate ||
-      //     null,
-      //   currentPhysician:
-      //     response1.data.currentPhysician || paciente.currentPhysician || {},
-      //   cellphone: response1.data.cellphone || paciente.cellphone || null,
-      //   currentLocationCity:
-      //     response1.data.currentLocationCity ||
-      //     paciente.currentLocationCity ||
-      //     null,
-      //   currentLocationCountry:
-      //     response1.data.currentLocationCountry ||
-      //     paciente.currentLocationCountry ||
-      //     null,
-      //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
-      // };
     };
     dispatch(adduser(combinedData));
     console.log(combinedData);
@@ -259,11 +214,15 @@ export const SidePte = ({ search, toggleSidebar }) => {
 
   useEffect(() => {
     if (user.name)
-      if (!user.sociodemographicDetails) {
+      if (!user.sociodemographicDetails?.genre) {
         router.push(rutas.PacienteDash)
         setIsModalOpen(true);
       }
   }, [user]);
+
+  useEffect(() => {
+    getUser({ headers: { token: token } }).catch(console.error);
+  }, [onboarding]);
 
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
@@ -394,7 +353,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         )}
       </div>
 
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} />
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} setOnboarding={setOnboarding} />
     </div>
   );
 };
