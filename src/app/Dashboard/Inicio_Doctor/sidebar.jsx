@@ -27,7 +27,6 @@ import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
 import rutas from "@/utils/rutas";
 
-
 import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
 import { IconPoint } from "@/components/InicioPaciente/notificaciones/IconPoint";
@@ -42,13 +41,11 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const token = Cookies.get("a");
   const refreshToken = Cookies.get("d");
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
 
   // reemplazar pathname por adjustedPathname
   const showSearch =
@@ -57,7 +54,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     pathname === "/Dashboard/Inicio_Doctor/Mensajes/crearMensaje" ||
     pathname === "/Dashboard/Inicio_Doctor/Historial" ||
     pathname === "/Dashboard/Inicio_Doctor/Historial/HistorialR" ||
-    pathname === "/Dashboard/Inicio_Doctor/Ordenes_Medicas/Pacientes"
+    pathname === "/Dashboard/Inicio_Doctor/Ordenes_Medicas/Pacientes";
   // reemplazar pathname por adjustedPathname
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
   const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
@@ -219,13 +216,13 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (user.name)
-      if (!user.medicalRegistries?.Nacional?.registryId) {
-        router.push(rutas.Doctor)
-        setIsModalOpen(true);
-      }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user.name)
+  //     if (!user.medicalRegistries?.Nacional?.registryId) {
+  //       router.push(rutas.Doctor)
+  //       setIsModalOpen(true);
+  //     }
+  // }, [user]);
 
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
@@ -338,9 +335,10 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-            }`}>
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={

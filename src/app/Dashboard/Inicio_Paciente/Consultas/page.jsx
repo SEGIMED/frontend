@@ -43,9 +43,11 @@ export default function HomeDocAll() {
   }, [dispatch]);
 
   //ordenamiento por fecha desde el front por ahora
-  const sortedConsultas = [...scheduledConsultas].sort((b, a) =>
-    a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
-  );
+  const sortedConsultas = [...scheduledConsultas]
+    .sort((b, a) =>
+      a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
+    )
+    .filter((consulta) => consulta.IsApproved == true);
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
@@ -54,10 +56,6 @@ export default function HomeDocAll() {
     setSelectedDocId(id);
     setIsReviewModalOpen(true);
   };
-
-  if (!consultas) {
-    return <MensajeSkeleton />;
-  }
 
   return (
     <div className="text-[#686868] h-full w-full flex flex-col">
