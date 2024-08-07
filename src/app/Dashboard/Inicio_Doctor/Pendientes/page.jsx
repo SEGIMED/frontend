@@ -29,6 +29,8 @@ import IconEditar from "@/components/icons/iconEditar";
 import IconClose2 from "@/components/icons/IconClose2";
 import DeleteOrden from "@/components/modal/ModalPatient/ModalDeteleOrden";
 import OrdenType from "@/components/modal/ModalDoctor/modalOrden";
+import IconRegresar from "@/components/icons/iconRegresar";
+import Elboton from "@/components/Buttons/Elboton";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -158,13 +160,13 @@ export default function HomeDoc() {
         <div className="flex flex-col h-full ">
             <title>{lastSegmentTextToShow}</title>
             <div className="flex items-center border-b md:justify-between w-full justify-center  border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
-                <div ></div>
 
-                {/* <FiltrosPaciente
-              isOpen={isFilterOpen}
-              toggleMenu={toggleFilterMenu}
-              onClickSort={handleSortClick}
-          /> */}
+                <Elboton
+                    href={`${rutas.Doctor}`}
+                    nombre={"Regresar"}
+                    size={"md"}
+                    icon={<IconRegresar />}
+                />
 
 
                 <h1 className="font-bold ml-4 hidden md:block ">Pendientes </h1>
