@@ -1,24 +1,11 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
 import DropNext from "@/components/consulta/dropdown";
 
-export default function Especialidad({ handleDisabled, state }) {
+export default function Especialidad({ handleDisabled, state, options }) {
 
-    const options = [
-        "Centro gallego",
-        "María Ferrer",
-        "Mater Dei",
-        "Dupuytren",
-        "Hospital Rivadavia",
-        "Trinidad de Quilmes",
-        "Trinidad Ramos Mejía",
-        "Trinidad San Isidro",
-        "Trinidad de Mitre",
-        "Hospital Garraham",
-        "Otro"
-    ];
-
+    const optionNames = options ? options.map(option => option.name) : [];
 
     return (
         <div className=" w-full flex flex-col items-center gap-3">
@@ -27,12 +14,12 @@ export default function Especialidad({ handleDisabled, state }) {
             </p>
 
             <DropNext
-                selectedOptions={state.espcialty2}
+                selectedOptions={state.specialty2}
                 handleDisabled={handleDisabled}
                 type={true}
-                options={options}
-                text2={"Seleccione su centro de atención"}
-                name={"espcialty"}
+                options={options ? optionNames : []}
+                text2={"Seleccione su especialidad"}
+                name={"specialty"}
 
             />
 

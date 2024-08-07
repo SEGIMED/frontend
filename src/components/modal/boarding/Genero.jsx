@@ -11,7 +11,7 @@ export default function Genero({ handleDisabled, state }) {
                     selectedOptions={state.genre2}
                     type={true}
                     handleDisabled={handleDisabled}
-                    options={["Masculino", "Femenino"]}
+                    options={["Femenino", "Masculino"]}
                     name={"genre"}
                 />
             </div>

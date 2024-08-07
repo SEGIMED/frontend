@@ -8,7 +8,7 @@ export default function UsoCelular({ handleDisabled, state }) {
             </p>
             <div>
                 <ButtonNext
-                    selectedOptions={state.UsoCelular}
+                    selectedOptions={state.needsCellphoneAssistance}
                     handleDisabled={handleDisabled}
                     options={["Si", "No"]}
                     name={"needsCellphoneAssistance"}

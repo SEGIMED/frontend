@@ -160,6 +160,8 @@ export default function HomeDoc() {
     setSelectedSpecialties(specialties);
   };
 
+  const noEmptySpaces = (value) => value.trim() !== "";
+
   return (
     <div className="h-full flex flex-col overflow-y-scroll">
       <title>{lastSegmentTextToShow}</title>
@@ -273,12 +275,13 @@ export default function HomeDoc() {
                   },
                   maxLength: {
                     value: 20,
-                    message: "No puede tener más de 20 caracteres",
+                    message: "No puede tener más de 40 caracteres",
                   },
+                  validate: noEmptySpaces,
                   pattern: {
-                    value: /^[A-Za-z]+$/,
-                    message: "Solo se permiten letras",
-                  },
+                    value: /^[A-Za-z\s]+$/,
+                    message: "Solo se permiten letras y espacios",
+                  }
                 })}
               />
               {errors.lastname && (
@@ -582,8 +585,8 @@ export default function HomeDoc() {
                     message: "Debe tener al menos 2 caracteres",
                   },
                   maxLength: {
-                    value: 20,
-                    message: "No puede tener más de 20 caracteres",
+                    value: 100,
+                    message: "No puede tener más de 100 caracteres",
                   },
                 })}
               />

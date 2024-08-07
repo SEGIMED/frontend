@@ -19,6 +19,7 @@ import MatriculaNumber from "../boarding/Matricula";
 import MatriculaProvNumber from "../boarding/MatriculaProv";
 import Especialidad from "../boarding/Especialidad";
 import IconArrowRight from "@/components/icons/iconArrowRight";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const ProgressBar = ({ steps, currentIndex }) => {
     return (
@@ -33,16 +34,54 @@ const ProgressBar = ({ steps, currentIndex }) => {
     );
 };
 
-const ModalBoarding = ({ isOpen, onClose, rol }) => {
+const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
+    const [catalog, setCatalog] = useState([]);
 
     const formStateGlobal = useAppSelector((state) => state.formSlice.selectedOptions);
     const user = useAppSelector((state) => state.user);
 
+
     const handleDisabled = () => {
         setDisabled(false);
     };
+
+    const getCatalog = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(
+                "/catalog/get-catalog?catalogName=medical_specialties",
+                headers
+            );
+            if (response.data) {
+                setCatalog(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const getCenter = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(
+                "/catalog/get-catalog?catalogName=medical_specialties",
+                headers
+            );
+            if (response.data) {
+                setCatalog(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    useEffect(() => {
+        if (rol === "Medico") {
+            getCatalog();
+        }
+    }, [rol]);
+
 
     useEffect(() => {
         if (index === 0) {
@@ -50,6 +89,8 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         }
     }, [index]);
 
+
+    // <Doctor key="doctor" handleDisabled={handleDisabled} state={formStateGlobal} />,
 
     const Modals = rol === "Paciente" ? [
         <Bienvenida key="bienvenida" />,
@@ -61,7 +102,7 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         <ViveSolo key="vive_solo" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <DispElectronicos key="disp_electronicos" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <UsoCelular key="uso_celular" handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Doctor key="doctor" handleDisabled={handleDisabled} state={formStateGlobal} />,
+
         <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
     ] : [
         <Bienvenida key="bienvenida" />,
@@ -69,7 +110,7 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
         <Nacimiento key="nacimiento" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Domicilio key="domicilio" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <Especialidad key="Especialidad" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Especialidad key="Especialidad" handleDisabled={handleDisabled} state={formStateGlobal} options={catalog} />,
         <MatriculaNumber key="MatriculaNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <MatriculaProvNumber key="MatriculaProvNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
@@ -77,16 +118,27 @@ const ModalBoarding = ({ isOpen, onClose, rol }) => {
 
 
 
+    const handleNext = async () => {
 
-
-    const handleNext = () => {
         if (index < Modals.length - 1) {
             setIndex(index + 1);
             setDisabled(true);
         } else {
             const infoSend = mapBoolean(formStateGlobal);
-            console.log({ ...infoSend, userId: user?.id });
-            onClose();
+            console.log(infoSend);
+            try {
+                const response = await ApiSegimed.patch(
+                    `/onboarding?tipo=${rol === "Medico" ? 2 : 3}&id=${user.userId}`,
+                    // `/onboarding?tipo=2&id=15`,
+                    infoSend
+                );
+                setOnboarding(true)
+
+                console.log(response.data);
+                onClose();
+            } catch (error) {
+                console.error("Error al enviar la información:", error);
+            }
         }
     };
 

@@ -42,6 +42,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -71,8 +72,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -159,52 +160,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
     const combinedData = {
       ...response1.data,
       ...response2.data,
-      //   anthropometricDetails:
-      //     response1.data.anthropometricDetails?.length > 0
-      //       ? response1.data.anthropometricDetails
-      //       : paciente.anthropometricDetails || [],
-      //   vitalSigns:
-      //     response1.data.vitalSigns?.length > 0
-      //       ? response1.data.vitalSigns
-      //       : paciente.vitalSigns || [],
-      //   sociodemographicDetails:
-      //     response1.data.sociodemographicDetails ||
-      //     paciente.sociodemographicDetails ||
-      //     {},
-      //   backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
-      //   patientPulmonaryHypertensionGroups:
-      //     response1.data.patientPulmonaryHypertensionGroups?.length > 0
-      //       ? response1.data.patientPulmonaryHypertensionGroups
-      //       : paciente.patientPulmonaryHypertensionGroups || {},
-      //   patientPulmonaryHypertensionRisks:
-      //     response1.data.patientPulmonaryHypertensionRisks?.length > 0
-      //       ? response1.data.patientPulmonaryHypertensionRisks
-      //       : paciente.patientPulmonaryHypertensionRisks || {},
-      //   patientCardiovascularRisks:
-      //     response1.data.patientCardiovascularRisks?.length > 0
-      //       ? response1.data.patientCardiovascularRisks
-      //       : paciente.patientCardiovascularRisks || {},
-      //   patientSurgicalRisks:
-      //     response1.data.patientSurgicalRisks?.length > 0
-      //       ? response1.data.patientSurgicalRisks
-      //       : paciente.patientSurgicalRisks || {},
-      //   lastMedicalEventDate:
-      //     response1.data.lastMedicalEventDate ||
-      //     paciente.lastMedicalEventDate ||
-      //     null,
-      //   currentPhysician:
-      //     response1.data.currentPhysician || paciente.currentPhysician || {},
-      //   cellphone: response1.data.cellphone || paciente.cellphone || null,
-      //   currentLocationCity:
-      //     response1.data.currentLocationCity ||
-      //     paciente.currentLocationCity ||
-      //     null,
-      //   currentLocationCountry:
-      //     response1.data.currentLocationCountry ||
-      //     paciente.currentLocationCountry ||
-      //     null,
-      //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
-      // };
     };
     dispatch(adduser(combinedData));
     console.log(combinedData);
@@ -253,13 +208,17 @@ export const SidePte = ({ search, toggleSidebar }) => {
     }
   }, [rol]);
 
-  // useEffect(() => {
-  //   if (user.name)
-  //     if (!paciente.sociodemographicDetails?.address) {
-  //       router.push(rutas.PacienteDash)
-  //       setIsModalOpen(true);
-  //     }
-  // }, [user]);
+  useEffect(() => {
+    if (user.name)
+      if (!user.sociodemographicDetails?.genre) {
+        router.push(rutas.PacienteDash)
+        setIsModalOpen(true);
+      }
+  }, [user]);
+
+  useEffect(() => {
+    getUser({ headers: { token: token } }).catch(console.error);
+  }, [onboarding]);
 
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
@@ -371,10 +330,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -391,7 +349,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         )}
       </div>
 
-      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} /> */}
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} setOnboarding={setOnboarding} />
     </div>
   );
 };
