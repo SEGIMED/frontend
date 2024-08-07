@@ -7,7 +7,7 @@ import IconUser2 from "@/components/icons/iconUser2";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
 
-export default function ModalOrdenPte({ doctors, handleChange, errors, state }) {
+export default function ModalOrdenPte({ doctors, handleChange, errors, state, disabled }) {
     const [selectedDoctor, setSelectedDoctor] = useState(new Set());
     const [selectedDoctorName, setSelectedDoctorName] = useState("");
 
@@ -51,7 +51,8 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                 </label>
                 <Dropdown>
                     <DropdownTrigger className="w-full">
-                        <Button
+                        {disabled ? <Button
+                            disabled
                             style={{
                                 borderRadius: "0.5rem",
                                 textAlign: "start",
@@ -62,10 +63,26 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                                 background: "white"
                             }}
                             variant="bordered">
+
                             {selectedDoctorName || "Ingrese el nombre del médico"}
-                        </Button>
+                        </Button> : <Button
+
+                            style={{
+                                borderRadius: "0.5rem",
+                                textAlign: "start",
+                                borderWidth: "1px",
+                                justifyContent: "flex-start",
+                                opacity: "1",
+                                color: "#686868",
+                                background: "white"
+                            }}
+                            variant="bordered">
+
+                            {selectedDoctorName || "Ingrese el nombre del médico"}
+                        </Button>}
+
                     </DropdownTrigger>
-                    {doctors && (
+                    {doctors && !disabled ? (
                         <DropdownMenu
                             aria-label="Doctors"
                             variant="flat"
@@ -74,6 +91,8 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                             selectionMode="single"
                             selectedKeys={selectedDoctor}
                             onSelectionChange={handleDoctorChange}>
+
+
                             {doctors.map((item) => (
                                 <DropdownItem
                                     key={item.id}
@@ -83,7 +102,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                                 </DropdownItem>
                             ))}
                         </DropdownMenu>
-                    )}
+                    ) : null}
                 </Dropdown>
                 {errors.doctorId && <p className="text-red-500">Por favor seleccione un médico.</p>}
             </div>
@@ -107,6 +126,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                     handleOptionChange={handleChange}
                     name={"OrderType"}
                     selectedOptions={state?.OrderType}
+                    disabled={disabled}
                 />
                 {errors.OrderType && <p className="text-red-500">Por favor seleccione un tipo de solicitud.</p>}
             </div>
@@ -118,6 +138,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                     placeholder={"Escriba el motivo de su solicitud"}
                     onChange={(e) => handleChange("motivo", e.target.value)}
                     defaultValue={state?.motivo}
+                    disabled={disabled}
                 />
                 {errors.motivo && <p className=" text-red-500">Por favor escriba el motivo de su solicitud.</p>}
             </div>
