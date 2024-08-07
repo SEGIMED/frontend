@@ -19,14 +19,12 @@ export default function HomeDocAll() {
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
   const [selectedDocId, setSelectedDocId] = useState(null);
   const consultas = useAppSelector((state) => state.schedules);
   const [scheduledConsultas, setScheduledConsultas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [isSorted, setIsSorted] = useState(false);
-
-  const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const getSchedulesByUserId = async () => {
     try {
       const response = await ApiSegimed.get("/schedulesByUserId");
@@ -45,9 +43,11 @@ export default function HomeDocAll() {
   }, [dispatch]);
 
   //ordenamiento por fecha desde el front por ahora
-  const sortedConsultas = [...scheduledConsultas].sort((b, a) =>
-    a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
-  );
+  const sortedConsultas = [...scheduledConsultas]
+    .sort((b, a) =>
+      a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
+    )
+    .filter((consulta) => consulta.IsApproved == true);
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
@@ -56,10 +56,6 @@ export default function HomeDocAll() {
     setSelectedDocId(id);
     setIsReviewModalOpen(true);
   };
-
-  if (!consultas) {
-    return <MensajeSkeleton />;
-  }
 
   return (
     <div className="text-[#686868] h-full w-full flex flex-col">

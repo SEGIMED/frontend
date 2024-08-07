@@ -6,10 +6,10 @@ import { FooterAcc } from "../footer/footerAcc";
 
 export default function Form({ formData, setFormData, hideForm }) {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col md:flex-row bg-white over">
-      <div className="w-full md:w-[50%] h-full flex flex-col">
+    <div className="fixed inset-0 z-50 flex flex-col lg:flex-row bg-white over">
+      <div className="w-full lg:w-[50%] h-full flex flex-col">
         <div className="py-5 px-10 flex justify-between">
-          <LogoSegimed className="w-1/3 md:w-48" />
+          <LogoSegimed className="w-1/3 lg:w-48" />
           <button
             onClick={hideForm}
             className="bg-[#487FFA] py-3 px-5 flex items-center justify-center rounded-lg text-white font-extrabold gap-2">
@@ -18,7 +18,7 @@ export default function Form({ formData, setFormData, hideForm }) {
         </div>
         <div className="h-full w-full flex flex-col items-center justify-center gap-5">
           <p className="text-center text-2xl">Ingrese sus datos</p>
-          <div className="overflow-y-auto p-5 w-full">
+          <div className="overflow-y-auto p-2 w-full">
             <FormUser formData={formData} setFormData={setFormData} />
           </div>
         </div>

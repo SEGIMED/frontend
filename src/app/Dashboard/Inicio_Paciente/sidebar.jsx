@@ -26,7 +26,6 @@ import { IconNotificaciones } from "@/components/InicioPaciente/notificaciones/I
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
 
-
 import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
 import { IconPoint } from "@/components/InicioPaciente/notificaciones/IconPoint";
@@ -42,16 +41,12 @@ export const SidePte = ({ search, toggleSidebar }) => {
     dispatch(setSearchTerm1(e.target.value));
   };
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  console.log(user);
-
 
   const showSearch =
     pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
@@ -173,11 +168,12 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getAllDoc = async (headers) => {
     try {
       const response = await ApiSegimed.get("/all-physicians", headers);
+
       if (response.data) {
         dispatch(getAllDoctores(response.data));
       }
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
     }
   };
 
