@@ -28,6 +28,7 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconEditar from "@/components/icons/iconEditar";
 import IconClose2 from "@/components/icons/IconClose2";
 import DeleteOrden from "@/components/modal/ModalPatient/ModalDeteleOrden";
+import OrdenType from "@/components/modal/ModalDoctor/modalOrden";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -39,10 +40,11 @@ export default function HomeDoc() {
 
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
-    const [showModalModify, setShowModalModify] = useState(false);
+    const [showModalOrden, setShowModalOrden] = useState(false);
     const [isLoading, setisLoading] = useState(true);
     const [isSorted, setIsSorted] = useState(false);
     const [errors, setErrors] = useState({});
+    const [selectedOrden, setSelectedOrden] = useState({});
     const [patients, setPatients] = useState([]);
     const [selectedId, setSelectedId] = useState([]);
     const [allDoctors, setAllDoctors] = useState([]);
@@ -51,6 +53,8 @@ export default function HomeDoc() {
         totalPages: 0,
         currentPage: 1,
     });
+
+    console.log(allDoctors);
 
     const userId = config.c;
     const dispatch = useAppDispatch();
@@ -140,31 +144,12 @@ export default function HomeDoc() {
     };
 
 
-
-    const handleSubmit = () => {
-        const { OrderType, doctorId, motivo } = infoSend;
-
-        const newErrors = {};
-        if (!OrderType) newErrors.OrderType = true;
-        if (!doctorId) newErrors.doctorId = true;
-        if (!motivo) newErrors.motivo = true;
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
+    const handleSubmit = (data) => {
         console.log(infoSend);
-        dispatch(resetFormState());
-        setShowModal(false);
-        Swal.fire({
-            title: "¡Solicitud creada correctamente!",
-            text: "",
-            icon: "success",
-            confirmButtonColor: "#487FFA",
-            confirmButtonText: "Aceptar",
-        });
+        router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`)
     };
+
+
 
 
 
@@ -182,15 +167,15 @@ export default function HomeDoc() {
           /> */}
 
 
-                <h1 className="font-bold ml-4 hidden md:block ">Listado de Solicitudes </h1>
+                <h1 className="font-bold ml-4 hidden md:block ">Pendientes </h1>
                 <button
-                    onClick={() => setShowModal(true)}
+                    onClick={() => setShowModalOrden(true)}
                     className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
                     <IconMas color={"#487ffa"} />
                     <p
                         className={` text-bluePrimary
                          font-bold `}>
-                        Nueva solicitud
+                        Generar nueva
                     </p>
                 </button>
                 {/* <div></div> */}
@@ -218,7 +203,7 @@ export default function HomeDoc() {
                     ) : sortedPatients.length === 0 ? (
                         <NotFound
                             text={
-                                "No hay solicitudes activas"
+                                "No hay solicitudes pendientes"
                             }
                             sizeText={"w-[100%]"}
                         />
@@ -253,8 +238,17 @@ export default function HomeDoc() {
                                             {
                                                 items: [
                                                     {
-                                                        label: "Modificar solicitud",
-                                                        onClick: () => setShowModalModify(true),
+                                                        label: "Ver solicitud",
+                                                        onClick: () => {
+                                                            setShowModal(true); handleChange("doctorId", 11);
+                                                            handleChange("OrderType", "Receta médica");
+                                                            handleChange("motivo", "xd")
+                                                        },
+                                                        icon: <IconEditar color={"#B2B2B2"} />,
+                                                    },
+                                                    {
+                                                        label: "Responder solicitud",
+                                                        onClick: () => router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`),
                                                         icon: <IconEditar color={"#B2B2B2"} />,
                                                     },
                                                     {
@@ -295,13 +289,13 @@ export default function HomeDoc() {
             {/* {showModal && selectedPatient && ( */}
             <ModalModularizado
                 isOpen={showModal}
-                onClose={() => { setShowModal(false); dispatch(resetFormState()); setErrors({}) }}
-                Modals={[<ModalOrdenPte key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
+                onClose={() => { setShowModal(false); }}
+                Modals={[<ModalOrdenPte state={infoSend} disabled={true} key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
                 title={"Generar nueva solicitud"}
                 button1={"hidden"}
-                button2={"bg-greenPrimary block text-white font-font-Roboto"}
+                button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
-                size={"h-fit md:h-[33rem] md:w-[35rem]"}
+                size={"h-fit md:h-fit md:w-[35rem]"}
                 buttonText={{ end: `Generar` }}
                 funcion={handleSubmit}
             />
@@ -311,7 +305,7 @@ export default function HomeDoc() {
                 Modals={[<DeleteOrden key={"deleteModalOrden"} id={selectedId} />]}
                 title={"Advertencia"}
                 button1={"bg-[#E73F3F] text-white"}
-                button2={"bg-white border-[#487FFA] border block font-font-Roboto text-[#487FFA]"}
+                button2={"text-bluePrimary bg-white border-[#487FFA] border  block font-font-Roboto "}
                 progessBar={"hidden"}
                 size={"h-[15rem] md:h-[15rem] md:w-[25rem]"}
                 buttonText={{ end: `No` }}
@@ -321,17 +315,20 @@ export default function HomeDoc() {
                 funcionButton1={handleDeleteOrden}
             />
             <ModalModularizado
-                isOpen={showModalModify}
-                onClose={() => { setShowModalModify(false); setErrors({}) }}
-                Modals={[<ModalOrdenPte state={infoSend} key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
-                title={"Generar nueva solicitud"}
+                isOpen={showModalOrden}
+                onClose={() => setShowModalOrden(false)}
+                Modals={[<OrdenType
+                    key="orden-type"
+                />]}
+                ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true&Pendientes=true`}
+                title={"Generar nueva órden médica"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
-                size={"h-fit md:h-[33rem] md:w-[35rem]"}
-                buttonText={{ end: `Generar` }}
-                funcion={handleSubmit}
+                size={"h-[16rem] md:h-[15rem] md:w-[35rem]"}
+                buttonText={{ end: `Continuar` }}
             />
+
             {/* )} */}
 
         </div>

@@ -35,7 +35,7 @@ export default function DetallePaciente() {
   const user = useAppSelector((state) => state.clinicalHistory.user);
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
-  
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -60,8 +60,8 @@ export default function DetallePaciente() {
         <>
           <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
             <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
-            <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />} 
-            funcion={() => GeneratePDF(user, infoPatient)}/>
+            <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />}
+              funcion={() => GeneratePDF(user, infoPatient)} />
           </div>
           <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
@@ -226,17 +226,17 @@ export default function DetallePaciente() {
         ]}
         title={"Importar Historia Clínica"}
         button1={"hidden"}
-        button2={"bg-greenPrimary block"}
+        button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
         size={"h-[35rem] md:h-[33rem] md:w-[35rem]"}
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
       />
-       {/* <div>
+      {/* <div>
             <h1>Vista Previa del PDF</h1>
             <PdfPreview user={user} />
         </div> */}
     </div>
-    
+
   );
 }

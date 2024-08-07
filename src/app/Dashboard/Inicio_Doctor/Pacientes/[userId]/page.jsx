@@ -164,7 +164,7 @@ export default function DetallePaciente({ params }) {
           ]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary text-white block font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}
