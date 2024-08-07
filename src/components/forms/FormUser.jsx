@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import IconPasswordClose from "../icons/IconPasswordClose";
 import IconPasswordOpen from "../icons/IconPasswordOpen";
 import IconCheckBoton from "../icons/iconCheckBoton";
+import Link from "next/link";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -27,21 +28,34 @@ export const FormUser = ({ formData, setFormData }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [errorMessage, setErrorMessage] =useState("")
+
+
+  const handleCheckboxChange = (type) => {
+    if (type === "terms") {
+      setTermsAccepted(!termsAccepted);
+    } else if (type === "privacy") {
+      setPrivacyAccepted(!privacyAccepted);
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    // if (!termsAccepted || !privacyAccepted) {
+    //   setErrorMessage("Debe aceptar todos los términos y condiciones.");
+    // }
+  
     try {
       setLoading(true);
       const updatedData = { ...formData, ...data };
       setFormData(updatedData);
-
-      const response = await ApiSegimed.post(
-        "/user/register-user",
-        updatedData
-      );
+  
+      const response = await ApiSegimed.post("/user/register-user", updatedData);
       if (response.status !== 201) {
         throw new Error(response.data.error);
       }
@@ -53,12 +67,13 @@ export const FormUser = ({ formData, setFormData }) => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response.data.error,
+        text: error.response?.data?.error || "Ocurrió un error inesperado.",
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
     }
   });
+  
 
   const passwordValue = watch("password");
 
@@ -68,7 +83,7 @@ export const FormUser = ({ formData, setFormData }) => {
     hasSpecialChar: /[\W_]/.test(passwordValue),
     hasMinLength: passwordValue?.length >= 6,
   };
-  console.log(showPasswordCriteria);
+
   return (
     <div className="pb-36">
       <form onSubmit={onSubmit}>
@@ -138,8 +153,6 @@ export const FormUser = ({ formData, setFormData }) => {
               })}
             />
 
-            {/* Mostrar los criterios solo si el usuario ha empezado a escribir */}
-
             {showPasswordCriteria && (
               <ul className="mt-2 text-sm ">
                 <li
@@ -182,7 +195,6 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          {/* Resto del formulario */}
           <div className="w-full max-w-96">
             <label htmlFor="idType">Tipo de Identificación</label>
             <select
@@ -209,7 +221,7 @@ export const FormUser = ({ formData, setFormData }) => {
             <input
               id="idNumber"
               type="text"
-              placeholder="Ingrese Numero de identificacion"
+              placeholder="Ingrese Numero de identificación"
               className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
               {...register("idNumber", {
                 required: {
@@ -268,57 +280,96 @@ export const FormUser = ({ formData, setFormData }) => {
           </div>
 
           <div className="w-full max-w-96">
-            <label htmlFor="cellphone">Número de Celular</label>
+            <label htmlFor="phone">Número Telefónico</label>
             <input
-              id="cellphone"
+              id="phone"
               type="text"
-              placeholder="Ingrese Numero de Celular"
+              placeholder="Ingrese Número Telefónico"
               className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
-              {...register("cellphone", {
+              {...register("phone", {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
               })}
             />
-            {errors.cellphone && (
+            {errors.phone && (
               <span className="text-red-500 text-sm font-medium">
-                {errors.cellphone.message}
+                {errors.phone.message}
               </span>
             )}
           </div>
 
           <div className="w-full max-w-96">
-            <label htmlFor="nationality">Nacionalidad</label>
-            <select
-              id="nationality"
-              className="w-full bg-[#FBFBFB] py-2 px-2 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
-              {...register("nationality", {
+            <label htmlFor="birthdate">Fecha de Nacimiento</label>
+            <input
+              id="birthdate"
+              type="date"
+              className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
+              {...register("birthdate", {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
-              })}>
-              <option value="2">Argentina</option>
-              <option value="1">Colombia</option>
-            </select>
-            {errors.nationality && (
+              })}
+            />
+            {errors.birthdate && (
               <span className="text-red-500 text-sm font-medium">
-                {errors.nationality.message}
+                {errors.birthdate.message}
               </span>
             )}
           </div>
-        </div>
 
-        <div className="flex justify-center p-10">
-          <button
-            disabled={loading}
-            className="bg-[#70C247] p-3 flex items-center justify-center rounded-lg text-white font-extrabold gap-2 w-64">
-            Completar Registro
-            <IconEnter className="w-6" />
-          </button>
+          <div className="w-full max-w-96 flex items-center text-[#487FFA]">
+            <input
+            type="checkbox"
+            id="terms"
+            className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
+            checked={termsAccepted}
+            onChange={() => handleCheckboxChange("terms")}
+            />
+            <Link href="/Term" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+              Acepto los términos y condiciones.
+              </Link>
+          </div>
+          
+
+          <div className="w-full max-w-96 flex items-center text-[#487FFA]">
+            <input
+            type="checkbox"
+            id="privacy"
+            className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
+            checked={privacyAccepted}
+            onChange={() => handleCheckboxChange("privacy")}
+            />
+            <Link href="/Priv" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+            Acepto la política de privacidad.
+           </Link>
+            </div>
+          {/* {errorMessage && (
+          <div className="text-red-500 mt-2">{errorMessage}</div>
+            )} */}
+
+          
+          <div className="w-full max-w-96 flex justify-center mt-4 mb-10">
+            <button
+              type="submit"
+              className={`w-full py-2 px-4 rounded-lg focus:outline-none 
+                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white focus:bg-[#3c6dcf]" : "bg-gray-400 text-white cursor-not-allowed"}`}
+              disabled={!termsAccepted || !privacyAccepted}
+              >
+              {loading ? (
+                <div className="flex justify-center">
+                  <IconEnter className="animate-spin" />
+                </div>
+              ) : (
+                "Registrar"
+              )}
+            </button>
+          </div>
         </div>
       </form>
     </div>
   );
 };
+
