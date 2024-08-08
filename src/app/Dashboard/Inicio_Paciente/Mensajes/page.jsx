@@ -16,6 +16,7 @@ import avatar from "@/utils/defaultAvatar";
 import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
+import IconMedChat from "@/components/icons/IconMedChat";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -100,6 +101,7 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-4 items-center">
+          <IconMedChat color="gray"/>
           <div className="w-8 h-8 flex justify-center items-center">
             {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
           </div>
