@@ -1,6 +1,10 @@
 'use client'
 import { socket } from "./socketio.js";
 import Observer from "./observer.js";
+/*
+    Modificar para que se haga todo lo que tenga que ver con la conexion y agregar tracks desde aquí.
+    Usar Observer para modificar el cliente.
+*/
 class RTCPeer{
     constructor(){
         this.configuration = {
