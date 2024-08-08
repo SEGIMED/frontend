@@ -15,6 +15,10 @@ import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
 import Doctor from "../boarding/Doctor";
 import { useAppSelector } from "@/redux/hooks";
 import { mapBoolean } from "@/utils/MapeoCuerpo";
+import MatriculaNumber from "../boarding/Matricula";
+import MatriculaProvNumber from "../boarding/MatriculaProv";
+import Especialidad from "../boarding/Especialidad";
+import IconArrowRight from "@/components/icons/iconArrowRight";
 
 const ProgressBar = ({ steps, currentIndex }) => {
     return (
@@ -29,7 +33,7 @@ const ProgressBar = ({ steps, currentIndex }) => {
     );
 };
 
-const ModalBoarding = ({ isOpen, onClose }) => {
+const ModalBoarding = ({ isOpen, onClose, rol }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
 
@@ -47,7 +51,7 @@ const ModalBoarding = ({ isOpen, onClose }) => {
     }, [index]);
 
 
-    const Modals = [
+    const Modals = rol === "Paciente" ? [
         <Bienvenida key="bienvenida" />,
         <Hipertension key="hipertension" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Genero key="genero" handleDisabled={handleDisabled} state={formStateGlobal} />,
@@ -59,7 +63,20 @@ const ModalBoarding = ({ isOpen, onClose }) => {
         <UsoCelular key="uso_celular" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Doctor key="doctor" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
+    ] : [
+        <Bienvenida key="bienvenida" />,
+        <Genero key="genero" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Nacimiento key="nacimiento" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Domicilio key="domicilio" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Especialidad key="Especialidad" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <MatriculaNumber key="MatriculaNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <MatriculaProvNumber key="MatriculaProvNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <Final key="final" handleDisabled={handleDisabled} state={formStateGlobal} />
     ];
+
+
+
 
 
     const handleNext = () => {
@@ -106,7 +123,7 @@ const ModalBoarding = ({ isOpen, onClose }) => {
                             disabled={disabled}
                             onClick={handleNext}
                             className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-fit disabled:bg-gray-400">
-                            <p className="block text-white font-bold">Continuar</p>
+                            <p className="flex text-white font-bold">Continuar <IconArrowRight /></p>
                         </button>
                     </div>
                 </div>

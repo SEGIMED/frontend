@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
@@ -22,7 +22,6 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-import React, { useMemo } from "react";
 import IconUpload from "@/components/icons/IconUpload";
 
 export default function HomeDoc() {
@@ -44,6 +43,7 @@ export default function HomeDoc() {
       return () => window.removeEventListener("resize", handleResize);
     }
   }, []);
+
   const {
     register,
     handleSubmit,
@@ -125,7 +125,6 @@ export default function HomeDoc() {
         updatedDataSend,
         headers
       );
-      // const response = await ApiSegimed.patch(`/update-full-physician`, headers);
 
       setEdit(false);
       Swal.fire({
@@ -166,9 +165,12 @@ export default function HomeDoc() {
       <title>{lastSegmentTextToShow}</title>
       <div
         className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"
-          } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
+          } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}
+      >
         <div
-          className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
+          className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"
+            }`}
+        >
           <IconCurrentRouteNav className="w-4" />
           <p className="text-lg ">Sus datos personales</p>
         </div>
@@ -238,6 +240,10 @@ export default function HomeDoc() {
                     value: 20,
                     message: "No puede tener más de 20 caracteres",
                   },
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "Solo se permiten letras",
+                  },
                 })}
               />
               {errors.name && (
@@ -269,6 +275,10 @@ export default function HomeDoc() {
                     value: 20,
                     message: "No puede tener más de 20 caracteres",
                   },
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "Solo se permiten letras",
+                  },
                 })}
               />
               {errors.lastname && (
@@ -294,16 +304,15 @@ export default function HomeDoc() {
               <DropdownTrigger className="md:w-1/2 w-full">
                 <Button
                   style={{
-                    //   width: "90%",
                     borderRadius: "0.5rem",
                     textAlign: "start",
-                    // marginRight: "1.5rem",
                     borderWidth: "1px",
                     justifyContent: "flex-start",
                     opacity: "1",
                     color: "#686868",
                   }}
-                  variant="bordered">
+                  variant="bordered"
+                >
                   {selectedValue}
                 </Button>
               </DropdownTrigger>
@@ -314,7 +323,8 @@ export default function HomeDoc() {
                 disallowEmptySelection
                 selectionMode="multiple"
                 selectedKeys={selectedKeys}
-                onSelectionChange={handleSelectionChange}>
+                onSelectionChange={handleSelectionChange}
+              >
                 {catalog?.map((item) => (
                   <DropdownItem key={item.name} value={item.id}>
                     {item.name}
@@ -341,12 +351,24 @@ export default function HomeDoc() {
           {edit ? (
             <div className="w-full flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.nacionalidad ? "red" : "#DCDBDB"
-                  }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-${errors.nationality ? "red" : "#DCDBDB"
+                  }`}
                 type="text"
                 defaultValue={doctor?.nationality}
                 {...register("nationality", {
                   required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "Solo se permiten letras",
+                  },
                 })}
               />
               {errors.nationality && (
@@ -378,12 +400,18 @@ export default function HomeDoc() {
                     value: 3,
                     message: "Debe tener al menos 3 caracteres",
                   },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z ]+$/,
+                    message: "Solo se permiten letras y espacios",
+                  },
                 })}
               />
               {errors.country && (
-                <p className="text-red-500 text-sm">
-                  {errors.country.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.country.message}</p>
               )}
             </div>
           ) : (
@@ -410,12 +438,18 @@ export default function HomeDoc() {
                     value: 3,
                     message: "Debe tener al menos 3 caracteres",
                   },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z ]+$/,
+                    message: "Solo se permiten letras y espacios",
+                  },
                 })}
               />
               {errors.city && (
-                <p className="text-red-500 text-sm">
-                  {errors.city.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.city.message}</p>
               )}
             </div>
           ) : (
@@ -437,6 +471,15 @@ export default function HomeDoc() {
                 defaultValue={doctor?.medicalRegistries?.Nacional?.registryId}
                 {...register("registryIdNacional", {
                   required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+
                 })}
               />
               {errors.registryIdNacional && (
@@ -463,6 +506,15 @@ export default function HomeDoc() {
                 defaultValue={doctor?.medicalRegistries?.Provincial?.registryId}
                 {...register("registryIdProvincial", {
                   required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
+
                 })}
               />
               {errors.registryIdProvincial && (
@@ -490,10 +542,20 @@ export default function HomeDoc() {
                 defaultValue={doctor?.attendancePlace?.addressDetails}
                 {...register("addressDetails", {
                   required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 5,
+                    message: "Debe tener al menos 5 caracteres",
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "No puede tener más de 50 caracteres",
+                  },
                 })}
               />
-              {errors.alias && (
-                <p className="text-red-500 text-sm">{errors.addressDetails.message}</p>
+              {errors.addressDetails && (
+                <p className="text-red-500 text-sm">
+                  {errors.addressDetails.message}
+                </p>
               )}
             </div>
           ) : (
@@ -515,6 +577,14 @@ export default function HomeDoc() {
                 defaultValue={doctor?.attendancePlace?.alias}
                 {...register("alias", {
                   required: "*Este campo es obligatorio",
+                  minLength: {
+                    value: 2,
+                    message: "Debe tener al menos 2 caracteres",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "No puede tener más de 20 caracteres",
+                  },
                 })}
               />
               {errors.alias && (
@@ -541,6 +611,10 @@ export default function HomeDoc() {
                 defaultValue={doctor?.attendancePlace?.googleMapsLink}
                 {...register("googleMapsLink", {
                   required: "*Este campo es obligatorio",
+                  pattern: {
+                    value: /^https:\/\/maps\.app\.goo\.gl\/[A-Za-z0-9]+$/,
+                    message: "Debe ser un link de Google Maps válido",
+                  }
                 })}
               />
               {errors.googleMapsLink && (
@@ -555,34 +629,6 @@ export default function HomeDoc() {
             </span>
           )}
         </div>
-        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
-            <IconCircle className="w-2" />
-            Direccion de Atención:
-          </label>
-          {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.attendancePlace?.addressDetails}
-                {...register("addressDetails", {
-                  required: "*Este campo es obligatorio",
-                })}
-              />
-              {errors.addressDetails && (
-                <p className="text-red-500 text-sm">
-                  {errors.addressDetails.message}
-                </p>
-              )}
-            </div>
-          ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.attendancePlace?.addressDetails}
-            </span>
-          )}
-        </div> */}
-
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
@@ -608,8 +654,7 @@ export default function HomeDoc() {
             Nivel de Experto:
           </label>
           <span className="w-full text-start px-6 py-2">
-            {doctor?.expertiseLevel?.name
-            }
+            {doctor?.expertiseLevel?.name}
           </span>
         </div>
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
@@ -654,8 +699,12 @@ export default function HomeDoc() {
                 {...register("cellphone", {
                   required: "*Este campo es obligatorio",
                   minLength: {
-                    value: 10,
-                    message: "Debe tener al menos 10 caracteres",
+                    value: 6,
+                    message: "Debe tener al menos 6 caracteres",
+                  },
+                  maxLength: {
+                    value: 15,
+                    message: "No puede tener más de 15 caracteres",
                   },
                   pattern: {
                     value: /^\d+$/,

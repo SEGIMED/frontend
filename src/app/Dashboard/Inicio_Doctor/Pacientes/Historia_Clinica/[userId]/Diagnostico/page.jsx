@@ -1,13 +1,8 @@
 "use client";
 
-import Ordenar from "@/components/Buttons/Ordenar";
-import FiltrarPacientes from "@/components/Buttons/FiltrarPacientes";
 import TableDiagnostico from "@/components/clinicalHistory/TableDiagnostico";
 import { usePathname } from "next/navigation";
 import NotFound from "@/components/notFound/notFound";
-import { useEffect, useState } from "react";
-import { ApiSegimed } from "@/Api/ApiSegimed";
-import Cookies from "js-cookie";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import { useAppSelector } from "@/redux/hooks";
 
@@ -18,7 +13,6 @@ export default function HomeDoc() {
 
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
-
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -49,10 +43,7 @@ export default function HomeDoc() {
             sizeText="w-[90%]"
           />
         ) : (
-          <TableDiagnostico
-            pacientes={infoPatient}
-
-          />
+          <TableDiagnostico pacientes={infoPatient} />
         )}
       </div>
     </div>

@@ -27,12 +27,12 @@ export default function CentroDetAtención({ handleDisabled, state }) {
             </p>
 
             <DropNext
-                selectedOptions={state.AtencionCentro2}
+                selectedOptions={state.centerAttention2}
                 handleDisabled={handleDisabled}
                 type={true}
                 options={options}
                 text2={"Seleccione su centro de atención"}
-                name={"AtencionCentro"}
+                name={"centerAttention"}
 
             />
 

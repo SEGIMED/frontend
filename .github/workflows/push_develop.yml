@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t segimed/frontend:develop .
+        run: docker build --build-arg NEXT_PUBLIC_API_URL=${{ secrets.API_URL_DEVELOP }}  -t segimed/frontend:develop .
 
       - name: Push Docker image to Docker Hub
         run: docker push segimed/frontend:develop

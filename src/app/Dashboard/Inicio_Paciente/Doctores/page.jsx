@@ -12,8 +12,6 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed.js";
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
-import FiltrosPaciente from "@/components/Buttons/FiltrosPaciente";
-import Ordenar from "@/components/Buttons/Ordenar";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconMiniCalendar from "@/components/icons/IconMiniCalendar";
 import IconPersonalData from "@/components/icons/IconPersonalData";
@@ -50,10 +48,8 @@ export default function DoctoresPte() {
     try {
       const response = await ApiSegimed.get(
         `/all-physicians?page=${pagination.currentPage}&limit=7&name=${searchTerm}`,
-        // `/all-physicians?page=${pagination.currentPage}&limit=7`,
         { headers: { token: token } }
       );
-      // console.log(response.data);
       if (response.data) {
         setDoctors(response.data.user);
         setPagination((prev) => ({
@@ -71,17 +67,13 @@ export default function DoctoresPte() {
 
   useEffect(() => {
     if (token) {
-      fetchDoctors();
+      fetchDoctors(searchTerm1);
     }
-  }, [pagination.currentPage, token]);
+  }, [searchTerm1, pagination.currentPage, token]);
 
   useEffect(() => {
     if (token) {
-      fetchDoctors(searchTerm1);
-      setPagination((prev) => ({
-        ...prev,
-        currentPage: 1,
-      }));
+      setPagination((prev) => ({ ...prev, currentPage: 1 }));
     }
   }, [searchTerm1, token]);
 
@@ -151,16 +143,6 @@ export default function DoctoresPte() {
                   {
                     title: "Acciones",
                     items: [
-                      // {
-                      //   label: "Solicitar asociarse",
-                      //   icon: <IconMiniCalendar />,
-                      //   onClick: () =>
-                      //     handleAssociateClick(
-                      //       doctor.id,
-                      //       doctor.name,
-                      //       doctor.lastname
-                      //     ),
-                      // },
                       {
                         label: "Solicitar Consulta",
                         icon: <IconMiniCalendar />,
@@ -193,7 +175,8 @@ export default function DoctoresPte() {
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60"
+        >
           <IconPrev /> Anterior
         </button>
         <p className=" w-14">
@@ -202,7 +185,8 @@ export default function DoctoresPte() {
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform active:scale-100 disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform active:scale-100 disabled:opacity-60"
+        >
           Siguiente
           <IconNext />
         </button>
@@ -234,7 +218,7 @@ export default function DoctoresPte() {
           ]}
           title={"Solicitar asociarse"}
           button1={"hidden"}
-          button2={"bg-greenPrimary block"}
+          button2={"bg-greenPrimary text-white block"}
           progessBar={"hidden"}
           size={"h-[21rem] md:h-[17rem] md:w-[35rem]"}
           buttonText={{ end: `Enviar solicitud` }}
@@ -243,3 +227,4 @@ export default function DoctoresPte() {
     </div>
   );
 }
+

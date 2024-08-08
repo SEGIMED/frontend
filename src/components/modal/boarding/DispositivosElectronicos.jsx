@@ -8,10 +8,10 @@ export default function DispElectronicos({ handleDisabled, state }) {
             </p>
             <div>
                 <ButtonNext
-                    selectedOptions={state.DispElectronicos}
+                    selectedOptions={state.hasTechUseDifficulty}
                     handleDisabled={handleDisabled}
                     options={["Si", "No"]}
-                    name={"DispElectronicos"}
+                    name={"hasTechUseDifficulty"}
                 />
             </div>
         </div>

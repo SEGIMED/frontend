@@ -29,7 +29,8 @@ export default function Citas({ title }) {
   const [dateSelected, setDateSelected] = useState();
   const [view, setView] = useState("month");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const minHour = new Date().setHours(8, 0, 0);
+  const maxHour = new Date().setHours(21, 0, 0);
   const getSchedules = async (headers) => {
     try {
       const response = await ApiSegimed.get("/schedules", headers);
@@ -71,10 +72,9 @@ export default function Citas({ title }) {
     setIsModalOpen(true);
   };
 
-
   const eventStyleGetter = (event, start, end, isSelected) => {
-    let backgroundColor = "#eaf4ff"; // Fondo claro
-    let borderColor = "#487ffa"; // Borde izquierdo azul
+    let backgroundColor = "#E9EFFF"; // Fondo claro
+    let borderColor = "#5272E9"; // Borde izquierdo azul
 
     if (isSelected) {
       backgroundColor = "#dce9ff"; // Fondo claro cuando está seleccionado
@@ -84,21 +84,21 @@ export default function Citas({ title }) {
     return {
       style: {
         backgroundColor: backgroundColor,
+        fontFamily: "Montserrat",
         borderLeft: `5px solid ${borderColor}`, // Borde izquierdo de 5px
-        borderRadius: '5px',
+        borderRadius: "5px",
         opacity: 1,
-        color: 'black',
-        border: '0px',
-        display: 'block',
-        padding: '5px' // Espaciado interno
-      }
+        color: "#5272E9",
+        borderColor: "#5272E9",
+        fontWeight: "500",
+        display: "block",
+        padding: "5px", // Espaciado interno
+      },
     };
   };
 
-
   const handleNewAppointment = () => {
     const today = new Date();
-
 
     setDateSelected(today);
     setIsModalOpen(true);
@@ -107,18 +107,39 @@ export default function Citas({ title }) {
   const userId = Cookies.get("c");
 
   const shedules = useAppSelector((state) => state.schedules);
-  const listaPacientes = useAppSelector(state => state.allPatients.patients);
+  const listaPacientes = useAppSelector((state) => state.allPatients.patients);
 
   function mapSchedules(appointments) {
     const myID = Number(Cookies.get("c"));
 
     const citas = appointments
-      .filter((appointment) => appointment.physician === myID)
+      .filter((appointment) => {
+        const startDateTime = dayjs(
+          appointment.scheduledStartTimestamp
+        ).toDate();
+        const endDateTime = dayjs(appointment.scheduledEndTimestamp).toDate();
+
+        // Comprobar si las horas de inicio y fin están dentro del rango permitido
+        const startTime =
+          startDateTime.getHours() * 60 + startDateTime.getMinutes();
+        const endTime = endDateTime.getHours() * 60 + endDateTime.getMinutes();
+
+        const minTime =
+          new Date(minHour).getHours() * 60 + new Date(minHour).getMinutes();
+        const maxTime =
+          new Date(maxHour).getHours() * 60 + new Date(maxHour).getMinutes();
+
+        return (
+          appointment.physician === myID &&
+          startTime >= minTime &&
+          endTime <= maxTime
+        );
+      })
       .map((appointment) => ({
         id: appointment.id,
         start: dayjs(appointment.scheduledStartTimestamp).toDate(),
         end: dayjs(appointment.scheduledEndTimestamp).toDate(),
-        title: `${appointment.reasonForConsultation}`,
+        title: `${appointment.patientUser.name} ${appointment.patientUser.lastname}`,
       }));
 
     return citas;
@@ -153,21 +174,24 @@ export default function Citas({ title }) {
     if (currentDay.isSame(today)) {
       return {
         style: {
-          backgroundColor: `5px solid white`,
-          borderLeft: `5px solid #487ffa`, // Borde izquierdo de 5px
-          borderRadius: '5px',
-          opacity: 1,
-          color: 'black',
-          border: '0px',
-          display: 'block',
-          padding: '5px' // Espaciado interno
+          backgroundColor: "#FAFAFC",
         },
+        // style: {
+        //   backgroundColor: `5px solid white`,
+        //   borderLeft: `5px solid #487ffa`, // Borde izquierdo de 5px
+        //   borderRadius: "5px",
+        //   opacity: 1,
+        //   color: "black",
+        //   border: "0px",
+        //   display: "block",
+        //   padding: "5px", // Espaciado interno
+        // },
       };
     }
     if (currentDay.isBefore(today)) {
       return {
         style: {
-          backgroundColor: "#F4F4F4",
+          backgroundColor: "#FAFAFC",
         },
       };
     }
@@ -219,7 +243,7 @@ export default function Citas({ title }) {
             </button>
             <button
               className={clsx(
-                "border border-[#DCDBDB] font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-xl transition duration-300",
+                "border border-[#DCDBDB] hidden lg:inline-block font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-xl transition duration-300",
                 {
                   "bg-bluePrimary text-white": view === "week",
                   "bg-[#FAFAFC] text-[#5F5F5F]": view !== "week",
@@ -256,39 +280,81 @@ export default function Citas({ title }) {
     );
   };
 
+  const EventComponent = ({ event }) => {
+    return (
+      <div>
+        <p className="text-sm font-bold">{event.title}</p>
+      </div>
+    );
+  };
+  //Formato para fecha del día
+  const dayFormat = (date, culture, localizer) => {
+    const formattedDate = localizer.format(date, "D MMMM", culture);
+    const [day, month] = formattedDate.split(" ");
+    const firstLetter = month.charAt(0).toUpperCase();
+    return `${day} ${firstLetter}${month.slice(1)}`;
+  };
+  const weekdayFormat = (date, culture, localizer) => {
+    const formattedDate = localizer.format(date, "dddd", culture);
+    return `${formattedDate.charAt(0).toUpperCase()}${formattedDate.slice(1)}`;
+  };
   return (
     <div
-      className={` flex flex-col items-center ${title && "bg-white"} rounded-2xl ${title ? "h-screen" : "h-full"
-        } `}>
+      className={` flex flex-col font-Montserrat items-center ${
+        title ? "bg-white" : "bg-[#FAFAFC]"
+      } rounded-2xl ${title ? "h-screen" : "h-full"} `}>
       <div className={`h-[90%] w-full rounded-2xl ${title && "bg-white"}`}>
         <Calendar
           localizer={localizer}
           events={events}
+          formats={{
+            dayFormat,
+            weekdayFormat,
+          }}
           startAccessor="start"
           endAccessor="end"
           view={view}
           onView={handleViewChange}
           onNavigate={handleNavigation}
           date={date}
-          // eventPropGetter={eventStyleGetter} // Aquí se añaden los estilos
+          eventPropGetter={eventStyleGetter} // Aquí se añaden los estilos
           onSelectSlot={handleSelectSlot}
           selectable
+          allDayAccessor=""
           className="h-full w-full"
           dayPropGetter={dayStyle}
           components={{
             toolbar: CustomToolbar,
+            event: EventComponent,
+          }}
+          slotPropGetter={() => ({
+            style: {
+              minHeight: "50px",
+            },
+          })}
+          messages={{
+            showMore: (total, remainingEvents, events) => `+${total} más`,
           }}
           firstDay={1}
+          min={minHour}
+          max={maxHour}
         />
       </div>
-      {!title ? <div className="w-full flex justify-center px-6 py-3 ">
-        <button onClick={handleNewAppointment} className=" w-fit text-white px-4 py-2 gap-2 bg-greenPrimary items-center  rounded-3xl justify-center flex"> <IconMas />Nueva consulta</button>
-      </div> : null}
+      {!title ? (
+        <div className="w-full flex justify-center px-6 py-3 ">
+          <button
+            onClick={handleNewAppointment}
+            className=" w-fit text-white px-4 py-2 gap-2 bg-greenPrimary items-center  rounded-3xl justify-center flex">
+            {" "}
+            <IconMas />
+            Nueva consulta
+          </button>
+        </div>
+      ) : null}
 
       <ModalConsultationCalendar
         isOpen={isModalOpen}
         onClose={closeModal}
-        physician={userId}
         dateSelect={dateSelected}
         lista={listaPacientes}
         title={"Paciente"}

@@ -2,6 +2,7 @@ import io from "socket.io-client";
 import { setChats, updateChat, addChat } from "@/redux/slices/chat/chat";
 import { dataClear } from "@/redux/slices/chat/chat";
 import Cookies from "js-cookie";
+import { baseURL } from "@/Api/ApiSegimed";
 
 class Socket {
   constructor() {
@@ -31,7 +32,7 @@ class Socket {
     this._token = token;
     this._refreshToken = refreshToken;
     this._dispatch = dispatch;
-    this._socket = io(`http://localhost:5000/room-consult`, {
+    this._socket = io(`${baseURL}/room-consult`, {
       query: {
         token: token,
         refreshToken: refreshToken,
@@ -42,7 +43,7 @@ class Socket {
     // Escuchar el evento 'disconnect' para saber cuando el socket se desconecta
     this._socket.on("disconnect", () => {});
 
-    this._socket.on("getHistoryChats", async (data) => {
+    this._socket.on("getHistoryChats",(data) => {
       //event listener client recived all chats of a user.
       if (data) dispatch(setChats(data));
     });
@@ -50,8 +51,7 @@ class Socket {
     this._socket.on("updateMessage", async (data) => {
       //event listener client recived info of a chat.
       dispatch(updateChat(data));
-
-      this._socket.emit("persistChat", data.chat, (newChat) => {
+      this._socket.emit("persistChat", { chat:data.chat, lastMessage: data.lastMessage }, (newChat) => {
         dispatch(addChat(newChat));
       });
     });

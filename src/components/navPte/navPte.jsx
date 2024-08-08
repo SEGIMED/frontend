@@ -29,29 +29,26 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    Cookies.remove("a");
-    Cookies.remove("b");
-    Cookies.remove("c");
-    Cookies.remove("d");
-
     socket.disconnect();
 
     dispatch(resetApp());
 
     router.push("/");
-
+    Cookies.remove("a");
+    Cookies.remove("b");
+    Cookies.remove("c");
+    Cookies.remove("d");
     setTimeout(() => {
       // Realizar la recarga de la página para limpiar todos los datos
       window.location.reload(true);
-    }, 2000);
+    }, 1000);
   };
 
   return (
     <div>
       <div
-        className={`flex ${
-          isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
-        } lg:flex`}>
+        className={`flex ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
+          } lg:flex`}>
         <div className="h-screen overflow-y-auto gap-4 w-[60%] px-4 md:w-72 md:px-6 py-8 bg-white border-r-[1px] border-[#D7D7D7] flex flex-col justify-between">
           <div className="flex flex-col justify-center gap-5">
             <Link href={`${rutas.PacienteDash}`} className="block">
@@ -62,122 +59,124 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
                 <Link
                   onClick={toggleSidebar}
                   href={rutas.PacienteDash}
-                  className={`flex items-center gap-4 ${
-                    pathname === rutas.PacienteDash ? "text-[#487FFA]" : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === rutas.PacienteDash ? "text-[#487FFA]" : ""
+                    }`}>
                   <IconCube
                     className="w-5"
-                    iconColor={`${
-                      pathname === rutas.PacienteDash ? "#487FFA" : "#B2B2B2"
-                    }`}
+                    iconColor={`${pathname === rutas.PacienteDash ? "#487FFA" : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Tablero</li>
                 </Link>
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Mi_Perfil}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <IconDoctorNav
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Mi_Perfil}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Mi perfil</li>
                 </Link>
                 <Link
                   onClick={toggleSidebar}
+                  href={`${rutas.PacienteDash}${rutas.Antecedentes}`}
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Antecedentes}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
+                  <IconDoctorNav
+                    className="w-6"
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Antecedentes}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
+                  />
+                  <li className="text-lg md:text-md">Antecedentes</li>
+                </Link>
+                <Link
+                  onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Preconsulta}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <IconPreConsulta
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Preconsulta}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Preconsultas</li>
                 </Link>
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Historial}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Historial}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Historial}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <IconRecordNav
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Historial}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Historial}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Consultas</li>
                 </Link>
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Mensajes}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <IconMessageNav
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Mensajes}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Chats</li>
                 </Link>
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Citas}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Citas}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Citas}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <IconCalendarNav
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Citas}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Citas}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Mi Agenda</li>
                 </Link>
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Doctores}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Doctores}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Doctores}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <IconPatientNav
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Doctores}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Doctores}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Médicos</li>
                 </Link>
@@ -200,18 +199,16 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Alarm}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Alarm}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Alarm}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <AlarmDash
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Alarm}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Alarm}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Alarmas</li>
                 </Link>
@@ -236,18 +233,16 @@ export const NavPte = ({ toggleSidebar, isOpen }) => {
                 <Link
                   onClick={toggleSidebar}
                   href={`${rutas.PacienteDash}${rutas.Sugerencias}`}
-                  className={`flex items-center gap-4 ${
-                    pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
-                      ? "text-[#487FFA]"
-                      : ""
-                  }`}>
+                  className={`flex items-center gap-4 ${pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
+                    ? "text-[#487FFA]"
+                    : ""
+                    }`}>
                   <Sugerencias
                     className="w-6"
-                    color={`${
-                      pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
-                        ? "#487FFA"
-                        : "#B2B2B2"
-                    }`}
+                    color={`${pathname === `${rutas.PacienteDash}${rutas.Sugerencias}`
+                      ? "#487FFA"
+                      : "#B2B2B2"
+                      }`}
                   />
                   <li className="text-lg md:text-md">Sugerencias</li>
                 </Link>

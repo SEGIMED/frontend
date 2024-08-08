@@ -50,9 +50,8 @@ export default function TableAlarm({ pacientes }) {
           icon: "success",
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
-
         });
-        router.push(`${rutas.Doctor}${rutas.Mensajes}/${id}`)
+        router.push(`${rutas.Doctor}${rutas.Mensajes}`);
       }
     } catch (error) {
       console.error("Error al intentar actualizar la alarma:", error);
@@ -63,10 +62,11 @@ export default function TableAlarm({ pacientes }) {
     <div className="flex flex-col">
       <div className="">
         {pacientes?.map((paciente, index) => (
-          <div key={index} className="w-[100%] flex border-b border-b-[#cecece] py-2 items-center">
+          <div
+            key={index}
+            className="w-[100%] flex border-b border-b-[#cecece] py-2 items-center">
             <div className="w-[12%] md:w-[5%] items-center flex justify-center">
               <PriorityIcon priority={paciente.highestPriority} />
-
             </div>
             <div className="text-center w-[70%] md:w-[75%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-6 items-center py-2 bg-white h-fit ">
               <span className="hidden md:flex items-center justify-between pr-6 ">
@@ -83,7 +83,10 @@ export default function TableAlarm({ pacientes }) {
                 {paciente?.name} {paciente?.lastname}
               </p>
 
-              <div className="text-[#5F5F5F] hidden md:block "> {paciente.HTP?.data?.catHpGroup?.name}</div>
+              <div className="text-[#5F5F5F] hidden md:block ">
+                {" "}
+                {paciente.HTP?.data?.catHpGroup?.name}
+              </div>
               <div className="text-[#5F5F5F] hidden md:block truncate">
                 {paciente.alarmDescription}
               </div>
@@ -106,9 +109,7 @@ export default function TableAlarm({ pacientes }) {
                 label="Opciones"
               />
             </div>
-
-
-          </div >
+          </div>
         ))}
       </div>
     </div>

@@ -35,10 +35,10 @@ const Modal = ({ isOpen, onClose }) => {
   return isOpen && !showUserForm ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
       <div className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="relative z-50 bg-white md:p-10 rounded-lg w-[90%] md:w-[45rem] h-[39rem] flex flex-col items-center gap-5">
+      <div className="relative z-50 bg-white md:p-10 rounded-lg w-[90%] md:w-[45rem] h-fit py-8 lg:h-[39rem] flex flex-col items-center gap-5">
         <div className="h-full w-full flex flex-col items-center justify-between">
-          <div className="h-full flex flex-col items-center justify-center gap-10">
-            <p className="font-semibold text-4xl text-center">
+          <div className="h-full flex flex-col items-center justify-center gap-6">
+            <p className="font-semibold text-3xl text-center">
               Continuar como:
             </p>
             <div className="flex flex-col items-center gap-10 font-bold text-xl">

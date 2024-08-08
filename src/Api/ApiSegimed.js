@@ -1,10 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-
-// const url = "https://segimed-backend.onrender.com/api";
-const url = "https://develop.api.segimed.com/api";
-const local = "http://localhost:5000/api"; 
+export const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const url = `${baseURL}/api`;
 
 export const ApiSegimed = axios.create({
   baseURL: local,
@@ -13,11 +11,7 @@ export const ApiSegimed = axios.create({
 ApiSegimed.interceptors.request.use(
   async (config) => {
     //Rutas que no necesitan token
-    if (
-      config.url === "/user/login" ||
-      config.url === "/user/refresh" ||
-      config.url === "/user/register-user"
-    ) {
+    if (config.url.includes("/user")) {
       return config;
     }
     //Se obtiene el ultimo access token de las cookies
@@ -91,8 +85,7 @@ ApiSegimed.interceptors.response.use(
     //Si el error es 401 y el request no es de login o refresh
     if (
       error.response.status === 401 &&
-      originalRequest.url !== "/user/login" &&
-      originalRequest.url !== "/user/refresh"
+      !originalRequest.url.includes("/user")
     ) {
       //Se obtiene el refresh token
       const refreshToken = Cookies.get("d");
@@ -118,7 +111,7 @@ ApiSegimed.interceptors.response.use(
       }
     }
     if (
-      error.response.data.msg === "Refresh token is invalid or expired" ||
+      error.response.data.msg === "Refresh token expired" ||
       error.response.data.msg === "Invalid access token" ||
       error.response.data.msg === "Invalid refresh token"
     ) {

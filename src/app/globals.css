@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -22,4 +23,32 @@ details > summary {
 details > summary::marker, /* Latest Chrome, Edge, Firefox */ 
 details > summary::-webkit-details-marker /* Safari */ {
   display: none;
+}
+
+.rbc-allday-cell {
+  display: none;
+}
+.rbc-time-view .rbc-header {
+  border-bottom: none;
+}
+.rbc-time-view,.rbc-header,.rbc-timeslot-group,.rbc-time-header-content,.rbc-time-content{
+  border: none!important;
+}
+.rbc-time-content > * + * > *{
+  border-left: none!important;
+  border-bottom: 1px solid #e0e0e0!important;
+}
+.rbc-header.rbc-today{
+  background: #eaf6ff;
+  color: #5272E9;
+}
+.rbc-current-time-indicator{
+  background: #5272E9!important;
+  height: 2px!important;
+}
+.rbc-header{
+  padding-bottom: 20px!important;
+}
+.rbc-show-more{
+  color: #5272E9!important;
 }

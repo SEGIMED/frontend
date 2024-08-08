@@ -31,8 +31,8 @@ export default function IconSuspender() {
           d="M24.01 0L24.01 24.01L0 24.01L0 0L24.01 0Z"
           stroke="#000000"
           strokeOpacity="0"
-          stroke-width="2.001546"
-          stroke-linejoin="round"
+          strokeWidth="2.001546"
+          strokeLinejoin="round"
         />
         <path
           id="path"
@@ -46,9 +46,9 @@ export default function IconSuspender() {
           d="M6 18.01L18.01 6"
           stroke="#FFFFFF"
           strokeOpacity="1.000000"
-          stroke-width="2.001546"
-          stroke-linejoin="round"
-          stroke-linecap="round"
+          strokeWidth="2.001546"
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
         <path
           id="path"
@@ -62,9 +62,9 @@ export default function IconSuspender() {
           d="M6 6L18.01 18.01"
           stroke="#FFFFFF"
           strokeOpacity="1.000000"
-          stroke-width="2.001546"
-          stroke-linejoin="round"
-          stroke-linecap="round"
+          strokeWidth="2.001546"
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
       </g>
     </svg>

@@ -13,6 +13,7 @@ module.exports = {
       fontFamily: {
         Roboto: ["Roboto", "sans-serif"],
         Poppins: ["Poppins", "sans-serif"],
+        Montserrat: ["Montserrat", "sans-serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

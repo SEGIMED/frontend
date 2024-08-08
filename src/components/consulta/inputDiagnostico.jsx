@@ -40,17 +40,29 @@ export default function InputDiagnostico({
   useEffect(() => {
     setValueDiagnosticoSubtitle2([
       diagnostico?.diagnostics[0]?.diagnosticNotes,
-      "",
+      diagnostico?.medicalProcedures[0]?.medicalProcedureName,
     ])
-    setValueDiagnosticoSubtitle3([
-      "","",
-    ])
+    setValueDiagnosticoSubtitle3(
+      diagnostico?.drugPrescriptions && diagnostico.drugPrescriptions.length > 0
+        ? diagnostico.drugPrescriptions
+        : ["", ""]
+
+    )
     setValueDiagnosticoSubtitle([
-      diagnostico?.conducta,
+      diagnostico?.TherapyPrescription,
       diagnostico?.treatmentPlan,
       diagnostico?.alarmPattern
     ])
   },[diagnostico])
+  
+  useEffect(() => {
+    if (diagnostico?.drugPrescriptions && diagnostico.drugPrescriptions.length > 0) {
+      diagnostico.drugPrescriptions.forEach((drug, index) => {
+        setValue(`medications[${index}]`, drug);
+      });
+      setInputs(diagnostico.drugPrescriptions);
+    }
+  }, [diagnostico, setValue]);
   // Observa cambios en los inputs de medications
   const medicationValues = watch('medications', inputs);
 
