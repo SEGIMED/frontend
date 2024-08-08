@@ -53,7 +53,7 @@ export default function MensajesDoc() {
   }, [getChats]);
 
   useEffect(() => {
-    console.log(getChats)
+    
     if (getChats) {
       const listChats = Object.values(getChats);
       const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 );
@@ -105,13 +105,11 @@ export default function MensajesDoc() {
         <div className="flex gap-0 md:gap-4 items-center">
           {chat.target.role === "Médico" ? <IconMedChat color="gray"/> : ""}
           <div className="w-8 h-8 flex justify-center items-center gap-3">
-            
             {handleImg(
               chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
             )}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
-            
             <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
               {chat?.target?.fullName}
             </p>
