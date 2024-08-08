@@ -20,6 +20,7 @@ import NotFound from "@/components/notFound/notFound";
 import IconMedChat from "@/components/icons/IconMedChat";
 import IconRegresar from "@/components/icons/iconRegresar";
 
+
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
   const dispatch = useAppDispatch();
@@ -52,10 +53,10 @@ export default function MensajesDoc() {
   }, [getChats]);
 
   useEffect(() => {
-    
+    console.log(getChats)
     if (getChats) {
       const listChats = Object.values(getChats);
-      const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 && chat.chatType === "Paciente");
+      const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 );
       const filterChatsMed = listChats.filter(chat => chat.messages.length > 0 && chat.chatType === "Médico");
       const filterToSort = flag ? filterChatsMed : filterChatsPtes;
 
@@ -102,7 +103,7 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-0 md:gap-4 items-center">
-          {flag ? <IconMedChat color="gray"/> : ""}
+          {chat.target.role === "Médico" ? <IconMedChat color="gray"/> : ""}
           <div className="w-8 h-8 flex justify-center items-center gap-3">
             
             {handleImg(
@@ -157,9 +158,9 @@ export default function MensajesDoc() {
         />
         {flag ? (
            <Elboton
-           nombre={"Pacientes"}
+           nombre={"Médicos"}
            size={"md"}
-           icon={<IconRegresar/>}
+           icon={<IconMedChat color="white"/>}
            onPress={() => setFlag(false)}
           
          />
