@@ -80,7 +80,7 @@ export const FormUser = ({ formData, setFormData }) => {
   const passwordCriteria = {
     hasUpperCase: /[A-Z]/.test(passwordValue),
     hasLowerCase: /[a-z]/.test(passwordValue),
-    hasSpecialChar: /[\W_]/.test(passwordValue),
+    hasSpecialChar: /[\W_+]/.test(passwordValue),
     hasMinLength: passwordValue?.length >= 6,
   };
 
@@ -146,7 +146,7 @@ export const FormUser = ({ formData, setFormData }) => {
                 },
                 pattern: {
                   value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/,
+                   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_+])[A-Za-z\d\W_+]{6,20}$/,
                   message:
                     "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial.",
                 },
