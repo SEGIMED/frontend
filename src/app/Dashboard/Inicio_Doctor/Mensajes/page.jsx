@@ -52,7 +52,7 @@ export default function MensajesDoc() {
   }, [getChats]);
 
   useEffect(() => {
-    console.log(getChats)
+    
     if (getChats) {
       const listChats = Object.values(getChats);
       const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 && chat.chatType === "Paciente");

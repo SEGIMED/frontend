@@ -304,7 +304,7 @@ export default function HomeDoc() {
                 ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true`}
                 title={"Generar nueva órden médica"}
                 button1={"hidden"}
-                button2={"bg-greenPrimary block font-font-Roboto"}
+                button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
                 size={"h-[16rem] md:h-[15rem] md:w-[35rem]"}
                 buttonText={{ end: `Continuar` }}

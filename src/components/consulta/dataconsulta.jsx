@@ -18,7 +18,7 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import ModalModularizado from "../modal/ModalPatient/ModalModurizado";
 
 export default function Consulta({ paciente, title, defaultOpen = false }) {
-  
+
   const [showMapModal, setShowMapModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
@@ -98,7 +98,7 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
           />]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary text-white block font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}
