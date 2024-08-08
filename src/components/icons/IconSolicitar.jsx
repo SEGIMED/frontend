@@ -31,8 +31,8 @@ export default function IconSolicitar() {
           d="M24.44 0L24.44 24.05L0 24.05L0 0L24.44 0Z"
           stroke="#000000"
           strokeOpacity="0"
-          stroke-width="2.000000"
-          stroke-linejoin="round"
+          strokeWidth="2.000000"
+          strokeLinejoin="round"
         />
         <path
           id="path"
@@ -46,9 +46,9 @@ export default function IconSolicitar() {
           d="M12.22 5.01L12.22 19.04"
           stroke="#FFFFFF"
           strokeOpacity="1.000000"
-          stroke-width="2.000000"
-          stroke-linejoin="round"
-          stroke-linecap="round"
+          strokeWidth="2.000000"
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
         <path
           id="path"
@@ -62,9 +62,9 @@ export default function IconSolicitar() {
           d="M5.09 12.02L19.35 12.02"
           stroke="#FFFFFF"
           strokeOpacity="1.000000"
-          stroke-width="2.000000"
-          stroke-linejoin="round"
-          stroke-linecap="round"
+          strokeWidth="2.000000"
+          strokeLinejoin="round"
+          strokeLinecap="round"
         />
       </g>
     </svg>

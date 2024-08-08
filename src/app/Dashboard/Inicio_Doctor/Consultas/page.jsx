@@ -31,12 +31,10 @@ import { setSearchBar } from "@/redux/slices/user/searchBar";
 export default function HomeDoc() {
   const token = Cookies.get("a");
   const dispatch = useAppDispatch();
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [riskFilter, setRiskFilter] = useState("");
-  const [isSorted, setIsSorted] = useState(false);
+  const [scheduledConsultas, setScheduledConsultas] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(setSearchBar(true));
@@ -44,8 +42,27 @@ export default function HomeDoc() {
       dispatch(setSearchBar(false));
     };
   }, [dispatch]);
+  const consultas = useAppSelector((state) => state);
+  const currentDate = new Date();
 
-  const consultas = useAppSelector((state) => state.schedules);
+  const getSchedulesByUserId = async () => {
+    try {
+      const response = await ApiSegimed.get("/schedulesByUserId");
+      setScheduledConsultas(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    try {
+      setLoading(true);
+      getSchedulesByUserId();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   // Obtener consultas del estado
   const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
   const router = useRouter();
@@ -57,18 +74,6 @@ export default function HomeDoc() {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
 
-  useEffect(() => {
-    // Actualizar isLoading según la llegada de consultas
-    if (consultas.length > 0) {
-      setIsLoading(false);
-    }
-  }, [consultas]);
-
-  // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
-  const scheduledConsultas = consultas.filter(
-    (consulta) => consulta.schedulingStatus === 1 && consulta.physician === myID
-  );
-
   // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
   const filteredPatients = scheduledConsultas.filter(
     (cita) =>
@@ -76,75 +81,77 @@ export default function HomeDoc() {
       cita.patientUser.lastname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Ordenar pacientes si es necesario
-  /*const sortedPatients = isSorted
-    ? [...filteredPatients].sort((a, b) =>
-        a.patientUser.name.localeCompare(b.patientUser.name)
-      )
-    : filteredPatients;
-*/ // dejo este codigo pero no lo uso - ordeno a los pacientes por fecha
-
-  const sortedPatients = filteredPatients.sort((a, b) =>
-    new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
-  );
-  const handleSortClick = () => {
-    setIsSorted(!isSorted);
-  };
+  //ordenamiento por fecha desde el front por ahora
+  const sortedConsultas = [...scheduledConsultas]
+    .sort((a, b) => {
+      //el que mas se acerca a la fecha actual
+      const diffA = Math.abs(new Date(a.scheduledStartTimestamp) - currentDate);
+      const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
+      return diffA - diffB;
+    })
+    .filter((cita) => cita.schedulingStatus === 1 && cita.IsApproved === true);
 
   const lastSegmentTextToShow = PathnameShow();
 
-  const handleRiskFilterClick = (risk) => {
-    setRiskFilter(risk);
-  };
-
-  const toggleFilterMenu = () => {
-    setIsFilterOpen(!isFilterOpen);
-  };
-
-  const handleReviewClick = (patient) => {
+  const handleReviewClick = (consulta) => {
     setIsReviewModalOpen(true);
-    setSelectedPatient(patient);
+    setSelectedPatientId(consulta?.patient);
   };
-  const handleCokiePatient = (schedule, id) => {
-    Cookies.set('patientId', id, { expires: 7 }); // La cookie expirará en 7 días
-    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}?patientId=${id}`);
-  }
+  const handleCokiePatient = (schedule, id, idEvent) => {
+    Cookies.set("patientId", id, { expires: 7 });
+    Cookies.set("medicalEventId", idEvent, { expires: 7 });
+    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
+  };
   const handleDeleteClick = (patient) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+        cancelButton: "btn btn-danger",
       },
-      buttonsStyling: true
+      buttonsStyling: true,
     });
-    swalWithBootstrapButtons.fire({
-      title: "Eliminar consulta con el paciente: " + patient.patientUser.name + " " + patient.patientUser.lastname,
-      text: "Una vez emilinada no podras recuperar esta informacion!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Si, eliminar!",
-      cancelButtonText: "No, cancelar!",
-      reverseButtons: true
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // falta agregar el numero 5 de eliminado en el catalogo
-        const data = await ApiSegimed.patch(`/schedule/${patient.id}`, { schedulingStatus: 5 }, { headers: { token: token } });
-        console.log(data);
-        swalWithBootstrapButtons.fire({
-          title: "Eliminado!",
-          text: "La consulta con el paciente: " + patient.patientUser.name + " " + patient.patientUser.lastname + " ha sido eliminada.",
-          icon: "success"
-        });
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          icon: "error"
-        });
-      }
-    });
+    swalWithBootstrapButtons
+      .fire({
+        title:
+          "Eliminar consulta con el paciente: " +
+          patient.patientUser.name +
+          " " +
+          patient.patientUser.lastname,
+        text: "Una vez eliminada no podrás recuperar esta informacion!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Si, eliminar!",
+        cancelButtonText: "No, cancelar!",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          // falta agregar el numero 5 de eliminado en el catalogo
+          const data = await ApiSegimed.patch(
+            `/schedule/${patient.id}`,
+            { schedulingStatus: 5 },
+            { headers: { token: token } }
+          );
+          swalWithBootstrapButtons.fire({
+            title: "Eliminado!",
+            text:
+              "La consulta con el paciente: " +
+              patient.patientUser.name +
+              " " +
+              patient.patientUser.lastname +
+              " ha sido eliminada.",
+            icon: "success",
+          });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelado",
+            icon: "error",
+          });
+        }
+      });
   };
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
@@ -186,57 +193,58 @@ export default function HomeDoc() {
               </p>
             </div>
           </div>
-          {isLoading ? (
-            <SkeletonList count={9} />
-          ) : filteredPatients.length === 0 ? (
-            <NotFound
-              text="No hay historial de consultas."
-              sizeText="w-[100%]"
-            />
-          ) : (
-            <div className="items-start justify-center w-full md:overflow-y-auto">
-              {sortedPatients?.map((paciente) => (
-                <PatientCardConsulta1
-                  key={paciente.id}
-                  paciente={paciente}
-                  consulta={paciente.consulta}
-                  button={
-                    <MenuDropDown
-                      label={"Mas"}
-                      icon={<IconOptions color="white" />}
-                      categories={[
-                        {
-                          title: "Opciones",
-                          icon: <IconOrder />,
-                          items: [
-                            {
-                              label: "Dejar Review",
-                              icon: <IconCorazonMini />,
-                              onClick: () => handleReviewClick(paciente),
-                            },
-                            {
-                              label: "Ver consultas",
-                              icon: <IconPersonalData />,
-                              onClick: () => handleCokiePatient(paciente.id, paciente.patient),
-                            },
-                            {
-                              label: "Eliminar consulta",
-                              icon: <IconDelete color="#B2B2B2" />,
-                              onClick: () => handleDeleteClick(paciente),
-                            },
-                          ],
-                        },
-                      ]}
-                    />
-                  }
-                />
-              ))}
-            </div>
-          )}
+
+          <div className="items-start justify-center w-full md:overflow-y-auto">
+            {sortedConsultas.length === 0 && !loading && (
+              <NotFound text="No hay consultas" />
+            )}
+            {loading && <SkeletonList count={9} />}
+            {sortedConsultas?.map((consulta) => (
+              <PatientCardConsulta1
+                key={consulta.id}
+                consulta={consulta}
+                button={
+                  <MenuDropDown
+                    label={"Mas"}
+                    icon={<IconOptions color="white" />}
+                    categories={[
+                      {
+                        title: "Opciones",
+                        icon: <IconOrder />,
+                        items: [
+                          {
+                            label: "Dejar Review",
+                            icon: <IconCorazonMini />,
+                            onClick: () => handleReviewClick(consulta),
+                          },
+                          {
+                            label: "Ver consultas",
+                            icon: <IconPersonalData />,
+                            onClick: () =>
+                              handleCokiePatient(
+                                consulta?.id,
+                                consulta?.patient,
+                                consulta.medicalEvent.id
+                              ),
+                          },
+                          {
+                            label: "Eliminar consulta",
+                            icon: <IconDelete color="#B2B2B2" />,
+                            onClick: () => handleDeleteClick(consulta),
+                          },
+                        ],
+                      },
+                    ]}
+                  />
+                }
+              />
+            ))}
+          </div>
+
           {isReviewModalOpen && (
             <ReviewModalApte
               onClose={() => setIsReviewModalOpen(false)}
-              id={selectedPatient.id}
+              id={selectedPatientId}
             />
           )}
         </div>

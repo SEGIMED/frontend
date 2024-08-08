@@ -13,6 +13,7 @@ import { socket } from "@/utils/socketio";
 import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
 import IconOrder from "@/components/icons/IconOrder";
 import IconRegresar from "@/components/icons/iconRegresar";
+import IconMedChat from "@/components/icons/IconMedChat";
 import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function DoctoresPte() {
@@ -46,21 +47,24 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-    socket.emit("createChat", { id }, (response) => { });
+    socket.emit("createChat", { id });
   };
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
-        <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder />} />
+
+        <Elboton nombre={"Ordenar"} size={"md"} icon={<IconOrder />} />
         <Elboton
           href={`${rutas.PacienteDash}${rutas.Mensajes}`}
           nombre={"Regresar"}
-          size={"lg"}
+          size={"md"}
           icon={<IconRegresar />}
         />
+
       </div>
-      <div className=" items-start w-full overflow-y-auto ">
+      <div className="items-start w-full md:overflow-y-auto">
+
         {filteredDoctor?.map((doctor) => (
           <DoctorCard
             key={doctor.id}
@@ -70,8 +74,8 @@ export default function DoctoresPte() {
                 href={`${rutas.PacienteDash}${rutas.Mensajes}/${doctor.id}`}
                 nombre={"Enviar Mensaje"}
                 icon={<IconMensajeBoton />}
-                size={"md"}
-                onPress={crearChat(doctor.id)}
+                size={"sm"}
+                onPress={() => crearChat(doctor.id)}
               />
             }
           />

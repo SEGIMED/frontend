@@ -11,7 +11,7 @@ export default function UsoCelular({ handleDisabled, state }) {
                     selectedOptions={state.UsoCelular}
                     handleDisabled={handleDisabled}
                     options={["Si", "No"]}
-                    name={"UsoCelular"}
+                    name={"needsCellphoneAssistance"}
                 />
             </div>
         </div>

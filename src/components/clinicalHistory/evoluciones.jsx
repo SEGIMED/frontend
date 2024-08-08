@@ -50,7 +50,6 @@ export default function Evoluciones({ pacientes }) {
                   <div className="text-[#5F5F5F] hidden md:block">
                     {paciente?.chiefComplaint}
                   </div>
-
                 </div>
                 <div className="flex w-[10%] md:w-[5%]  items-center justify-center">
                   {openDetails[index] ? (

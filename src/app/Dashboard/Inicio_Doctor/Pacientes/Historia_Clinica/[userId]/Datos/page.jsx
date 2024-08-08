@@ -20,6 +20,9 @@ import IconExportar from "@/components/icons/IconExportar";
 import IconImportar from "@/components/icons/IconImportar";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
+import GeneratePDF from "@/components/pdf/pdfgenerator";
+import PdfPreview from "@/components/pdf/pdfPreview";
+import { consultas } from "@/utils/generatePDFDataUtil";
 
 export default function DetallePaciente() {
   const pathname = usePathname();
@@ -30,6 +33,7 @@ export default function DetallePaciente() {
   const [dataImportar, setDataImportar] = useState({});
 
   const user = useAppSelector((state) => state.clinicalHistory.user);
+  const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
   const openModal = () => {
@@ -49,14 +53,15 @@ export default function DetallePaciente() {
     console.log(dataImportar)
     setIsModalOpen(false);
   };
-
+  console.log("data para el pdf", infoPatient)
   return (
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? <SkeletonList count={13} /> : (
         <>
           <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
             <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
-            <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />} />
+            <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />}
+              funcion={() => GeneratePDF(user, infoPatient)} />
           </div>
           <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
@@ -221,12 +226,17 @@ export default function DetallePaciente() {
         ]}
         title={"Importar Historia Clínica"}
         button1={"hidden"}
-        button2={"bg-greenPrimary block"}
+        button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
         size={"h-[35rem] md:h-[33rem] md:w-[35rem]"}
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
       />
+      {/* <div>
+            <h1>Vista Previa del PDF</h1>
+            <PdfPreview user={user} />
+        </div> */}
     </div>
+
   );
 }

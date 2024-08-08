@@ -39,7 +39,7 @@ import IconTStar2 from "@/components/icons/IconStar2";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "next/navigation";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import Elboton from "@/components/Buttons/Elboton";
 import IconRegresar from "@/components/icons/iconRegresar";
@@ -59,17 +59,19 @@ export default function HomeDoc() {
   const [patients, setPatients] = useState([]);
   const [patientsFavorites, setPatientsFavorites] = useState([]);
   const [ordenMedica, setOrdenMedica] = useState(false);
+  const [Pendientes, setPendientes] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
-
-
   useEffect(() => {
-    if (!searchParams.get("ordenMedica")) {
-      return
+    if (searchParams.get("ordenMedica")) {
+      setOrdenMedica(searchParams.get("ordenMedica"));
     }
-    setOrdenMedica(searchParams.get('ordenMedica'))
+    if (searchParams.get("Pendientes")) {
+      setPendientes(searchParams.get("Pendientes"));
+    }
+    return
   }, [searchParams]);
 
   const [pagination, setPagination] = useState({
@@ -256,7 +258,6 @@ export default function HomeDoc() {
   };
 
   return (
-
     <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
       <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
@@ -273,18 +274,20 @@ export default function HomeDoc() {
               Agregar Paciente
             </p>
           </button> */}
-          {ordenMedica ? <button
-            type="button"
-            className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
-            onClick={() => {
-              router.push(`${rutas.Doctor}${rutas.Ordenes}`);
-            }}>
-            <IconRegresar />
-            <p className="text-start hidden md:block text-white font-bold text-base leading-5">
-              {" "}
-              Regresar
-            </p>
-          </button> : null}
+          {ordenMedica ? (
+            <button
+              type="button"
+              className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+              onClick={() => {
+                router.push(`${rutas.Doctor}${rutas.Ordenes}`);
+              }}>
+              <IconRegresar />
+              <p className="text-start hidden md:block text-white font-bold text-base leading-5">
+                {" "}
+                Regresar
+              </p>
+            </button>
+          ) : null}
 
           <button
             onClick={handleFavoriteClick}
@@ -351,7 +354,6 @@ export default function HomeDoc() {
             ]}
           />
         </div>
-
       </div>
 
       <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] overflow-y-auto">
@@ -388,7 +390,9 @@ export default function HomeDoc() {
                 <p className="text-base w-fit">
                   {paciente.name} {paciente.lastname}
                 </p>
-                <div onClick={() => changeFavorite(paciente)}>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => changeFavorite(paciente)}>
                   {paciente.isFavorite ? (
                     <IconFavoriteYellow />
                   ) : (
@@ -414,70 +418,83 @@ export default function HomeDoc() {
                 isOpen={openOptionsPatientId === paciente.id}
                 toggleOptions={() => toggleOptionMenu(paciente.id)}
               /> */}
-                {ordenMedica ? <Elboton
-                  href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
-                  icon={<IconSelect color={"#487ffa"} />}
-                  nombre={"Seleccionar "}
-                  size={"md"}
-                  className={"bg-white border border-bluePrimary text-bluePrimary "}
-                  onPress={() => { dispatch(setSelectedOption({ name: "patient", option: paciente.id })); }}
-                  classNameText={"hidden md:block "}
-                // icon={<IconMas />}
-                /> : <MenuDropDown
-                  label="Opciones"
-                  icon={<IconOptions color="#FFFFFF" />}
-                  categories={[
-                    {
-                      title: "Acciones",
-                      items: [
-                        {
-                          label: "Agendar Consulta",
-                          onClick: () => openModal(paciente.id),
-                          icon: <IconMiniCalendar />,
-                        },
-                        {
-                          label: paciente.isFavorite
-                            ? "Quitar de Favoritos"
-                            : "Agregar a Favoritos",
-                          onClick: () => changeFavorite(paciente),
-                          icon: (
-                            <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
-                          ),
-                        },
-                      ],
-                    },
-                    {
-                      title: "Información",
-                      items: [
-                        {
-                          label: "Ver Historia Clínica",
-                          href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
-                          icon: <IconClinicalHistory />,
-                        },
-                        {
-                          label: "Ver datos Personales",
-                          href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
-                          icon: <IconPersonalData />,
-                        },
-                        {
-                          label: "Ver antiguas consultas",
-                          href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
-                          icon: <IconClinicalHistory />,
-                        },
-                        {
-                          label: "Ver Mensajes",
-                          href: `${rutas.Doctor}${rutas.Mensajes}`,
-                          icon: <IconMessages />,
-                        },
-                        {
-                          label: "Ver Geolocalización",
-                          onClick: () => handleGeolocationClick(paciente),
-                          icon: <IconGeolocation />,
-                        },
-                      ],
-                    },
-                  ]}
-                />}
+                {ordenMedica ? (
+                  <Elboton
+                    href={Pendientes ? `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true` : `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
+                    icon={<IconSelect color={"#487ffa"} />}
+                    nombre={"Seleccionar "}
+                    size={"md"}
+                    className={
+                      "bg-white border border-bluePrimary text-bluePrimary "
+                    }
+                    onPress={() => {
+                      dispatch(
+                        setSelectedOption({
+                          name: "patient",
+                          option: paciente.id,
+                        })
+                      );
+                    }}
+                    classNameText={"hidden md:block "}
+                  // icon={<IconMas />}
+                  />
+                ) : (
+                  <MenuDropDown
+                    label="Opciones"
+                    icon={<IconOptions color="#FFFFFF" />}
+                    categories={[
+                      {
+                        title: "Acciones",
+                        items: [
+                          {
+                            label: "Agendar Consulta",
+                            onClick: () => openModal(paciente.id),
+                            icon: <IconMiniCalendar />,
+                          },
+                          {
+                            label: paciente.isFavorite
+                              ? "Quitar de Favoritos"
+                              : "Agregar a Favoritos",
+                            onClick: () => changeFavorite(paciente),
+                            icon: (
+                              <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
+                            ),
+                          },
+                        ],
+                      },
+                      {
+                        title: "Información",
+                        items: [
+                          {
+                            label: "Ver Historia Clínica",
+                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
+                            icon: <IconClinicalHistory />,
+                          },
+                          {
+                            label: "Ver datos Personales",
+                            href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
+                            icon: <IconPersonalData />,
+                          },
+                          {
+                            label: "Ver antiguas consultas",
+                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
+                            icon: <IconClinicalHistory />,
+                          },
+                          {
+                            label: "Ver Mensajes",
+                            href: `${rutas.Doctor}${rutas.Mensajes}`,
+                            icon: <IconMessages />,
+                          },
+                          {
+                            label: "Ver Geolocalización",
+                            onClick: () => handleGeolocationClick(paciente),
+                            icon: <IconGeolocation />,
+                          },
+                        ],
+                      },
+                    ]}
+                  />
+                )}
               </div>
             </div>
           ))
@@ -502,18 +519,19 @@ export default function HomeDoc() {
         </button>
       </div>
       {showMapModal && selectedPatient && (
-
         <ModalModularizado
           isOpen={showMapModal}
           onClose={() => setShowMapModal(false)}
-          Modals={[<MapModalPte
-            onClose={() => setShowMapModal(false)}
-            patient={selectedPatient}
-            key={"map"}
-          />]}
+          Modals={[
+            <MapModalPte
+              onClose={() => setShowMapModal(false)}
+              patient={selectedPatient}
+              key={"map"}
+            />,
+          ]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary text-white block font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}
@@ -526,6 +544,5 @@ export default function HomeDoc() {
         patientId={selectedPatientId}
       />
     </div>
-
   );
 }
