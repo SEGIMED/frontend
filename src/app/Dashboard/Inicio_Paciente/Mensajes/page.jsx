@@ -100,7 +100,7 @@ export default function MensajesDoc() {
         key={chat._id}
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-0 md:gap-4 items-center">
           <IconMedChat color="gray"/>
           <div className="w-8 h-8 flex justify-center items-center">
             {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
