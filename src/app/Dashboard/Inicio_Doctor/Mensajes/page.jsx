@@ -27,7 +27,7 @@ export default function MensajesDoc() {
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
   const [seen, setSeen]= useState(false)
-  const[medicos, setMedicos]=useState(false)
+  const[flag, setFlag]=useState(false)
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
@@ -52,11 +52,12 @@ export default function MensajesDoc() {
   }, [getChats]);
 
   useEffect(() => {
+    console.log(getChats)
     if (getChats) {
       const listChats = Object.values(getChats);
       const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 && chat.chatType === "Paciente");
       const filterChatsMed = listChats.filter(chat => chat.messages.length > 0 && chat.chatType === "Médico");
-      const filterToSort = medicos ? filterChatsMed : filterChatsPtes;
+      const filterToSort = flag ? filterChatsMed : filterChatsPtes;
 
       const sortedChats = filterToSort.sort((a, b) => {
         const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
@@ -66,7 +67,7 @@ export default function MensajesDoc() {
 
       setChats(sortedChats);
     }
-  }, [medicos, getChats]);
+  }, [flag, getChats]);
 
   const handleImg = (img) => {
     if (img) {
@@ -101,12 +102,15 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-4 items-center">
-          <div className="w-8 h-8 flex justify-center items-center">
+          {flag ? <IconMedChat color="gray"/> : ""}
+          <div className="w-8 h-8 flex justify-center items-center gap-3">
+            
             {handleImg(
               chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
             )}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
+            
             <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
               {chat?.target?.fullName}
             </p>
@@ -151,12 +155,12 @@ export default function MensajesDoc() {
           size={"md"}
           icon={<IconMas />}
         />
-        {medicos ? (
+        {flag ? (
            <Elboton
            nombre={"Pacientes"}
            size={"md"}
            icon={<IconRegresar/>}
-           onPress={() => setMedicos(false)}
+           onPress={() => setFlag(false)}
           
          />
         ):(
@@ -164,7 +168,7 @@ export default function MensajesDoc() {
           nombre={"Médicos"}
           size={"md"}
           icon={<IconMedChat/>}
-          onPress={() => setMedicos(true)}
+          onPress={() => setFlag(true)}
           className={"bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA]"}
         />
         )}

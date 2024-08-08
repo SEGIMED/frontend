@@ -243,6 +243,7 @@ export default function DoctoresPte() {
             <PatientCard
               key={medico.id}
               paciente={medico}
+              flag={true}
               button={
                 <Elboton
                   href={`${rutas.Doctor}${rutas.Mensajes}/${medico.id}`}
