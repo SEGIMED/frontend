@@ -352,9 +352,6 @@ export const FormUser = ({ formData, setFormData }) => {
             Acepto la política de privacidad.
            </Link>
             </div>
-          {/* {errorMessage && (
-          <div className="text-red-500 mt-2">{errorMessage}</div>
-            )} */}
 
           
           <div className="w-full max-w-96 flex justify-center mt-4 mb-10">
