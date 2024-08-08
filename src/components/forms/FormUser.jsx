@@ -81,6 +81,7 @@ export const FormUser = ({ formData, setFormData }) => {
     hasUpperCase: /[A-Z]/.test(passwordValue),
     hasLowerCase: /[a-z]/.test(passwordValue),
     hasSpecialChar: /[\W_+]/.test(passwordValue),
+    hasNumber: /[0-9]/.test(passwordValue),
     hasMinLength: passwordValue?.length >= 6,
   };
 
@@ -192,6 +193,15 @@ export const FormUser = ({ formData, setFormData }) => {
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe tener al menos 6 caracteres
+                </li>
+                <li
+                className={`flex gap-2 items-center whitespace-nowrap ${
+                passwordCriteria.hasNumber ? "text-[#70C247]" : ""
+                }`}>
+                {passwordCriteria.hasNumber && (
+                <IconCheckBoton className={"w-4"} />
+                )}{" "}
+                Debe contener un número
                 </li>
               </ul>
             )}
