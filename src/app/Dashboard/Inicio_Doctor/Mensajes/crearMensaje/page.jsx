@@ -249,7 +249,7 @@ export default function DoctoresPte() {
                   href={`${rutas.Doctor}${rutas.Mensajes}/${medico.id}`}
                   nombre={"Enviar Mensaje"}
                   icon={<IconMensajeBoton />}
-                  size={"md"}
+                  size={"sm"}
                   onPress={() => crearChat(medico.id)}
                 />
               }
@@ -265,7 +265,7 @@ export default function DoctoresPte() {
                   href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}
                   nombre={"Enviar Mensaje"}
                   icon={<IconMensajeBoton />}
-                  size={"md"}
+                  size={"sm"}
                   onPress={() => crearChat(paciente.id)}
                 />
               }
