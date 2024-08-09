@@ -53,7 +53,7 @@ export default function MensajesDoc() {
   }, [getChats]);
 
   useEffect(() => {
-    console.log(getChats)
+    
     if (getChats) {
       const listChats = Object.values(getChats);
       const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 );
@@ -67,15 +67,25 @@ export default function MensajesDoc() {
       });
 
       setChats(sortedChats);
+      console.log(chats)
     }
   }, [flag, getChats]);
 
-  const handleImg = (img) => {
-    if (img) {
-      return (
-        <img src={img} alt="" className="w-12 h-12 object-cover rounded-3xl " />
-      );
-    }
+  const handleImg = (img, userId, role) => {
+    const handleClick = () => {
+      if (role === "Paciente") {
+        router.push(`${rutas.Doctor}${rutas.Pacientes}/${userId}`);
+      }
+    };
+  
+    return (
+      <img
+        src={img || avatar}  
+        alt=""
+        className={`w-12 h-12 object-cover rounded-3xl ${role === "Paciente" ? "cursor-pointer" : ""}`}
+        onClick={role === "Paciente" ? handleClick : undefined}
+      />
+    );
   };
 
   const handleViewMessages = (chat) => {
@@ -88,7 +98,7 @@ export default function MensajesDoc() {
     if (unseenMessages.length) {
       const lastMessage = messages[messages.length - 1];
       const userId = Cookies.get("c");
-      if (lastMessage.target.userId === Number(userId)) {
+      if (lastMessage?.target?.userId === Number(userId)) {
         return unseenMessages.length;
       }
     }
@@ -103,15 +113,16 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-0 md:gap-4 items-center">
-          {chat.target.role === "Médico" ? <IconMedChat color="gray"/> : ""}
-          <div className="w-8 h-8 flex justify-center items-center gap-3">
-            
+          {chat?.target?.role === "Médico" ? <IconMedChat color="gray"/> : ""}
+          <div 
+          className="w-8 h-8 flex justify-center items-center gap-3">
             {handleImg(
-              chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
+            chat?.target?.avatar,  
+            chat?.target?.userId,
+            chat?.target?.role
             )}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
-            
             <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
               {chat?.target?.fullName}
             </p>

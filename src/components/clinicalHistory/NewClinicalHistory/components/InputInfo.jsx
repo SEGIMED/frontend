@@ -1,6 +1,6 @@
 "use client";
 
-import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
+import IconCurrentRouteNav from "../../../icons/IconCurrentRouteNav";
 
 export default function InputInfo({ info, title }) {
   return (
