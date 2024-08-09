@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const NavItem = ({ name, path, icon: Icon, isActive, onClick, external }) => (
+const SideBarItems = ({ name, path, icon: Icon, isActive, onClick, external }) => (
     external ? (
         <a
             onClick={onClick}
@@ -24,4 +24,4 @@ const NavItem = ({ name, path, icon: Icon, isActive, onClick, external }) => (
     )
 );
 
-export default NavItem;
+export default SideBarItems;

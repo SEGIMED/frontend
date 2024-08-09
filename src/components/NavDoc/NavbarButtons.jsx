@@ -10,6 +10,7 @@ import Sugerencias from "../icons/IconSugerencias";
 import IconEducacion from "../icons/IconEducacion";
 import IconPreConsulta from "../icons/iconPreconsulta";
 import rutas from "@/utils/rutas";
+import IconMedChat from "../icons/IconMedChat";
 
 export const buttonsDoc = [
     {
@@ -130,26 +131,21 @@ export const buttonsAdmin = [
     {
         name: "Médicos",
         path: `${rutas.Admin}${rutas.Doctores}`,
-        icon: IconPatientNav,
+        icon: IconMedChat,
     },
     {
         name: "Pacientes",
         path: `${rutas.Admin}${rutas.Pacientes}`,
-        icon: IconPatientNav,
-    },
-    {
-        name: "Data Entries",
-        path: `${rutas.Admin}${rutas.Pacientes}`,
-        icon: IconPatientNav,
-    },
-    {
-        name: "Mi perfil",
-        path: `${rutas.Admin}${rutas.Mi_Perfil}`,
         icon: IconDoctorNav,
     },
     {
+        name: "Data Entries",
+        path: `${rutas.Admin}${rutas.DataEntries}`,
+        icon: IconPatientNav,
+    },
+    {
         name: "Errores",
-        path: `${rutas.Admin}${rutas.Preconsulta}`,
+        path: `${rutas.Admin}${rutas.Errores}`,
         icon: IconPreConsulta,
     },
 

@@ -5,13 +5,13 @@ import Cookies from "js-cookie";
 import { useAppDispatch } from "@/redux/hooks";
 import { resetApp } from "@/redux/rootReducer";
 import { socket } from "@/utils/socketio";
-import NavItem from "./NavbarItems";
+import SideBarItems from "./SideBarItems";
 import Elboton from "../Buttons/Elboton";
 import rutas from "@/utils/rutas";
 import LogoSegimed from "../logo/LogoSegimed";
 import IconOut from "../icons/iconOut";
 
-export const NavModularizada = ({ toggleSidebar, isOpen, buttons }) => {
+export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
     const pathname = usePathname();
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -47,7 +47,7 @@ export const NavModularizada = ({ toggleSidebar, isOpen, buttons }) => {
                     {/* </Link> */}
                     <ul className="flex flex-col gap-3 md:gap-4">
                         {buttons.map((button) => (
-                            <NavItem
+                            <SideBarItems
                                 key={button.path}
                                 name={button.name}
                                 path={button.path}

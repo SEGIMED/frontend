@@ -1,10 +1,11 @@
 "use client";
-import { NavModularizada } from "@/components/navAdmin/navAdmin";
+import { SideBarMod } from "@/components/Modularizaciones/SideBarMod";
 
 import { useState } from "react";
 import { Suspense } from "react";
 import { SegiBot } from "@/components/InicioPaciente/chatSegi/SegiBot";
 import { buttonsAdmin } from "@/components/NavDoc/NavbarButtons";
+import { NavBarMod } from "@/components/Modularizaciones/NavbarMod";
 
 export default function RootLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +15,10 @@ export default function RootLayout({ children }) {
   return (
     <div className="flex h-screen md:h-screen w-screen overflow-y-scroll md:overflow-y-hidden ">
       {/* Barra de navegación */}
-      <NavModularizada isOpen={isOpen} toggleSidebar={toggleSidebar} buttons={buttonsAdmin} />
+      <SideBarMod isOpen={isOpen} toggleSidebar={toggleSidebar} buttons={buttonsAdmin} />
 
       <div className="flex flex-col w-full h-full">
+        <NavBarMod search={true} toggleSidebar={toggleSidebar} />
         {/* <SideDoctor search={true} toggleSidebar={toggleSidebar} /> */}
         {/* Contenido principal */}
         <Suspense>

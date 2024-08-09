@@ -17,16 +17,19 @@ import { setSearchTerm1 } from "@/redux/slices/doctor/allDoctores";
 
 import AvatarSideBar from "../avatar/avatarSideBar";
 import { socket } from "@/utils/socketio";
-import { NotificacionElement } from "@/components/InicioPaciente/NotificacionElement";
-import { IconNotificaciones } from "@/components/InicioPaciente/IconNotificaciones";
 import useDataFetching from "@/utils/SideBarFunctionsDoctor";
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { IconNotificaciones } from "../InicioPaciente/notificaciones/IconNotificaciones";
+import NotificacionesContainer from "../InicioPaciente/notificaciones/NotificacionesContainer";
+import useDataFetchingPte from "@/utils/SideBarFunctionsPaciente";
+import { protectRoute } from "@/utils/protectRutes";
 
-export const SideModularizado = ({ search, toggleSidebar }) => {
+export const NavBarMod = ({ search, toggleSidebar }) => {
     const pathname = usePathname();
-    const rol = Cookies.get("b");
+    // const rol = Cookies.get("b");
+    const [rol, setRol] = useState(null); // Initialize as null
 
     const notifications = useAppSelector((state) => state.notifications);
     const user = useAppSelector((state) => state.user);
@@ -35,6 +38,7 @@ export const SideModularizado = ({ search, toggleSidebar }) => {
     // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
     const id = Cookies.get("c");
     const token = Cookies.get("a");
+
     const refreshToken = Cookies.get("d");
 
     // reemplazar pathname por adjustedPathname
@@ -64,51 +68,15 @@ export const SideModularizado = ({ search, toggleSidebar }) => {
 
     } = useDataFetching();// Use the useRouter hook
 
-    // const getUser = async (headers) => {
-    //     const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
-    //     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
 
-    //     if (response.data) {
-    //         dispatch(adduser(response.data));
-    //     }
-    // };
-    // const getPatients = async (headers) => {
-    //     const response = await ApiSegimed.get(`/patients`, headers);
-    //     if (response.data) {
-    //         const pacientesFormateados = response.data.map((paciente) => {
-    //             const fechaFormateada = new Date(paciente.lastLogin)
-    //                 .toLocaleString()
-    //                 .replace(/\,/g, " -");
-    //             return { ...paciente, lastLogin: fechaFormateada };
-    //         });
-    //         dispatch(setAllPatients(pacientesFormateados));
-    //     }
-    // };
-    // const getDoctorNotifications = async (headers) => {
-    //     try {
-    //         const response = await ApiSegimed.get(
-    //             `/all-notifications-physician?physicianId=` + id,
-    //             headers
-    //         );
+    const {
+        getUser,
+        getPatientNotifications,
+        getSchedules,
+        obtenerUbicacion,
+        getAllDoc
+    } = useDataFetchingPte();// Use the useRouter hook
 
-    //         if (response.data) {
-    //             dispatch(addNotifications(response.data));
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-    // const getSchedules = async (headers) => {
-    //     try {
-    //         const response = await ApiSegimed.get("/schedules", headers);
-
-    //         if (response.data) {
-    //             dispatch(addSchedules(response.data));
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
 
     const handleSearchChange = (e) => {
         dispatch(setSearchTerm(e.target.value));
@@ -121,65 +89,56 @@ export const SideModularizado = ({ search, toggleSidebar }) => {
 
     const searchTerm = useAppSelector((state) => state.user.searchTerm);
 
-    // const getActivesAlarms = async (headers) => {
-    //     try {
-    //         const response = await ApiSegimed.get("/alarms-by-patient", headers);
-
-    //         const actives = response.data?.alarms?.filter(
-    //             (alarm) => alarm.solved === false
-    //         ).length;
-    //         const inactives = response.data?.alarms?.filter(
-    //             (alarm) => alarm.solved === true
-    //         ).length;
-    //         const data = {
-    //             activeAlarms: Number(actives),
-    //             inactiveAlarms: Number(inactives),
-    //         };
-
-    //         dispatch(addAlarms(data));
-    //     } catch (error) {
-    //         console.error("Error fetching data:", error);
-    //     }
-    // };
-
-    // const getActivesPacientes = async (headers) => {
-    //     try {
-    //         const response = await ApiSegimed.get(
-    //             "/statistics-patient-activity",
-    //             headers
-    //         );
-
-    //         dispatch(addActivePtes(response.data));
-    //     } catch (error) {
-    //         console.error("Error fetching data:", error);
-    //     }
-    // };
 
     useEffect(() => {
-        if (rol !== "Médico") {
-            Cookies.remove("a");
-            Cookies.remove("b");
-            Cookies.remove("c");
-            Cookies.remove("d");
-            dispatch(resetApp());
-            router.push("/");
-            setTimeout(() => window.location.reload(true), 2000);
-            return;
+        if (rol) {
+            protectRoute(pathname, rol, dispatch, router)
         }
+    }, [pathname, rol]);
+
+    useEffect(() => {
+        const fetchedRol = Cookies.get("b");
+        setRol(fetchedRol);
+    }, [rol]);
+
+    useEffect(() => {
 
         if (token) {
-            getUserDoctor().catch(console.error);
-            getPatientsDoctor().catch(console.error);
-            getSchedulesDoctor().catch(console.error);
-            getActivesAlarmsDoctor().catch(console.error);
-            getActivesPacientesDoctor().catch(console.error);
-            getDoctorNotifications().catch(console.error);
-            if (!socket.isConnected()) {
-                socket.setSocket(token, refreshToken, dispatch);
-                socket.emit("onJoin", { id: id });
+            if (rol === "Médico") {
+                getUserDoctor().catch(console.error);
+                getPatientsDoctor().catch(console.error);
+                getSchedulesDoctor().catch(console.error);
+                getActivesAlarmsDoctor().catch(console.error);
+                getActivesPacientesDoctor().catch(console.error);
+                getDoctorNotifications().catch(console.error);
+                if (!socket.isConnected()) {
+                    socket.setSocket(token, refreshToken, dispatch);
+                    socket.emit("onJoin", { id: id });
+                }
             }
-        }
-    }, [dispatch]);
+            if (rol === "Paciente") {
+                obtenerUbicacion();
+                getUser({ headers: { token: token } }).catch(console.error);
+                getAllDoc({ headers: { token: token } }).catch(console.error);
+                getSchedules({ headers: { token: token } }).catch(console.error);
+
+                getPatientNotifications({ headers: { token: token } }).catch(
+                    console.error
+                );
+                if (!socket.isConnected()) {
+                    socket.setSocket(token, refreshToken, dispatch);
+                    socket.emit("onJoin", { id: id });
+                }
+            }
+            if (rol === "Admin") {
+                getActivesAlarmsDoctor().catch(console.error);
+                getActivesPacientesDoctor().catch(console.error);
+                //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
+            }
+        } else return
+    }, [rol]);
+
+
 
     const [showNotifications, setShowNotifications] = useState(false);
     const unreadNotifications = notifications?.filter(
@@ -287,48 +246,28 @@ export const SideModularizado = ({ search, toggleSidebar }) => {
                         {user?.name} {user?.lastname}
                     </span>
                     <span className="text-start text-[#808080]">
-                        {user.role === 3 ? "Paciente" : user.role === 2 ? "Médico" : user.role === 1 ? "Administrador" : ""}
+
+                        {rol === "Médico" ? "Médico" : rol === "Paciente" ? "Paciente" : rol === "Admin" ? "Administrador" : ""}
                     </span>
                 </div>
-
                 <button
                     onClick={handleNotificationClick}
-                    className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${showNotifications && "bg-[#E73F3F]"
+                    className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+                        "bg-[#E73F3F]"
                         }`}>
                     <IconNotificaciones
                         className="w-6 h-6"
-                        color={showNotifications && "white"}
+                        color={
+                            (showNotifications || unreadNotifications.length > 0) && "white"
+                        }
                     />
                 </button>
                 {showNotifications && (
-                    <div
-                        onClick={handleNotificationClick}
-                        className="fixed top-0 left-0 w-screen h-screen z-40">
-                        <div
-                            onClick={(e) => e.stopPropagation()}
-                            className="fixed flex flex-col gap-2 bg-red w-[90%] md:w-[30%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-4 z-50 top-[10%] right-[5%] md:right-[2%]">
-                            <p className="text-2xl text-bluePrimary font-semibold py-2">
-                                Notificaciones
-                            </p>
-                            <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-                                {unreadNotifications && unreadNotifications.length > 0 ? (
-                                    unreadNotifications.map((notificacion) => (
-                                        <NotificacionElement
-                                            key={notificacion._id}
-                                            notificacion={notificacion}
-                                            onClick={() =>
-                                                handleNotificationElementClick(notificacion._id)
-                                            }
-                                        />
-                                    ))
-                                ) : (
-                                    <p className="text-lg text-[#5F5F5F] text-center py-2">
-                                        No hay notificaciones por leer
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                    <NotificacionesContainer
+                        handleNotificationElementClick={handleNotificationElementClick}
+                        handleNotificationClick={handleNotificationClick}
+                        unreadNotifications={unreadNotifications}
+                    />
                 )}
             </div>
         </div>
