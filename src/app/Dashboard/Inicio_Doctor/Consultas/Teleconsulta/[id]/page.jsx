@@ -10,57 +10,59 @@ import { socket } from "@/utils/socketio";
 import rtcPer from "@/utils/RTCPeer";
 import Cookies from "js-cookie";
 import observer from "@/utils/observer";
- 
+import Config from "@/components/Teleconsulta/config";
+
 export default function TeleconsultaId (id) {
-    const consultId = Number(id.params.id);
-    const [roomData, setRoomData]=useState(null)
-    const [stream, setStream] = useState(null)
-    const myVideo=useRef()
-    const remoteVideo=useRef()
+    // const consultId = Number(id.params.id);
+    // const [roomData, setRoomData]=useState(null)
+    // const [stream, setStream] = useState(null)
+    // const myVideo=useRef()
+    // const remoteVideo=useRef()
 
-    useEffect(()=>{
-        if(stream) rtcPer.createOffer(consultId)
+    // useEffect(()=>{
+    //     if(stream) rtcPer.createOffer(consultId)
         
         
-    },[stream])
+    // },[stream])
 
-    useEffect(() => {
-    observer.addViewMediaUser(remoteVideo.current)
+    // useEffect(() => {
+    // observer.addViewMediaUser(remoteVideo.current)
 
 
-    if(!rtcPer.state){
+    // if(!rtcPer.state){
         
-        socket._socket.emit("joinRoom", consultId, async (data) => {
-            setRoomData(data);
-        });
+    //     socket._socket.emit("joinRoom", consultId, async (data) => {
+    //         setRoomData(data);
+    //     });
       
-        rtcPer.init()
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-                setStream(stream)
-                myVideo.current.srcObject = stream
-                const myId = Cookies.get("c"); 
-                rtcPer.defineUserObj(myId);    
+    //     rtcPer.init()
+    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+    //             setStream(stream)
+    //             myVideo.current.srcObject = stream
+    //             const myId = Cookies.get("c"); 
+    //             rtcPer.defineUserObj(myId);    
     
-            stream.getTracks().forEach(track => {
-                rtcPer.peerConnection.addTrack(track,stream);
-            });
-        })
-            socket._socket.on("onAsw",async (asw) =>{
-                console.log(asw)
-                await rtcPer.setRemoteDescription(asw);
-                console.log(rtcPer.peerConnection);
-            })
-            socket._socket.on("newCandidate",async (candidate) =>{
-                console.log('esto es candidate',candidate)
-                await rtcPer.setCandidateRemote(candidate);
-            })
-    }
+    //         stream.getTracks().forEach(track => {
+    //             rtcPer.peerConnection.addTrack(track,stream);
+    //         });
+    //     })
+    //         socket._socket.on("onAsw",async (asw) =>{
+    //             console.log(asw)
+    //             await rtcPer.setRemoteDescription(asw);
+    //             console.log(rtcPer.peerConnection);
+    //         })
+    //         socket._socket.on("newCandidate",async (candidate) =>{
+    //             console.log('esto es candidate',candidate)
+    //             await rtcPer.setCandidateRemote(candidate);
+    //         })
+    // }
 
-    }, []);
+    // }, []);
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
-            <div className="w-full flex justify-between items-center border-b-2">
+            <Config className="h-full w-full" />
+            {/* <div className="w-full flex justify-between items-center border-b-2">
                 <div className="flex justify-start items-center">
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
                         <IconLive/> Datos de consulta
@@ -101,7 +103,7 @@ export default function TeleconsultaId (id) {
                         <IconCamera/>
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
