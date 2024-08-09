@@ -9,7 +9,7 @@
     Componentes Necesarios. 
     Lista de dispositivos.
 */
-
+import ViewMedia from "./ViewMedia"
 import { useCallback, useState } from "react"
 import SelectDataMedia from "./SelectDataMedia"
 export default function Config(){
@@ -33,16 +33,12 @@ export default function Config(){
     return (
     <div className="w-full h-full">
         {
-            /*
-                 Aca componente para mostrar la camara. Se le pasa por props los estados locales de camera, y microphone
-            */
+            camera && microfono && <ViewMedia camera={camera} microphone={microfono} /> ||  "Vista no disponible."
 
         }
-
-
-       <label>{camera}</label>
+       <label>Camara</label>
        <SelectDataMedia className="w-[500px] h-[300px]" handleOnChange={handleOnChangeCamera} type="videoinput" />
-       <label>{microfono}</label>
+       <label>Microfono</label>
        <SelectDataMedia className="w-[500px] h-[300px]" handleOnChange={handleOnChangeMicrofono} type="audioinput" />
     </div>)
 }

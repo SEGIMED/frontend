@@ -32,6 +32,7 @@ export default function SelectDataMedia({handleOnChange,type}){
                 
                 // Array.isArray(listDevice) && listDevice.length && (<SelectOptions className="w-full h-full" handleOnChange={handleOnChange} devices={listDevice}/>) || "Devices not found"
                 <select className="w-50 h-8" onChange={handleOnChange}>
+                    <option value="">Seleccione una opción</option>
                    {
                        Array.isArray(listDevice) && listDevice.map((device)=>{
                           return(<option key={device.deviceId} value={device.deviceId}>
