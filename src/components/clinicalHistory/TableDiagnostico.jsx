@@ -22,8 +22,9 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
     <div className="h-full flex flex-col">
       {pacientes?.map((paciente, index) => {
         // Formatear datos dentro del mapeo
-        const formattedDrugs = paciente.drugPrescriptions?.join(', ') || " - ";
-        const formattedProcedures = paciente.medicalProcedure?.join(', ') || " - ";
+        const formattedDrugs = paciente.drugPrescriptions?.join(", ") || " - ";
+        const formattedProcedures =
+          paciente.medicalProcedure?.join(", ") || " - ";
 
         return (
           <div key={index}>
@@ -41,18 +42,24 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
                       {new Date(paciente.timestamp).toLocaleTimeString()}
                     </div>
                     <div className="text-[#5F5F5F]">
-                      {new Date(paciente.timestamp).toLocaleDateString("es-ES", {
-                        day: "numeric",
-                        month: "numeric",
-                      })}
+                      {new Date(paciente.timestamp).toLocaleDateString(
+                        "es-ES",
+                        {
+                          day: "numeric",
+                          month: "numeric",
+                        }
+                      )}
                     </div>
                     <div className="text-[#5F5F5F] hidden md:block">
-                      {paciente?.physician?.name} {paciente?.physician?.lastname}
+                      {paciente?.physician?.name}{" "}
+                      {paciente?.physician?.lastname}
                     </div>
                     <div className="text-[#5F5F5F]">
                       {paciente?.attendancePlace?.alias}
                     </div>
-                    <div className="text-[#5F5F5F]">{paciente?.chiefComplaint}</div>
+                    <div className="text-[#5F5F5F]">
+                      {paciente?.chiefComplaint}
+                    </div>
                   </div>
                   <div className="flex w-[10%] md:w-[5%] items-center justify-center">
                     {openDetails[index] ? (
@@ -64,20 +71,12 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
                 </div>
               </summary>
               <div className="md:p-4 p-2 bg-[#f5f4f4]">
-              <InputInfo
-              title="Diagnósticos"
-              info={paciente.diagnostics?.map(d=>d.diagnosticNotes)}
-              />
                 <InputInfo
-                  title="Medicamentos"
-                  info={formattedDrugs}
-                  
+                  title="Diagnósticos"
+                  info={paciente.diagnostics?.map((d) => d.diagnosticNotes)}
                 />
-                <InputInfo
-                  title="Procedimientos"
-                  info={formattedProcedures}
-                  
-                />
+                <InputInfo title="Medicamentos" info={formattedDrugs} />
+                <InputInfo title="Procedimientos" info={formattedProcedures} />
                 {/* <InputInfo title='Conducta terapeutica' info={paciente.medicalProcedures} /> */}
                 <InputInfo
                   title="Tratamiento no farmacológico"
@@ -95,4 +94,3 @@ export default function TableDiagnostico({ pacientes, subtitle, subtitle2 }) {
     </div>
   );
 }
-

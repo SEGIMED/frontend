@@ -1,39 +1,9 @@
 "use client";
 import React from "react";
-import Image from "next/image";
-
-import riesgoRojo from "@/components/images/riesgoRojo.png";
-import riesgoAmarillo from "@/components/images/riesgoAmarillo.png";
-import riesgoVerde from "@/components/images/riesgoVerde.png";
 import RealColorRisk from "@/utils/realColor";
 import IconRisk from "../icons/iconRisk";
-import Avatars from "../avatar/avatarChat";
-import LastLogin from "@/utils/lastLogin";
-import avatar from "@/utils/defaultAvatar";
 
 export default function PatientCardConsulta1({ consulta, button }) {
-  const getRandomColor = () => {
-    const colors = [riesgoRojo, riesgoAmarillo, riesgoVerde];
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    return colors[randomIndex];
-  };
-  // console.log(consulta);
-  const getStatusTextAndColor = (status) => {
-    switch (status) {
-      case 1: // Agendada
-        return { text: "Agendada", color: "text-[#686868]" }; // Color normal
-      case 2: // Atendida
-        return { text: "Atendida", color: "text-green-500" }; // Verde
-      case 3: // Cancelada
-        return { text: "Cancelada", color: "text-red-500" }; // Rojo
-      case 4: // No atendida
-        return { text: "No atendida", color: "text-red-500" }; // Rojo
-      default:
-        return { text: "Desconocido", color: "text-[#686868]" }; // Color por defecto
-    }
-  };
-
-  const status = getStatusTextAndColor(consulta?.schedulingStatus);
   return (
     <div className="w-[100%] flex border-b border-b-[#cecece] py-2 items-center">
       <div className="w-[10%] md:w-[5%] items-center flex justify-center">

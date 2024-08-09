@@ -27,13 +27,8 @@ import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
 import IconMessages from "@/components/icons/IconMessages.jsx";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import MapModalPte from "@/components/modal/MapModalPte.jsx";
-import Ordenar from "@/components/Buttons/Ordenar";
-import IconOrder from "@/components/icons/IconOrder";
 import IconOptions from "@/components/icons/IconOptions";
-import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
-import IconAlarm from "@/components/icons/IconAlarm";
 import IconHooter from "@/components/icons/IconHooter";
-import IconAlphabetic from "@/components/icons/IconAlphabetic";
 import IconFilter from "@/components/icons/IconFilter";
 import IconTStar2 from "@/components/icons/IconStar2";
 import NotFound from "@/components/notFound/notFound";
@@ -149,12 +144,10 @@ export default function HomeDoc() {
   }, [dispatch]);
 
   const filteredPatients = showFavorites ? patientsFavorites : patients;
-  console.log(filteredPatients);
 
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
     : filteredPatients;
-  console.log(sortedPatients, `xd`);
 
   const openModal = (patientId) => {
     setIsModalOpen(true);
@@ -180,12 +173,6 @@ export default function HomeDoc() {
       if (response.status === 201 || response.status === 200) {
         getFavorites({ headers: { token: token } }).catch(console.error);
         getPatients({ headers: { token: token } }).catch(console.error);
-        console.log(
-          `Patient ${
-            patient.isFavorite ? "removed from" : "added to"
-          } favorites successfully.`,
-          response
-        );
       } else {
         console.log("Something went wrong:", response);
       }
@@ -458,7 +445,7 @@ export default function HomeDoc() {
                         items: [
                           {
                             label: "Ver Historia Clínica",
-                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
+                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}`,
                             icon: <IconClinicalHistory />,
                           },
                           {

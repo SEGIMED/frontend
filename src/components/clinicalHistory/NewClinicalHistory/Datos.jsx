@@ -1,4 +1,3 @@
-// DetallePaciente.jsx
 "use client";
 
 import { useState } from "react";
@@ -18,7 +17,7 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import GeneratePDF from "@/components/pdf/pdfgenerator";
 
-export default function DetallePaciente() {
+const Datos = () => {
   const pathname = usePathname();
 
   const pathArray = pathname.split("/");
@@ -239,4 +238,6 @@ export default function DetallePaciente() {
         </div> */}
     </div>
   );
-}
+};
+
+export default Datos;
