@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import IconCamera from "@/components/icons/IconCamera";
 import IconData from "@/components/icons/IconData";
 import IconFinish from "@/components/icons/IconFinish";
@@ -11,13 +11,28 @@ import rtcPer from "@/utils/RTCPeer";
 import Cookies from "js-cookie";
 import observer from "@/utils/observer";
 import Config from "@/components/Teleconsulta/config";
-
+import Room from "@/components/Teleconsulta/room";
 export default function TeleconsultaId (id) {
-    // const consultId = Number(id.params.id);
-    // const [roomData, setRoomData]=useState(null)
-    // const [stream, setStream] = useState(null)
-    // const myVideo=useRef()
-    // const remoteVideo=useRef()
+    const consultId = Number(id.params.id);
+    const [stateComponent, setStateComponent] = useState(null);
+    const [stream, setStream] = useState(null)
+    const myVideo=useRef()
+    const remoteVideo=useRef()
+
+    const userView = useCallback((state)=>{
+        const onChangeStateComponent = (state) => setStateComponent(state);
+        switch(state){
+            case "config":
+                return <Config onClick={onChangeStateComponent} className="h-[200px] w-full" /> //vista si el estado de la teleconsulta es configuration.
+            case "waiting":
+                rtcPer.init(consultId);
+                return <Room onClick={onChangeStateComponent} consultId={consultId} className="w-full h-full"/> //aca ira el componente que indicara el estado de los 2 usuarios. y se mantendra hasta que el doctor de iniciar.
+            case "InCalling":
+                return //aca ira el componente ya de la llamada, con la vista de las 2 camaras.
+            default: //por default ira a la vista de la configuración.
+                return <Config onClick={onChangeStateComponent}  className="h-[200px] w-full" /> //vista si el estado de la teleconsulta es configuration.
+        }
+    },[stateComponent])
 
     // useEffect(()=>{
     //     if(stream) rtcPer.createOffer(consultId)
@@ -61,7 +76,7 @@ export default function TeleconsultaId (id) {
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
-            <Config className="h-full w-full" />
+            {userView(stateComponent)}
             {/* <div className="w-full flex justify-between items-center border-b-2">
                 <div className="flex justify-start items-center">
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">

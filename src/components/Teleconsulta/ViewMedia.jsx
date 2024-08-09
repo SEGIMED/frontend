@@ -1,6 +1,8 @@
 'use client'
 
 import { useRef,useEffect } from "react"
+import rtcPer from "@/utils/RTCPeer"
+
 export default function ViewMedia({camera,microphone}){
     const getDecives = async () => {
         const contrains = {
@@ -18,14 +20,14 @@ export default function ViewMedia({camera,microphone}){
 
     useEffect(()=>{
        getDecives().then(stream => {
-        console.log(stream)
             cameraRef.current.srcObject = stream;
+            rtcPer.defineUserObjStream(stream);
        }) 
     },[])
 
     const cameraRef = useRef(null);
     
 
-    return <video ref={cameraRef}  playsInline muted autoPlay />
+    return <video  className="h-[250px] w-auto" ref={cameraRef}  playsInline muted autoPlay />
 
 }

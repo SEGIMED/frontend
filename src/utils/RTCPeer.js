@@ -15,7 +15,10 @@ class RTCPeer{
             ],
           };
          this.peerConnection = null;
-         this.userObj = null;
+         this.userObj = {
+            userId: null,
+            stream: null
+         }
          this.dataChannel = null;
          this.state = null;
         if(!RTCPeer.instance){
@@ -28,22 +31,32 @@ class RTCPeer{
         this.configuration.iceCandidatePoolSize = num;
     }
 
-    defineUserObj(userobj){
-        if(!userobj) this.userObj = userobj; 
+    defineUserObjId(userId){
+        if(userId) this.userObj.userId = Number(userId); 
     }
 
+    defineUserObjStream(stream){
+        this.userObj.stream = stream;
+    }
 
-
-    init(){
+    init(consultId){
         if(this.configuration) this.peerConnection = new RTCPeerConnection(this.configuration);
-        return this.peerConnection;
+        this.getTracksMedia(consultId);
     }
 
+    getTracksMedia(consultId){ 
+        if(this.userObj.stream){ 
+            this.userObj.stream.getTracks().forEach(track => {
+                this.peerConnection.addTrack(track,this.userObj.stream);
+            });
+            socket.emit("userState",{consultId,state:"ready"});
+        }
+    }
+  
     async createOffer(id){
         this.peerConnection.addEventListener('track', async (event) => {
-            console.log('entro')
             const [remoteStream] = event.streams;
-            Observer.setStreamVideo(remoteStream);
+            console.log(remoteStream);
         });
 
         this.peerConnection.addEventListener('icegatheringstatechange', (event) => {

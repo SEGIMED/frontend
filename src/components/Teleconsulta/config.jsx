@@ -12,7 +12,8 @@
 import ViewMedia from "./ViewMedia"
 import { useCallback, useState } from "react"
 import SelectDataMedia from "./SelectDataMedia"
-export default function Config(){
+
+export default function Config({onClick}){
     const [camera, setCamera] = useState(null)
     const [microfono, setMicrofono] = useState(null)
 
@@ -40,5 +41,7 @@ export default function Config(){
        <SelectDataMedia className="w-[500px] h-[300px]" handleOnChange={handleOnChangeCamera} type="videoinput" />
        <label>Microfono</label>
        <SelectDataMedia className="w-[500px] h-[300px]" handleOnChange={handleOnChangeMicrofono} type="audioinput" />
+
+       <button className="border-2 border-black p-1" onClick={()=> onClick('waiting')}>Entrar a la consulta</button>
     </div>)
 }

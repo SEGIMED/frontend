@@ -9,21 +9,22 @@ import SelectOptions from "./selectOptions";
 
 */
 
+export async function getConnectedDevices(type) {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log(devices)
+    return devices.filter(device => device.kind === type)
+}
 
 export default function SelectDataMedia({handleOnChange,type}){
      const [listDevice,setListDevice] = useState(null);
 
-     async function getConnectedDevices() {
-         const devices = await navigator.mediaDevices.enumerateDevices();
-         return devices.filter(device => device.kind === type)
-     }
 
     useEffect(()=>{
         navigator.mediaDevices.addEventListener('devicechange', event => {
-            getConnectedDevices().then(listDevice => setListDevice(listDevice))
+            getConnectedDevices(type).then(listDevice => setListDevice(listDevice))
         });
 
-        getConnectedDevices().then(list => setListDevice(list))
+        getConnectedDevices(type).then(list => setListDevice(list))
 
     },[])
 
