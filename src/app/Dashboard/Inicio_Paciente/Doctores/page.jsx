@@ -218,7 +218,7 @@ export default function DoctoresPte() {
           ]}
           title={"Solicitar asociarse"}
           button1={"hidden"}
-          button2={"bg-greenPrimary block"}
+          button2={"bg-greenPrimary text-white block"}
           progessBar={"hidden"}
           size={"h-[21rem] md:h-[17rem] md:w-[35rem]"}
           buttonText={{ end: `Enviar solicitud` }}

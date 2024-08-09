@@ -612,8 +612,8 @@ export default function HomeDoc() {
                 {...register("googleMapsLink", {
                   required: "*Este campo es obligatorio",
                   pattern: {
-                    value: /^https:\/\/maps\.app\.goo\.gl\/[A-Za-z0-9]+$/,
-                    message: "Debe ser un link de Google Maps válido",
+                    value: /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(:\d+)?(\/[^\s]*)?$/,
+                    message: "Debe ser un link válido",
                   }
                 })}
               />

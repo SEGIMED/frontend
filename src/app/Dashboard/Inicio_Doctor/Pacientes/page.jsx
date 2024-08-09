@@ -53,15 +53,19 @@ export default function HomeDoc() {
   const [patients, setPatients] = useState([]);
   const [patientsFavorites, setPatientsFavorites] = useState([]);
   const [ordenMedica, setOrdenMedica] = useState(false);
+  const [Pendientes, setPendientes] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    if (!searchParams.get("ordenMedica")) {
-      return;
+    if (searchParams.get("ordenMedica")) {
+      setOrdenMedica(searchParams.get("ordenMedica"));
     }
-    setOrdenMedica(searchParams.get("ordenMedica"));
+    if (searchParams.get("Pendientes")) {
+      setPendientes(searchParams.get("Pendientes"));
+    }
+    return;
   }, [searchParams]);
 
   const [pagination, setPagination] = useState({
@@ -398,7 +402,11 @@ export default function HomeDoc() {
               /> */}
                 {ordenMedica ? (
                   <Elboton
-                    href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
+                    href={
+                      Pendientes
+                        ? `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`
+                        : `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`
+                    }
                     icon={<IconSelect color={"#487ffa"} />}
                     nombre={"Seleccionar "}
                     size={"md"}
@@ -509,7 +517,7 @@ export default function HomeDoc() {
           ]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary text-white block font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}

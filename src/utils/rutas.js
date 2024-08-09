@@ -35,8 +35,11 @@ const Pasadas = "/Pasadas";
 const Ordenes = "/Ordenes_Medicas";
 const Generar = "/Generar_Orden";
 const Antecedentes = "/Antecedentes";
+const CrearMensaje="/crearMensaje"
+const Pendientes = "/Pendientes";
 
 const rutas = {
+  Pendientes,
   Antecedentes,
   Diagnostico,
   ExamenFisico,
@@ -71,6 +74,7 @@ const rutas = {
   Teleconsulta,
   Mis_turnos,
   Pasadas,
+  CrearMensaje
 };
 
 export default rutas;

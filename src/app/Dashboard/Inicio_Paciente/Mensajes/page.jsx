@@ -16,6 +16,7 @@ import avatar from "@/utils/defaultAvatar";
 import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
+import IconMedChat from "@/components/icons/IconMedChat";
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -85,18 +86,22 @@ export default function MensajesDoc() {
   };
 
   const chatElements = useMemo(() => {
-    const sortedChats = chats.sort((a, b) => {
+    
+    const filterChats= chats.filter(a=>a.messages.length > 0 )
+   
+    const sortedChats = filterChats.sort((a, b) => {
       const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
       const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
       return dateB - dateA;
     });
 
-    return sortedChats.map((chat) => (
+    return  sortedChats.map((chat) => (
       <div
         key={chat._id}
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-0 md:gap-4 items-center">
+          <IconMedChat color="gray"/>
           <div className="w-8 h-8 flex justify-center items-center">
             {handleImg(chat?.target?.avatar !== null ? chat?.target?.avatar : avatar)}
           </div>
@@ -144,12 +149,14 @@ export default function MensajesDoc() {
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2 ">
+        
         <Elboton
-          href={`${rutas.PacienteDash}${rutas.Mensajes}/crearMensaje`}
+          href={`${rutas.PacienteDash}${rutas.Mensajes}${rutas.CrearMensaje}`}
           nombre={"Nuevo Chat"}
           className="w-full md:w-48 md:h-12 md:text-lg"
           icon={<IconMas />}
         />
+       
         {/* <Elboton nombre={"Ordenar"} size={"lg"} icon={<IconOrder/>}/> */}
       </div>
       <div className="relative max-h-[90%] gap-2 items-start justify-center w-full overflow-y-auto ">

@@ -227,7 +227,7 @@ export default function DetallePaciente() {
         Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} />]}
         title={"Importar Historia Clínica"}
         button1={"hidden"}
-        button2={"bg-greenPrimary block"}
+        button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
         size={"h-[35rem] md:h-[33rem] md:w-[35rem]"}
         buttonText={{ end: `Importar` }}
