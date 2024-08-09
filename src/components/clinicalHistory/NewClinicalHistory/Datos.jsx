@@ -1,19 +1,14 @@
-// DetallePaciente.jsx
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import IconFatArrow from "@/components/icons/iconFatarrowDash";
-import Cookies from "js-cookie";
 import AntecedenteDash from "@/components/dashPte/antecedentesDash";
 import BotonDashPte from "@/components/Buttons/ElBotonDashPte";
 import AvatarDashPte from "@/components/avatar/avatarDashPte";
 import CalcularEdad from "@/utils/calcularEdad";
-import { ApiSegimed } from "@/Api/ApiSegimed";
 import { usePathname } from "next/navigation";
 import LastLogin from "@/utils/lastLogin";
 import { useAppSelector } from "@/redux/hooks";
-import Skeleton from "react-loading-skeleton";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import IconExportar from "@/components/icons/IconExportar";
@@ -21,10 +16,8 @@ import IconImportar from "@/components/icons/IconImportar";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import GeneratePDF from "@/components/pdf/pdfgenerator";
-import PdfPreview from "@/components/pdf/pdfPreview";
-import { consultas } from "@/utils/generatePDFDataUtil";
 
-export default function DetallePaciente() {
+const Datos = () => {
   const pathname = usePathname();
 
   const pathArray = pathname.split("/");
@@ -48,20 +41,27 @@ export default function DetallePaciente() {
     setDataImportar(data);
   };
 
-
   const submitModalData = () => {
-    console.log(dataImportar)
+    console.log(dataImportar);
     setIsModalOpen(false);
   };
-  console.log("data para el pdf", infoPatient)
   return (
     <div className="min-h-screen w-full flex flex-col">
-      {isLoading ? <SkeletonList count={13} /> : (
+      {isLoading ? (
+        <SkeletonList count={13} />
+      ) : (
         <>
           <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
-            <ButtonBlancoBorde text={"Importar"} funcion={openModal} iconLeft={<IconExportar />} />
-            <ButtonBlancoBorde text={"Exportar"} iconLeft={<IconImportar />}
-              funcion={() => GeneratePDF(user, infoPatient)} />
+            <ButtonBlancoBorde
+              text={"Importar"}
+              funcion={openModal}
+              iconLeft={<IconExportar />}
+            />
+            <ButtonBlancoBorde
+              text={"Exportar"}
+              iconLeft={<IconImportar />}
+              funcion={() => GeneratePDF(user, infoPatient)}
+            />
           </div>
           <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
@@ -74,14 +74,17 @@ export default function DetallePaciente() {
                 </span>
                 <span>
                   {user?.sociodemographicDetails?.birthDate
-                    ? `${CalcularEdad(user.sociodemographicDetails.birthDate)} años`
+                    ? `${CalcularEdad(
+                        user.sociodemographicDetails.birthDate
+                      )} años`
                     : "Sin especificar nacimiento"}
                 </span>
                 <span>
                   {user?.sociodemographicDetails?.isAlive ? "Vivo" : null}
                 </span>
                 <span>
-                  <b>Ultima consulta:</b> {LastLogin(user?.lastMedicalEventDate)}
+                  <b>Ultima consulta:</b>{" "}
+                  {LastLogin(user?.lastMedicalEventDate)}
                 </span>
                 <span>
                   <b>Medico tratante: </b>{" "}
@@ -213,20 +216,17 @@ export default function DetallePaciente() {
                   : "No hay antecedentes"
               }
             />
-          </div>  </>)}
+          </div>{" "}
+        </>
+      )}
 
       <ModalModularizado
         isOpen={isModalOpen}
         onClose={closeModal}
-        Modals={[
-          <ImportarHC
-            key={"importar hc"}
-            onData={handleModalData}
-          />,
-        ]}
+        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} />]}
         title={"Importar Historia Clínica"}
         button1={"hidden"}
-        button2={"bg-greenPrimary text-white block"}
+        button2={"bg-greenPrimary block"}
         progessBar={"hidden"}
         size={"h-[35rem] md:h-[33rem] md:w-[35rem]"}
         buttonText={{ end: `Importar` }}
@@ -237,6 +237,7 @@ export default function DetallePaciente() {
             <PdfPreview user={user} />
         </div> */}
     </div>
-
   );
-}
+};
+
+export default Datos;

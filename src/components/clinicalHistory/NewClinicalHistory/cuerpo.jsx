@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import Model from "react-body-highlighter";
 import { Slider } from "@nextui-org/react";
-import ButtonNext from "../consulta/button";
-import DropNext from "../consulta/dropdown";
-import IconDolor from "../icons/IconDolor";
-import IconDolor2 from "../icons/IconDolor2";
+import ButtonNext from "../../consulta/button";
+import DropNext from "../../consulta/dropdown";
+import IconDolor from "../../icons/IconDolor";
+import IconDolor2 from "../../icons/IconDolor2";
 import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
-import IconConsulta from "../icons/IconConsulta";
+import IconConsulta from "../../icons/IconConsulta";
 
 export default function ClincalCuerpo({ info }) {
   const [isPain, setIsPain] = useState(true); // Estado para manejar si hay dolor
@@ -56,10 +56,12 @@ export default function ClincalCuerpo({ info }) {
               data={selectedMuscles}
               style={{ width: "20rem", padding: "3rem" }}
               type={modelType}
+              onClick={(e) => e.preventDefault}
             />
           </div>
           <div className=" items-center justify-center">
             <ButtonNext
+              disabled={true}
               options={["Frente", "Dorso"]}
               handleSelection={handleModelTypeChange}
               name={"modelType"}
@@ -110,6 +112,7 @@ export default function ClincalCuerpo({ info }) {
                       aria-label="Nivel de dolor"
                       size="lg"
                       step={1}
+                      disabled={true}
                       showSteps={true}
                       maxValue={10}
                       minValue={1}
