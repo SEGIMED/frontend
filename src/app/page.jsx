@@ -62,6 +62,8 @@ export default function Home() {
         });
         Cookies.set("b", result.authenticationDetails.role, { expires: 1 });
         Cookies.set("c", result.authenticationDetails.userId, { expires: 1 });
+        console.log(result.authenticationDetails.role);
+
 
         // Verificar si el usuario y la contraseña son iguales
         if (data.userOrDni === data.password) {
@@ -151,9 +153,8 @@ export default function Home() {
                   id="userOrDni"
                   name="userOrDni"
                   placeholder="Ingrese su correo electrónico o DNI"
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none ${
-                    errors.userOrDni ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none ${errors.userOrDni ? "border-red-500" : "border-gray-300"
+                    }`}
                   {...register("userOrDni", {
                     required: true,
                     validate: (value) =>
@@ -177,9 +178,8 @@ export default function Home() {
                   id="password"
                   name="password"
                   placeholder="Ingrese su contraseña"
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
+                    }`}
                   {...register("password", { required: true })}
                 />
                 <div className="relative">
@@ -221,11 +221,10 @@ export default function Home() {
             <div className="text-center  flex justify-center">
               <button
                 type="submit"
-                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-lg flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${
-                  Object.keys(errors).length === 0
+                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-lg flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
                     ? ""
                     : "cursor-not-allowed opacity-50"
-                }`}
+                  }`}
                 disabled={Object.keys(errors).length !== 0 || loading}>
                 Iniciar Sesión <IconSend className="m" />
               </button>

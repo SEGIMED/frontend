@@ -1,5 +1,8 @@
-export default function Estadisticas() {
+import Estadisticas from "../../Inicio_Doctor/Estadisticas/page"
+export default function EstadisticasPage() {
     return (
-        <div>holaa</div>
+        <div className=" h-full ">
+            <Estadisticas />
+        </div>
     )
 }
