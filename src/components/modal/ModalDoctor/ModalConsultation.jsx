@@ -166,6 +166,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       } else {
         console.error("Error message:", error.message);
       }
+    } finally {
+      setDisabled(false);
     }
   });
 
@@ -176,16 +178,24 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   }
 
   return isOpen ? (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto">
       <div
         onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[40rem] flex flex-col items-center gap-5">
+       <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
         <form
           onSubmit={onSubmit}
-          className="flex flex-col justify-between w-full h-full">
-          <div className="flex items-center justify-start h-16 gap-3 p-5 font-semibold border-b-2">
-            <IconCurrentRouteNav className="w-4" /> Agendar consulta
+          className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
+            <div className="flex items-center gap-3">
+              <IconCurrentRouteNav className="w-4" />
+              <p>Agendar consulta</p>
+            </div>
+            <button
+              onClick={handleClose}
+              className="transition-transform transform hover:scale-105 active:scale-100 active:translate-y-1">
+              <IconClose className="w-8" />
+            </button>
           </div>
           <div className="flex flex-col justify-around px-5 pb-2">
             <div className="flex items-center justify-start gap-2 text-sm font-semibold">
@@ -367,11 +377,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </button>
           </div>
         </form>
-        <button
-          onClick={handleClose}
-          className="absolute top-0 right-0 m-4 duration-300 ease-in-out transform hover:transition hover:scale-105 active:scale-100 active:translate-y-1">
-          <IconClose className="w-8" />
-        </button>
+       
       </div>
     </div>
   ) : null;

@@ -46,16 +46,15 @@ export const FormUser = ({ formData, setFormData }) => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    // if (!termsAccepted || !privacyAccepted) {
-    //   setErrorMessage("Debe aceptar todos los términos y condiciones.");
-    // }
-  
     try {
       setLoading(true);
       const updatedData = { ...formData, ...data };
       setFormData(updatedData);
-  
-      const response = await ApiSegimed.post("/user/register-user", updatedData);
+
+      const response = await ApiSegimed.post(
+        "/user/register-user",
+        updatedData
+      );
       if (response.status !== 201) {
         throw new Error(response.data.error);
       }
@@ -67,12 +66,13 @@ export const FormUser = ({ formData, setFormData }) => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response?.data?.error || "Ocurrió un error inesperado.",
+        text: error.response.data.error,
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
     }
   });
+
   
 
   const passwordValue = watch("password");
@@ -80,14 +80,15 @@ export const FormUser = ({ formData, setFormData }) => {
   const passwordCriteria = {
     hasUpperCase: /[A-Z]/.test(passwordValue),
     hasLowerCase: /[a-z]/.test(passwordValue),
-    hasSpecialChar: /[\W_]/.test(passwordValue),
+    hasSpecialChar: /[\W_+]/.test(passwordValue),
+    hasNumber: /[0-9]/.test(passwordValue),
     hasMinLength: passwordValue?.length >= 6,
   };
 
   return (
     <div className="pb-36">
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center justify-center gap-3">
           <div className="w-full max-w-96">
             <label htmlFor="email">Correo Electrónico</label>
             <input
@@ -146,12 +147,14 @@ export const FormUser = ({ formData, setFormData }) => {
                 },
                 pattern: {
                   value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/,
+                   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_+])[A-Za-z\d\W_+]{6,20}$/,
                   message:
                     "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial.",
                 },
               })}
             />
+
+            {/* Mostrar los criterios solo si el usuario ha empezado a escribir */}
 
             {showPasswordCriteria && (
               <ul className="mt-2 text-sm ">
@@ -191,10 +194,20 @@ export const FormUser = ({ formData, setFormData }) => {
                   )}{" "}
                   Debe tener al menos 6 caracteres
                 </li>
+                <li
+                className={`flex gap-2 items-center whitespace-nowrap ${
+                passwordCriteria.hasNumber ? "text-[#70C247]" : ""
+                }`}>
+                {passwordCriteria.hasNumber && (
+                <IconCheckBoton className={"w-4"} />
+                )}{" "}
+                Debe contener un número
+                </li>
               </ul>
             )}
           </div>
 
+          {/* Resto del formulario */}
           <div className="w-full max-w-96">
             <label htmlFor="idType">Tipo de Identificación</label>
             <select
@@ -221,7 +234,7 @@ export const FormUser = ({ formData, setFormData }) => {
             <input
               id="idNumber"
               type="text"
-              placeholder="Ingrese Numero de identificación"
+              placeholder="Ingrese Numero de identificacion"
               className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
               {...register("idNumber", {
                 required: {
@@ -280,45 +293,48 @@ export const FormUser = ({ formData, setFormData }) => {
           </div>
 
           <div className="w-full max-w-96">
-            <label htmlFor="phone">Número Telefónico</label>
+            <label htmlFor="cellphone">Número de Celular</label>
             <input
-              id="phone"
+              id="cellphone"
               type="text"
-              placeholder="Ingrese Número Telefónico"
+              placeholder="Ingrese Numero de Celular"
               className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
-              {...register("phone", {
+              {...register("cellphone", {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
               })}
             />
-            {errors.phone && (
+            {errors.cellphone && (
               <span className="text-red-500 text-sm font-medium">
-                {errors.phone.message}
+                {errors.cellphone.message}
               </span>
             )}
           </div>
 
           <div className="w-full max-w-96">
-            <label htmlFor="birthdate">Fecha de Nacimiento</label>
-            <input
-              id="birthdate"
-              type="date"
-              className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
-              {...register("birthdate", {
+            <label htmlFor="nationality">Nacionalidad</label>
+            <select
+              id="nationality"
+              className="w-full bg-[#FBFBFB] py-2 px-2 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
+              {...register("nationality", {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
-              })}
-            />
-            {errors.birthdate && (
+              })}>
+              <option value="2">Argentina</option>
+              <option value="1">Colombia</option>
+            </select>
+            {errors.nationality && (
               <span className="text-red-500 text-sm font-medium">
-                {errors.birthdate.message}
+                {errors.nationality.message}
               </span>
             )}
           </div>
+      
+         
 
           <div className="w-full max-w-96 flex items-center text-[#487FFA]">
             <input
@@ -346,9 +362,6 @@ export const FormUser = ({ formData, setFormData }) => {
             Acepto la política de privacidad.
            </Link>
             </div>
-          {/* {errorMessage && (
-          <div className="text-red-500 mt-2">{errorMessage}</div>
-            )} */}
 
           
           <div className="w-full max-w-96 flex justify-center mt-4 mb-10">

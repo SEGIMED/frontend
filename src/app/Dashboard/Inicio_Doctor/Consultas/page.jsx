@@ -26,6 +26,9 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import IconDelete from "@/components/icons/IconDelete";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import DynamicTable from "@/components/table/DynamicTable";
+import IconConsulta from "@/components/icons/IconConsulta";
+import IconAccion from "@/components/icons/IconAccion";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -56,7 +59,6 @@ export default function HomeDoc() {
   }, []);
 
   // Obtener consultas del estado
-  const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
   const router = useRouter();
   // Obtener pacientes del estado
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -65,13 +67,6 @@ export default function HomeDoc() {
   useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
-
-  // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
-  const filteredPatients = scheduledConsultas.filter(
-    (cita) =>
-      cita.patientUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cita.patientUser.lastname.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   //ordenamiento por fecha desde el front por ahora
   const sortedConsultas = [...scheduledConsultas]
@@ -145,6 +140,65 @@ export default function HomeDoc() {
         }
       });
   };
+  const columns = [
+    {
+      label: "Nombre",
+      key: "patientUser.name",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Fecha",
+      key: "scheduledStartTimestamp",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Centro de atencion",
+      key: "healthCenter",
+      showMobile: true,
+      width: "w-16",
+    },
+    {
+      label: "Motivo de consulta",
+      key: "reasonForConsultation",
+      showMobile: false,
+      width: "w-16",
+    },
+  ];
+  const renderDropDown = (row) => {
+    return (
+      <MenuDropDown
+        label="Mas"
+        icon={<IconOptions color="white" />}
+        categories={[
+          {
+            title: "Opciones",
+            items: [
+              {
+                label: "Dejar Review",
+                icon: <IconCorazonMini />,
+                onClick: () => handleReviewClick(row),
+              },
+              {
+                label: "Ver consultas",
+                icon: <IconPersonalData />,
+                onClick: () =>
+                  handleCokiePatient(row.id, row.patient, row.medicalEvent.id),
+              },
+              {
+                label: "Eliminar consulta",
+                icon: <IconDelete color="#B2B2B2" />,
+                onClick: () => handleDeleteClick(row),
+              },
+            ].filter(Boolean),
+          },
+        ]}
+        className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+      />
+    );
+  };
+
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
@@ -172,74 +226,18 @@ export default function HomeDoc() {
             </Link>
           </div>
         </div>
-        <div className="h-full md:overflow-y-auto">
-          <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
-            <div className="w-[10%] md:w-[5%] md:block"></div>
-            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-4 py-2 z-10">
-              <p className="text-[#5F5F5F]">Nombre</p>
-              <p className="text-[#5F5F5F]">Fecha </p>
-              {/* <p className="text-[#5F5F5F] hidden md:block">Grupo HTP</p> */}
-              <p className="text-[#5F5F5F] ">Centro de atencion</p>
-              <p className="text-[#5F5F5F] hidden md:block">
-                Motivo de consulta
-              </p>
-            </div>
-          </div>
-
-          <div className="items-start justify-center w-full md:overflow-y-auto">
-            {sortedConsultas.length === 0 && !loading && (
-              <NotFound text="No hay consultas" />
-            )}
-            {loading && <SkeletonList count={9} />}
-            {sortedConsultas?.map((consulta) => (
-              <PatientCardConsulta1
-                key={consulta.id}
-                consulta={consulta}
-                button={
-                  <MenuDropDown
-                    label={"Mas"}
-                    icon={<IconOptions color="white" />}
-                    categories={[
-                      {
-                        title: "Opciones",
-                        icon: <IconOrder />,
-                        items: [
-                          {
-                            label: "Dejar Review",
-                            icon: <IconCorazonMini />,
-                            onClick: () => handleReviewClick(consulta),
-                          },
-                          {
-                            label: "Ver consultas",
-                            icon: <IconPersonalData />,
-                            onClick: () =>
-                              handleCokiePatient(
-                                consulta?.id,
-                                consulta?.patient,
-                                consulta.medicalEvent.id
-                              ),
-                          },
-                          {
-                            label: "Eliminar consulta",
-                            icon: <IconDelete color="#B2B2B2" />,
-                            onClick: () => handleDeleteClick(consulta),
-                          },
-                        ],
-                      },
-                    ]}
-                  />
-                }
-              />
-            ))}
-          </div>
-
-          {isReviewModalOpen && (
-            <ReviewModalApte
-              onClose={() => setIsReviewModalOpen(false)}
-              id={selectedPatientId}
-            />
-          )}
-        </div>
+        <DynamicTable
+          columns={columns}
+          rows={sortedConsultas}
+          renderDropDown={renderDropDown}
+          showRisks={true}
+        />
+        {isReviewModalOpen && (
+          <ReviewModalApte
+            onClose={() => setIsReviewModalOpen(false)}
+            id={selectedPatientId}
+          />
+        )}
       </div>
     </div>
   );
