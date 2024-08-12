@@ -29,6 +29,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import DynamicTable from "@/components/table/DynamicTable";
 import IconConsulta from "@/components/icons/IconConsulta";
 import IconAccion from "@/components/icons/IconAccion";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -37,6 +38,13 @@ export default function HomeDoc() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
   const consultas = useAppSelector((state) => state);
   const currentDate = new Date();
 

@@ -23,6 +23,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import IconHooter from "@/components/icons/IconHooter";
 import IconRisk from "@/components/icons/iconRisk";
 import IconAlphabetic from "@/components/icons/IconAlphabetic";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 import IconMedChat from "@/components/icons/IconMedChat";
 
 export default function DoctoresPte() {
@@ -44,6 +45,14 @@ export default function DoctoresPte() {
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
   const lastSegmentTextToShow = PathnameShow();
+
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
@@ -163,10 +172,10 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-   
-    socket.emit("createChat", {id});
+
+    socket.emit("createChat", { id });
   };
-  
+
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
@@ -205,29 +214,29 @@ export default function DoctoresPte() {
               ]}
             />
             {flag ? (
-            <Elboton
-              nombre={"Pacientes"}
-              size={"md"}
-              icon={<IconRegresar/>}
-              onPress={() => {
-                setFlag(false);
-                handlePageChange(1);
-              }}
-              className={"mr-2"}
-            />
-            ):(
               <Elboton
-              nombre={"Médicos"}
-              size={"md"}
-              icon={<IconMedChat />}
-              onPress={() => {
-                setFlag(true);
-                handlePageChange(1);
-              }}
-              className={"bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA] mr-2"}
-            />
+                nombre={"Pacientes"}
+                size={"md"}
+                icon={<IconRegresar />}
+                onPress={() => {
+                  setFlag(false);
+                  handlePageChange(1);
+                }}
+                className={"mr-2"}
+              />
+            ) : (
+              <Elboton
+                nombre={"Médicos"}
+                size={"md"}
+                icon={<IconMedChat />}
+                onPress={() => {
+                  setFlag(true);
+                  handlePageChange(1);
+                }}
+                className={"bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA] mr-2"}
+              />
             )}
-            
+
           </div>
         </div>
         <Elboton

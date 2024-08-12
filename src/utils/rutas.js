@@ -35,10 +35,14 @@ const Pasadas = "/Pasadas";
 const Ordenes = "/Ordenes_Medicas";
 const Generar = "/Generar_Orden";
 const Antecedentes = "/Antecedentes";
-const CrearMensaje="/crearMensaje"
+const CrearMensaje = "/crearMensaje"
 const Pendientes = "/Pendientes";
+const DataEntries = "/Data_Entries";
+const Errores = "/Errores";
 
 const rutas = {
+  Errores,
+  DataEntries,
   Pendientes,
   Antecedentes,
   Diagnostico,

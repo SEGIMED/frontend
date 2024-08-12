@@ -26,6 +26,7 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconDelete from "@/components/icons/IconDelete";
 import Swal from "sweetalert2";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 import { useRouter } from "next/navigation";
 import DynamicTable from "@/components/table/DynamicTable";
 
@@ -62,6 +63,18 @@ export default function HomeDoc() {
 
   // Obtener pacientes del estado
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(setSearchTerm(""));
+  }, [dispatch]);
+
   useEffect(() => {
     // Actualizar isLoading según la llegada de consultas
     if (consultas.length > 0) {

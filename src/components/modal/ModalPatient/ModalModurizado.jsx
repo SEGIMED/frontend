@@ -104,7 +104,7 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
                         disabled={disabled}
                         onClick={funcion ? funcion : handleNext}
                         className={` py-2 px-4 items-center flex rounded-lg  gap-2 w-fit ${button2} disabled:bg-gray-400`}>
-                        <p className="  font-bold flex gap-2 items-center">{index === Modals.length - 1 ? buttonText.end : buttonText.start}{buttonIcon ? <IconArrowRight /> : null}</p>
+                        <p className="  font-bold flex gap-2 items-center">{index === Modals.length - 1 ? buttonText.end : buttonText.start}{buttonIcon ? buttonIcon : <IconArrowRight />}</p>
                     </button>
                 </div>
 
