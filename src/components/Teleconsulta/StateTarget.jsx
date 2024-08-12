@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 
 
-export default () => {
+export default function StateTarget() {
 //estilisar, dejar como en la imagen.
     const [data,setData] = useState('');
 
