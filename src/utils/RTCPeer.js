@@ -73,11 +73,11 @@ class RTCPeer{
         });
 
 
-            if(!this.state){
+            
           const offer = await this.peerConnection.createOffer();
           await this.peerConnection.setLocalDescription(offer); 
         return offer
-            }
+            
     } 
     
     async createAsw (id){
@@ -101,11 +101,11 @@ class RTCPeer{
             console.log('nuevo evento ',this.peerConnection.connectionState);
         });
         
-            if(!this.state){
+          
             const asw = await this.peerConnection.createAnswer(); 
             await this.peerConnection.setLocalDescription(asw);
             return asw
-            }
+            
     } 
         
     async setRemoteDescription(description){
@@ -123,41 +123,7 @@ class RTCPeer{
        await this.peerConnection.addIceCandidate(candidate);
     }
 
-    async createRoom(){
-        const offer = await peerConnection.createOffer();
-        await this.peerConnection.setLocalDescription(offer);
-
-
-        socket.emit('createRoom',null,(dataChannel) => {
-            this.dataChannel = dataChannel;
-        });
-
-        socket.on('onJoin',async (message)=> {
-            if(message?.answer){
-                const remoteDesc = new RTCSessionDescription(message.answer);
-                await this.peerConnection.setRemoteDescription(remoteDesc);
-            }
-
-            if(message?.updateDataChannel) this.dataChannel =  message.dataChannel;
-
-            if(message?.offer){
-                const remoteDesc = new RTCSessionDescription(message.offer);
-                await this.peerConnection.setRemoteDescription(remoteDesc);
-            }
-        });
-        console.log(this.peerConnection);
-    }
-
     
-
-    sendInvite(targetId){
-        socket.emit("sendInvite",targetId,(data)=>{
-            if(data?.sent){
-                this.state = "Invitación Enviada." 
-            }
-        });
-    }
-
 
 
 }
