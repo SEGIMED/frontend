@@ -12,30 +12,60 @@ import DoctorCardConsulta from "@/components/card/docCardConsulta";
 import { useRouter } from "next/navigation";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import NotFound from "@/components/notFound/notFound";
+import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 
 export default function HomePte() {
   const dispatch = useAppDispatch();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [consultas, setConsultas] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isSorted, setIsSorted] = useState(false);
   const router = useRouter();
+  const currentDate = new Date();
 
   // Obtener consultas del estado
   const myID = Number(Cookies.get("c"));
 
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
-  const consultas = useAppSelector((state) => state.schedules);
+  // const consultas = useAppSelector((state) => state.schedules);
+
+  const getSchedulesByUserId = async () => {
+    try {
+      setLoading(true);
+      const response = await ApiSegimed.get("/schedulesByUserId");
+      setConsultas(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getSchedulesByUserId();
+  }, []);
 
   useEffect(() => {
     dispatch(setSearchTerm1(""));
   }, [dispatch]);
 
-  // Filtrar consultas con schedulingStatus = 1 y paciente = myID, y extraer los IDs de los docs
+  // Filtrar consultas con schedulingStatus = 1 y IsApproved = true para ver si las consultas ya estan aprobadas
   const scheduledConsultas = consultas?.filter(
-    (consulta) => consulta.schedulingStatus === 1
+    (consulta) => consulta.schedulingStatus === 1 && consulta.IsApproved
   );
-  const sortedConsultas =[...scheduledConsultas].sort((b,a) =>
+
+  /* const sortedConsultas = [...scheduledConsultas].sort((b, a) =>
     a.scheduledStartTimestamp.localeCompare(b.scheduledStartTimestamp)
-  )
+  ) */
+
+  //ordenamiento por fecha desde el front por ahora
+  const sortedConsultas = [...scheduledConsultas]
+    .sort((a, b) => {
+      //el que mas se acerca a la fecha actual
+      const diffA = Math.abs(new Date(a.scheduledStartTimestamp) - currentDate);
+      const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
+      return diffA - diffB;
+    })
+    .filter((cita) => cita.schedulingStatus === 1);
+
   const handleSortClick = () => {
     setIsSorted(!isSorted);
   };
@@ -44,8 +74,8 @@ export default function HomePte() {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  if (!consultas) {
-    return <MensajeSkeleton />;
+  if (loading) {
+    return <SkeletonList count={10} />;
   }
 
   return (
@@ -86,10 +116,12 @@ export default function HomePte() {
         </p>
       </div>
       <div className="h-full overflow-auto">
-        {scheduledConsultas.length === 0 && 
-          <NotFound 
-          text="No hay historial de preconsultas."
-          sizeText="w-[100%]"/>}
+        {(!loading && scheduledConsultas.length) === 0 && (
+          <NotFound
+            text="No hay historial de preconsultas."
+            sizeText="w-[100%]"
+          />
+        )}
         {sortedConsultas.map((doc) => (
           <DoctorCardConsulta
             key={doc.id}
@@ -97,7 +129,7 @@ export default function HomePte() {
             button={
               <Ver
                 id={doc.id}
-                ruta={`${rutas.PacienteDash}${rutas.Preconsulta}/${doc.id}`} 
+                ruta={`${rutas.PacienteDash}${rutas.Preconsulta}/${doc.id}`}
               />
             }
           />

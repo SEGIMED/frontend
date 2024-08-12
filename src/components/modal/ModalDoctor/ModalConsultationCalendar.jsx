@@ -13,17 +13,14 @@ import IconTypeQueries from "@/components/icons/IconTypeQueries";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
-import { useAppSelector } from "@/redux/hooks";
 import Swal from "sweetalert2";
 
 const ModalConsultationCalendar = ({
   isOpen,
   onClose,
-  physician,
   dateSelect,
   lista,
   title,
-  patient,
   stateName,
 }) => {
   const {
@@ -32,6 +29,7 @@ const ModalConsultationCalendar = ({
     setValue,
     watch,
     reset,
+    getValues,
     formState: { errors },
   } = useForm();
 
@@ -39,7 +37,8 @@ const ModalConsultationCalendar = ({
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const selectTime = watch("time");
-
+  const role = Cookies.get("b");
+  const userId = Number(Cookies.get("c"));
   const combineDateTime = (date, time) =>
     date && time ? `${date}T${time}:00` : "";
 
@@ -74,7 +73,6 @@ const ModalConsultationCalendar = ({
       setTime("");
     }
   }, [isOpen, reset]);
-
   useEffect(() => {
     const startDateTime = combineDateTime(date, selectTime);
     if (startDateTime) {
@@ -107,7 +105,6 @@ const ModalConsultationCalendar = ({
       const selectedTime = new Date(
         combineDateTime(data.date, data.scheduledStartTimestamp)
       );
-
       // Definir los límites de tiempo
       const startLimit = new Date(data.date);
       startLimit.setHours(8, 0, 0);
@@ -127,22 +124,31 @@ const ModalConsultationCalendar = ({
         return;
       }
       setDisabled(true);
-      const token = Cookies.get("a");
-      const headers = { headers: { token } };
-
-      const payload = patient ? { ...data, patient } : { ...data, physician };
-
-      const response = await ApiSegimed.post("/schedules", payload, headers);
+      if (role == "Paciente") {
+        data.patient = userId;
+      } else {
+        data.physician = userId;
+      }
+      const payload = data;
+      const response = await ApiSegimed.post("/schedules", payload);
 
       if (response.data) {
-        handleClose();
-
-        Swal.fire({
-          title: "Consulta agendada con éxito!",
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-          icon: "success",
-        });
+        if (role !== "Paciente") {
+          Swal.fire({
+            title: "Consulta agendada con éxito!",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+          });
+        } else {
+          Swal.fire({
+            title: "Se ha solicitado la consulta con éxito",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+            text: "En menos de 24 horas recibirás una respuesta a tu solicitud.",
+          });
+        }
       }
     } catch (error) {
       console.error("Error al enviar los datos:", error);
@@ -224,13 +230,14 @@ const ModalConsultationCalendar = ({
                   <label className="flex items-center gap-3">
                     <input
                       id="teleconsulta"
+                      disabled
                       type="radio"
                       value="2"
                       {...register("typeOfMedicalConsultation", {
                         required: "* Debes seleccionar una opción *",
                       })}
                     />
-                    Teleconsulta
+                    Teleconsulta(Próximamente)
                   </label>
                 </div>
                 {errors.typeOfMedicalConsultation && (

@@ -244,7 +244,7 @@ export default function IconList() {
     { component: <IconCopyright />, name: "IconCopyright" },
     { component: <IconCorazonMini />, name: "IconCorazonMini" },
     {
-      component: <IconCube className="w-20" iconColor={"black"} />,
+      component: <IconCube className="w-20" color={"black"} />,
       name: "IconCube",
     },
     {

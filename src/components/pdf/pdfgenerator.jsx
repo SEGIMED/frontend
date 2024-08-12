@@ -2,9 +2,37 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import CalcularEdad from '@/utils/calcularEdad';
 import avatar from '@/utils/defaultAvatar';
+import logo from '@/utils/logoSegimed';
+import { Fecha } from '@/utils/NormaliceFechayHora';
+import { IMC } from '@/utils/normaliceVitalSigns';
 
+async function getImageDataURL(imageUrl, size) {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Para manejar imágenes de otros dominios
+    img.src = imageUrl || avatar;
 
+    return new Promise((resolve) => {
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
 
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, size, size);
+
+            // Calculamos las dimensiones para mantener la proporción de la imagen original
+            const scale = Math.min(size / img.width, size / img.height);
+            const x = (size - img.width * scale) / 2;
+            const y = (size - img.height * scale) / 2;
+
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+            const dataURL = canvas.toDataURL('image/jpeg');
+            resolve(dataURL);
+        };
+    });
+}
 
 // Función para redondear la imagen en un canvas
 async function getCircularImageDataURL(imageUrl, size) {
@@ -40,6 +68,7 @@ async function getCircularImageDataURL(imageUrl, size) {
 
 
 export default async function GeneratePDF(user, consultas) {
+    
     const doc = new jsPDF();
     let y = 30; // Posición inicial
 
@@ -54,38 +83,50 @@ export default async function GeneratePDF(user, consultas) {
     }
     // si el texto de la data es muy largo lo divide en cuantos caracteres se necesite 
     function splitTextIntoParagraphs(text, maxChars) {
+        text = String(text);
+        // Ensure maxChars is a positive number
+        if (typeof maxChars !== 'number' || maxChars <= 0) {
+            throw new TypeError('The "maxChars" parameter should be a positive number');
+        }
+        
         const paragraphs = [];
         let startIndex = 0;
-    
+        
         while (startIndex < text.length) {
             const endIndex = Math.min(startIndex + maxChars, text.length);
             paragraphs.push(text.substring(startIndex, endIndex));
             startIndex = endIndex;
         }
-    
+        
         return paragraphs;
     }
+    
 
     const avatarUrl = user.avatar;
     const imageSize = 400; // Ajustar según sea necesario
     const circularAvatarDataURL = await getCircularImageDataURL(avatarUrl, imageSize);
-    
-   
-    
+
+    const logoUrl = await getImageDataURL(logo, 400)
+    //logo
+    doc.addImage(logoUrl, 'JPEG', 10, 5, 40, 40)
+
     // Título centrado
     doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
     doc.text('Historia Clínica del Paciente', 105, y, { align: 'center' });
 
-    // URL a la derecha
+    // URL a la derecha, azul
+    const urlColor = [72, 127, 250]; // [R, G, B] para el color #487FFA
+    doc.setTextColor(...urlColor);
     const url = 'www.segimed.com';
     doc.setFontSize(10);
-    doc.text(url, 190, y, { align: 'right' });
+    doc.text(url, 190, 25, { align: 'right' });
 
     // Línea horizontal debajo del título y la URL
     doc.setLineWidth(0.5);
     doc.line(20, y + 10, doc.internal.pageSize.width - 20, y + 10);
-
+    //color de texto en automatico/negro
+    doc.setTextColor(0, 0, 0); 
     y += 20;
 
     // Insertar avatar del usuario a la izquierda, ajustar ancho y alto
@@ -140,7 +181,7 @@ export default async function GeneratePDF(user, consultas) {
         { title: 'Antecedentes familiares:', data: user.backgrounds?.familyBackground || '-' },
         { title: 'Antecedentes de infancia:', data: user.backgrounds?.pediatricBackground || '-' },
         { title: 'Medicación actual:', data: user.backgrounds?.pharmacologicalBackground || '-' },
-        { title: 'Alergias:', data: user.backgrounds?.allergicBackground || '-' },
+        { title: 'Alergias:', data: user.backgrounds?.allergicBackground  || '-' },
         { title: 'Vacunas:', data: user.backgrounds?.vaccinationBackground || '-' }
     ];
 
@@ -168,7 +209,7 @@ export default async function GeneratePDF(user, consultas) {
             addPageIfNeeded(30); // Asegurar espacio para el título de la consulta
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(20);
-            const consultaTitle = `Consulta ${consulta.fecha}`;
+            const consultaTitle = `Consulta ${Fecha(consulta.timestamp, 4) || "-"}`;
             const consultaTitleWidth = doc.getTextWidth(consultaTitle);
             const xConsultaTitle = (pageWidth - consultaTitleWidth) / 2;
             doc.text(consultaTitle, xConsultaTitle, y);
@@ -176,49 +217,56 @@ export default async function GeneratePDF(user, consultas) {
             y += 10;
     
             const anamnesis = [
-                {title: 'Evolución de la enfermedad:', data: consulta.anamnesis?.evolucionEnfermedad || '-'},
-                {title: 'Motivo de la consulta:', data: consulta.anamnesis?.motivoConsulta || '-'},
-                {title: ' Síntomas importantes:', data: consulta.anamnesis?.sintomasImportantes || '-'},
+                {title: 'Evolución de la enfermedad:', data: consulta?.chiefComplaint || '-'},
+                {title: 'Motivo de la consulta:', data: consulta?.chiefComplaint || '-'},
+                {title: ' Síntomas importantes:', data: consulta?.reviewOfSystems || '-'},
             ];
+
+        
             
-            const evolucion = {title: '', data: consulta.evolucion || '-'};
+            const evolucion = [{title: '', data: consulta?.historyOfPresentIllness || '-'}];
+               
+            const formattedDrugs = consulta?.drugPrescriptions?.join(', ') || " - ";
+            const formattedProcedures = consulta?.medicalProcedure?.join(', ') || " - ";
+            const dignostic = consulta.diagnostics.length ? consulta.diagnostics?.map(d=>d.diagnosticNotes) : "-"
     
             const diagYtratamiento = [
-                {title: 'Diagnósticos:', data: consulta.diagnosticosYTratamiento.diagnosticos || '-'},
-                {title: ' Medicamentos:', data: consulta.diagnosticosYTratamiento.medicamentos  || '-'},
-                {title: ' Procedimientos:', data: consulta.diagnosticosYTratamiento.procedimientos || '-'},
-                {title: ' Conducta Terapéutica:', data: consulta.diagnosticosYTratamiento.conductaTerapeutica || '-' },
-                {title: ' Tratamiento No Farmacológico:', data: consulta.diagnosticosYTratamiento.tratamientoNoFarmacologico || '-'},
-                {title: ' Pauta de Alarma:', data: consulta.diagnosticosYTratamiento.pautaAlarma || '-'},
+                {title: 'Diagnósticos:', data: dignostic },
+                {title: ' Medicamentos:', data: formattedDrugs  || '-'},
+                {title: ' Procedimientos:', data: formattedProcedures || '-'},
+                {title: ' Tratamiento No Farmacológico:', data: consulta.treatmentPlan || '-'},
+                {title: ' Pauta de Alarma:', data: consulta.alarmPAttern || '-'},
             ];
-    
+           
+            const antropometricTitle=[ "Estatura:", "Peso:", "IMC:"]
+
+            const vitalSignsTitles = [
+                "Temperatura:", "Frecuencia Cardíaca:",
+                "PA Sistólica:", "PA Diastólica:", "Frecuencia Respiratoria:", "Saturación de Oxígeno:"
+            ];
+            const antropometriDetail=consulta?.antropetriDetails?.map((sign,index)=>({
+                title: antropometricTitle[index] || "",
+                data: `${sign?.measure || "-"} ${sign?.measureUnit}` 
+            })) || [];
+
+            const vitalSigns = consulta?.vitalSigns?.map((sign, index) => ({
+                title: vitalSignsTitles[index] || "",
+                data: `${sign?.measure || '-'} ${sign?.measureUnit}`
+            })) || [];
+
             const signosVitales = [
-                { title:"",data: `
-                Estatura: ${consulta.signosVitales.estatura || '-'}
-                Peso: ${consulta.signosVitales.peso || '-'}
-                IMC: ${consulta.signosVitales.imc || '-'}
-                Temperatura: ${consulta.signosVitales.temperatura || '-'}
-                `},{title:"",data:`
-                Frecuencia Cardíaca: ${consulta.signosVitales.frecuenciaCardiaca || '-'}
-                PA Sistólica: ${consulta.signosVitales.paSistolica || '-'}
-                PA Diastólica: ${consulta.signosVitales.paDiastolica || '-'}
-                Frecuencia Respiratoria: ${consulta.signosVitales.frecuenciaRespiratoria || '-'}
-                `},{title:"",data:
-                `
-                Saturación de Oxígeno: ${consulta.signosVitales.saturacionOxigeno || '-'}
-                Clase Funcional: ${consulta.signosVitales.claseFuncional || '-'}
-                Glucemia: ${consulta.signosVitales.glucemia || '-'}
-            ` },
+                ...antropometriDetail,
+                ...vitalSigns
             ];
             
             const allSections = [
                 { title: 'Anamnesis:', data: anamnesis },
                 { title: 'Signos Vitales:', data: signosVitales },
-                { title: 'Evolución:', data: [evolucion] },
+                { title: 'Evolución:', data: evolucion },
                 { title: 'Diagnóstico y Tratamiento:', data: diagYtratamiento },
                 
             ];
-    
+           
             allSections.forEach(section => {
                 addPageIfNeeded(30);
     
@@ -235,9 +283,9 @@ export default async function GeneratePDF(user, consultas) {
                     doc.text(subSection.title, 12, y);
                     y += 10;
     
-                    const isSignosVitales = section.title === 'Signos Vitales';
+                    const isSignosVitales = section.title === 'Signos Vitales:';
                     const maxChars = 310;
-                    const spacing = isSignosVitales ? 50 : 30; 
+                    const spacing = isSignosVitales ? 10 : 30; 
     
                     const paragraphs = splitTextIntoParagraphs(subSection.data, maxChars);
                     paragraphs.forEach(paragraph => {

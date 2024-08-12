@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
@@ -22,7 +21,6 @@ import PhotoModalPte from "@/components/modal/PhotoModalPTe";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 
-// Definir opciones para el select de sexo
 const sexoOptions = [
   { value: 2, label: "Masculino" },
   { value: 1, label: "Femenino" },
@@ -33,16 +31,6 @@ export default function HomePte() {
   const dispatch = useAppDispatch();
   const id = Cookies.get("c");
   const token = Cookies.get("a");
-  const date = new Date(paciente.lastLogin);
-  const options = {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  };
 
   const [buttonSize, setButtonSize] = useState("lg");
 
@@ -127,8 +115,7 @@ export default function HomePte() {
   return (
     <div className="h-full overflow-y-scroll flex flex-col">
       <div
-        className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"
-          } justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
+        className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"} justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
         <div
           className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
           <Image src={ruteActual} alt="ruta actual" />
@@ -200,6 +187,10 @@ export default function HomePte() {
                     value: 20,
                     message: "No puede tener más de 20 caracteres",
                   },
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "Solo se permiten letras",
+                  },
                 })}
               />
               {errors.name && (
@@ -230,6 +221,10 @@ export default function HomePte() {
                   maxLength: {
                     value: 20,
                     message: "No puede tener más de 20 caracteres",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z]+$/,
+                    message: "Solo se permiten letras",
                   },
                 })}
               />
@@ -262,8 +257,7 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <select
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.genreId ? "red" : "#DCDBDB"
-                  }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.genreId ? "red" : "#DCDBDB"}]`}
                 defaultValue={
                   paciente.sociodemographicDetails?.genre === "Masculino"
                     ? 2
@@ -271,7 +265,8 @@ export default function HomePte() {
                 }
                 {...register("genreId", {
                   required: "*Este campo es obligatorio",
-                })}>
+                })}
+              >
                 {sexoOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -296,8 +291,7 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${errors.birthDate ? "red" : "#DCDBDB"
-                  }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg p-1 md:p-2 mr-6 border-[${errors.birthDate ? "red" : "#DCDBDB"}]`}
                 type="date"
                 defaultValue={paciente.sociodemographicDetails?.birthDate}
                 {...register("birthDate", {
@@ -324,15 +318,14 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"
-                  }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"}]`}
                 type="text"
                 defaultValue={paciente?.cellphone}
                 {...register("cellphone", {
                   required: "*Este campo es obligatorio",
                   minLength: {
-                    value: 10,
-                    message: "Debe tener al menos 10 caracteres",
+                    value: 6,
+                    message: "Debe tener al menos 6 caracteres",
                   },
                   maxLength: {
                     value: 20,
@@ -364,8 +357,7 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"
-                  }]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.emergencyContactPhone ? "red" : "#DCDBDB"}]`}
                 type="text"
                 defaultValue={
                   paciente.sociodemographicDetails?.emergencyContactPhone
@@ -373,8 +365,8 @@ export default function HomePte() {
                 {...register("emergencyContactPhone", {
                   required: "*Este campo es obligatorio",
                   minLength: {
-                    value: 10,
-                    message: "Debe tener al menos 10 caracteres",
+                    value: 6,
+                    message: "Debe tener al menos 6 caracteres",
                   },
                   maxLength: {
                     value: 20,
@@ -412,6 +404,10 @@ export default function HomePte() {
                   defaultValue={paciente.sociodemographicDetails?.address}
                   {...register("address", {
                     required: "*Este campo es obligatorio",
+                    maxLength: {
+                      value: 50,
+                      message: "No puede tener más de 50 caracteres",
+                    },
                   })}
                 />
                 {errors.address && (
@@ -460,23 +456,19 @@ export default function HomePte() {
       </form>
 
       {showModal && (
-
         <ModalModularizado
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          Modals={[<MapModal
-            onClose={() => setShowModal(false)}
-            patient={paciente}
-            key={"map"}
-          />]}
+          Modals={[
+            <MapModal onClose={() => setShowModal(false)} patient={paciente} key={"map"} />,
+          ]}
           title={"Geolocalizacion "}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary block text-white font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}
         />
-
       )}
       <PhotoModalPte isOpen={isModalOpen} onClose={closeModalFoto} />
     </div>

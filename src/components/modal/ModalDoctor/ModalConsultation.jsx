@@ -15,8 +15,11 @@ import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import rutas from "@/utils/rutas";
 
 const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
+  const role = Cookies.get("b");
   const {
     register,
     handleSubmit,
@@ -28,6 +31,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   } = useForm();
 
   const [disabled, setDisabled] = useState(false);
+  const router = useRouter();
 
   const handleClose = () => {
     onClose();
@@ -47,6 +51,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   const addMinutes = (date, minutes) => {
     return new Date(date.getTime() + minutes * 60000);
   };
+
   useEffect(() => {
     function onClose2(event) {
       if (event.key === "Escape") {
@@ -57,14 +62,12 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
     if (typeof window !== "undefined")
       window.addEventListener("keydown", onClose2);
 
-    // Cleanup function to remove the event listener when the component unmounts
     return () => {
       window.removeEventListener("keydown", onClose2);
     };
   }, [onClose]);
 
   useEffect(() => {
-    // Reset form when isOpen becomes false
     if (!isOpen) {
       reset({
         patient: "",
@@ -124,20 +127,36 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
 
       const token = Cookies.get("a");
       const headers = { headers: { token: token } };
-
       const response = await ApiSegimed.post("/schedules", rest, headers);
 
       handleClose();
       if (response.data) {
-        Swal.fire({
-          title: "Consulta agendada con exito!",
-          // text: "You clicked the button!",
-          icon: "success",
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-        });
+        if (role !== "Paciente") {
+          Swal.fire({
+            title: "Consulta agendada con éxito!",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+          });
+        } else {
+          Swal.fire({
+            title: "Se ha solicitado la consulta con éxito",
+            icon: "success",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+            text: "En menos de 24 horas recibirás una respuesta a tu solicitud.",
+          });
+        }
       }
     } catch (error) {
+      handleClose();
+      Swal.fire({
+        icon: "error",
+        title: "Ha ocurrido un error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Aceptar",
+        text: "Ocurrió un error al intentar agendar la consulta. Por favor, intenta nuevamente.",
+      });
       console.error("Error al enviar los datos:", error);
 
       if (error.response) {
@@ -147,8 +166,11 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       } else {
         console.error("Error message:", error.message);
       }
+    } finally {
+      setDisabled(false);
     }
   });
+
   function handleClickOutside(event) {
     if (event.target === event.currentTarget) {
       onClose();
@@ -156,23 +178,31 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   }
 
   return isOpen ? (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto">
       <div
         onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[35rem] md:h-[35rem] flex flex-col items-center gap-5">
+       <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
         <form
           onSubmit={onSubmit}
-          className="flex flex-col justify-between w-full h-full">
-          <div className="flex items-center justify-start h-16 gap-3 p-5 font-semibold border-b-2">
-            <IconCurrentRouteNav className="w-4" /> Agendar consulta
+          className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
+            <div className="flex items-center gap-3">
+              <IconCurrentRouteNav className="w-4" />
+              <p>Agendar consulta</p>
+            </div>
+            <button
+              onClick={handleClose}
+              className="transition-transform transform hover:scale-105 active:scale-100 active:translate-y-1">
+              <IconClose className="w-8" />
+            </button>
           </div>
-          <div className="flex flex-col justify-around px-5">
+          <div className="flex flex-col justify-around px-5 pb-2">
             <div className="flex items-center justify-start gap-2 text-sm font-semibold">
               <IconTypeQueries /> Tipo de consultas
             </div>
-            <div className="flex items-center justify-start gap-2">
-              <div className="flex items-center justify-start gap-3 mt-2">
+            <div className="flex items-center  justify-around gap-2">
+              <div className="flex items-center justify-start gap-3 mt-1">
                 <input
                   id="consultaFisica"
                   type="radio"
@@ -189,10 +219,11 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 </label>
               </div>
 
-              <div className="flex items-center justify-start gap-3">
-                {/* <input
+              <div className="flex items-center justify-start gap-3 mt-1">
+                <input
                   id="teleconsulta"
                   type="radio"
+                  disabled
                   value="2"
                   {...register("typeOfMedicalConsultation", {
                     required: {
@@ -200,22 +231,24 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                       message: "* Debes seleccionar una opción *",
                     },
                   })}
-                /> */}
-                {/* <label htmlFor="teleconsulta" className="">
-                  Teleconsulta
-                </label> */}
+                />
+                <label htmlFor="teleconsulta" className="">
+                  Teleconsulta(Próximamente)
+                </label>
               </div>
             </div>
-            {errors.typeOfMedicalConsultation && (
-              <span className="text-sm font-medium text-red-500">
-                {errors.typeOfMedicalConsultation.message}
-              </span>
-            )}
+            <div className="relative">
+              {errors.typeOfMedicalConsultation && (
+                <span className="absolute left-0 top-full mt-1 text-sm font-medium text-red-500">
+                  {errors.typeOfMedicalConsultation.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="w-full border" />
 
-          <div className="flex flex-col justify-around gap-2 px-5">
+          <div className="flex flex-col justify-around gap-2  pb-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconReasonQuerie /> Motivo de consulta
             </div>
@@ -230,16 +263,18 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 },
               })}
             />
-            {errors.reasonForConsultation && (
-              <span className="text-sm font-medium text-red-500">
-                {errors.reasonForConsultation.message}
-              </span>
-            )}
+            <div className="relative">
+              {errors.reasonForConsultation && (
+                <span className="absolute left-0 top-full mt-1 text-sm font-medium text-red-500">
+                  {errors.reasonForConsultation.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="w-full border" />
 
-          <div className="flex flex-col justify-around gap-2 px-5">
+          <div className="flex flex-col justify-around gap-2 px-5 pb-2">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconCenterAtenttion /> Centro de atención
             </div>
@@ -258,16 +293,18 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
               <option value="">Seleccione el centro de atención</option>
               <option value="1">Centro Gallegos</option>
             </select>
-            {errors.healthCenter && (
-              <span className="text-sm font-medium text-red-500">
-                {errors.healthCenter.message}
-              </span>
-            )}
+            <div className="relative">
+              {errors.healthCenter && (
+                <span className="absolute left-0 top-full mt-1 text-sm font-medium text-red-500">
+                  {errors.healthCenter.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="w-full border" />
 
-          <div className="flex flex-col justify-around gap-2 px-5">
+          <div className="flex flex-col justify-around gap-2 px-5 pb-2">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconDate /> Fecha
             </div>
@@ -290,11 +327,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                     },
                   })}
                 />
-                {errors.date && (
-                  <span className="text-sm font-medium text-red-500">
-                    {errors.date.message}
-                  </span>
-                )}
+                <div className="relative">
+                  {errors.date && (
+                    <span className="absolute left-0 top-full mt-1 text-sm font-medium text-red-500">
+                      {errors.date.message}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="flex flex-row justify-between gap-2 md:flex-col">
@@ -317,11 +356,13 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                     },
                   })}
                 />
-                {errors.time && (
-                  <span className="text-sm font-medium text-red-500">
-                    {errors.time.message}
-                  </span>
-                )}
+                <div className="relative">
+                  {errors.time && (
+                    <span className="absolute left-0 top-full mt-1 text-sm font-medium text-red-500">
+                      {errors.time.message}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -336,11 +377,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </button>
           </div>
         </form>
-        <button
-          onClick={handleClose}
-          className="absolute top-0 right-0 m-4 duration-300 ease-in-out transform hover:transition hover:scale-105 active:scale-100 active:translate-y-1">
-          <IconClose className="w-8" />
-        </button>
+       
       </div>
     </div>
   ) : null;

@@ -2,15 +2,25 @@
 
 import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import BotonPreconsulta from "../Buttons/BotonPreconsulta";
+import { IMC } from "@/utils/normaliceVitalSigns";
 
 function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive, defaultOpen = false }) {
-  const [signValue, setSignValue] = useState(0);
+  const [imcValue, setImcValue] = useState(null);
+
+  useEffect(() => {
+    if (vitalSigns.weight.measure && vitalSigns.height.measure) {
+      const getImcValue = IMC(vitalSigns.weight.measure, vitalSigns.height.measure);
+      setImcValue(getImcValue);
+    }
+    else {
+      setImcValue(0);
+    }
+  }, [vitalSigns]);
 
   const handleInput = (sign, value) => {
-    setSignValue(value);
     onVitalSignChange(sign, value);
   };
 
@@ -32,6 +42,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
 
         {Object.keys(vitalSigns).map((sign, index) => {
           const data = vitalSigns[sign];
+          const defaulValueInput = data.measure > 0 ? data.measure : '';
           return (
             <div
               key={index}
@@ -49,13 +60,24 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                   <span className="w-[100px] flex md:flex-1 justify-start md:justify-end text-[#5F5F5F] font-normal text-sm">
                     {data.referenceValue} {data.unit}
                   </span>
-                  <input
-                    type="number"
-                    value={data.measure === 0 ? '' : data.measure}
-                    min={0}
-                    className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                    onChange={(e) => handleInput(sign, Number(e.target.value))}
-                  />
+                  {sign !== 'IMC' ?
+                    <input
+                      type="number"
+                      placeholder={defaulValueInput}
+                      min={0}
+                      className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                      onChange={(e) => handleInput(sign, Number(e.target.value))}
+                    />
+                    :
+                    <input
+                      type="number"
+                      placeholder={(sign === 'IMC' && imcValue) ? imcValue : defaulValueInput}
+                      value={(sign === 'IMC' && imcValue) ? imcValue : null}
+                      min={0}
+                      className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                      onChange={(e) => handleInput(sign, Number(e.target.value))}
+                    />
+                  }
                 </div>}
               {sign === 'abnormalGlycemia' &&
                 <div className="md:max-w-[50%] flex justify-end items-center gap-2 md:px-8 py-1">
@@ -84,7 +106,8 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                       <input
                         key={index}
                         type="number"
-                        value={data.options[option] === 0 ? '' : data.options[option]}
+                        placeholder={data.options[option] > 0 ? data.options[option] : ''}
+                        // defaultValue={}
                         className="w-full text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
                         onChange={(e) => onVitalSignChange(sign, Number(e.target.value), null, option)}
                       />

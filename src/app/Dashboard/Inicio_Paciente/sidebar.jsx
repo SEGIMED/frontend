@@ -25,6 +25,8 @@ import { NotificacionElement } from "@/components/InicioPaciente/notificaciones/
 import { IconNotificaciones } from "@/components/InicioPaciente/notificaciones/IconNotificaciones";
 import { addNotifications } from "@/redux/slices/user/notifications";
 import Swal from "sweetalert2";
+
+import ModalBoarding from "@/components/modal/ModalPatient/ModalBoarding";
 import NotificacionesContainer from "@/components/InicioPaciente/notificaciones/NotificacionesContainer";
 import { IconPoint } from "@/components/InicioPaciente/notificaciones/IconPoint";
 
@@ -33,17 +35,24 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const notifications = useAppSelector((state) => state.notifications);
+  const showSearch = useAppSelector((state) => state.searchBar);
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const handleSearchChange = (e) => {
     dispatch(setSearchTerm1(e.target.value));
   };
 
-  const showSearch =
-    pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
-    // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
-    pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
-    pathname === "/Dashboard/Inicio_Paciente/Historial";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // const showSearch =
+  //   pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
+  //   // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+  //   pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
+  //   pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
   const lastSegmentText = pathname
     .substring(pathname.lastIndexOf("/") + 1)
@@ -63,8 +72,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
   // Obteniendo el segmento a mostrar
   const segmentToShow = lastSegment.match(/^\d+$/)
     ? pathBeforeLastSegment.substring(
-        pathBeforeLastSegment.lastIndexOf("/") + 1
-      )
+      pathBeforeLastSegment.lastIndexOf("/") + 1
+    )
     : lastSegment;
 
   const id = Cookies.get("c");
@@ -151,52 +160,6 @@ export const SidePte = ({ search, toggleSidebar }) => {
     const combinedData = {
       ...response1.data,
       ...response2.data,
-      //   anthropometricDetails:
-      //     response1.data.anthropometricDetails?.length > 0
-      //       ? response1.data.anthropometricDetails
-      //       : paciente.anthropometricDetails || [],
-      //   vitalSigns:
-      //     response1.data.vitalSigns?.length > 0
-      //       ? response1.data.vitalSigns
-      //       : paciente.vitalSigns || [],
-      //   sociodemographicDetails:
-      //     response1.data.sociodemographicDetails ||
-      //     paciente.sociodemographicDetails ||
-      //     {},
-      //   backgrounds: response1.data.backgrounds || paciente.backgrounds || {},
-      //   patientPulmonaryHypertensionGroups:
-      //     response1.data.patientPulmonaryHypertensionGroups?.length > 0
-      //       ? response1.data.patientPulmonaryHypertensionGroups
-      //       : paciente.patientPulmonaryHypertensionGroups || {},
-      //   patientPulmonaryHypertensionRisks:
-      //     response1.data.patientPulmonaryHypertensionRisks?.length > 0
-      //       ? response1.data.patientPulmonaryHypertensionRisks
-      //       : paciente.patientPulmonaryHypertensionRisks || {},
-      //   patientCardiovascularRisks:
-      //     response1.data.patientCardiovascularRisks?.length > 0
-      //       ? response1.data.patientCardiovascularRisks
-      //       : paciente.patientCardiovascularRisks || {},
-      //   patientSurgicalRisks:
-      //     response1.data.patientSurgicalRisks?.length > 0
-      //       ? response1.data.patientSurgicalRisks
-      //       : paciente.patientSurgicalRisks || {},
-      //   lastMedicalEventDate:
-      //     response1.data.lastMedicalEventDate ||
-      //     paciente.lastMedicalEventDate ||
-      //     null,
-      //   currentPhysician:
-      //     response1.data.currentPhysician || paciente.currentPhysician || {},
-      //   cellphone: response1.data.cellphone || paciente.cellphone || null,
-      //   currentLocationCity:
-      //     response1.data.currentLocationCity ||
-      //     paciente.currentLocationCity ||
-      //     null,
-      //   currentLocationCountry:
-      //     response1.data.currentLocationCountry ||
-      //     paciente.currentLocationCountry ||
-      //     null,
-      //   lastLogin: response1.data.lastLogin || paciente.lastLogin || null,
-      // };
     };
     dispatch(adduser(combinedData));
     console.log(combinedData);
@@ -205,14 +168,13 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const getAllDoc = async (headers) => {
     try {
       const response = await ApiSegimed.get("/all-physicians", headers);
-    
+
       if (response.data) {
         dispatch(getAllDoctores(response.data));
       }
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
     }
-   
   };
 
   useEffect(() => {
@@ -225,7 +187,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       setTimeout(() => {
         // Realizar la recarga de la página para limpiar todos los datos
         window.location.reload(true);
-      }, 2000);
+      }, 1000);
       return;
     }
 
@@ -245,7 +207,15 @@ export const SidePte = ({ search, toggleSidebar }) => {
       }
     }
   }, [rol]);
-  //Notificaciones
+
+  // useEffect(() => {
+  //   if (user.name)
+  //     if (!paciente.sociodemographicDetails?.address) {
+  //       router.push(rutas.PacienteDash)
+  //       setIsModalOpen(true);
+  //     }
+  // }, [user]);
+
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
@@ -356,10 +326,9 @@ export const SidePte = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -375,6 +344,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
+
+      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} /> */}
     </div>
   );
 };

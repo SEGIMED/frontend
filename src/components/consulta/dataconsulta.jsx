@@ -42,7 +42,7 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
         fullName: [paciente?.name, paciente?.lastname].filter(Boolean).join(" "),
         edad: paciente?.sociodemographicDetails?.birthDate === undefined ? '' : CalcularEdad(paciente?.sociodemographicDetails?.birthDate),
         genre: paciente?.sociodemographicDetails?.genre,
-        idNumber: paciente?.sociodemographicDetails?.idNumber,
+        idNumber: paciente?.idNumber,
         medicalCoverage: paciente?.sociodemographicDetails?.healthCarePlan,
         phone: paciente?.cellphone,
         emergencyNumber: paciente?.sociodemographicDetails?.emergencyContactPhone,
@@ -79,9 +79,9 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
         <DataPatient title="Genero" info={values.genre} />
         <DataPatient title="Número de documento" info={values.idNumber} />
         <DataPatient title="Cobertura medica" info={values.medicalCoverage} />
-        <DataPatient title="Telefono" info={values.phone} />
+        {/* <DataPatient title="Telefono" info={values.phone} />
         <DataPatient title="Telefono de emergencia" info={values.emergencyNumber} />
-        <DataPatient title="Correo electronico" info={values.email} />
+        <DataPatient title="Correo electronico" info={values.email} /> */}
         <DataPatient title="Dirección de domicilio" geolocation={paciente?.geolocation} openModal={handleGeolocationClick} />
         <DataPatient title="Lugar de nacimiento" info={values.currentLocationCountry} />
         <DataPatient title="Fecha de nacimiento" info={values.birthDate} />
@@ -98,7 +98,7 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
           />]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary text-white block font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}

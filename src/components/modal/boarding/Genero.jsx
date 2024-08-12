@@ -8,7 +8,8 @@ export default function Genero({ handleDisabled, state }) {
             </p>
             <div>
                 <ButtonNext
-                    selectedOptions={state.genre}
+                    selectedOptions={state.genre2}
+                    type={true}
                     handleDisabled={handleDisabled}
                     options={["Masculino", "Femenino"]}
                     name={"genre"}

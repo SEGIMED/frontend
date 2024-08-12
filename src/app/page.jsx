@@ -24,8 +24,9 @@ export default function Home() {
   } = useForm();
 
   const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
   const onSubmit = async (data) => {
+    if (loading) return;
     const postData = {
       password: String(data.password),
       ...(/^\S+@\S+\.\S+$/.test(data.userOrDni)
@@ -43,6 +44,7 @@ export default function Home() {
       // });
 
       // const result = await response.json();
+      setLoading(true);
       const response = await ApiSegimed.post("/user/login", postData);
       const result = response.data;
 
@@ -60,6 +62,8 @@ export default function Home() {
         });
         Cookies.set("b", result.authenticationDetails.role, { expires: 1 });
         Cookies.set("c", result.authenticationDetails.userId, { expires: 1 });
+        console.log(result.authenticationDetails.role);
+
 
         // Verificar si el usuario y la contraseña son iguales
         if (data.userOrDni === data.password) {
@@ -74,12 +78,14 @@ export default function Home() {
             router.push(`${rutas.PacienteDash}`);
           }
         }
+        setLoading(false);
       }
     } catch (error) {
       let errorMessage = error?.response?.data?.error;
 
       // Mostrar el error usando Swal si es un error de conexión
       if (error) {
+        setLoading(false);
         Swal.fire({
           icon: "error",
           title: "Error",
@@ -126,18 +132,18 @@ export default function Home() {
       </div>
       <Footer />
       <FooterAccount /> */}
-      <div className="h-full md:h-screen flex mt-[18%] md:mt-0 flex-col md:flex-row font-poppins antialiased">
+      <div className="h-full lg:h-screen flex mt-0 flex-col lg:flex-row font-poppins antialiased ">
         {/* Lado derecho */}
-        <div className="w-full md:w-1/2 flex justify-center items-center">
+        <div className="w-full lg:w-1/2 flex justify-center items-center ">
           <form
-            className="w-full md:max-w-md p-8 bg-white "
+            className="w-full lg:max-w-lg p-8 bg-white"
             onSubmit={handleSubmit(onSubmit)}>
-            <header className="mb-10 md:mb-6 text-center">
-              <h2 className="text-3xl md:text-2xl text-gray-800 font-semibold leading-7 capitalize">
+            <header className="mb-10 lg:mb-6 text-center">
+              <h2 className="text-3xl lg:text-2xl text-gray-800 font-semibold leading-7 capitalize">
                 Ingrese sus Datos
               </h2>
             </header>
-            <div className="mb-6 md:mb-4">
+            <div className="mb-6 lg:mb-4">
               <label className="block text-gray-700 mb-2" htmlFor="userOrDni">
                 Correo electrónico o DNI
               </label>
@@ -147,7 +153,7 @@ export default function Home() {
                   id="userOrDni"
                   name="userOrDni"
                   placeholder="Ingrese su correo electrónico o DNI"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.userOrDni ? "border-red-500" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none ${errors.userOrDni ? "border-red-500" : "border-gray-300"
                     }`}
                   {...register("userOrDni", {
                     required: true,
@@ -162,7 +168,7 @@ export default function Home() {
                 </span>
               )}
             </div>
-            <div className="mb-10 md:mb-4">
+            <div className="mb-10 lg:mb-4">
               <label className="block text-gray-700 mb-2" htmlFor="password">
                 Contraseña
               </label>
@@ -172,7 +178,7 @@ export default function Home() {
                   id="password"
                   name="password"
                   placeholder="Ingrese su contraseña"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none ${errors.password ? "border-red-500" : "border-gray-300"
                     }`}
                   {...register("password", { required: true })}
                 />
@@ -196,7 +202,7 @@ export default function Home() {
                 </span>
               )}
             </div>
-            <div className="flex justify-between items-center mb-10 md:mb-6 w-full">
+            <div className="flex justify-between items-center mb-10 lg:mb-6 w-full">
               <label className="flex items-center">
                 <input
                   type="checkbox"
@@ -215,18 +221,18 @@ export default function Home() {
             <div className="text-center  flex justify-center">
               <button
                 type="submit"
-                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-md flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
+                className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-lg flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
                     ? ""
                     : "cursor-not-allowed opacity-50"
                   }`}
-                disabled={Object.keys(errors).length !== 0}>
+                disabled={Object.keys(errors).length !== 0 || loading}>
                 Iniciar Sesión <IconSend className="m" />
               </button>
             </div>
           </form>
         </div>
         {/* Lado izquierdo */}
-        <div className="hidden md:flex flex-col md:w-1/2 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-400 text-white text-center justify-center items-center">
+        <div className="hidden lg:flex flex-col lg:w-1/2 bg-gradient-to-br h-full from-blue-400 via-blue-600 to-blue-400 text-white text-center justify-center items-center">
           <IconRegister className={"w-[400px]"} />
           <p className="px-24 pb-2 text-lg font-normal leading-8">
             SEGIMED es una novedosa plataforma médica interactiva que permite
@@ -235,7 +241,7 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <div className="fixed bottom-0 left-0 w-full flex justify-start">
+      <div className="relative lg:fixed bottom-0 left-0 w-full flex justify-start">
         <FooterAcc />
       </div>
     </div>

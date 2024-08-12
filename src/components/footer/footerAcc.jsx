@@ -2,7 +2,7 @@ import IconCopyright from "../icons/iconCopyright";
 
 export const FooterAcc = () => {
   return (
-    <div className="absolute bottom-0 px-4 w-full md:w-1/2 flex justify-center items-center py-6 bg-[#FFFFFF]">
+    <div className="relative lg:absolute bottom-0 px-4 w-full md:w-1/2 flex justify-center items-center py-6 bg-[#FFFFFF]">
       <span className="ml-2 mr-1">
         <IconCopyright />
       </span>

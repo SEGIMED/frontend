@@ -4,6 +4,7 @@ import { IconPoint } from "./IconPoint";
 
 export const NotificacionElement = ({ notificacion, onClick }) => {
   const message = formatNotificationMessage(notificacion);
+  console.log(notificacion);
   if (!message) return null;
   return (
     <div

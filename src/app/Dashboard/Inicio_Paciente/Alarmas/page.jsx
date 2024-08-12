@@ -115,7 +115,7 @@ export default function AlarmPte() {
         title={"Importante"}
         ruta={`${rutas.PacienteDash}${rutas.Alarm}/${myID}`}
         button1={"hidden"}
-        button2={"bg-greenPrimary block"}
+        button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
         size={"h-[36rem] md:h-[27rem] md:w-[33rem]"}
         buttonText={{ end: `Aceptar y continuar`, start: `Continuar` }}

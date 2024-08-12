@@ -1,11 +1,11 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
 import StoreProvider from "./StoreProvider";
 import { Providers } from "./providers";
 
 export const metadata = {
   title: "Segimed App",
   description: "Segimed aplicación de telemedicina para médicos y pacientes",
+  manifest: "/manifest.json",
 };
 
 export async function generateViewport() {

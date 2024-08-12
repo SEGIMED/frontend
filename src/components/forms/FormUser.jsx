@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import IconPasswordClose from "../icons/IconPasswordClose";
 import IconPasswordOpen from "../icons/IconPasswordOpen";
 import IconCheckBoton from "../icons/iconCheckBoton";
+import Link from "next/link";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -25,6 +26,20 @@ export const FormUser = ({ formData, setFormData }) => {
   });
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [errorMessage, setErrorMessage] =useState("")
+
+
+  const handleCheckboxChange = (type) => {
+    if (type === "terms") {
+      setTermsAccepted(!termsAccepted);
+    } else if (type === "privacy") {
+      setPrivacyAccepted(!privacyAccepted);
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -32,6 +47,7 @@ export const FormUser = ({ formData, setFormData }) => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
+      setLoading(true);
       const updatedData = { ...formData, ...data };
       setFormData(updatedData);
 
@@ -39,39 +55,41 @@ export const FormUser = ({ formData, setFormData }) => {
         "/user/register-user",
         updatedData
       );
-
-      const user = response.data;
-
+      if (response.status !== 201) {
+        throw new Error(response.data.error);
+      }
+      setLoading(false);
       router.push(`/accounts/register/success`);
-
       reset();
     } catch (error) {
-      if (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.response.data.error,
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-        });
-      }
+      setLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response.data.error,
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
     }
   });
+
+  
 
   const passwordValue = watch("password");
 
   const passwordCriteria = {
     hasUpperCase: /[A-Z]/.test(passwordValue),
     hasLowerCase: /[a-z]/.test(passwordValue),
-    hasSpecialChar: /[\W_]/.test(passwordValue),
+    hasSpecialChar: /[\W_+]/.test(passwordValue),
+    hasNumber: /[0-9]/.test(passwordValue),
     hasMinLength: passwordValue?.length >= 6,
   };
 
   return (
     <div className="pb-36">
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col items-center justify-center gap-3">
-          <div className="w-96">
+      <div className="flex flex-col items-center justify-center gap-3">
+          <div className="w-full max-w-96">
             <label htmlFor="email">Correo Electrónico</label>
             <input
               type="email"
@@ -96,7 +114,9 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          <div className="w-96">
+          <div
+            className="w-full max-w-96"
+            onBlur={() => setShowPasswordCriteria(false)}>
             <label htmlFor="password">Contraseña</label>
             <div className="relative">
               <button
@@ -110,6 +130,7 @@ export const FormUser = ({ formData, setFormData }) => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Ingrese Contraseña"
+              onFocus={() => setShowPasswordCriteria(true)}
               className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
               {...register("password", {
                 required: {
@@ -126,7 +147,7 @@ export const FormUser = ({ formData, setFormData }) => {
                 },
                 pattern: {
                   value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/,
+                   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_+])[A-Za-z\d\W_+]{6,20}$/,
                   message:
                     "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial.",
                 },
@@ -135,48 +156,59 @@ export const FormUser = ({ formData, setFormData }) => {
 
             {/* Mostrar los criterios solo si el usuario ha empezado a escribir */}
 
-            <ul className="mt-2 text-sm ">
-              <li
+            {showPasswordCriteria && (
+              <ul className="mt-2 text-sm ">
+                <li
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
+                  }`}>
+                  {passwordCriteria.hasUpperCase && (
+                    <IconCheckBoton className={"w-4"} />
+                  )}{" "}
+                  Debe contener una letra mayúscula
+                </li>
+                <li
+                  className={`flex gap-2  items-center whitespace-nowrap ${
+                    passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
+                  }`}>
+                  {passwordCriteria.hasLowerCase && (
+                    <IconCheckBoton className={"w-4"} />
+                  )}{" "}
+                  Debe contener una letra minúscula
+                </li>
+                <li
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
+                  }`}>
+                  {passwordCriteria.hasSpecialChar && (
+                    <IconCheckBoton className={"w-4"} />
+                  )}{" "}
+                  Debe contener un carácter especial
+                </li>
+                <li
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
+                  }`}>
+                  {passwordCriteria.hasMinLength && (
+                    <IconCheckBoton className={"w-4"} />
+                  )}{" "}
+                  Debe tener al menos 6 caracteres
+                </li>
+                <li
                 className={`flex gap-2 items-center whitespace-nowrap ${
-                  passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
+                passwordCriteria.hasNumber ? "text-[#70C247]" : ""
                 }`}>
-                {passwordCriteria.hasUpperCase && (
-                  <IconCheckBoton className={"w-4"} />
+                {passwordCriteria.hasNumber && (
+                <IconCheckBoton className={"w-4"} />
                 )}{" "}
-                Debe contener una letra mayúscula
-              </li>
-              <li
-                className={`flex gap-2  items-center whitespace-nowrap ${
-                  passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
-                }`}>
-                {passwordCriteria.hasLowerCase && (
-                  <IconCheckBoton className={"w-4"} />
-                )}{" "}
-                Debe contener una letra minúscula
-              </li>
-              <li
-                className={`flex gap-2 items-center whitespace-nowrap ${
-                  passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
-                }`}>
-                {passwordCriteria.hasSpecialChar && (
-                  <IconCheckBoton className={"w-4"} />
-                )}{" "}
-                Debe contener un carácter especial
-              </li>
-              <li
-                className={`flex gap-2 items-center whitespace-nowrap ${
-                  passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
-                }`}>
-                {passwordCriteria.hasMinLength && (
-                  <IconCheckBoton className={"w-4"} />
-                )}{" "}
-                Debe tener al menos 6 caracteres
-              </li>
-            </ul>
+                Debe contener un número
+                </li>
+              </ul>
+            )}
           </div>
 
           {/* Resto del formulario */}
-          <div className="w-96">
+          <div className="w-full max-w-96">
             <label htmlFor="idType">Tipo de Identificación</label>
             <select
               id="idType"
@@ -197,7 +229,7 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          <div className="w-96">
+          <div className="w-full max-w-96">
             <label htmlFor="idNumber">Número de Identificación</label>
             <input
               id="idNumber"
@@ -218,7 +250,7 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          <div className="w-96">
+          <div className="w-full max-w-96">
             <label htmlFor="name">Nombre</label>
             <input
               id="name"
@@ -239,7 +271,7 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          <div className="w-96">
+          <div className="w-full max-w-96">
             <label htmlFor="lastname">Apellido</label>
             <input
               id="lastname"
@@ -260,7 +292,7 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          <div className="w-96">
+          <div className="w-full max-w-96">
             <label htmlFor="cellphone">Número de Celular</label>
             <input
               id="cellphone"
@@ -281,7 +313,7 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-          <div className="w-96">
+          <div className="w-full max-w-96">
             <label htmlFor="nationality">Nacionalidad</label>
             <select
               id="nationality"
@@ -301,15 +333,56 @@ export const FormUser = ({ formData, setFormData }) => {
               </span>
             )}
           </div>
-        </div>
+      
+         
 
-        <div className="flex justify-center p-10">
-          <button className="bg-[#70C247] p-3 flex items-center justify-center rounded-lg text-white font-extrabold gap-2 w-64">
-            Completar Registro
-            <IconEnter className="w-6" />
-          </button>
+          <div className="w-full max-w-96 flex items-center text-[#487FFA]">
+            <input
+            type="checkbox"
+            id="terms"
+            className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
+            checked={termsAccepted}
+            onChange={() => handleCheckboxChange("terms")}
+            />
+            <Link href="/Term" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+              Acepto los términos y condiciones.
+              </Link>
+          </div>
+          
+
+          <div className="w-full max-w-96 flex items-center text-[#487FFA]">
+            <input
+            type="checkbox"
+            id="privacy"
+            className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
+            checked={privacyAccepted}
+            onChange={() => handleCheckboxChange("privacy")}
+            />
+            <Link href="/Priv" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+            Acepto la política de privacidad.
+           </Link>
+            </div>
+
+          
+          <div className="w-full max-w-96 flex justify-center mt-4 mb-10">
+            <button
+              type="submit"
+              className={`w-full py-2 px-4 rounded-lg focus:outline-none 
+                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white focus:bg-[#3c6dcf]" : "bg-gray-400 text-white cursor-not-allowed"}`}
+              disabled={!termsAccepted || !privacyAccepted}
+              >
+              {loading ? (
+                <div className="flex justify-center">
+                  <IconEnter className="animate-spin" />
+                </div>
+              ) : (
+                "Registrar"
+              )}
+            </button>
+          </div>
         </div>
       </form>
     </div>
   );
 };
+
