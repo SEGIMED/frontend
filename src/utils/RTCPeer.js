@@ -73,10 +73,12 @@ class RTCPeer{
         });
 
 
-
+            if(!this.state){
           const offer = await this.peerConnection.createOffer();
           await this.peerConnection.setLocalDescription(offer); 
+                this.state= true
         return offer
+            }
     } 
     
     async createAsw (id){
