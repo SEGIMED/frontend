@@ -102,12 +102,12 @@ class RTCPeer{
             console.log('nuevo evento ',this.peerConnection.connectionState);
         });
         
-            
+            if(!this.state){
             const asw = await this.peerConnection.createAnswer(); 
             await this.peerConnection.setLocalDescription(asw);
-           
+                this.state=true
             return asw
-        
+            }
     } 
         
     async setRemoteDescription(description){
