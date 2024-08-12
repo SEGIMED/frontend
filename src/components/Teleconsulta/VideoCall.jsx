@@ -29,17 +29,18 @@ export default function VideoCall({consultId,Role}){
             if(Role === "Médico" && newData.patient.state){
                     rtcPer.createOffer(consultId).then(offer => {
                                 socket.emit('sendOffer',{id:consultId,offer});
-                                socket._socket.on('onAsw',(asw) => {
+                    });
+                     socket._socket.on('onAsw',(asw) => {
+                                             console.log('entro al onAsw')
                                         rtcPer.setRemoteDescription(asw).then(() => console.log('recibio una nueva respuesta'))
                                 })
-                    });
                 } else {
                     socket._socket.on('onOffer',(offer) =>{
                         rtcPer.setRemoteDescription(offer)
                         .then(()=> rtcPer.createAsw(consultId))
                         .then((asw) =>{
+                                    console.log('se envio la respuesta')
                                     socket.emit('sendAsw',{id:consultId,asw});
-                                    rtcPer.state = true;
                         })
                     })
                 }
