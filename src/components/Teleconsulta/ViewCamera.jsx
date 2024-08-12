@@ -4,7 +4,7 @@ import rtcPer from "@/utils/RTCPeer";
 import React,{useEffect, useState, useRef} from 'react';
 
 
-export default ({deviceId, type,handleRemoteStream}) => {
+export default function ViewCamera({deviceId, type,handleRemoteStream}){
         const [stream,setStream] = useState('')
         const myVideo = useRef(null);
         console.log(deviceId)
