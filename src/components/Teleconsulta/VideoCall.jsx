@@ -30,6 +30,7 @@ export default function VideoCall({consultId,Role}){
                     rtcPer.createOffer(consultId).then(offer => {
                         if(!rtcPer.state){        
                                 socket.emit('sendOffer',{id:consultId,offer});
+                                 rtcPer.state = true;
                         }
                     });
                 } else {
@@ -37,8 +38,9 @@ export default function VideoCall({consultId,Role}){
                         rtcPer.setRemoteDescription(offer)
                         .then(()=> rtcPer.createAsw(consultId))
                         .then((asw) =>{
-                                if(!this.state){
+                                if(!rtcPer.state){
                                     socket.emit('sendAsw',{id:consultId,asw});
+                                    rtcPer.state = true;
                                 }
                         })
                     })
