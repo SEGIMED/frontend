@@ -23,7 +23,7 @@ import { resetFormState } from "@/redux/slices/doctor/formConsulta";
 
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconOptions from "@/components/icons/IconOptions";
-import IconEditar from "@/components/icons/IconEditar";
+import IconEditar from "@/components/icons/iconEditar";
 import IconClose2 from "@/components/icons/IconClose2";
 import DeleteOrden from "@/components/modal/ModalPatient/ModalDeteleOrden";
 
