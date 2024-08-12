@@ -1,47 +1,39 @@
-/*
-    Componente pue solo toma la configuración de camara y audio.
-    su responsabilidad es tomar los parametros de configuración. recorriendo getUserMedia(); de navigator.
-    una vez tenga seleccionado sus dispositivos de medios. se los pasa a sus hijos.
-*/
+'use client'
+import { useState } from "react";
+import DeviceSelect from "./DeviceSelect"
+import ViewCamera from "./ViewCamera";
+import dataDecives from "@/utils/getDataDecives";
+
+export default function Config({handleChangeState}){
+    const [cameras,setCameras] = useState('');
+    const [microphones,setMicrophones] = useState('');
+   
 
 
-/*
-    Componentes Necesarios. 
-    Lista de dispositivos.
-*/
-import ViewMedia from "./ViewMedia"
-import { useCallback, useState } from "react"
-import SelectDataMedia from "./SelectDataMedia"
-
-export default function Config({onClick}){
-    const [camera, setCamera] = useState(null)
-    const [microfono, setMicrofono] = useState(null)
-
-    const handleOnChangeCamera = (event) => {
-        if(event.target){
-            const {value} = event.target;
-            setCamera(value);
+    const handleSelectDevice = (deviceId,type) => {
+        if(type === "audio"){
+            setMicrophones(deviceId);
+            dataDecives._preferentMicrophone = deviceId;
+        } else {
+            setCameras(deviceId);
+            dataDecives._preferentCamera = deviceId;
         }
-    }
-    
-    const handleOnChangeMicrofono = (event) => {
-        if(event.target){
-            const {value} = event.target;
-            setMicrofono(value);
-        }
-    } 
+            
+      };
 
     return (
-    <div className="w-full h-full">
-        {
-            camera && microfono && <ViewMedia camera={camera} microphone={microfono} /> ||  "Vista no disponible."
-
-        }
-       <label>Camara</label>
-       <SelectDataMedia className="w-[500px] h-[300px]" handleOnChange={handleOnChangeCamera} type="videoinput" />
-       <label>Microfono</label>
-       <SelectDataMedia className="w-[500px] h-[300px]" handleOnChange={handleOnChangeMicrofono} type="audioinput" />
-
-       <button className="border-2 border-black p-1" onClick={()=> onClick('waiting')}>Entrar a la consulta</button>
-    </div>)
+        <div>
+            <div className="w-52 h-44">
+               {
+                cameras && <ViewCamera deviceId={cameras} type="local"/> 
+                
+               } 
+            </div>
+            <div className="flex gap-9">
+            <DeviceSelect onSelectDevice={handleSelectDevice} type="video"/>        
+            <DeviceSelect onSelectDevice={handleSelectDevice} type="audio" />
+            <button onClick={()=>handleChangeState(true)}>Listo</button>
+            </div>
+        </div>
+    )
 }

@@ -39,25 +39,24 @@ class RTCPeer{
         this.userObj.stream = stream;
     }
 
-    init(consultId){
+    init(){
         if(this.configuration) this.peerConnection = new RTCPeerConnection(this.configuration);
-        this.getTracksMedia(consultId);
     }
 
-    getTracksMedia(consultId){ 
-        if(this.userObj.stream){ 
-            this.userObj.stream.getTracks().forEach(track => {
-                this.peerConnection.addTrack(track,this.userObj.stream);
-            });
-            socket.emit("userState",{consultId,state:"ready"});
-        }
-    }
+    // getTracksMedia(consultId){ 
+    //     if(this.userObj.stream){ 
+    //         this.userObj.stream.getTracks().forEach(track => {
+    //             this.peerConnection.addTrack(track,this.userObj.stream);
+    //         });
+    //         socket.emit("userState",{consultId,state:"ready"});
+    //     }
+    // }
   
     async createOffer(id){
-        this.peerConnection.addEventListener('track', async (event) => {
-            const [remoteStream] = event.streams;
-            console.log(remoteStream);
-        });
+        // this.peerConnection.addEventListener('track', async (event) => {
+        //     const [remoteStream] = event.streams;
+        //     console.log(remoteStream);
+        // });
 
         this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
             console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
@@ -72,46 +71,52 @@ class RTCPeer{
         this.peerConnection.addEventListener('connectionstatechange', (event) => {
             console.log('nuevo evento ',peerConnection.connectionState);
         });
-        if(!this.state){
-            console.log('se creo una oferta'); 
-          this.state = true; 
+
+
+
           const offer = await this.peerConnection.createOffer();
           await this.peerConnection.setLocalDescription(offer); 
-          socket.emit('sendOffer',{id,offer});
-        }
+        return offer
     } 
     
     async createAsw (id){
 
-this.peerConnection.addEventListener('track', async (event) => {
-    const [remoteStream] = event.streams;
-    Observer.setStreamVideo(remoteStream);
-});
+// this.peerConnection.addEventListener('track', async (event) => {
+//     const [remoteStream] = event.streams;
+//     Observer.setStreamVideo(remoteStream);
+// });
 
         this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
             console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
-        });
+        }); 
         
         this.peerConnection.addEventListener('icecandidate', (event) => {
-            console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
+            console.log("esto es el candidate evente en createasw", event)  //no entra el eventListener
             if (event.candidate) {
                 socket.emit("newCandidate",{id, candidate: event.candidate});
             }
         });
         this.peerConnection.addEventListener('connectionstatechange', (event) => {
-            console.log('nuevo evento ',peerConnection.connectionState);
+            console.log('nuevo evento ',this.peerConnection.connectionState);
         });
-        if(!this.state){ 
-            this.state = true;    
+        
+            
             const asw = await this.peerConnection.createAnswer(); 
             await this.peerConnection.setLocalDescription(asw);
-            socket.emit('sendAsw',{id,asw});
-        }
+           
+            return asw
+        
     } 
         
     async setRemoteDescription(description){
-        const remoteDesc = new RTCSessionDescription(description);
-        await this.peerConnection.setRemoteDescription(remoteDesc);
+        try {
+            const remoteDesc = new RTCSessionDescription(description);
+            return await this.peerConnection.setRemoteDescription(remoteDesc);
+        
+        } catch (error) {
+            console.log(error)
+            return error
+        }
     }
 
     async setCandidateRemote(candidate){

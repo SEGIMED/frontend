@@ -11,29 +11,19 @@ import rtcPer from "@/utils/RTCPeer";
 import observer from "@/utils/observer.js";
 import Cookies from "js-cookie";
 import Config from "@/components/Teleconsulta/config";
-import Room from "@/components/Teleconsulta/room";
+import StateTarget from "@/components/Teleconsulta/StateTarget";
+import VideoCall from "@/components/Teleconsulta/VideoCall";
 export default function TeleconsultaId (id) {
+    const [state , setState] = useState(false);
+
     const consultId = Number(id.params.id);
-    const [stateComponent, setStateComponent] = useState(null);
-    const [stream, setStream] = useState(null)
-    const myVideo=useRef()
-    const remoteVideo=useRef()
+    
 
-    const userView = useCallback((state)=>{
-        const onChangeStateComponent = (state) => setStateComponent(state);
-        switch(state){
-            case "config":
-                return <Config onClick={onChangeStateComponent} className="h-[200px] w-full" /> //vista si el estado de la teleconsulta es configuration.
-            case "waiting":
-                rtcPer.init(consultId);
-                return <Room onClick={onChangeStateComponent} consultId={consultId} className="w-full h-full"/> //aca ira el componente que indicara el estado de los 2 usuarios. y se mantendra hasta que el doctor de iniciar.
-            case "InCalling":
-                return //aca ira el componente ya de la llamada, con la vista de las 2 camaras.
-            default: //por default ira a la vista de la configuración.
-                return <Config onClick={onChangeStateComponent}  className="h-[200px] w-full" /> //vista si el estado de la teleconsulta es configuration.
-        }
-    },[stateComponent])
-
+   
+    const handleChangeState = (s) => {
+        rtcPer.init(consultId);
+        setState(s)
+    };
 
 
     // useEffect(() => {
@@ -87,7 +77,10 @@ export default function TeleconsultaId (id) {
  
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
-              {userView(stateComponent)}
+            {
+
+                state ? <VideoCall consultId={consultId}/> : <Config handleChangeState={handleChangeState}/>
+            }
             {/* <div className="w-full flex justify-between items-center border-b-2">
                 <div className="flex justify-start items-center">
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
