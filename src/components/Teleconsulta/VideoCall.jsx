@@ -37,7 +37,9 @@ export default function VideoCall({consultId,Role}){
                         rtcPer.setRemoteDescription(offer)
                         .then(()=> rtcPer.createAsw(consultId))
                         .then((asw) =>{
-                            socket.emit('sendAsw',{id:consultId,asw});
+                                if(!this.state){
+                                    socket.emit('sendAsw',{id:consultId,asw});
+                                }
                         })
                     })
                 }
