@@ -5,11 +5,9 @@ import IconNext from "@/components/icons/IconNext";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { setSearchTerm } from "@/redux/slices/doctor/allPatients";
-import config from "@/components/localData/localdata";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed.js";
 import { PathnameShow } from "@/components/pathname/path";
-import rutas from "@/utils/rutas.js";
 import NotFound from "@/components/notFound/notFound";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
@@ -25,7 +23,7 @@ import { resetFormState } from "@/redux/slices/doctor/formConsulta";
 
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconOptions from "@/components/icons/IconOptions";
-import IconEditar from "@/components/icons/iconEditar";
+import IconEditar from "@/components/icons/IconEditar";
 import IconClose2 from "@/components/icons/IconClose2";
 import DeleteOrden from "@/components/modal/ModalPatient/ModalDeteleOrden";
 
@@ -34,12 +32,12 @@ export default function HomeDoc() {
     const infoSend = useAppSelector((state) => state.formSlice.selectedOptions);
     console.log(infoSend);
 
-
-    const router = useRouter()
+    const router = useRouter();
 
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [showModalModify, setShowModalModify] = useState(false);
+    const [selectedRequest, setSelectedRequest] = useState({});
     const [isLoading, setisLoading] = useState(true);
     const [isSorted, setIsSorted] = useState(false);
     const [errors, setErrors] = useState({});
@@ -52,42 +50,33 @@ export default function HomeDoc() {
         currentPage: 1,
     });
 
-    const userId = config.c;
     const dispatch = useAppDispatch();
     const token = Cookies.get("a");
+    const id = Cookies.get("c");
     const lastSegmentTextToShow = PathnameShow();
 
-    const getPatients = async (headers) => {
-        const response = await ApiSegimed.get(
-            `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&physicianId=${userId}`,
-            headers
-        );
-        if (response.data) {
-            const pacientesFormateados = response.data.user.map((paciente) => {
-                const fechaFormateada = new Date(paciente.lastLogin)
-                    .toLocaleString()
-                    .replace(/\,/g, " -");
-                return { ...paciente, lastLogin: fechaFormateada };
-            });
-            console.log(pacientesFormateados);
-            setPatients(response.data.user);
-            setPagination((prev) => ({
-                ...prev,
-                totalUsers: response.data.totalUsers,
-                totalPages: response.data.totalPages,
-            }));
+    const getPatientRequest = async (headers) => {
+        try {
+            const response = await ApiSegimed.get(`/patient-medical-request?patientId=${id}`, { headers });
+            if (response.data) {
+                console.log(response.data);
+                setPatients(response.data);
+                setisLoading(false);
+            }
+        } catch (error) {
+            console.error("Error fetching patient requests:", error);
             setisLoading(false);
         }
     };
 
     const getAllDoc = async (headers) => {
         try {
-            const response = await ApiSegimed.get("/all-physicians", headers);
+            const response = await ApiSegimed.get("/all-physicians", { headers });
             if (response.data) {
                 setAllDoctors(response.data);
             }
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching doctors:", error);
         }
     };
 
@@ -98,12 +87,13 @@ export default function HomeDoc() {
         }));
     }, [searchTerm]);
 
-
     useEffect(() => {
-
-        getPatients({ headers: { token: token } }).catch(console.error);
-        getAllDoc({ headers: { token: token } }).catch(console.error);
-
+        try {
+            getPatientRequest({ token });
+            getAllDoc({ token });
+        } catch (error) {
+            console.error("Error during initial data fetch:", error);
+        }
     }, [pagination.currentPage, searchTerm]);
 
     useEffect(() => {
@@ -111,13 +101,10 @@ export default function HomeDoc() {
     }, [dispatch]);
 
     const filteredPatients = patients;
-    // console.log(filteredPatients);
 
     const sortedPatients = isSorted
         ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
         : filteredPatients;
-    // console.log(sortedPatients, `xd`);
-
 
     const handlePageChange = (newPage) => {
         if (newPage > 0 && newPage <= pagination.totalPages) {
@@ -133,41 +120,104 @@ export default function HomeDoc() {
         setErrors((prevErrors) => ({ ...prevErrors, [name]: false })); // Clear error when field changes
     };
 
-    const handleDeleteOrden = () => {
-        console.log(selectedId);
-        setShowModalDelete(false)
-
+    const handleDeleteOrden = async () => {
+        try {
+            const response = await ApiSegimed.delete(`/patient-medical-request?id=${selectedRequest.id}`);
+            if (response.data) {
+                await getPatientRequest({ token });
+                dispatch(resetFormState());
+                setSelectedRequest({})
+                setShowModalDelete(false);
+                Swal.fire({
+                    title: "¡Solicitud eliminada correctamente!",
+                    text: "",
+                    icon: "success",
+                    confirmButtonColor: "#487FFA",
+                    confirmButtonText: "Aceptar",
+                });
+            }
+        } catch (error) {
+            console.error("Error creating patient request:", error);
+        }
+        setShowModalDelete(false);
     };
 
-
-
-    const handleSubmit = () => {
-        const { OrderType, doctorId, motivo } = infoSend;
+    const handleSubmit = async () => {
+        const { reqTypes, physicianId, message } = infoSend;
 
         const newErrors = {};
-        if (!OrderType) newErrors.OrderType = true;
-        if (!doctorId) newErrors.doctorId = true;
-        if (!motivo) newErrors.motivo = true;
+        if (!reqTypes) newErrors.reqTypes = true;
+        if (!physicianId) newErrors.physicianId = true;
+        if (!message) newErrors.message = true;
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-        console.log(infoSend);
-        dispatch(resetFormState());
-        setShowModal(false);
-        Swal.fire({
-            title: "¡Solicitud creada correctamente!",
-            text: "",
-            icon: "success",
-            confirmButtonColor: "#487FFA",
-            confirmButtonText: "Aceptar",
-        });
+        try {
+            const response = await ApiSegimed.post("/patient-medical-request", infoSend);
+            if (response.data) {
+                await getPatientRequest({ token });
+                dispatch(resetFormState());
+                setSelectedRequest({})
+                setShowModal(false);
+                Swal.fire({
+                    title: "¡Solicitud creada correctamente!",
+                    text: "",
+                    icon: "success",
+                    confirmButtonColor: "#487FFA",
+                    confirmButtonText: "Aceptar",
+                });
+            }
+        } catch (error) {
+            console.error("Error creating patient request:", error);
+        }
     };
 
+    const handleSubmitModify = async () => {
+        // Extraer los valores actuales de infoSend y selectedRequest
+        const { reqTypes, physicianId, message } = infoSend;
 
+        // Validar los valores en infoSend (o usar los de selectedRequest si no hay en infoSend)
+        const newErrors = {};
+        if (!reqTypes && !selectedRequest.reqTypes) newErrors.reqTypes = true;
+        if (!physicianId && !selectedRequest.physicianId) newErrors.physicianId = true;
+        if (!message && !selectedRequest.message) newErrors.message = true;
 
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        // Crear un objeto combinado que solo sobrescriba los campos presentes en infoSend
+        const updatedInfoSend = {
+            ...selectedRequest, // Mantiene todos los campos actuales
+            ...(reqTypes && { reqTypes }), // Sobrescribe reqTypes si está presente en infoSend
+            ...(physicianId && { physicianId }), // Sobrescribe physicianId si está presente en infoSend
+            ...(message && { message }), // Sobrescribe message si está presente en infoSend
+        };
+
+        try {
+            // Enviar la solicitud PATCH con los valores combinados
+            const response = await ApiSegimed.patch(`/patient-medical-request?id=${selectedRequest.id}`, updatedInfoSend);
+            if (response.data) {
+                await getPatientRequest({ token });
+                dispatch(resetFormState());
+                setSelectedRequest({});
+                setShowModalModify(false);
+                Swal.fire({
+                    title: "¡Solicitud modificada correctamente!",
+                    text: "",
+                    icon: "success",
+                    confirmButtonColor: "#487FFA",
+                    confirmButtonText: "Aceptar",
+                });
+            }
+        } catch (error) {
+            console.error("Error modifying patient request:", error);
+        }
+    };
 
     return (
         <div className="flex flex-col h-full ">
@@ -232,19 +282,19 @@ export default function HomeDoc() {
                                 <div className="grid text-center grid-cols-4 w-[100%] pr-3  justify-center md:w-[100%] md:text-left md:grid-cols-6 items-center  py-2 bg-white z-10">
 
                                     <div className="text-[#5F5F5F] ">
-                                        {Fecha(paciente.lastLogin, 4)}
+                                        {Fecha(paciente.createdAt, 4)}
                                     </div>
                                     <div className="text-[#5F5F5F] md:block hidden ">
-                                        {Hora(paciente.lastLogin)}
+                                        {Hora(paciente.createdAt)}
                                     </div>
                                     <div className="text-[#5F5F5F] ">
-                                        {paciente?.name} {paciente?.lastname}
+                                        {paciente?.physicianReq?.name}       {paciente?.physicianReq?.lastname}
                                     </div>
                                     <div className="text-[#5F5F5F]">
-                                        {paciente?.name}
+                                        {paciente?.reqTypes}
                                     </div>
                                     <div className="text-[#5F5F5F] md:block hidden">
-                                        {paciente?.name}
+                                        {paciente?.message}
                                     </div>
                                     <MenuDropDown
                                         label="Opciones"
@@ -254,12 +304,12 @@ export default function HomeDoc() {
                                                 items: [
                                                     {
                                                         label: "Modificar solicitud",
-                                                        onClick: () => setShowModalModify(true),
+                                                        onClick: () => { setSelectedRequest(paciente); setShowModalModify(true) },
                                                         icon: <IconEditar color={"#B2B2B2"} />,
                                                     },
                                                     {
                                                         label: "Eliminar solicitud",
-                                                        onClick: () => { setSelectedId(paciente.id); setShowModalDelete(true) },
+                                                        onClick: () => { setSelectedRequest(paciente); setShowModalDelete(true) },
                                                         icon:
                                                             <IconClose2 />
                                                         ,
@@ -308,7 +358,7 @@ export default function HomeDoc() {
             <ModalModularizado
                 isOpen={showModalDelete}
                 onClose={() => { setShowModalDelete(false) }}
-                Modals={[<DeleteOrden key={"deleteModalOrden"} id={selectedId} />]}
+                Modals={[<DeleteOrden key={"deleteModalOrden"} />]}
                 title={"Advertencia"}
                 button1={"bg-[#E73F3F] text-white"}
                 button2={"bg-white border-[#487FFA] border block font-font-Roboto text-[#487FFA]"}
@@ -316,21 +366,21 @@ export default function HomeDoc() {
                 size={"h-[15rem] md:h-[15rem] md:w-[25rem]"}
                 buttonText={{ end: `No` }}
                 funcion={() => { setShowModalDelete(false) }}
-                buttonIcon={false}
+                buttonIcon={<></>}
                 buttonText1={`Si`}
                 funcionButton1={handleDeleteOrden}
             />
             <ModalModularizado
                 isOpen={showModalModify}
                 onClose={() => { setShowModalModify(false); setErrors({}) }}
-                Modals={[<ModalOrdenPte state={infoSend} key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
-                title={"Generar nueva solicitud"}
+                Modals={[<ModalOrdenPte state={selectedRequest} key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
+                title={"Modificar solicitud"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
                 size={"h-fit md:h-[33rem] md:w-[35rem]"}
-                buttonText={{ end: `Generar` }}
-                funcion={handleSubmit}
+                buttonText={{ end: `Modificar` }}
+                funcion={handleSubmitModify}
             />
             {/* )} */}
 

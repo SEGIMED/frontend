@@ -47,7 +47,7 @@ export default function HomeDoc() {
     const [isSorted, setIsSorted] = useState(false);
     const [errors, setErrors] = useState({});
     const [selectedOrden, setSelectedOrden] = useState({});
-    const [patients, setPatients] = useState([]);
+    const [request, setRequest] = useState([]);
     const [selectedId, setSelectedId] = useState([]);
     const [allDoctors, setAllDoctors] = useState([]);
     const [pagination, setPagination] = useState({
@@ -56,32 +56,25 @@ export default function HomeDoc() {
         currentPage: 1,
     });
 
-    console.log(allDoctors);
 
-    const userId = config.c;
     const dispatch = useAppDispatch();
     const token = Cookies.get("a");
+    const userId = Cookies.get("c");
+
     const lastSegmentTextToShow = PathnameShow();
 
-    const getPatients = async (headers) => {
-        const response = await ApiSegimed.get(
-            `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&physicianId=${userId}`,
-            headers
-        );
-        if (response.data) {
-            const pacientesFormateados = response.data.user.map((paciente) => {
-                const fechaFormateada = new Date(paciente.lastLogin)
-                    .toLocaleString()
-                    .replace(/\,/g, " -");
-                return { ...paciente, lastLogin: fechaFormateada };
-            });
-            console.log(pacientesFormateados);
-            setPatients(response.data.user);
-            setPagination((prev) => ({
-                ...prev,
-                totalUsers: response.data.totalUsers,
-                totalPages: response.data.totalPages,
-            }));
+    const getDoctorRequest = async (headers) => {
+        try {
+
+            const response = await ApiSegimed.get(`/patient-medical-request?physicianId=${userId}`);
+
+            if (response.data) {
+                console.log(response.data);
+                setRequest(response.data);
+                setisLoading(false);
+            }
+        } catch (error) {
+            console.error("Error fetching patient requests:", error);
             setisLoading(false);
         }
     };
@@ -107,7 +100,7 @@ export default function HomeDoc() {
 
     useEffect(() => {
 
-        getPatients({ headers: { token: token } }).catch(console.error);
+        getDoctorRequest({ headers: { token: token } }).catch(console.error);
         getAllDoc({ headers: { token: token } }).catch(console.error);
 
     }, [pagination.currentPage, searchTerm]);
@@ -116,8 +109,8 @@ export default function HomeDoc() {
         dispatch(setSearchTerm(""));
     }, [dispatch]);
 
-    const filteredPatients = patients;
-    // console.log(filteredPatients);
+    const filteredPatients = request.filter((patient) => patient.status === false);
+
 
     const sortedPatients = isSorted
         ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
@@ -139,15 +132,38 @@ export default function HomeDoc() {
         setErrors((prevErrors) => ({ ...prevErrors, [name]: false })); // Clear error when field changes
     };
 
-    const handleDeleteOrden = () => {
-        console.log(selectedId);
-        setShowModalDelete(false)
+    // const handleDeleteOrden = () => {
+    //     console.log(selectedId);
+    //     setShowModalDelete(false)
 
+    // };
+
+    const handleDeleteOrden = async () => {
+        try {
+            const response = await ApiSegimed.delete(`/patient-medical-request?id=${selectedOrden.id}`);
+            if (response.data) {
+                await getDoctorRequest({ token });
+                dispatch(resetFormState());
+                setSelectedOrden({})
+                setShowModalDelete(false);
+                Swal.fire({
+                    title: "¡Solicitud eliminada correctamente!",
+                    text: "",
+                    icon: "success",
+                    confirmButtonColor: "#487FFA",
+                    confirmButtonText: "Aceptar",
+                });
+            }
+        } catch (error) {
+            console.error("Error creating patient request:", error);
+        }
+        setShowModalDelete(false);
     };
 
-
-    const handleSubmit = (data) => {
-        console.log(infoSend);
+    const handleSubmit = () => {
+        handleChange("patient", selectedOrden?.patientId);
+        handleChange("reqTypes", selectedOrden?.reqTypes);
+        handleChange("id", selectedOrden?.id);
         router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`)
     };
 
@@ -171,7 +187,7 @@ export default function HomeDoc() {
 
                 <h1 className="font-bold ml-4 hidden md:block ">Pendientes </h1>
                 <button
-                    onClick={() => setShowModalOrden(true)}
+                    onClick={() => { dispatch(resetFormState()); setShowModalOrden(true) }}
                     className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
                     <IconMas color={"#487ffa"} />
                     <p
@@ -219,19 +235,19 @@ export default function HomeDoc() {
                                 <div className="grid text-center grid-cols-4 w-[100%] pr-3  justify-center md:w-[100%] md:text-left md:grid-cols-6 items-center  py-2 bg-white z-10">
 
                                     <div className="text-[#5F5F5F] ">
-                                        {Fecha(paciente.lastLogin, 4)}
+                                        {Fecha(paciente.createdAt, 4)}
                                     </div>
                                     <div className="text-[#5F5F5F] md:block hidden ">
-                                        {Hora(paciente.lastLogin)}
+                                        {Hora(paciente.createdAt)}
                                     </div>
                                     <div className="text-[#5F5F5F] ">
-                                        {paciente?.name} {paciente?.lastname}
+                                        {paciente?.physicianReq?.name} {paciente?.physicianReq?.lastname}
                                     </div>
                                     <div className="text-[#5F5F5F]">
-                                        {paciente?.name}
+                                        {paciente?.reqTypes}
                                     </div>
                                     <div className="text-[#5F5F5F] md:block hidden">
-                                        {paciente?.name}
+                                        {paciente?.message}
                                     </div>
                                     <MenuDropDown
                                         label="Opciones"
@@ -242,20 +258,23 @@ export default function HomeDoc() {
                                                     {
                                                         label: "Ver solicitud",
                                                         onClick: () => {
-                                                            setShowModal(true); handleChange("doctorId", 11);
-                                                            handleChange("OrderType", "Receta médica");
-                                                            handleChange("motivo", "xd")
+                                                            setShowModal(true); setSelectedOrden(paciente)
                                                         },
                                                         icon: <IconEditar color={"#B2B2B2"} />,
                                                     },
                                                     {
                                                         label: "Responder solicitud",
-                                                        onClick: () => router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`),
+                                                        onClick: () => {
+                                                            handleChange("patientId", paciente?.id);
+                                                            handleChange("reqTypes", paciente?.reqTypes);
+                                                            handleChange("id", paciente?.id);
+                                                            handleChange("message", paciente?.message); router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`)
+                                                        },
                                                         icon: <IconEditar color={"#B2B2B2"} />,
                                                     },
                                                     {
                                                         label: "Eliminar solicitud",
-                                                        onClick: () => { setSelectedId(paciente.id); setShowModalDelete(true) },
+                                                        onClick: () => { setSelectedOrden(paciente); setShowModalDelete(true) },
                                                         icon:
                                                             <IconClose2 />
                                                         ,
@@ -292,8 +311,8 @@ export default function HomeDoc() {
             <ModalModularizado
                 isOpen={showModal}
                 onClose={() => { setShowModal(false); }}
-                Modals={[<ModalOrdenPte state={infoSend} disabled={true} key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
-                title={"Generar nueva solicitud"}
+                Modals={[<ModalOrdenPte state={selectedOrden} disabled={true} key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
+                title={"Ver solicitud"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
@@ -312,7 +331,7 @@ export default function HomeDoc() {
                 size={"h-[15rem] md:h-[15rem] md:w-[25rem]"}
                 buttonText={{ end: `No` }}
                 funcion={() => { setShowModalDelete(false) }}
-                buttonIcon={false}
+                buttonIcon={<div></div>}
                 buttonText1={`Si`}
                 funcionButton1={handleDeleteOrden}
             />
@@ -323,12 +342,13 @@ export default function HomeDoc() {
                     key="orden-type"
                 />]}
                 ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true&Pendientes=true`}
-                title={"Generar nueva órden médica"}
+                title={"Generar nueva solicitud"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
                 size={"h-[16rem] md:h-[15rem] md:w-[35rem]"}
                 buttonText={{ end: `Continuar` }}
+
             />
 
             {/* )} */}
