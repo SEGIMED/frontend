@@ -26,7 +26,7 @@ export default function ViewCamera({deviceId, type,handleRemoteStream}){
                         console.log(remoteStream)
                         handleRemoteStream(remoteStream)
                         myVideo.current.srcObject = remoteStream;
-¡                    });
+                   });
                     
                 }
             }
