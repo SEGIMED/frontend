@@ -75,7 +75,8 @@ class RTCPeer{
 
             
           const offer = await this.peerConnection.createOffer();
-          await this.peerConnection.setLocalDescription(offer); 
+          await this.peerConnection.setLocalDescription(offer);
+        this.state=true
         return offer
             
     } 
