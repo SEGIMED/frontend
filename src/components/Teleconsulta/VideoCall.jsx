@@ -28,7 +28,9 @@ export default function VideoCall({consultId,Role}){
             console.log(newData)
             if(Role === "Médico" && newData.patient.state){
                     rtcPer.createOffer(consultId).then(offer => {
-                        socket.emit('sendOffer',{id:consultId,offer});
+                        if(!rtcPer.state){        
+                                socket.emit('sendOffer',{id:consultId,offer});
+                        }
                     });
                 } else {
                     socket._socket.on('onOffer',(offer) =>{
