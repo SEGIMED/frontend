@@ -2,7 +2,7 @@ import dataDecives from "@/utils/getDataDecives"
 // DeviceSelect.js
 import React,{useEffect, useState} from 'react';
 
-export default  ({onSelectDevice, type }) => {
+export default  function DeviceSelect({onSelectDevice, type })  {
         const [devices,setDevices] = useState('')
     useEffect(()=>{
         const getData = () => {
