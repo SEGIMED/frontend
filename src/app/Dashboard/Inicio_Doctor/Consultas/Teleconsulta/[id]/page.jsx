@@ -22,45 +22,7 @@ export default function TeleconsultaId (id) {
     };
     
 
-    // useEffect(()=>{
-    //     if(stream) rtcPer.createOffer(consultId)
-        
-        
-    // },[stream])
-
-    // useEffect(() => {
-    // observer.addViewMediaUser(remoteVideo.current)
-
-
-    // if(!rtcPer.state){
-        
-    //     socket._socket.emit("joinRoom", consultId, async (data) => {
-    //         setRoomData(data);
-    //     });
-      
-    //     rtcPer.init()
-    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-    //             setStream(stream)
-    //             myVideo.current.srcObject = stream
-    //             const myId = Cookies.get("c"); 
-    //             rtcPer.defineUserObj(myId);    
-    
-    //         stream.getTracks().forEach(track => {
-    //             rtcPer.peerConnection.addTrack(track,stream);
-    //         });
-    //     })
-    //         socket._socket.on("onAsw",async (asw) =>{
-    //             console.log(asw)
-    //             await rtcPer.setRemoteDescription(asw);
-    //             console.log(rtcPer.peerConnection);
-    //         })
-    //         socket._socket.on("newCandidate",async (candidate) =>{
-    //             console.log('esto es candidate',candidate)
-    //             await rtcPer.setCandidateRemote(candidate);
-    //         })
-    // }
-
-    // }, []);
+  
 
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
