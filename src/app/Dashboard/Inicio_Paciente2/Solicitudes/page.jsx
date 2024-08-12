@@ -245,7 +245,7 @@ export default function HomeDoc() {
                 </button>
                 {/* <div></div> */}
             </div>
-            <div className="flex flex-col overflow-y-auto">
+            <div className="flex flex-col  w-full h-full overflow-y-auto">
 
 
                 <div className="w-[100%] border-b border-b-[#cecece] flex">
@@ -262,7 +262,7 @@ export default function HomeDoc() {
 
                 </div>
 
-                <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] ">
+                <div className=" justify-center w-[100%] items-center h-[100%] bg-[#FAFAFC] ">
                     {isLoading ? (
                         <SkeletonList count={10} />
                     ) : sortedPatients.length === 0 ? (
