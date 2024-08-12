@@ -76,7 +76,6 @@ class RTCPeer{
             if(!this.state){
           const offer = await this.peerConnection.createOffer();
           await this.peerConnection.setLocalDescription(offer); 
-                this.state= true
         return offer
             }
     } 
@@ -105,7 +104,6 @@ class RTCPeer{
             if(!this.state){
             const asw = await this.peerConnection.createAnswer(); 
             await this.peerConnection.setLocalDescription(asw);
-                this.state=true
             return asw
             }
     } 
