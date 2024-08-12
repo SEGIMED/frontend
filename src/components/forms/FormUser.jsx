@@ -373,7 +373,7 @@ export const FormUser = ({ formData, setFormData }) => {
               >
               {loading ? (
                 <div className="flex justify-center">
-                  <IconEnter className="animate-spin" />
+                  <IconEnter className="w-6 " />
                 </div>
               ) : (
                 "Registrar"
