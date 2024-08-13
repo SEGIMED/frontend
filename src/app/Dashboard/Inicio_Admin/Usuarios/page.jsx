@@ -9,7 +9,7 @@ export default function Admin(params) {
     const pacientes=usuarios.filter(pte=>pte.role=== 3)
     const dataEntries= usuarios.filter(data=> data.role === 4)
 
-    console.log(dataEntries)
+   
 
     const lastSegmentTextToShow=PathnameShow()
     const title= [<h1 key={"a"} className="font-bold ml-4">Listado de Pacientes</h1>,

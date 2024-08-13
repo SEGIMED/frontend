@@ -7,7 +7,7 @@ export default function UseDataFetchingAdmin (){
     const dispatch=useAppDispatch()
     const allUsers= async  (headers)=>{
         const response= await getAllUsers(headers)
-        if(response.data)dispatch(addAllUsers(response.data))
+        if(response.data) dispatch(addAllUsers(response.data))
     }
 
 
