@@ -20,6 +20,7 @@ import rutas from "@/utils/rutas";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import DoctorAsociado from "@/components/modal/ModalPatient/modalDoctorAsociation";
 import IconOptions from "@/components/icons/IconOptions";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function DoctoresPte() {
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
@@ -42,6 +43,13 @@ export default function DoctoresPte() {
 
   useEffect(() => {
     dispatch(setSearchTerm1(""));
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
   }, [dispatch]);
 
   const fetchDoctors = async (searchTerm = "") => {

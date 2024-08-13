@@ -17,6 +17,7 @@ import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
 import IconMedChat from "@/components/icons/IconMedChat";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 import ModalDetailDoctor from "@/components/modal/ModalPatient/ModalDetailDoctor";
 
 export default function MensajesDoc() {
@@ -25,12 +26,19 @@ export default function MensajesDoc() {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
-  const [seen, setSeen] = useState(false);
+  const [seen, setSeen]  = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const user = useAppSelector((state) => state.user);
   const lastSegmentTextToShow = PathnameShow();
   const router = useRouter();
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!reload) {
