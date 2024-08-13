@@ -118,7 +118,7 @@ export const FormUser = ({ formData, setFormData }) => {
           <div
             className="w-full max-w-96"
             onBlur={() => setShowPasswordCriteria(false)}>
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">Nueva Contraseña</label>
             <div className="relative">
               <button
                 type="button"
