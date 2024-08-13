@@ -15,6 +15,7 @@ import notifications from "./slices/user/notifications";
 import clinicalHistory from "./slices/doctor/HistorialClinico";
 import chatBot from "./slices/chat/chatBot";
 import searchBar from "./slices/user/searchBar";
+import allUsers from "./slices/user/allUsers";
 enableMapSet();
 // Define a reset action type
 const RESET_ACTION_TYPE = "root/reset";
@@ -35,7 +36,8 @@ const appReducer = combineReducers({
   notifications,
   clinicalHistory,
   chatBot,
-  searchBar
+  searchBar,
+  allUsers
 });
 
 // Create a root reducer that handles the reset action

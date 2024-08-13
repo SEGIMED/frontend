@@ -25,6 +25,7 @@ import { IconNotificaciones } from "../InicioPaciente/notificaciones/IconNotific
 import NotificacionesContainer from "../InicioPaciente/notificaciones/NotificacionesContainer";
 import useDataFetchingPte from "@/utils/SideBarFunctionsPaciente";
 import { protectRoute } from "@/utils/protectRutes";
+import UseDataFetchingAdmin from "@/utils/dataFetching/SideBarFunctionsAdmin";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
     const pathname = usePathname();
@@ -33,7 +34,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
     const notifications = useAppSelector((state) => state.notifications);
     const user = useAppSelector((state) => state.user);
-    console.log(user);
+   
     const showSearch = useAppSelector((state) => state.searchBar);
     // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
     const id = Cookies.get("c");
@@ -45,7 +46,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
     const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
     const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
-    console.log(lastSegment);
+    
     const formattedLastSegment = lastSegment.replace(/_/g, " ");
 
     const segments = pathname.split("/");
@@ -76,6 +77,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         obtenerUbicacion,
         getAllDoc
     } = useDataFetchingPte();// Use the useRouter hook
+
+    const {
+        allUsers,
+        
+    }= UseDataFetchingAdmin()
 
 
     const handleSearchChange = (e) => {
@@ -133,6 +139,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             if (rol === "Admin") {
                 getActivesAlarmsDoctor().catch(console.error);
                 getActivesPacientesDoctor().catch(console.error);
+                allUsers({ headers: { token: token } }).catch(console.error)
                 //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
             }
         } else return

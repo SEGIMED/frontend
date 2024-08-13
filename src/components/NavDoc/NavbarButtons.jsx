@@ -130,17 +130,17 @@ export const buttonsAdmin = [
     },
     {
         name: "Médicos",
-        path: `${rutas.Admin}${rutas.Doctores}`,
+        path: `${rutas.Admin}${rutas.Usuarios}?medicos=true`,
         icon: IconMedChat,
     },
     {
         name: "Pacientes",
-        path: `${rutas.Admin}${rutas.Pacientes}`,
+        path: `${rutas.Admin}${rutas.Usuarios}?pacientes=true`,
         icon: IconDoctorNav,
     },
     {
         name: "Data Entries",
-        path: `${rutas.Admin}${rutas.DataEntries}`,
+        path: `${rutas.Admin}${rutas.Usuarios}?dataEntries=true`,
         icon: IconPatientNav,
     },
     {

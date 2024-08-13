@@ -39,6 +39,7 @@ const CrearMensaje = "/crearMensaje"
 const Pendientes = "/Pendientes";
 const DataEntries = "/Data_Entries";
 const Errores = "/Errores";
+const Usuarios= "/Usuarios"
 
 const rutas = {
   Errores,
@@ -78,7 +79,8 @@ const rutas = {
   Teleconsulta,
   Mis_turnos,
   Pasadas,
-  CrearMensaje
+  CrearMensaje,
+  Usuarios
 };
 
 export default rutas;
