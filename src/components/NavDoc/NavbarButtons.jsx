@@ -13,148 +13,142 @@ import rutas from "@/utils/rutas";
 import IconMedChat from "../icons/IconMedChat";
 
 export const buttonsDoc = [
-    {
-        name: "Tablero",
-        path: rutas.Doctor,
-        icon: IconCube,
-    },
-    {
-        name: "Mi perfil",
-        path: `${rutas.Doctor}${rutas.Mi_Perfil}`,
-        icon: IconDoctorNav,
-    },
-    {
-        name: "Consultas",
-        path: `${rutas.Doctor}${rutas.Consultas}`,
-        icon: IconRecordNav,
-    },
-    {
-        name: "Chats",
-        path: `${rutas.Doctor}${rutas.Mensajes}`,
-        icon: IconMessageNav,
-    },
-    {
-        name: "Mi Agenda",
-        path: `${rutas.Doctor}${rutas.Citas}`,
-        icon: IconCalendarNav,
-    },
-    {
-        name: "Estadísticas",
-        path: `${rutas.Doctor}${rutas.Estadisticas}`,
-        icon: Estadistica,
-    },
-    {
-        name: "Alarmas",
-        path: `${rutas.Doctor}${rutas.Alarm}`,
-        icon: AlarmDash,
-    },
-    {
-        name: "Pacientes",
-        path: `${rutas.Doctor}${rutas.Pacientes}`,
-        icon: IconPatientNav,
-    },
-    {
-        name: "Educación",
-        path: "https://circulacionpulmonar.com/",
-        icon: IconEducacion,
-        external: true, // Indicador de que es un enlace externo
-    },
-    {
-        name: "Sugerencias",
-        path: `${rutas.Doctor}${rutas.Sugerencias}`,
-        icon: Sugerencias,
-    },
+  {
+    name: "Tablero",
+    path: rutas.Doctor,
+    icon: IconCube,
+  },
+  {
+    name: "Mi perfil",
+    path: `${rutas.Doctor}${rutas.Mi_Perfil}`,
+    icon: IconDoctorNav,
+  },
+  {
+    name: "Consultas",
+    path: `${rutas.Doctor}${rutas.Consultas}`,
+    icon: IconRecordNav,
+  },
+  {
+    name: "Chats",
+    path: `${rutas.Doctor}${rutas.Mensajes}`,
+    icon: IconMessageNav,
+  },
+  {
+    name: "Mi Agenda",
+    path: `${rutas.Doctor}${rutas.Mi_Agenda}`,
+    icon: IconCalendarNav,
+  },
+  {
+    name: "Estadísticas",
+    path: `${rutas.Doctor}${rutas.Estadisticas}`,
+    icon: Estadistica,
+  },
+  {
+    name: "Alarmas",
+    path: `${rutas.Doctor}${rutas.Alarm}`,
+    icon: AlarmDash,
+  },
+  {
+    name: "Pacientes",
+    path: `${rutas.Doctor}${rutas.Pacientes}`,
+    icon: IconPatientNav,
+  },
+  {
+    name: "Educación",
+    path: "https://circulacionpulmonar.com/",
+    icon: IconEducacion,
+    external: true, // Indicador de que es un enlace externo
+  },
+  {
+    name: "Sugerencias",
+    path: `${rutas.Doctor}${rutas.Sugerencias}`,
+    icon: Sugerencias,
+  },
 ];
 
-
-
-
 export const buttonsPaciente = [
-    {
-        name: "Tablero",
-        path: rutas.PacienteDash,
-        icon: IconCube,
-    },
-    {
-        name: "Mi perfil",
-        path: `${rutas.PacienteDash}${rutas.Mi_Perfil}`,
-        icon: IconDoctorNav,
-    },
-    {
-        name: "Preconsultas",
-        path: `${rutas.PacienteDash}${rutas.Preconsulta}`,
-        icon: IconPreConsulta,
-    },
-    {
-        name: "Consultas",
-        path: `${rutas.PacienteDash}${rutas.Historial}`,
-        icon: IconRecordNav,
-    },
-    {
-        name: "Chats",
-        path: `${rutas.PacienteDash}${rutas.Mensajes}`,
-        icon: IconMessageNav,
-    },
-    {
-        name: "Mi Agenda",
-        path: `${rutas.PacienteDash}${rutas.Citas}`,
-        icon: IconCalendarNav,
-    },
-    {
-        name: "Médicos",
-        path: `${rutas.PacienteDash}${rutas.Doctores}`,
-        icon: IconPatientNav,
-    },
-    {
-        name: "Alarmas",
-        path: `${rutas.PacienteDash}${rutas.Alarm}`,
-        icon: AlarmDash,
-    },
-    {
-        name: "Sugerencias",
-        path: `${rutas.PacienteDash}${rutas.Sugerencias}`,
-        icon: Sugerencias,
-    },
+  {
+    name: "Tablero",
+    path: rutas.PacienteDash,
+    icon: IconCube,
+  },
+  {
+    name: "Mi perfil",
+    path: `${rutas.PacienteDash}${rutas.Mi_Perfil}`,
+    icon: IconDoctorNav,
+  },
+  {
+    name: "Preconsultas",
+    path: `${rutas.PacienteDash}${rutas.Preconsulta}`,
+    icon: IconPreConsulta,
+  },
+  {
+    name: "Consultas",
+    path: `${rutas.PacienteDash}${rutas.Historial}`,
+    icon: IconRecordNav,
+  },
+  {
+    name: "Chats",
+    path: `${rutas.PacienteDash}${rutas.Mensajes}`,
+    icon: IconMessageNav,
+  },
+  {
+    name: "Mi Agenda",
+    path: `${rutas.PacienteDash}${rutas.Mi_Agenda}`,
+    icon: IconCalendarNav,
+  },
+  {
+    name: "Médicos",
+    path: `${rutas.PacienteDash}${rutas.Doctores}`,
+    icon: IconPatientNav,
+  },
+  {
+    name: "Alarmas",
+    path: `${rutas.PacienteDash}${rutas.Alarm}`,
+    icon: AlarmDash,
+  },
+  {
+    name: "Sugerencias",
+    path: `${rutas.PacienteDash}${rutas.Sugerencias}`,
+    icon: Sugerencias,
+  },
 ];
 
 export const buttonsAdmin = [
-    {
-        name: "Tablero",
-        path: rutas.Admin,
-        icon: IconCube,
-    },
-    {
-        name: "Estadísticas",
-        path: `${rutas.Admin}${rutas.Estadisticas}`,
-        icon: Estadistica,
-    },
-    {
-        name: "Médicos",
-        path: `${rutas.Admin}${rutas.Doctores}`,
-        icon: IconMedChat,
-    },
-    {
-        name: "Pacientes",
-        path: `${rutas.Admin}${rutas.Pacientes}`,
-        icon: IconDoctorNav,
-    },
-    {
-        name: "Data Entries",
-        path: `${rutas.Admin}${rutas.DataEntries}`,
-        icon: IconPatientNav,
-    },
-    {
-        name: "Errores",
-        path: `${rutas.Admin}${rutas.Errores}`,
-        icon: IconPreConsulta,
-    },
+  {
+    name: "Tablero",
+    path: rutas.Admin,
+    icon: IconCube,
+  },
+  {
+    name: "Estadísticas",
+    path: `${rutas.Admin}${rutas.Estadisticas}`,
+    icon: Estadistica,
+  },
+  {
+    name: "Médicos",
+    path: `${rutas.Admin}${rutas.Doctores}`,
+    icon: IconMedChat,
+  },
+  {
+    name: "Pacientes",
+    path: `${rutas.Admin}${rutas.Pacientes}`,
+    icon: IconDoctorNav,
+  },
+  {
+    name: "Data Entries",
+    path: `${rutas.Admin}${rutas.DataEntries}`,
+    icon: IconPatientNav,
+  },
+  {
+    name: "Errores",
+    path: `${rutas.Admin}${rutas.Errores}`,
+    icon: IconPreConsulta,
+  },
 
-    {
-        name: "Sugerencias",
-        path: `${rutas.Admin}${rutas.Sugerencias}`,
-        icon: Sugerencias,
-    },
+  {
+    name: "Sugerencias",
+    path: `${rutas.Admin}${rutas.Sugerencias}`,
+    icon: Sugerencias,
+  },
 ];
-
-
-
