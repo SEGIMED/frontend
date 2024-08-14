@@ -9,12 +9,14 @@ export default function BotonInterconsulta({
   active,
   type,
   Icon,
+  disabled = false,
 }) {
   return type === "green" ? (
     <div
-      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border bg-white border-[#cecece] cursor-pointer ${active ? "bg-[#70C247]" : ""
-        }`}
-      onClick={onClick}>
+      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border bg-white border-[#cecece] ${
+        disabled && "cursor-pointer"
+      } ${active ? "bg-[#70C247]" : ""}`}
+      onClick={!disabled && onClick}>
       <p className={`text-sm font-normal leading-4 ${active && "text-white"}`}>
         {label}
       </p>
@@ -26,9 +28,10 @@ export default function BotonInterconsulta({
     </div>
   ) : (
     <div
-      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border bg-white border-[#cecece] cursor-pointer ${active ? "bg-red-500" : ""
-        }`}
-      onClick={onClick}>
+      className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border bg-white border-[#cecece] ${
+        disabled && "cursor-pointer"
+      } ${active ? "bg-red-500" : ""}`}
+      onClick={!disabled && onClick}>
       <p className={`text-sm font-normal leading-4 ${active && "text-white"}`}>
         {label}
       </p>
