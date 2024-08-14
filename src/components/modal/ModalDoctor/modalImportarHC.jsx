@@ -52,7 +52,7 @@ export default function ImportarHC({ onData }) {
     return (
         <div className="w-full flex flex-col justify-start gap-2">
             <div className='gap-2 flex flex-col'>
-                <div className='flex gap-3'>
+                <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
                     <IconCurrentRouteNav className={'w-4'} />
                     <div>Selecciona el archivo</div>
                 </div>
@@ -63,6 +63,7 @@ export default function ImportarHC({ onData }) {
                         <IconUpload color="#808080" />
                         Adjuntar archivo
                     </button>
+
                     <input
                         type="file"
                         ref={fileInputRef}
