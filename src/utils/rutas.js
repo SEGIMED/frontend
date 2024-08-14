@@ -7,7 +7,7 @@ const PacienteDash2 = "/Dashboard/Inicio_Paciente2";
 const Entries = "/Dashboard/Inicio_Entries";
 
 const Alarm = "/Alarmas";
-const Citas = "/Citas";
+const Mi_Agenda = "/Mi_Agenda";
 const Consultas = "/Consultas";
 const Estadisticas = "/Estadisticas";
 const Historial = "/Consultas";
@@ -36,16 +36,17 @@ const Pasadas = "/Pasadas";
 const Ordenes = "/Ordenes_Medicas";
 const Generar = "/Generar_Orden";
 const Antecedentes = "/Antecedentes";
-const CrearMensaje = "/crearMensaje"
+const CrearMensaje = "/crearMensaje";
 const Pendientes = "/Pendientes";
 const DataEntries = "/Data_Entries";
 const Errores = "/Errores";
 const Estudios = "/Estudios";
 const Importaciones = "/Importaciones";
-
+const Agenda_General = "/Agenda_General";
 const rutas = {
   Estudios,
   Importaciones,
+  Agenda_General,
   Errores,
   DataEntries,
   Pendientes,
@@ -65,7 +66,7 @@ const rutas = {
   PacienteDash2,
   Admin,
   Alarm,
-  Citas,
+  Mi_Agenda,
   Consultas,
   Estadisticas,
   Historial,
@@ -84,7 +85,7 @@ const rutas = {
   Mis_turnos,
   Pasadas,
   CrearMensaje,
-  Entries
+  Entries,
 };
 
 export default rutas;
