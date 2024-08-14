@@ -11,6 +11,8 @@ export default function UserCard({ user, button, role }) {
   return (
     <div className="flex justify-between w-full border-b border-b-[#cecece] px-6 py-2 items-center">
       <div className="flex gap-1 md:gap-5 items-center">
+
+        {/* icon segun el role */}
         {role === 2  && <IconMedChat color="gray" />}
         {role === 3  && (
         user?.patientPulmonaryHypertensionRisks?.risk ? (
@@ -34,6 +36,8 @@ export default function UserCard({ user, button, role }) {
             {specialtiesString ? ` - ${specialtiesString}` : null}
           </span>}
       </div>
+
+      {/* posicion de button y grupo htp + buton segun el role */}
       {role === 3  ? (
         <div className="flex justify-end md:justify-between items-center min-w-[20%] md:gap-6 2xl:gap-14">
           <div className="border-bluePrimary border-1 rounded-lg px-4 py-2 hidden lg:block">
