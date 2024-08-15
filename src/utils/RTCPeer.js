@@ -15,12 +15,9 @@ class RTCPeer{
             ],
           };
          this.peerConnection = null;
-         this.userObj = {
-            userId: null,
-            stream: null
-         }
-         this.dataChannel = null;
-         this.state = null;
+         this.isOffer = false;
+         this.isAsw = false;
+         this.state = false;
         if(!RTCPeer.instance){
             RTCPeer.instance = this;
         }
@@ -43,85 +40,100 @@ class RTCPeer{
         if(this.configuration) this.peerConnection = new RTCPeerConnection(this.configuration);
     }
 
-    // getTracksMedia(consultId){ 
-    //     if(this.userObj.stream){ 
-    //         this.userObj.stream.getTracks().forEach(track => {
-    //             this.peerConnection.addTrack(track,this.userObj.stream);
-    //         });
-    //         socket.emit("userState",{consultId,state:"ready"});
-    //     }
-    // }
+    
   
     async createOffer(id){
-        // this.peerConnection.addEventListener('track', async (event) => {
-        //     const [remoteStream] = event.streams;
-        //     console.log(remoteStream);
-        // });
+try {
+         
+    this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
+        console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
+    });
+    
+    this.peerConnection.addEventListener('icecandidate', (event) => {
+        console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
+        if (event.candidate) {
+            socket.emit("newCandidate",{id, candidate: event.candidate});
+        }
+    });
+    this.peerConnection.addEventListener('connectionstatechange', (event) => {
+        console.log('nuevo evento ',this.peerConnection.connectionState);
+    });
 
-        this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
-            console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
-        });
-        
-        this.peerConnection.addEventListener('icecandidate', (event) => {
-            console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
-            if (event.candidate) {
-                socket.emit("newCandidate",{id, candidate: event.candidate});
-            }
-        });
-        this.peerConnection.addEventListener('connectionstatechange', (event) => {
-            console.log('nuevo evento ',peerConnection.connectionState);
-        });
+    socket._socket.on('newCandidate',(data) => {
+        this.setCandidateRemote(data)
+    })
 
-
-            
-          const offer = await this.peerConnection.createOffer();
-          await this.peerConnection.setLocalDescription(offer);
-        this.state=true
+    if(!this.isOffer){
+        const offer = await this.peerConnection.createOffer();
+        await this.peerConnection.setLocalDescription(offer);
+        this.isOffer=true;
         return offer
+    }
+    throw new Error('Ya se envio una oferta.')
+} catch (error) {
+    console.log(error)
+    return error
+}
             
     } 
     
     async createAsw (id){
 
-// this.peerConnection.addEventListener('track', async (event) => {
-//     const [remoteStream] = event.streams;
-//     Observer.setStreamVideo(remoteStream);
-// });
+try {
+    
+    
+    this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
+        console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
+    }); 
+    
+    this.peerConnection.addEventListener('icecandidate', (event) => {
+        console.log("esto es el candidate evente en createasw", event)  //no entra el eventListener
+        if (event.candidate) {
+            socket.emit("newCandidate",{id, candidate: event.candidate});
+        }
+    });
+    this.peerConnection.addEventListener('connectionstatechange', (event) => {
+        console.log('nuevo evento ',this.peerConnection.connectionState);
+    });
+    socket._socket.on('newCandidate',(data) => {
+        this.setCandidateRemote(data)
+    })
+    
+      if(!this.isAsw){
+          const asw = await this.peerConnection.createAnswer(); 
+          await this.peerConnection.setLocalDescription(asw);
+          this.isAsw = true;
+          return asw
+      }
 
-        this.peerConnection.addEventListener('icegatheringstatechange', (event) => {
-            console.log('ICE Gathering State:', this.peerConnection.iceGatheringState);
-        }); 
-        
-        this.peerConnection.addEventListener('icecandidate', (event) => {
-            console.log("esto es el candidate evente en createasw", event)  //no entra el eventListener
-            if (event.candidate) {
-                socket.emit("newCandidate",{id, candidate: event.candidate});
-            }
-        });
-        this.peerConnection.addEventListener('connectionstatechange', (event) => {
-            console.log('nuevo evento ',this.peerConnection.connectionState);
-        });
-        
-          
-            const asw = await this.peerConnection.createAnswer(); 
-            await this.peerConnection.setLocalDescription(asw);
-            return asw
-            
+      throw new Error('Ya se envio una respuesta')
+} catch (error) {
+    console.log(error)
+    return error
+
+}
     } 
         
     async setRemoteDescription(description){
         try {
-            const remoteDesc = new RTCSessionDescription(description);
-            return await this.peerConnection.setRemoteDescription(remoteDesc);
-        
+            if(!this.state){
+                const remoteDesc = new RTCSessionDescription(description);
+                await this.peerConnection.setRemoteDescription(remoteDesc);
+                this.state= true;
+            }
+            throw new Error('Ya tienes una descripcion remota')
         } catch (error) {
             console.log(error)
             return error
         }
     }
 
-    async setCandidateRemote(candidate){
-       await this.peerConnection.addIceCandidate(candidate);
+     setCandidateRemote(candidate){
+            
+     this.peerConnection.addIceCandidate(candidate).catch((e) => {
+        console.log(e.name)
+     })
+       
     }
 
     

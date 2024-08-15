@@ -25,18 +25,16 @@ export default function VideoCall({consultId,Role}){
 
         socket._socket.on('dataRoom', (newData) => {
             setData(newData);
-            console.log(newData)
             if(Role === "Médico" && newData.patient.state){
                      socket._socket.on('onAsw',(asw) => {
                                              console.log('entro al onAsw')
                                         rtcPer.setRemoteDescription(asw).then(() => console.log('recibio una nueva respuesta'))
                                 })
-                    if(!rtcPer.state){
                             
                     rtcPer.createOffer(consultId).then(offer => {
                                 socket.emit('sendOffer',{id:consultId,offer});
                     });
-                    }
+                    
                 } else {
                     socket._socket.on('onOffer',(offer) =>{
                         rtcPer.setRemoteDescription(offer)
