@@ -6,7 +6,7 @@ import IconCurrentRouteNav from '@/components/icons/IconCurrentRouteNav';
 import InputInfoText from '@/components/ordenMedica/inputInfo';
 
 
-export default function ImportarHC({ onData }) {
+export default function ImportarHC({ onData, text }) {
     const fileInputRef = useRef(null);
     const [file, setFile] = useState(null);
     const [title, setTitle] = useState("");
@@ -53,36 +53,39 @@ export default function ImportarHC({ onData }) {
     return (
         <div className="w-full flex flex-col justify-start gap-2">
             <div className='gap-2 flex flex-col'>
-                <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
-                    <IconCurrentRouteNav className={'w-4'} />
-                    <div>Selecciona el archivo</div>
-                </div>
-                <div className="flex flex-row gap-3">
-                    <button
-                        className="flex items-center justify-start gap-3 py-2 px-6 border-2 bg-white border-[#D7D7D7] text-[#808080] rounded-lg text-base"
-                        onClick={handleButtonClick}>
-                        <IconUpload color="#808080" />
-                        Adjuntar archivo
-                    </button>
-
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        style={{ display: 'none' }}
-                        onChange={handleOnChange}
-                        accept="application/pdf, image/*"
-                    />
-                </div>
-                <div>
-                    {file && (
-                        <div className="flex items-center gap-4">
-                            <span>{file.name}</span>
-                            <button onClick={handleDeleteFile}>
-                                <IconDelete />
-                            </button>
+                {!text ?
+                    <div className='flex flex-col gap-2'>
+                        <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
+                            <IconCurrentRouteNav className={'w-4'} />
+                            <div>Selecciona el archivo</div>
                         </div>
-                    )}
-                </div>
+                        <div className="flex flex-row gap-3">
+                            <button
+                                className="flex items-center justify-start gap-3 py-2 px-6 border-2 bg-white border-[#D7D7D7] text-[#808080] rounded-lg text-base"
+                                onClick={handleButtonClick}>
+                                <IconUpload color="#808080" />
+                                Adjuntar archivo
+                            </button>
+
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                onChange={handleOnChange}
+                                accept="application/pdf, image/*"
+                            />
+                        </div>
+                        <div>
+                            {file && (
+                                <div className="flex items-center gap-4">
+                                    <span>{file.name}</span>
+                                    <button onClick={handleDeleteFile}>
+                                        <IconDelete />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div> : null}
                 <div className='flex flex-col gap-3'>
                     <InputInfoText
                         onChange={handleTitleChange}

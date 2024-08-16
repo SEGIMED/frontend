@@ -46,16 +46,20 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
   const addMinutes = (date, minutes) =>
     new Date(date.getTime() + minutes * 60000);
 
+  const SelectDate = watch("date");
+
   useEffect(() => {
-    if (dateSelect) {
-      const formattedDate = formatDate(new Date(dateSelect));
-      setDate(formattedDate);
-      setValue("date", formattedDate);
-      const formattedTime = getHourFromDateString(dateSelect);
-      setTime(formattedTime);
-      setValue("time", formattedTime);
+    const startDateTime = combineDateTime(SelectDate, selectTime);
+    if (startDateTime) {
+      const startDate = new Date(startDateTime);
+      const endDate = addMinutes(startDate, 30);
+      // Create Date objects directly
+      setValue("scheduledStartTimestamp", startDate);
+      setValue("scheduledEndTimestamp", endDate);
     }
-  }, [dateSelect, setValue]);
+    setValue("medicalSpecialty", 1);
+    setValue("schedulingStatus", 1);
+  }, [setValue, selectTime, date]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -131,6 +135,8 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
         data.physician = userId;
       }
       const payload = data;
+      console.log(payload);
+
       const response = await ApiSegimed.post("/schedules", payload);
 
       if (response.data) {
@@ -304,6 +310,12 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
                       type="date"
                       defaultValue={date}
                       className=" md:w-60 w-full p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
+                      {...register("date", {
+                        required: {
+                          value: true,
+                          message: "* Selecciona la fecha *",
+                        },
+                      })}
                     // disabled
                     />
                     {errors.date && (

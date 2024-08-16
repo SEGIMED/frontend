@@ -10,7 +10,7 @@ const SideBarItems = ({ name, path, icon: Icon, isActive, onClick, external }) =
             className={`flex items-center gap-4`}
         >
             <Icon className="w-6" />
-            <li className="text-lg md:text-md">{name}</li>
+            <li className="text-lg md:text-md text-[#808080]">{name}</li>
         </a>
     ) : (
         <Link

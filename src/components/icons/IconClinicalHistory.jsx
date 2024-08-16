@@ -1,6 +1,6 @@
 export default function IconClinicalHistory({ className, color }) {
     return (
-        <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+        <svg width="24.000000" height="24.000000" className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
             <desc>
                 Created with Pixso.
             </desc>
@@ -19,7 +19,7 @@ export default function IconClinicalHistory({ className, color }) {
                 <path id="path" d="M8.26 13.91L8.24 13.91C7.84 13.52 7.84 12.89 8.24 12.5C8.63 12.1 9.25 12.1 9.65 12.5L9.65 12.53L8.26 13.91ZM14.24 10.53L14.24 10.5C14.63 10.1 15.25 10.1 15.65 10.5C16.05 10.89 16.05 11.52 15.65 11.91L15.62 11.91L14.24 10.53Z" fill="#000000" fillOpacity="0" fillRule="nonzero" />
                 <path id="path" d="M8.94 13.21L10.94 15.21L14.94 11.21" stroke={color ? color : "#B2B2B2"} strokeOpacity="1.000000" strokeWidth="2.000000" strokeLinejoin="round" strokeLinecap="round" />
             </g>
-        </svg>
+        </svg >
 
 
 
