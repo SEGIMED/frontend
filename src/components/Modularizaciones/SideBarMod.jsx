@@ -46,7 +46,7 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
                     <ul className="flex flex-col gap-3 md:gap-4">
                         {buttons.map((section) => (
                             <div key={section.title} className="flex flex-col gap-4">
-                                {section.title ? <h3 className="text-gray-500 font-semibold">{section.title}</h3> : null}
+                                {section.title ? <h3 className="text-[#808080] text-base font-normal">{section.title}</h3> : null}
                                 {section.buttons.map((button) => (
                                     <SideBarItems
                                         key={button.path}

@@ -39,7 +39,7 @@ export const buttonsDoc = [
             },
             {
                 name: "Mi Agenda",
-                path: `${rutas.Doctor}${rutas.Citas}`,
+                path: `${rutas.Doctor}${rutas.Mi_Agenda}`,
                 icon: IconCalendarNav,
             },
             {
@@ -102,7 +102,7 @@ export const buttonsPaciente = [
             },
             {
                 name: "Mi Agenda",
-                path: `${rutas.PacienteDash}${rutas.Citas}`,
+                path: `${rutas.PacienteDash}${rutas.Mi_Agenda}`,
                 icon: IconCalendarNav,
             },
             {

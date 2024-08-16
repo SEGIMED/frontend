@@ -195,9 +195,8 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
               </label>
               <select
                 id={stateName}
-                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                  errors.patient ? "border-red-500" : ""
-                }`}
+                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.patient ? "border-red-500" : ""
+                  }`}
                 {...register(stateName, {
                   required: `*Debe elegir un ${title} *`,
                 })}>
@@ -275,15 +274,14 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
                 </label>
                 <select
                   id="healthCenter"
-                  className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                    errors.healthCenter ? "border-red-500" : ""
-                  }`}
+                  className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
+                    }`}
                   {...register("healthCenter", {
                     required:
                       "* ¿En cuál centro de atención quieres ser atendido? *",
                   })}>
                   <option value="">Seleccione el centro de atención</option>
-                  <option value="1">Centro Gallegos</option>
+                  <option value="1">Centro Gallego</option>
                 </select>
                 {errors.healthCenter && (
                   <span className="text-red-500 text-sm">
@@ -306,7 +304,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
                       type="date"
                       defaultValue={date}
                       className=" md:w-60 w-full p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                      // disabled
+                    // disabled
                     />
                     {errors.date && (
                       <span className="text-red-500 text-sm">

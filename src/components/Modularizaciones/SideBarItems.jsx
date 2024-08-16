@@ -16,7 +16,7 @@ const SideBarItems = ({ name, path, icon: Icon, isActive, onClick, external }) =
         <Link
             onClick={onClick}
             href={path}
-            className={`flex items-center gap-4 ${isActive ? "text-[#487FFA]" : ""}`}
+            className={`flex items-center gap-4 ${isActive ? "text-[#487FFA]" : "text-[#808080]"}`}
         >
             <Icon className="w-6" color={isActive ? "#487FFA" : "#B2B2B2"} />
             <li className="text-lg md:text-md">{name}</li>

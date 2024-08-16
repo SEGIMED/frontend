@@ -12,6 +12,7 @@ import rutas from "@/utils/rutas";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import { useState } from "react";
+import IconImportarDash from "@/components/icons/IconImportarDash";
 
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
@@ -21,10 +22,11 @@ export default function HomePte() {
 
   const Buttons = [
     {
-      name: "Mis Turnos",
+      name: "Importar",
       path: "/Mis_turnos",
-      icon: IconTurnos,
       backgroundColor: "bg-[#487FFA]",
+      function: () => setIsModalOpen(true),
+      icon: IconImportarDash,
     },
     {
       name: "Medicamentos",
@@ -56,12 +58,7 @@ export default function HomePte() {
       icon: IconAntecedentes,
       backgroundColor: "bg-[#ECD652]",
     },
-    {
-      name: "Importar",
-      icon: IconAntecedentes,
-      backgroundColor: "bg-[#487FFA]",
-      function: () => setIsModalOpen(true)
-    }
+
   ];
 
   const handleModalData = (data) => {

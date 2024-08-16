@@ -5,6 +5,7 @@ import React, { useState, useRef } from 'react';
 import IconCurrentRouteNav from '@/components/icons/IconCurrentRouteNav';
 import InputInfoText from '@/components/ordenMedica/inputInfo';
 
+
 export default function ImportarHC({ onData }) {
     const fileInputRef = useRef(null);
     const [file, setFile] = useState(null);
@@ -85,7 +86,7 @@ export default function ImportarHC({ onData }) {
                 <div className='flex flex-col gap-3'>
                     <InputInfoText
                         onChange={handleTitleChange}
-                        text={true}
+                        classNameInput={'md:w-full'}
                         title={"Titulo"}
                         placeholder={"Añadí un título"}
                         icon={<IconCurrentRouteNav className={'w-4'} />}

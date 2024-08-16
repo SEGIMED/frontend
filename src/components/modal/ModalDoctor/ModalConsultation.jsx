@@ -182,7 +182,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       <div
         onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
-       <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
+      <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
         <form
           onSubmit={onSubmit}
           className="flex flex-col h-full">
@@ -280,9 +280,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                errors.healthCenter ? "border-red-500" : ""
-              }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
+                }`}
               {...register("healthCenter", {
                 required: {
                   value: true,
@@ -291,7 +290,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
                 },
               })}>
               <option value="">Seleccione el centro de atención</option>
-              <option value="1">Centro Gallegos</option>
+              <option value="1">Centro Gallego</option>
             </select>
             <div className="relative">
               {errors.healthCenter && (
@@ -377,7 +376,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </button>
           </div>
         </form>
-       
+
       </div>
     </div>
   ) : null;

@@ -1,6 +1,6 @@
 export default function IconClinicalHistory({ className, color }) {
     return (
-        <svg width="24.000000" height="24.000000" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+        <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
             <desc>
                 Created with Pixso.
             </desc>

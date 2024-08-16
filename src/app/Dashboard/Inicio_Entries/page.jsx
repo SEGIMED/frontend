@@ -24,7 +24,8 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import DashboardButton from "@/components/Modularizaciones/ButtonsDashMod";
 import DashboardButtonData from "@/components/Modularizaciones/ButtonsDashDataMod";
-import { buttonsDashAdmin } from "@/components/DashAdmin/ButtonsDash";
+
+import { buttonsDashEntries } from "@/components/DashAdmin/ButtonsDash";
 
 export default function HomeDoc() {
     const user = useAppSelector((state) => state.user);
@@ -133,7 +134,7 @@ export default function HomeDoc() {
                 ¡Bienvenido {user?.name} {user?.lastname}
             </h2>
             <div className="grid-cols-2 gap-4 grid lg:flex w-full">
-                {buttonsDashAdmin.map((button, index) => (
+                {buttonsDashEntries.map((button, index) => (
                     <DashboardButton
                         key={index}
                         href={button.href}

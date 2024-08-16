@@ -1,6 +1,6 @@
-export default function IconMedChat({ classname, color }) {
+export default function IconMedChat({ className, color }) {
 	return (
-		<svg width="24.000000" height="24.000000" className={classname} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+		<svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
 			<desc>
 				Created with Pixso.
 			</desc>
