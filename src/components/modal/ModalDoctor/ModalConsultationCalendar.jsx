@@ -14,15 +14,14 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import { useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
+import rutas from "@/utils/rutas";
 
-const ModalConsultationCalendar = ({
-  isOpen,
-  onClose,
-  dateSelect,
-  lista,
-  title,
-  stateName,
-}) => {
+const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
+  const role = Cookies.get("b");
+  const userId = Number(Cookies.get("c"));
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,13 +31,15 @@ const ModalConsultationCalendar = ({
     getValues,
     formState: { errors },
   } = useForm();
-
+  const pacientes = useAppSelector((state) => state.allPatients.patients);
+  const doctores = useAppSelector((state) => state.doctores.doctores);
+  const stateName = role == "Paciente" ? "physician" : "patient";
+  const title = role == "Paciente" ? "Médico" : "Paciente";
+  const lista = role == "Paciente" ? doctores : pacientes;
   const [disabled, setDisabled] = useState(false);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const selectTime = watch("time");
-  const role = Cookies.get("b");
-  const userId = Number(Cookies.get("c"));
   const combineDateTime = (date, time) =>
     date && time ? `${date}T${time}:00` : "";
 
@@ -139,7 +140,7 @@ const ModalConsultationCalendar = ({
             icon: "success",
             confirmButtonColor: "#487FFA",
             confirmButtonText: "Aceptar",
-          });
+          }).then(() => router.push(`${rutas.Doctor}${rutas.Consultas}`));
         } else {
           Swal.fire({
             title: "Se ha solicitado la consulta con éxito",
@@ -154,7 +155,9 @@ const ModalConsultationCalendar = ({
       console.error("Error al enviar los datos:", error);
       Swal.fire({
         title: "Error al agendar la consulta",
-        text: "Ocurrió un error al intentar agendar la consulta. Por favor, intenta nuevamente.",
+        text:
+          error.response.data.error.split(":")[1] ||
+          "Ocurrió un error al intentar agendar la consulta. Por favor, intenta nuevamente.",
         icon: "error",
         confirmButtonColor: "#d33",
         confirmButtonText: "Aceptar",

@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import IconPasswordClose from "@/components/icons/IconPasswordClose";
 import IconPasswordOpen from "@/components/icons/IconPasswordOpen";
-
+import IconEnter from "@/components/icons/IconEnter";
+import LoadingFallback from "@/components/loading/loading";
 import rutas from "@/utils/rutas";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import IconSend from "@/components/icons/IconSend";
@@ -218,15 +219,25 @@ export default function Home() {
                 ¿Olvidó su contraseña?
               </Link>
             </div>
-            <div className="text-center  flex justify-center">
+            <div className="text-center max-w-96  flex justify-center">
               <button
                 type="submit"
                 className={`text-white text-center bg-[#70C247] px-10 py-3 rounded-lg flex items-center transform hover:scale-105 active:scale-100 active:translate-y-1 ${Object.keys(errors).length === 0
                     ? ""
                     : "cursor-not-allowed opacity-50"
-                  }`}
-                disabled={Object.keys(errors).length !== 0 || loading}>
-                Iniciar Sesión <IconSend className="m" />
+                } ${loading ? "bg-bluePrimary px-10 py-3" :"bg-[#70C247]" }`}
+                disabled={Object.keys(errors).length !== 0 || loading}
+                style={{ minWidth: "200px" }}>
+
+               {loading ? (
+                <div className="flex items-center justify-center w-full h-full">
+                 <LoadingFallback className= "w-6 h-6" />
+                </div>
+              ) : (
+               <div className="flex justify-center items-center gap-3">
+                Iniciar Sesión <IconEnter className="w-6" />
+                </div>
+              )}
               </button>
             </div>
           </form>
