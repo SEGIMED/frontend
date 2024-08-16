@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { ApiSegimed } from "@/Api/ApiSegimed";
@@ -20,6 +21,7 @@ import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import rutas from "@/utils/rutas";
 
 const sexoOptions = [
   { value: 2, label: "Masculino" },
@@ -29,7 +31,7 @@ const sexoOptions = [
 export default function EditarPaciente({id, paciente}) {
  
   const dispatch = useAppDispatch();
-  
+  const router=useRouter()
   const token = Cookies.get("a");
 
   const [buttonSize, setButtonSize] = useState("lg");
@@ -116,38 +118,49 @@ export default function EditarPaciente({id, paciente}) {
     <div className="h-full overflow-y-scroll flex flex-col">
       <div
         className={`flex ${edit ? "flex-col md:flex-row" : "md:flex-row"} justify-between items-center gap-2 pl-10 pr-6 py-3 border-b border-b-[#cecece] bg-[#FAFAFC]`}>
-        <div
-          className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"}`}>
+       <div className=" items-center gap-4 hidden md:flex">
           <Image src={ruteActual} alt="ruta actual" />
-          <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
+          <p className="text-lg font-normal leading-6 text-[#5F5F5F] hidden md:block ">
             Sus datos personales
           </p>
         </div>
         <div>
-          {edit ? (
-            <div className="flex items-center gap-2">
-              <Elboton
-                icon={<IconGuardar />}
-                nombre={"Guardar Cambios"}
-                size={buttonSize}
-                onPress={handleSubmit(onSubmit)}
-              />
-              <Elboton
-                icon={<IconRegresar />}
-                nombre={"Regresar"}
-                size={buttonSize}
-                onPress={handleCancel}
-              />
-            </div>
-          ) : (
+        <div className="flex items-center gap-2 justify-end">
+        {edit ? (
+          <>
+            <Elboton
+              icon={<IconGuardar />}
+              nombre={"Guardar Cambios"}
+              size={buttonSize}
+              onPress={handleSubmit(onSubmit)}
+            />
+            <Elboton
+              icon={<IconRegresar />}
+              nombre={"Regresar"}
+              size={buttonSize}
+              onPress={handleCancel}
+            />
+          </>
+        ) : (
+          <>
             <Elboton
               icon={<IconEditar />}
               nombre={"Editar"}
               size={buttonSize}
               onPress={handleEdit}
             />
-          )}
-        </div>
+            <Elboton
+              icon={<IconRegresar />}
+              nombre={"Regresar"}
+              size={buttonSize}
+              onPress={() => {
+                router.push(`${rutas.Admin}${rutas.Usuarios}?pacientes=true`);
+              }}
+            />
+          </>
+        )}
+      </div>
+    </div>
       </div>
       <form>
         {edit && (

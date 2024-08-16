@@ -4,8 +4,8 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default async function getPatientDetail(id, headers) {
     try {
-      const response1 = await ApiSegimed.get(`/patient-details?id=${id}`, { headers })
-      const response2= await  ApiSegimed.get(`/patient/${id}`, { headers })
+      const response1 = await ApiSegimed.get(`/patient-details?id=${id}`,  headers )
+      const response2= await  ApiSegimed.get(`/patient/${id}`,  headers )
     
   
       const combinedData = {

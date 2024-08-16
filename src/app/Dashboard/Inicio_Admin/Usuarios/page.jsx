@@ -8,18 +8,12 @@ import IconFilter from "@/components/icons/IconFilter"
 import Elboton from "@/components/Buttons/Elboton"
 import UserCard from "@/components/card/userCard"
 import IconOptions from "@/components/icons/IconOptions";
-import IconGeolocation from "@/components/icons/IconGeolocation";
-import IconTablillaTilde from "@/components/icons/iconTablillaTilde";
-import IconAlarmBlue from "@/components/icons/iconAlarmBlue";
-import IconEditar from "@/components/icons/iconEditar";
-import IconCancel from "@/components/icons/iconCancel";
-import rutas from "@/utils/rutas";
 import GeneratePatientButton from "@/components/adminDash/buttonOptionLists/buttonPatientList";
 
 export default function Admin(params) {
     const usuarios=useAppSelector(state=>state.allUsers.allUsers)
     const searchParams = useSearchParams();
-    const router=useRouter()
+
     
     const medicos=usuarios.filter(med=>med.role=== 2)
     const pacientes=usuarios.filter(pte=>pte.role=== 3)
@@ -34,49 +28,7 @@ export default function Admin(params) {
     icon={<IconOptions color="white" />}
     />
 
-    // const pteButton=<MenuDropDown 
-    // label="Opciones"
-    // icon={<IconOptions color="white" />}
-    // categories={[
-    //     {
-    //     items:[
-    //         {
-    //             label:"Editar Paciente",
-    //             icon:<IconEditar color="lightGray"/>,
-    //             onClick: ()=>{router.push(`${rutas.Admin}${rutas.Usuarios}/${paciente?.id}`)}
-    //             },
-    //         {
-    //             label:"Eliminar Paciente",
-    //             icon:<IconCancel className={"w-6"}/>
-    //             },
-    //         {
-    //             label:"Ver Datos Personales",
-    //             icon:<IconOptions color="lightGray"/>
-    //             },
-    //         {
-    //             label:"Ver Alarmas Creadas",
-    //             icon:<IconAlarmBlue color="lightGray" className={"w-6"}/>
-    //             },
-    //         {
-    //             label:"Ver Historila clinico",
-    //             icon: <IconTablillaTilde color="lightGray"/>
-    //             },
-    //         {
-    //             label:"Ver Antiguas Consultas",
-    //             icon: <IconTablillaTilde color="lightGray"/>
-    //             },
-    //         {
-    //             label:"Ver Solicitudes",
-    //             icon: <IconTablillaTilde color="lightGray"/>
-    //             },
-    //         {
-    //             label:"ver Geolocalizacion",
-    //             icon:<IconGeolocation/>
-    //             }
-    //     ],
-    // }
-    // ]}
-    // />
+    
 
     const dataEButton=<MenuDropDown 
     label="Opciones"

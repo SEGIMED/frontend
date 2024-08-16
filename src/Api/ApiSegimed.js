@@ -82,6 +82,7 @@ ApiSegimed.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+    
     //Si el error es 401 y el request no es de login o refresh
     if (
       error.response.status === 401 &&
