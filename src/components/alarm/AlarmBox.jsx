@@ -20,7 +20,7 @@ export default function AlarmBox({
       </span>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
         {array?.map((alarm, index) => {
-          const isSelected = selectedAlarms[categoryIndex] === index + 1;
+          const isSelected = selectedAlarms[categoryIndex] === index +1 ;
           let appliedClass = "";
 
           if (isSelected) {

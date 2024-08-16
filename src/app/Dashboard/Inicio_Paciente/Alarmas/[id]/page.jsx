@@ -41,7 +41,7 @@ const AlarmSelector = () => {
 
   const handleSelect = (categoryIndex, index) => {
     const updatedSelections = [...selectedAlarms];
-    updatedSelections[categoryIndex] = index + 1; // Guardar el índice seleccionado (+1 para no empezar en 0)
+    updatedSelections[categoryIndex] = index + 1 ; // Guardar el índice seleccionado (+1 para no empezar en 0)
     setSelectedAlarms(updatedSelections);
   };
 
@@ -55,7 +55,7 @@ const AlarmSelector = () => {
 
     // Transformar los valores según el formato requerido
     const transformedValues = selectedAlarms.map(
-      (value, index) => `${index + 1}:${value}`
+      (value, index) => `${index  }:${value }`
     );
 
     const headers = { headers: { token: token } };
@@ -65,6 +65,8 @@ const AlarmSelector = () => {
       questionsPriority: JSON.stringify(transformedValues),
       alarmDescription: text,
     };
+
+    
 
     try {
       // Realizar la solicitud POST al servidor
