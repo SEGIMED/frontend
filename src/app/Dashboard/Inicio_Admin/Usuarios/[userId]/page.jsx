@@ -1,16 +1,24 @@
 "use client";
 import { useEffect } from "react";
 import { useAppSelector } from "@/redux/hooks";
+import { useSearchParams } from "next/navigation";
 import EditarPaciente from "@/components/adminDash/editarPerfil";
 import UseDataFetchingAdmin from "@/utils/dataFetching/SideBarFunctionsAdmin";
 import Cookies from "js-cookie";
+import HistoriaClinica from "@/components/adminDash/clinicHistory";
 
 export default function PacienteId({ params }) {
     const paciente = useAppSelector((state) => state.user);
-    const id = Number(params.id);
+    const id = Number(params.userId);
+    const searchParams= useSearchParams()
 
     const token = Cookies.get("a");
     const { getPatientD } = UseDataFetchingAdmin();
+
+    const editarPerfilQuery= searchParams.get("editPerfil") === "true";
+    const historiaClinicaQuery= searchParams.get("historiaClinica") === "true";
+
+
 
     useEffect(() => {
         getPatientD(id, { headers: { token: token } });
@@ -18,8 +26,10 @@ export default function PacienteId({ params }) {
     }, [id, token]);
 
     return (
-        <>
-            <EditarPaciente id={id} paciente={paciente} />
-        </>
+        <div className="h-full w-full overflow-y-auto">
+        {editarPerfilQuery && <EditarPaciente id={id} paciente={paciente} /> }
+        {historiaClinicaQuery && <HistoriaClinica id={id}/>}
+            
+        </div>
     );
 }

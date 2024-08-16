@@ -1,9 +1,12 @@
 "use client"
 import { useAppSelector } from "@/redux/hooks"
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import MenuDropDown from "@/components/dropDown/MenuDropDown"
 import { PathnameShow } from "@/components/pathname/path"
 
+import MapModalPte from "@/components/modal/MapModalPte";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconFilter from "@/components/icons/IconFilter"
 import Elboton from "@/components/Buttons/Elboton"
 import UserCard from "@/components/card/userCard"
@@ -13,6 +16,9 @@ import GeneratePatientButton from "@/components/adminDash/buttonOptionLists/butt
 export default function Admin(params) {
     const usuarios=useAppSelector(state=>state.allUsers.allUsers)
     const searchParams = useSearchParams();
+    const [showMapModal, setShowMapModal] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(false);
+    
 
     
     const medicos=usuarios.filter(med=>med.role=== 2)
@@ -35,6 +41,11 @@ export default function Admin(params) {
     icon={<IconOptions color="white" />}
     />
 
+    const handleGeolocationClick = (patient) => {
+        setSelectedPatient(patient);
+        setShowMapModal(true);
+      };
+
    
 
     const lastSegmentTextToShow=PathnameShow()
@@ -43,9 +54,9 @@ export default function Admin(params) {
         <h1 key={2} className="font-bold ml-4">Listado de Data Entries</h1>
     ]
     return (
-        <div className="flex flex-col h-full ">
+        <div className="h-full w-full overflow-y-auto">
         <title>{lastSegmentTextToShow}</title>
-        <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
+        <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-30 ">
             <div>
                 <Elboton
                 nombre="Crear"/>
@@ -70,7 +81,7 @@ export default function Admin(params) {
                     key={paciente.id}
                     role={paciente.role}
                     user={paciente}
-                    button={GeneratePatientButton(paciente.id)}
+                    button={<GeneratePatientButton pacienteId={paciente.id} cb={() => handleGeolocationClick(paciente)} />}
                 />
                 ))
              ) : (
@@ -103,6 +114,25 @@ export default function Admin(params) {
                 <p className=" text-center font-semibold">No hay Data Entries para mostrar</p>
             ))}
             </div>
+            {showMapModal && selectedPatient && (
+            <ModalModularizado
+            isOpen={showMapModal}
+            onClose={() => setShowMapModal(false)}
+            Modals={[
+            <MapModalPte
+              onClose={() => setShowMapModal(false)}
+              patient={selectedPatient}
+              key={"map"}
+                />,
+            ]}
+            title={"Geolocalizacion del paciente"}
+            button1={"hidden"}
+            button2={"bg-bluePrimary text-white block font-font-Roboto"}
+            progessBar={"hidden"}
+            size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
+            buttonText={{ end: `Continuar` }}
+            />
+      )}
         </div>
     )
 }

@@ -12,7 +12,7 @@ export default async function getPatientDetail(id, headers) {
         ...response1.data,
         ...response2.data,
       };
-      console.log(combinedData)
+      
       return combinedData;
     } catch (error) {
       console.error('Error fetching user data:', error);

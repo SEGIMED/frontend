@@ -15,7 +15,7 @@ export default function UseDataFetchingAdmin (){
     const getPatientD= async (id,headers)=>{
         
         const response= await getPatientDetail(id,headers)
-        console.log("esto es reponse",response)
+        
         dispatch(adduser(response))
     }
 
