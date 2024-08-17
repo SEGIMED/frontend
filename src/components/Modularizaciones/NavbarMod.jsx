@@ -79,7 +79,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     } = useDataFetchingPte();// Use the useRouter hook
 
     const {
-        allUsers,
+        setAllUsers,
         
     }= UseDataFetchingAdmin()
 
@@ -139,7 +139,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             if (rol === "Admin") {
                 getActivesAlarmsDoctor().catch(console.error);
                 getActivesPacientesDoctor().catch(console.error);
-                allUsers({ headers: { token: token } }).catch(console.error)
+                setAllUsers({ headers: { token: token } }).catch(console.error)
                 //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
             }
         } else return

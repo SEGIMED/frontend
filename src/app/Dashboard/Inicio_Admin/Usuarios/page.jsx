@@ -19,7 +19,7 @@ export default function Admin(params) {
     const [showMapModal, setShowMapModal] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState(false);
     
-
+    console.log(usuarios)
     
     const medicos=usuarios.filter(med=>med.role=== 2)
     const pacientes=usuarios.filter(pte=>pte.role=== 3)

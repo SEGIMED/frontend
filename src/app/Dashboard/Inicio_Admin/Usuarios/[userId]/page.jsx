@@ -1,35 +1,66 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { useSearchParams } from "next/navigation";
-import EditarPaciente from "@/components/adminDash/editarPerfil";
+import EditarPaciente from "@/components/adminDash/editarPerfilPte";
 import UseDataFetchingAdmin from "@/utils/dataFetching/SideBarFunctionsAdmin";
-import Cookies from "js-cookie";
 import HistoriaClinica from "@/components/adminDash/clinicHistory";
+import AlarmsByRole from "@/components/adminDash/alarm";
+import Cookies from "js-cookie";
+import getAlarmByPatientId from "@/utils/dataFetching/fetching/getAlarmByPatientID";
 
 export default function PacienteId({ params }) {
-    const paciente = useAppSelector((state) => state.user);
     const id = Number(params.userId);
-    const searchParams= useSearchParams()
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [alarms, setAlarms]=useState([])
     const token = Cookies.get("a");
-    const { getPatientD } = UseDataFetchingAdmin();
+    
 
-    const editarPerfilQuery= searchParams.get("editPerfil") === "true";
-    const historiaClinicaQuery= searchParams.get("historiaClinica") === "true";
+    const hasFetchedAlarms = useRef(false);  // Bandera para evitar múltiples peticiones de alarmas
+    const hasFetchedPatient = useRef(false);  // Bandera para evitar múltiples peticiones
+    const searchParams = useSearchParams();
+    
+
+    
+    const { setAlarmByPatientId, setPatientDetail } = UseDataFetchingAdmin();
+
+    const editarPerfilPteQuery = searchParams.get("editPerfilPte") === "true";
+    const historiaClinicaQuery = searchParams.get("historiaClinica") === "true";
+    const pteAlarmQuery = searchParams.get("pteAlarm") === "true";
+
+   
+useEffect(() => {
+    const fetchData = async () => {
+        if (!hasFetchedAlarms.current && !hasFetchedPatient.current) {
+            
+            // Fetch alarms
+            
+            const alarmsActive = await getAlarmByPatientId(id);
+           
+            setAlarms(alarmsActive);
+            
+            // Fetch patient details
+           
+            await setPatientDetail(id);
+            
+
+            setIsLoading(false);
+            hasFetchedAlarms.current = true;
+            hasFetchedPatient.current = true;
+        }
+    };
+    fetchData();
+    
+}, []);
 
 
-
-    useEffect(() => {
-        getPatientD(id, { headers: { token: token } });
-        // Run this effect only when `id` or `token` changes.
-    }, [id, token]);
 
     return (
         <div className="h-full w-full overflow-y-auto">
-        {editarPerfilQuery && <EditarPaciente id={id} paciente={paciente} /> }
-        {historiaClinicaQuery && <HistoriaClinica id={id}/>}
-            
+            {editarPerfilPteQuery && <EditarPaciente id={id}  />}
+            {historiaClinicaQuery && <HistoriaClinica id={id} />}
+            {pteAlarmQuery && <AlarmsByRole alarms={alarms} isLoading={isLoading} />}
         </div>
     );
 }
+

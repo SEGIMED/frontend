@@ -28,8 +28,9 @@ const sexoOptions = [
   { value: 1, label: "Femenino" },
 ];
 
-export default function EditarPaciente({id, paciente}) {
- 
+export default function EditarPaciente({id}) {
+  const paciente = useAppSelector((state) => state.user);
+  
   const dispatch = useAppDispatch();
   const router=useRouter()
   const token = Cookies.get("a");
@@ -259,7 +260,7 @@ export default function EditarPaciente({id, paciente}) {
             Edad:
           </label>
           <span className="w-1/2 text-start px-6 py-2">
-            {CalcularEdad(paciente.sociodemographicDetails?.birthDate)}
+            {CalcularEdad(paciente?.sociodemographicDetails?.birthDate)}
           </span>
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
@@ -399,7 +400,7 @@ export default function EditarPaciente({id, paciente}) {
             </div>
           ) : (
             <span className="w-1/2 text-start px-6 py-2">
-              {paciente.sociodemographicDetails?.emergencyContactPhone}
+              {paciente?.sociodemographicDetails?.emergencyContactPhone}
             </span>
           )}
         </div>
@@ -414,7 +415,7 @@ export default function EditarPaciente({id, paciente}) {
                 <input
                   className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2"
                   type="text"
-                  defaultValue={paciente.sociodemographicDetails?.address}
+                  defaultValue={paciente?.sociodemographicDetails?.address}
                   {...register("address", {
                     required: "*Este campo es obligatorio",
                     maxLength: {
@@ -439,7 +440,7 @@ export default function EditarPaciente({id, paciente}) {
             </div>
           ) : (
             <span className="w-1/2 text-start px-6 py-2">
-              {paciente.sociodemographicDetails?.address}
+              {paciente?.sociodemographicDetails?.address}
             </span>
           )}
         </div>
@@ -449,7 +450,7 @@ export default function EditarPaciente({id, paciente}) {
             Última conexión:
           </label>
           <span className="w-1/2 text-start px-6 py-2">
-            {LastLogin(paciente.lastLogin)}
+            {LastLogin(paciente?.lastLogin)}
           </span>
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">

@@ -16,6 +16,7 @@ import clinicalHistory from "./slices/doctor/HistorialClinico";
 import chatBot from "./slices/chat/chatBot";
 import searchBar from "./slices/user/searchBar";
 import allUsers from "./slices/user/allUsers";
+import alarms2 from "./slices/alarms/alarms2";
 enableMapSet();
 // Define a reset action type
 const RESET_ACTION_TYPE = "root/reset";
@@ -32,6 +33,7 @@ const appReducer = combineReducers({
   formSlice,
   preconsultaForm,
   alarms,
+  alarms2,
   activePtes,
   notifications,
   clinicalHistory,
