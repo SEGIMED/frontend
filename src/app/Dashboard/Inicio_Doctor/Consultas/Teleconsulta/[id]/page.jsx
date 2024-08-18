@@ -13,6 +13,7 @@ import observer from "@/utils/observer";
 import Config from "@/components/Teleconsulta/config";
 import StateTarget from "@/components/Teleconsulta/StateTarget";
 import VideoCall from "@/components/Teleconsulta/VideoCall";
+import CallVideo from "@/components/Teleconsulta/CallVideo";
 export default function TeleconsultaId (id) {
     const [state , setState] = useState(false)
     const consultId = Number(id.params.id);
@@ -27,9 +28,13 @@ export default function TeleconsultaId (id) {
     return (
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
             {
+                consultId && <CallVideo id={consultId}/>
+            }
+           
+            {/* {
                 state ? <VideoCall consultId={consultId} Role="Médico"/> : <Config handleChangeState={handleChangeState}/>
 
-            }
+            } */}
             {/* <div className="w-full flex justify-between items-center border-b-2">
                 <div className="flex justify-start items-center">
                     <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
