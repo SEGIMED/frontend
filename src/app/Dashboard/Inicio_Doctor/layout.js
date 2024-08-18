@@ -17,9 +17,12 @@ export default function RootLayout({ children }) {
   return (
     <div className="flex h-screen md:h-screen w-screen overflow-y-scroll md:overflow-y-hidden ">
       {/* Barra de navegación */}
-      <SideBarMod isOpen={isOpen} toggleSidebar={toggleSidebar} buttons={buttonsDoc} />
+      <SideBarMod
+        isOpen={isOpen}
+        toggleSidebar={toggleSidebar}
+        buttons={buttonsDoc}
+      />
       {/* <NavDoctor isOpen={isOpen} toggleSidebar={toggleSidebar} /> */}
-
 
       <div className="flex flex-col w-full h-full">
         {/* <SideDoctor search={true} toggleSidebar={toggleSidebar} /> */}
