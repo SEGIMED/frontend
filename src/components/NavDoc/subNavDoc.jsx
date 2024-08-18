@@ -255,6 +255,16 @@ export default function SubNavbar({ id }) {
                   }}>
                   Diagnosticos y tratamientos
                 </DropdownItem>
+                <DropdownItem
+                  className={getSelectedClass("HC Importados")}
+                  key="importaciones"
+                  textValue="HC Importados"
+                  onClick={() => {
+                    dispatch(changeTabs("HC Importados"));
+                    setOpenDetails(!openDetails);
+                  }}>
+                  HC Importados
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
