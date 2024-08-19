@@ -118,7 +118,7 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-0 md:gap-4 items-center">
-          <IconMedChat color="gray" />
+          <IconMedChat color="gray" className="w-6 h-6" />
           <div className="w-8 h-8 flex justify-center items-center">
             {handleImg(chat?.target?.avatar, chat?.target?.userId)}
           </div>

@@ -122,7 +122,9 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-0 md:gap-4 items-center">
-          {chat?.target?.role === "Médico" ? <IconMedChat color="gray" /> : ""}
+          {chat?.target?.role === "Médico" && (
+            <IconMedChat color="gray" className="w-6 h-6" />
+          )}
           <div className="w-8 h-8 flex justify-center items-center gap-3">
             {handleImg(
               chat?.target?.avatar,
@@ -181,14 +183,14 @@ export default function MensajesDoc() {
             <Elboton
               nombre={"Médicos"}
               size={"md"}
-              icon={<IconMedChat color="white" />}
+              icon={<IconMedChat color="white" className="w-6 h-6" />}
               onPress={() => setFlag(false)}
             />
           ) : (
             <Elboton
               nombre={"Médicos"}
               size={"md"}
-              icon={<IconMedChat />}
+              icon={<IconMedChat className="w-6 h-6" />}
               onPress={() => setFlag(true)}
               className={
                 "bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA]"
