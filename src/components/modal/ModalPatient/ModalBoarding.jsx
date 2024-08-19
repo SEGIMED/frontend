@@ -53,11 +53,11 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
         setDisabled(false);
     };
 
-    const getCatalog = async (headers) => {
+    const getCatalog = async () => {
         try {
             const response = await ApiSegimed.get(
                 "/catalog/get-catalog?catalogName=medical_specialties",
-                headers
+
             );
             if (response.data) {
                 setCatalog(response.data);
@@ -67,19 +67,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
         }
     };
 
-    const getCenter = async (headers) => {
-        try {
-            const response = await ApiSegimed.get(
-                "/catalog/get-catalog?catalogName=medical_specialties",
-                headers
-            );
-            if (response.data) {
-                setCatalog(response.data);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+
 
     const handleChange = ({ name, option }) => {
         dispatch(setSelectedOption({ name, option }));
@@ -87,7 +75,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
 
 
     useEffect(() => {
-        if (rol === "Medico") {
+        if (rol === "Médico") {
             getCatalog();
         }
     }, [rol]);
@@ -138,7 +126,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
             console.log(infoSend);
             try {
                 const response = await ApiSegimed.patch(
-                    `/onboarding?tipo=${rol === "Medico" ? 2 : 3}&id=${user.userId}`,
+                    `/onboarding?tipo=${rol === "Médico" ? 2 : 3}&id=${user.userId}`,
                     // `/onboarding?tipo=2&id=15`,
                     infoSend
                 );

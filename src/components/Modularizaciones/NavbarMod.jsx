@@ -25,6 +25,8 @@ import { IconNotificaciones } from "../InicioPaciente/notificaciones/IconNotific
 import NotificacionesContainer from "../InicioPaciente/notificaciones/NotificacionesContainer";
 import useDataFetchingPte from "@/utils/SideBarFunctionsPaciente";
 import { protectRoute } from "@/utils/protectRutes";
+import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
+import rutas from "@/utils/rutas";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
     const pathname = usePathname();
@@ -33,7 +35,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
     const notifications = useAppSelector((state) => state.notifications);
     const user = useAppSelector((state) => state.user);
-    console.log(user);
     const showSearch = useAppSelector((state) => state.searchBar);
     // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
     const id = Cookies.get("c");
@@ -41,11 +42,38 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
     const refreshToken = Cookies.get("d");
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [onboarding, setOnboarding] = useState(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+
+    useEffect(() => {
+        if (!user.name || !rol) return;
+
+
+
+        if (rol === "Médico") {
+            if (!user.medicalRegistries?.Nacional?.registryId) {
+                router.push(rutas.Doctor);
+                setIsModalOpen(true);
+            }
+        } else if (rol === "Paciente") {
+
+            if (!user.sociodemographicDetails?.genre) {
+                router.push(rutas.PacienteDash);
+                setIsModalOpen(true);
+            }
+        }
+
+        return;
+    }, [user, rol]);
+
     // reemplazar pathname por adjustedPathname
     const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
     const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
     const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
-    console.log(lastSegment);
     const formattedLastSegment = lastSegment.replace(/_/g, " ");
 
     const segments = pathname.split("/");
@@ -275,6 +303,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
                     />
                 )}
             </div>
+            <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={rol} setOnboarding={setOnboarding} />
         </div>
     );
 };
