@@ -22,7 +22,9 @@ export default function PacienteId({ params }) {
     
 
     
-    const { setAlarmByPatientId, setPatientDetail } = UseDataFetchingAdmin();
+    const { 
+        setAlarmByPatientId, 
+        setPatientDetail } = UseDataFetchingAdmin();
 
     const editarPerfilPteQuery = searchParams.get("editPerfilPte") === "true";
     const historiaClinicaQuery = searchParams.get("historiaClinica") === "true";
