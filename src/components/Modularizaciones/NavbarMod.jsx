@@ -148,8 +148,14 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
-
+  const Inicio =
+    rol == "Paciente"
+      ? "/Dashboard/Inicio_Paciente"
+      : "/Dashboard/Inicio_Doctor";
   const formattedChats = formatChat(chats, id);
+  const hasUnreadMessages = Object.values(formattedChats).some(
+    (chat) => chat.cantidadMensajes > 0
+  );
 
   function formatChat(data, userId) {
     const resultado = {};
@@ -218,8 +224,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       console.error(error);
     }
   };
+
   const handleMensajeElementClick = (id) => {
-    router.push(`${rutas.Inicio(rol)}${rutas.Mensajes}/${id}`);
+    router.push(`${Inicio}${rutas.Mensajes}/${id}`);
   };
 
   return (
@@ -301,11 +308,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         <button
           onClick={handleChatClick}
           className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showChats || formattedChats.length > 0) && "bg-[#E73F3F]"
+            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
           }`}>
           <IconMail
             className="w-6 h-6"
-            color={(showChats || formattedChats.length > 0) && "white"}
+            color={(showChats || hasUnreadMessages) && "white"}
           />
         </button>
         {showChats && (

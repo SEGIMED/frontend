@@ -1,11 +1,4 @@
 // // const Dash="/Dashboard"
-const Inicio = (role) => {
-  if (role === "Paciente") {
-    return "/Dashboard/Inicio_Paciente";
-  } else {
-    return "/Dashboard/Inicio_Doctor";
-  }
-};
 
 const Doctor = "/Dashboard/Inicio_Doctor";
 const PacienteDash = "/Dashboard/Inicio_Paciente";
@@ -55,7 +48,6 @@ const rutas = {
   Estudios,
   Importaciones,
   Educacion,
-  Inicio,
   Agenda_General,
   Errores,
   DataEntries,
