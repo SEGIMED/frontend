@@ -5,7 +5,7 @@ import IconNotFound from "../icons/ImageNotFound";
 
 export default function NotFound({ text, sizeText }) {
     return (
-        <div className="flex flex-col h-[90%]   items-center justify-center space-x-0">
+        <div className="flex flex-col h-[100%]   items-center justify-center space-x-0">
 
             <div className='flex flex-col items-center justify-center  gap-8 md:gap-6 '>
 

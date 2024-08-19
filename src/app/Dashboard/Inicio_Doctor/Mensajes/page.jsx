@@ -17,6 +17,9 @@ import rutas from "@/utils/rutas";
 import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
 import NotFound from "@/components/notFound/notFound";
+import IconMedChat from "@/components/icons/IconMedChat";
+import IconRegresar from "@/components/icons/iconRegresar";
+
 
 export default function MensajesDoc() {
   const getChats = useAppSelector((state) => state.chat);
@@ -24,10 +27,13 @@ export default function MensajesDoc() {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
+  const [seen, setSeen]= useState(false)
+  const[flag, setFlag]=useState(false)
   const token = Cookies.get("a");
   const idUser = Cookies.get("c");
   const lastSegmentTextToShow = PathnameShow();
   const router = useRouter();
+
   useEffect(() => {
     if (!reload) {
       const navigationEntries = performance.getEntriesByType("navigation");
@@ -46,12 +52,40 @@ export default function MensajesDoc() {
     }
   }, [getChats]);
 
-  const handleImg = (img) => {
-    if (img) {
-      return (
-        <img src={img} alt="" className="w-12 h-12 object-cover rounded-3xl " />
-      );
+  useEffect(() => {
+    
+    if (getChats) {
+      const listChats = Object.values(getChats);
+      const filterChatsPtes = listChats.filter(chat => chat.messages.length > 0 );
+      const filterChatsMed = listChats.filter(chat => chat.messages.length > 0 && chat.chatType === "Médico");
+      const filterToSort = flag ? filterChatsMed : filterChatsPtes;
+
+      const sortedChats = filterToSort.sort((a, b) => {
+        const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
+        const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
+        return dateB - dateA;
+      });
+
+      setChats(sortedChats);
+      console.log(chats)
     }
+  }, [flag, getChats]);
+
+  const handleImg = (img, userId, role) => {
+    const handleClick = () => {
+      if (role === "Paciente") {
+        router.push(`${rutas.Doctor}${rutas.Pacientes}/${userId}`);
+      }
+    };
+  
+    return (
+      <img
+        src={img || avatar}  
+        alt=""
+        className={`w-12 h-12 object-cover rounded-3xl ${role === "Paciente" ? "cursor-pointer" : ""}`}
+        onClick={role === "Paciente" ? handleClick : undefined}
+      />
+    );
   };
 
   const handleViewMessages = (chat) => {
@@ -61,30 +95,31 @@ export default function MensajesDoc() {
   const counterM = (messages) => {
     if (!messages.length) return false;
     const unseenMessages = messages.filter(message => !message.state);
-    if(unseenMessages.length){
+    if (unseenMessages.length) {
       const lastMessage = messages[messages.length - 1];
       const userId = Cookies.get("c");
-      if (lastMessage.target.userId === Number(userId)) return unseenMessages.length;
+      if (lastMessage?.target?.userId === Number(userId)) {
+        return unseenMessages.length;
+      }
     }
-    return 0
+    setSeen(true);
+    return 0;
   };
 
   const chatElements = useMemo(() => {
-    const sortedChats = chats.sort((a, b) => {
-      const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
-      const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
-      return dateB - dateA;
-    });
-
-    return sortedChats.map((chat) => (
+    return chats.map((chat) => (
       <div
         key={chat._id}
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
-        <div className="flex gap-4 items-center">
-          <div className="w-8 h-8 flex justify-center items-center">
+        <div className="flex gap-0 md:gap-4 items-center">
+          {chat?.target?.role === "Médico" ? <IconMedChat color="gray"/> : ""}
+          <div 
+          className="w-8 h-8 flex justify-center items-center gap-3">
             {handleImg(
-              chat?.target?.avatar !== null ? chat?.target?.avatar : avatar
+            chat?.target?.avatar,  
+            chat?.target?.userId,
+            chat?.target?.role
             )}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
@@ -125,12 +160,32 @@ export default function MensajesDoc() {
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
+      <div className="flex gap-3">
         <Elboton
           href={`${rutas.Doctor}${rutas.Mensajes}/crearMensaje`}
           nombre={"Nuevo Chat"}
           size={"md"}
           icon={<IconMas />}
         />
+        {flag ? (
+           <Elboton
+           nombre={"Médicos"}
+           size={"md"}
+           icon={<IconMedChat color="white"/>}
+           onPress={() => setFlag(false)}
+          
+         />
+        ):(
+          <Elboton
+          nombre={"Médicos"}
+          size={"md"}
+          icon={<IconMedChat/>}
+          onPress={() => setFlag(true)}
+          className={"bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA]"}
+        />
+        )}
+        
+        </div>
         <div></div>
       </div>
       <div className="gap-2 items-start justify-center w-full md:overflow-y-auto">
@@ -140,3 +195,4 @@ export default function MensajesDoc() {
     </div>
   );
 }
+

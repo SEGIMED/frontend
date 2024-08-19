@@ -13,6 +13,7 @@ import IconCorazonMini from "@/components/icons/iconCorazon";
 import ReviewModal from "@/components/modal/ReviewModal";
 import IconOptions from "@/components/icons/IconOptions";
 import NotFound from "@/components/notFound/notFound";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function HomeDocAll() {
@@ -40,6 +41,13 @@ export default function HomeDocAll() {
   }, []);
   useEffect(() => {
     dispatch(setSearchTerm1(""));
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
   }, [dispatch]);
 
   //ordenamiento por fecha desde el front por ahora

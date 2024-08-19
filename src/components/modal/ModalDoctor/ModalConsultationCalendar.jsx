@@ -14,15 +14,14 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import { useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
+import rutas from "@/utils/rutas";
 
-const ModalConsultationCalendar = ({
-  isOpen,
-  onClose,
-  dateSelect,
-  lista,
-  title,
-  stateName,
-}) => {
+const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
+  const role = Cookies.get("b");
+  const userId = Number(Cookies.get("c"));
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,29 +31,35 @@ const ModalConsultationCalendar = ({
     getValues,
     formState: { errors },
   } = useForm();
-
+  const pacientes = useAppSelector((state) => state.allPatients.patients);
+  const doctores = useAppSelector((state) => state.doctores.doctores);
+  const stateName = role == "Paciente" ? "physician" : "patient";
+  const title = role == "Paciente" ? "Médico" : "Paciente";
+  const lista = role == "Paciente" ? doctores : pacientes;
   const [disabled, setDisabled] = useState(false);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const selectTime = watch("time");
-  const role = Cookies.get("b");
-  const userId = Number(Cookies.get("c"));
   const combineDateTime = (date, time) =>
     date && time ? `${date}T${time}:00` : "";
 
   const addMinutes = (date, minutes) =>
     new Date(date.getTime() + minutes * 60000);
 
+  const SelectDate = watch("date");
+
   useEffect(() => {
-    if (dateSelect) {
-      const formattedDate = formatDate(new Date(dateSelect));
-      setDate(formattedDate);
-      setValue("date", formattedDate);
-      const formattedTime = getHourFromDateString(dateSelect);
-      setTime(formattedTime);
-      setValue("time", formattedTime);
+    const startDateTime = combineDateTime(SelectDate, selectTime);
+    if (startDateTime) {
+      const startDate = new Date(startDateTime);
+      const endDate = addMinutes(startDate, 30);
+      // Create Date objects directly
+      setValue("scheduledStartTimestamp", startDate);
+      setValue("scheduledEndTimestamp", endDate);
     }
-  }, [dateSelect, setValue]);
+    setValue("medicalSpecialty", 1);
+    setValue("schedulingStatus", 1);
+  }, [setValue, selectTime, date]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -130,6 +135,8 @@ const ModalConsultationCalendar = ({
         data.physician = userId;
       }
       const payload = data;
+      console.log(payload);
+
       const response = await ApiSegimed.post("/schedules", payload);
 
       if (response.data) {
@@ -139,7 +146,7 @@ const ModalConsultationCalendar = ({
             icon: "success",
             confirmButtonColor: "#487FFA",
             confirmButtonText: "Aceptar",
-          });
+          }).then(() => router.push(`${rutas.Doctor}${rutas.Consultas}`));
         } else {
           Swal.fire({
             title: "Se ha solicitado la consulta con éxito",
@@ -154,7 +161,9 @@ const ModalConsultationCalendar = ({
       console.error("Error al enviar los datos:", error);
       Swal.fire({
         title: "Error al agendar la consulta",
-        text: "Ocurrió un error al intentar agendar la consulta. Por favor, intenta nuevamente.",
+        text:
+          error.response.data.error.split(":")[1] ||
+          "Ocurrió un error al intentar agendar la consulta. Por favor, intenta nuevamente.",
         icon: "error",
         confirmButtonColor: "#d33",
         confirmButtonText: "Aceptar",
@@ -192,9 +201,8 @@ const ModalConsultationCalendar = ({
               </label>
               <select
                 id={stateName}
-                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                  errors.patient ? "border-red-500" : ""
-                }`}
+                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.patient ? "border-red-500" : ""
+                  }`}
                 {...register(stateName, {
                   required: `*Debe elegir un ${title} *`,
                 })}>
@@ -272,15 +280,14 @@ const ModalConsultationCalendar = ({
                 </label>
                 <select
                   id="healthCenter"
-                  className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                    errors.healthCenter ? "border-red-500" : ""
-                  }`}
+                  className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
+                    }`}
                   {...register("healthCenter", {
                     required:
                       "* ¿En cuál centro de atención quieres ser atendido? *",
                   })}>
                   <option value="">Seleccione el centro de atención</option>
-                  <option value="1">Centro Gallegos</option>
+                  <option value="1">Centro Gallego</option>
                 </select>
                 {errors.healthCenter && (
                   <span className="text-red-500 text-sm">
@@ -303,7 +310,13 @@ const ModalConsultationCalendar = ({
                       type="date"
                       defaultValue={date}
                       className=" md:w-60 w-full p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                      // disabled
+                      {...register("date", {
+                        required: {
+                          value: true,
+                          message: "* Selecciona la fecha *",
+                        },
+                      })}
+                    // disabled
                     />
                     {errors.date && (
                       <span className="text-red-500 text-sm">

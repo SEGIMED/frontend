@@ -124,7 +124,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     dispatch(setSearchTerm(e.target.value));
   };
 
-  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+  const searchTerm = useAppSelector((state) => state.user.searchTerm);
 
   // const getActivesAlarm = async (headers) => {
   //   try {

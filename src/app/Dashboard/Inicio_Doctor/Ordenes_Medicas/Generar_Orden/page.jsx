@@ -13,11 +13,14 @@ import InputInfoText from "@/components/ordenMedica/inputInfo";
 import IconDay from "@/components/icons/IconDay";
 import IconMas from "@/components/icons/iconMas";
 import Swal from "sweetalert2";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
     const orden = useAppSelector((state) => state.formSlice.selectedOptions);
     const [pendientes, setPendientes] = useState(false);
+    console.log(orden);
+
 
     const router = useRouter();
     const userId = config.c;
@@ -36,7 +39,19 @@ export default function HomeDoc() {
         dispatch(setSelectedOption({ name, option: value }));
     };
 
-    const onSubmit = (orden) => {
+    const onSubmit = async (orden) => {
+        if (pendientes) {
+            const body = { status: true }
+            try {
+                const response = await ApiSegimed.patch(`/patient-medical-request?id=${orden.id}`, body);
+                if (response.data) {
+                    await getDoctorRequest({ token });
+                    dispatch(resetFormState());
+                }
+            } catch (error) {
+                console.error("Error creating patient request:", error);
+            }
+        }
         console.log(orden);
         Swal.fire({
             icon: "success",

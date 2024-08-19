@@ -4,9 +4,9 @@ export default function ButtonBlancoBorde({ funcion, text, iconLeft, iconRight }
     <button
       onClick={funcion}
       className="flex px-2 md:px-6 py-2 bg-white rounded-xl gap-1 items-center border-solid border-2 border-[#487FFA]">
-        {iconLeft}
-      <p className="text-start text-[#487FFA] font-bold text-base leading-5">
-        {text} 
+      {iconLeft}
+      <p className="text-start text-[#487FFA] font-bold text-base font-Roboto leading-5">
+        {text}
       </p>
       {iconRight}
     </button>

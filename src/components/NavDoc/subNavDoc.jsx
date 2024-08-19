@@ -3,38 +3,38 @@ import React, { useEffect, useState } from "react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import rutas from "@/utils/rutas";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconSubNavbar from "../icons/IconSubNavbar";
 import IconRegresar from "../icons/iconRegresar";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
-import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   setLoading,
   addClinicalHistory,
   clearClinicalHistory,
   addUserHistory,
+  changeTabs,
 } from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@nextui-org/react";
 
 export default function SubNavbar({ id }) {
   const [openDetails, setOpenDetails] = useState(false);
-  const pathname = usePathname();
-  const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
-
-  const pathArray = pathname.split("/");
-  const userId = pathArray[pathArray.length - 2];
-
-  const getLinkClass = (routeLastSegment) =>
-    `/${lastSegment}` === routeLastSegment ? "bg-white" : "cursor-pointer ";
-
-  const router = useRouter();
+  const params = useParams();
+  const selectedTab = useAppSelector((state) => state.clinicalHistory.tab);
+  const userId = params?.userId;
+  const getSelectedClass = (name) =>
+    selectedTab === name ? "bg-white" : "cursor-pointer ";
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.clinicalHistory);
 
   const combineDetails = (details, defaultDetails) => {
     return details.length > 0 ? details : defaultDetails;
@@ -43,7 +43,8 @@ export default function SubNavbar({ id }) {
   const combineVitalSigns = (vitalSigns, defaultVitalSigns) => {
     return defaultVitalSigns.map((defaultSign) => {
       const existingSign = vitalSigns.find(
-        (sign) => sign.measureType === defaultSign.measureType && sign.measure !== null
+        (sign) =>
+          sign.measureType === defaultSign.measureType && sign.measure !== null
       );
       return existingSign || defaultSign;
     });
@@ -60,16 +61,40 @@ export default function SubNavbar({ id }) {
         const defaultAnthropometricDetails = [
           { measureType: "Estatura", measureUnit: "Cm", measure: "-" },
           { measureType: "Peso", measureUnit: "Kg", measure: "-" },
-          { measureType: "Índice de Masa Corporal", measureUnit: "Kg/m²", measure: "-" },
+          {
+            measureType: "Índice de Masa Corporal",
+            measureUnit: "Kg/m²",
+            measure: "-",
+          },
         ];
 
         const defaultVitalSigns = [
           { measureType: "Temperatura", measureUnit: "°C", measure: "-" },
-          { measureType: "Frecuencia Cardiaca", measureUnit: "bpm", measure: "-" },
-          { measureType: "Presión Arterial Sistólica", measureUnit: "mmHg", measure: "-" },
-          { measureType: "Presión Arterial Diastólica", measureUnit: "mmHg", measure: "-" },
-          { measureType: "Frecuencia Respiratoria", measureUnit: "rpm", measure: "-" },
-          { measureType: "Saturación de Oxígeno", measureUnit: "%", measure: "-" },
+          {
+            measureType: "Frecuencia Cardiaca",
+            measureUnit: "bpm",
+            measure: "-",
+          },
+          {
+            measureType: "Presión Arterial Sistólica",
+            measureUnit: "mmHg",
+            measure: "-",
+          },
+          {
+            measureType: "Presión Arterial Diastólica",
+            measureUnit: "mmHg",
+            measure: "-",
+          },
+          {
+            measureType: "Frecuencia Respiratoria",
+            measureUnit: "rpm",
+            measure: "-",
+          },
+          {
+            measureType: "Saturación de Oxígeno",
+            measureUnit: "%",
+            measure: "-",
+          },
           // { measureType: "Estatura", measureUnit: "Cm", measure: "-" },
           // { measureType: "Peso", measureUnit: "Kg", measure: "-" },
           // { measureType: "IMC", measureUnit: "Kg/m²", measure: "-" },
@@ -91,7 +116,6 @@ export default function SubNavbar({ id }) {
             vitalSigns: combinedVitalSigns,
           };
         });
-        console.log(combinedConsultas);
         dispatch(addClinicalHistory(combinedConsultas));
       }
     } catch (error) {
@@ -104,29 +128,21 @@ export default function SubNavbar({ id }) {
       `/patient-details?id=${userId}`,
       headers
     );
-    console.log(response.data, `user`);
     dispatch(addUserHistory(response.data));
   };
 
   useEffect(() => {
     const token = Cookies.get("a");
+    dispatch(setLoading(true));
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
+      getConsultas({ headers: { token: token } }).catch(console.error);
     }
-  }, []);
-
-  useEffect(() => {
-    const token = Cookies.get("a");
-    dispatch(setLoading(true));
-
-    getConsultas({ headers: { token: token } }).catch(console.error);
-    getUser({ headers: { token: token } }).catch(console.error);
 
     return () => {
       dispatch(clearClinicalHistory());
     };
   }, [userId, dispatch]);
-
 
   return (
     <div className="border-b border-b-[#cecece] bg-[#fafafc] flex flex-row-reverse md:flex-row justify-around items-center md:pr-6">
@@ -146,70 +162,44 @@ export default function SubNavbar({ id }) {
             "border-l-1",
           ],
           wrapper: ["px-0"],
-        }}
-      >
+        }}>
         <NavbarContent className="gap-0 px-0 overflow-x-auto">
           <NavbarItem
             key={"Datos del Paciente"}
-            className={getLinkClass(rutas.Datos)}
-            onClick={() =>
-              router.push(
-                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.Datos}`
-              )
-            }
-          >
+            className={getSelectedClass("Datos")}
+            onClick={() => dispatch(changeTabs("Datos"))}>
             <div className="flex items-center gap-2" aria-current="page">
               <IconClinicalHistory /> Datos del Paciente
             </div>
           </NavbarItem>
           <NavbarItem
             key={"Consultas"}
-            className={getLinkClass(rutas.Consultas)}
-            onClick={() =>
-              router.push(
-                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Consultas}`
-              )
-            }
-          >
+            className={getSelectedClass("Consultas")}
+            onClick={() => dispatch(changeTabs("Consultas"))}>
             <div className="flex items-center gap-2" aria-current="page">
               <IconSubNavbar /> Consultas
             </div>
           </NavbarItem>
           <NavbarItem
             key={"Evoluciones"}
-            className={getLinkClass(rutas.Evoluciones)}
-            onClick={() =>
-              router.push(
-                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Evoluciones}`
-              )
-            }
-          >
+            className={getSelectedClass("Evoluciones")}
+            onClick={() => dispatch(changeTabs("Evoluciones"))}>
             <div className="flex items-center gap-2">
               <IconSubNavbar /> Evoluciones
             </div>
           </NavbarItem>
           <NavbarItem
             key={"Anamnesis"}
-            className={getLinkClass(rutas.Anamnesis)}
-            onClick={() =>
-              router.push(
-                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Anamnesis}`
-              )
-            }
-          >
+            className={getSelectedClass("Anamnesis")}
+            onClick={() => dispatch(changeTabs("Anamnesis"))}>
             <div className="flex items-center gap-2">
               <IconSubNavbar /> Anamnesis
             </div>
           </NavbarItem>
           <NavbarItem
             key={"Autoevaluación"}
-            className={getLinkClass(rutas.Evaluacion)}
-            onClick={() =>
-              router.push(
-                `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}/${rutas.Evaluacion}`
-              )
-            }
-          >
+            className={getSelectedClass("Autoevaluación")}
+            onClick={() => dispatch(changeTabs("Autoevaluación"))}>
             <div className="flex items-center gap-2">
               <IconSubNavbar /> Autoevaluación
             </div>
@@ -225,8 +215,7 @@ export default function SubNavbar({ id }) {
                     border: "0",
                   }}
                   variant="bordered"
-                  onClick={() => setOpenDetails(!openDetails)}
-                >
+                  onClick={() => setOpenDetails(!openDetails)}>
                   Mas{" "}
                   {openDetails ? (
                     <IconArrowDetailUp />
@@ -237,43 +226,44 @@ export default function SubNavbar({ id }) {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem
-                  className={getLinkClass(rutas.ExamenFisico)}
+                  className={getSelectedClass("Examen Físico")}
                   key="new"
                   textValue="Examen Fisico"
-                >
-                  <Link
-                    className="w-full"
-                    onClick={() => setOpenDetails(!openDetails)}
-                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.ExamenFisico}`}
-                  >
-                    <p>Examen Fisico</p>
-                  </Link>
+                  onClick={() => {
+                    dispatch(changeTabs("Examen Físico"));
+                    setOpenDetails(!openDetails);
+                  }}>
+                  Examen Físico
                 </DropdownItem>
                 <DropdownItem
-                  className={getLinkClass(rutas.SignosVitales)}
+                  className={getSelectedClass("Signos Vitales")}
                   key="copy"
                   textValue="Signos Vitales"
-                >
-                  <Link
-                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.SignosVitales}`}
-                    onClick={() => setOpenDetails(!openDetails)}
-                    className="w-full"
-                  >
-                    <p>Signos Vitales</p>
-                  </Link>
+                  onClick={() => {
+                    dispatch(changeTabs("Signos Vitales"));
+                    setOpenDetails(!openDetails);
+                  }}>
+                  Signos Vitales
                 </DropdownItem>
                 <DropdownItem
-                  className={getLinkClass(rutas.Diagnostico)}
+                  className={getSelectedClass("Diagnosticos y tratamientos")}
                   key="edit"
                   textValue="Diagnosticos y tratamientos"
-                >
-                  <Link
-                    onClick={() => setOpenDetails(!openDetails)}
-                    className="w-full"
-                    href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${id}${rutas.Diagnostico}`}
-                  >
-                    <p>Diagnosticos y tratamientos</p>
-                  </Link>
+                  onClick={() => {
+                    dispatch(changeTabs("Diagnosticos y tratamientos"));
+                    setOpenDetails(!openDetails);
+                  }}>
+                  Diagnosticos y tratamientos
+                </DropdownItem>
+                <DropdownItem
+                  className={getSelectedClass("HC Importados")}
+                  key="importaciones"
+                  textValue="HC Importados"
+                  onClick={() => {
+                    dispatch(changeTabs("HC Importados"));
+                    setOpenDetails(!openDetails);
+                  }}>
+                  HC Importados
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

@@ -26,7 +26,9 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconDelete from "@/components/icons/IconDelete";
 import Swal from "sweetalert2";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 import { useRouter } from "next/navigation";
+import DynamicTable from "@/components/table/DynamicTable";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -37,14 +39,37 @@ export default function HomeDoc() {
   const [isSorted, setIsSorted] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [consultas, setConsultas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const consultas = useAppSelector((state) => state.schedules);
-  // Obtener consultas del estado
-  const myID = Number(Cookies.get("c")); // Obtener myID de las cookies
+  const currentDate = new Date();
+  // Obtener consultas
+  const getSchedulesByUserId = async () => {
+    try {
+      const response = await ApiSegimed.get("/schedulesByUserId");
+      setConsultas(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    try {
+      setIsLoading(true);
+      getSchedulesByUserId();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   // Obtener pacientes del estado
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
@@ -59,29 +84,17 @@ export default function HomeDoc() {
 
   // Filtrar consultas con schedulingStatus = 1 y physician = myID, y extraer los IDs de los pacientes
   const scheduledConsultas = consultas.filter(
-    (consulta) => consulta.schedulingStatus !== 1 && consulta.physician === myID
+    (consulta) => consulta.schedulingStatus !== 1
   );
+  const sortedConsultas = [...scheduledConsultas]
+    .sort((a, b) => {
+      //el que mas se acerca a la fecha actual
+      const diffA = Math.abs(new Date(a.scheduledStartTimestamp) - currentDate);
+      const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
+      return diffA - diffB;
+    })
+    .filter((cita) => cita.schedulingStatus === 2);
 
-  // Filtrar pacientes que tienen consulta programada y aplicar filtro de búsqueda
-  const filteredPatients = scheduledConsultas.filter(
-    (cita) =>
-      cita.patientUser.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cita.patientUser.lastname.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Ordenar pacientes si es necesario
-  /*const sortedPatients = isSorted
-    ? [...filteredPatients].sort((a, b) =>
-        a.patientUser.name.localeCompare(b.patientUser.name)
-      )
-    : filteredPatients;*/ // dejo este codigo pero no lo uso - ordeno a los pacientes por fecha
-
-  const sortedPatients = filteredPatients
-    .sort(
-      (a, b) =>
-        new Date(b.scheduledEndTimestamp) - new Date(a.scheduledEndTimestamp)
-    )
-    .filter((cita) => cita.schedulingStatus == 2);
   const handleSortClick = () => {
     setIsSorted(!isSorted);
   };
@@ -91,7 +104,6 @@ export default function HomeDoc() {
   const handleRiskFilterClick = (risk) => {
     setRiskFilter(risk);
   };
-
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
@@ -101,7 +113,6 @@ export default function HomeDoc() {
     setSelectedPatient(patient);
   };
   const isLessThan24HoursAgo = (timestamp) => {
-    const currentDate = new Date();
     const consultationDate = new Date(timestamp);
     const differenceInHours = (currentDate - consultationDate) / 1000 / 3600;
     return differenceInHours < 24;
@@ -158,6 +169,63 @@ export default function HomeDoc() {
     Cookies.set("medicalEventId", idEvent, { expires: 7 });
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
   };
+  const columns = [
+    {
+      label: "Nombre",
+      key: "patientUser.name",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Fecha",
+      key: "scheduledStartTimestamp",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Centro de atencion",
+      key: "healthCenter",
+      showMobile: true,
+      width: "w-16",
+    },
+    {
+      label: "Motivo de consulta",
+      key: "reasonForConsultation",
+      showMobile: false,
+      width: "w-16",
+    },
+  ];
+  const PasadasDropdown = (row) => {
+    return (
+      <MenuDropDown
+        label={"Mas"}
+        icon={<IconOptions color="white" />}
+        categories={[
+          {
+            title: "Opciones",
+            items: [
+              {
+                label: "Dejar Review",
+                icon: <IconCorazonMini />,
+                onClick: () => handleReviewClick(row),
+              },
+              isLessThan24HoursAgo(row.scheduledEndTimestamp) && {
+                label: "Ver consultas",
+                icon: <IconPersonalData />,
+                onClick: () =>
+                  handleCokiePatient(row.id, row.patient, row.medicalEvent.id),
+              },
+              isLessThan24HoursAgo(row?.scheduledEndTimestamp) && {
+                label: "Eliminar consulta",
+                icon: <IconDelete color="#B2B2B2" />,
+                onClick: () => handleDeleteClick(row),
+              },
+            ], // Elimina los valores nulos
+          },
+        ]}
+      />
+    );
+  };
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
@@ -185,76 +253,18 @@ export default function HomeDoc() {
             </Link>
           </div>
         </div>
-        <div className="h-full md:overflow-y-auto">
-          <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
-            <div className="w-[10%] md:w-[5%] md:block"></div>
-            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-4 py-2 z-10">
-              <p className="text-[#5F5F5F]">Nombre</p>
-              <p className="text-[#5F5F5F]">Fecha </p>
-              {/* <p className="text-[#5F5F5F] hidden md:block">Grupo HTP</p> */}
-              <p className="text-[#5F5F5F] ">Centro de atencion</p>
-              <p className="text-[#5F5F5F] hidden md:block">
-                Motivo de consulta
-              </p>
-            </div>
-          </div>
-          {consultas.length === 0 && (
-            <NotFound text="No hay consultas pasadas." />
-          )}
-          {
-            <div className="items-start justify-center w-full md:overflow-y-auto">
-              {sortedPatients?.map((consulta) => (
-                <PatientCardConsulta1
-                  key={consulta.id}
-                  consulta={consulta}
-                  button={
-                    <MenuDropDown
-                      label={"Mas"}
-                      icon={<IconOptions color="white" />}
-                      categories={[
-                        {
-                          title: "Opciones",
-                          items: [
-                            {
-                              label: "Dejar Review",
-                              icon: <IconCorazonMini />,
-                              onClick: () => handleReviewClick(consulta),
-                            },
-                            isLessThan24HoursAgo(
-                              consulta.scheduledEndTimestamp
-                            ) && {
-                              label: "Ver consultas",
-                              icon: <IconPersonalData />,
-                              onClick: () =>
-                                handleCokiePatient(
-                                  consulta.id,
-                                  consulta.patient,
-                                  consulta.medicalEvent.id
-                                ),
-                            },
-                            isLessThan24HoursAgo(
-                              consulta?.scheduledEndTimestamp
-                            ) && {
-                              label: "Eliminar consulta",
-                              icon: <IconDelete color="#B2B2B2" />,
-                              onClick: () => handleDeleteClick(consulta),
-                            },
-                          ], // Elimina los valores nulos
-                        },
-                      ]}
-                    />
-                  }
-                />
-              ))}
-            </div>
-          }
-          {isReviewModalOpen && (
-            <ReviewModalApte
-              onClose={() => setIsReviewModalOpen(false)}
-              id={selectedPatient.id}
-            />
-          )}
-        </div>
+        <DynamicTable
+          columns={columns}
+          rows={sortedConsultas}
+          renderDropDown={PasadasDropdown}
+          showRisks={true}
+        />
+        {isReviewModalOpen && (
+          <ReviewModalApte
+            onClose={() => setIsReviewModalOpen(false)}
+            id={selectedPatient.id}
+          />
+        )}
       </div>
     </div>
   );

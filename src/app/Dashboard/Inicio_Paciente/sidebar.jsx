@@ -35,6 +35,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const notifications = useAppSelector((state) => state.notifications);
+  const showSearch = useAppSelector((state) => state.searchBar);
   const user = useAppSelector((state) => state.user);
   const searchTerm1 = useAppSelector((state) => state.doctores.searchTerm1);
   const handleSearchChange = (e) => {
@@ -48,11 +49,11 @@ export const SidePte = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
-  const showSearch =
-    pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
-    // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
-    pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
-    pathname === "/Dashboard/Inicio_Paciente/Historial";
+  // const showSearch =
+  //   pathname === "/Dashboard/Inicio_Paciente/Doctores" ||
+  //   // pathname === "/Dashboard/Inicio_Paciente/Mensajes" ||
+  //   pathname === "/Dashboard/Inicio_Paciente/Mensajes/crearMensaje" ||
+  //   pathname === "/Dashboard/Inicio_Paciente/Historial";
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
   const lastSegmentText = pathname
     .substring(pathname.lastIndexOf("/") + 1)
@@ -187,7 +188,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
       setTimeout(() => {
         // Realizar la recarga de la página para limpiar todos los datos
         window.location.reload(true);
-      }, 2000);
+      }, 1000);
       return;
     }
 
