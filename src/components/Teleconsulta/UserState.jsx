@@ -30,13 +30,15 @@ export default function UserState(){
     },[])
 
     return(
-        <div className="">
-            <p>
-                {isReady ? 'Esta preparado ' : 'Esperando que se conecte'}
+        <div className="h-full w-full flex flex-col items-center justify-center 
+        rounded-medium border-solid border-2 border-gray-250 mb-40 bg-gray-200">
+           
+          
+                <img className="w-1/3 h-1/3 mb-10 rounded-full" src={dataTarget?.target?.avatar || avatar } />
+           
+            <p className="text-bold text-xl">
+                {isReady ? `${dataTarget?.name} está esperando..` : `Esperando a ${dataTarget?.name} que se conecte...`}
             </p>
-            <div>
-                <img className="w-12 h-12" src={dataTarget?.target?.avatar || avatar } />
-            </div>
         </div>
     )
 }
