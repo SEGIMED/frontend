@@ -13,13 +13,14 @@ import Domicilio from "../boarding/Domicilio";
 import CentroDetAtención from "../boarding/CentroDeAtencion";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
 import Doctor from "../boarding/Doctor";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { mapBoolean } from "@/utils/MapeoCuerpo";
 import MatriculaNumber from "../boarding/Matricula";
 import MatriculaProvNumber from "../boarding/MatriculaProv";
 import Especialidad from "../boarding/Especialidad";
 import IconArrowRight from "@/components/icons/iconArrowRight";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 
 const ProgressBar = ({ steps, currentIndex }) => {
     return (
@@ -41,6 +42,11 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
 
     const formStateGlobal = useAppSelector((state) => state.formSlice.selectedOptions);
     const user = useAppSelector((state) => state.user);
+
+    console.log(formStateGlobal);
+
+
+    const dispatch = useAppDispatch()
 
 
     const handleDisabled = () => {
@@ -75,6 +81,10 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
         }
     };
 
+    const handleChange = ({ name, option }) => {
+        dispatch(setSelectedOption({ name, option }));
+    }
+
 
     useEffect(() => {
         if (rol === "Medico") {
@@ -98,7 +108,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
         <Genero key="genero" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Nacimiento key="nacimiento" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Domicilio key="domicilio" handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} handleChange={handleChange} />,
         <ViveSolo key="vive_solo" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <DispElectronicos key="disp_electronicos" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <UsoCelular key="uso_celular" handleDisabled={handleDisabled} state={formStateGlobal} />,
@@ -109,7 +119,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
         <Genero key="genero" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Nacimiento key="nacimiento" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <Domicilio key="domicilio" handleDisabled={handleDisabled} state={formStateGlobal} />,
-        <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} />,
+        <CentroDetAtención key="centro_det_atencion" handleDisabled={handleDisabled} state={formStateGlobal} handleChange={handleChange} />,
         <Especialidad key="Especialidad" handleDisabled={handleDisabled} state={formStateGlobal} options={catalog} />,
         <MatriculaNumber key="MatriculaNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
         <MatriculaProvNumber key="MatriculaProvNumber" handleDisabled={handleDisabled} state={formStateGlobal} />,
