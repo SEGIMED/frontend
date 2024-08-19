@@ -99,8 +99,6 @@ export default function HomeDoc() {
     <p key={2}>Alarmas</p>,
   ];
 
-  console.log(barChartData);
-
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
       <BarChart data={barChartData} />

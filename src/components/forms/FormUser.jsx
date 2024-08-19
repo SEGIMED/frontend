@@ -11,7 +11,6 @@ import IconPasswordOpen from "../icons/IconPasswordOpen";
 import IconCheckBoton from "../icons/iconCheckBoton";
 import Link from "next/link";
 import LoadingFallback from "../loading/loading";
-import { findFlagUrlByIso2Code } from "country-flags-svg";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -32,18 +31,18 @@ export const FormUser = ({ formData, setFormData }) => {
   const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("");
 
   const countries = [
-    { iso: 'AR', prefix: '+54', name: 'Argentina' },
-    { iso: 'PE', prefix: '+51', name: 'Perú' },
-    { iso: 'BR', prefix: '+55', name: 'Brasil' },
-    { iso: 'CL', prefix: '+56', name: 'Chile' },
-    { iso: 'CO', prefix: '+57', name: 'Colombia' },
-    { iso: 'VE', prefix: '+58', name: 'Venezuela' },
-    { iso: 'BO', prefix: '+591', name: 'Bolivia' },
-    { iso: 'EC', prefix: '+593', name: 'Ecuador' },
-    { iso: 'UY', prefix: '+598', name: 'Uruguay' },
+    { iso: "AR", prefix: "+54", name: "Argentina" },
+    { iso: "PE", prefix: "+51", name: "Perú" },
+    { iso: "BR", prefix: "+55", name: "Brasil" },
+    { iso: "CL", prefix: "+56", name: "Chile" },
+    { iso: "CO", prefix: "+57", name: "Colombia" },
+    { iso: "VE", prefix: "+58", name: "Venezuela" },
+    { iso: "BO", prefix: "+591", name: "Bolivia" },
+    { iso: "EC", prefix: "+593", name: "Ecuador" },
+    { iso: "UY", prefix: "+598", name: "Uruguay" },
   ];
 
   const handleCheckboxChange = (type) => {
@@ -61,7 +60,11 @@ export const FormUser = ({ formData, setFormData }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
-      const updatedData = { ...formData, ...data, cellphone: data.cellphonePrefix + data.cellphone };
+      const updatedData = {
+        ...formData,
+        ...data,
+        cellphone: data.cellphonePrefix + data.cellphone,
+      };
       setFormData(updatedData);
 
       const response = await ApiSegimed.post(
@@ -85,7 +88,6 @@ export const FormUser = ({ formData, setFormData }) => {
       });
     }
   });
-
 
   const passwordValue = watch("password");
 
@@ -171,40 +173,45 @@ export const FormUser = ({ formData, setFormData }) => {
             {showPasswordCriteria && (
               <ul className="mt-2 text-sm ">
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
-                    }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
+                  }`}>
                   {passwordCriteria.hasUpperCase && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener una letra mayúscula
                 </li>
                 <li
-                  className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
-                    }`}>
+                  className={`flex gap-2  items-center whitespace-nowrap ${
+                    passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
+                  }`}>
                   {passwordCriteria.hasLowerCase && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener una letra minúscula
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
-                    }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
+                  }`}>
                   {passwordCriteria.hasSpecialChar && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener un carácter especial
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
-                    }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
+                  }`}>
                   {passwordCriteria.hasMinLength && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe tener al menos 6 caracteres
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasNumber ? "text-[#70C247]" : ""
-                    }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${
+                    passwordCriteria.hasNumber ? "text-[#70C247]" : ""
+                  }`}>
                   {passwordCriteria.hasNumber && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
@@ -311,9 +318,10 @@ export const FormUser = ({ formData, setFormData }) => {
                     value: true,
                     message: "* Prefijo requerido *",
                   },
-                })}
-              >
-                <option value="" disabled selected>Prefijo</option>
+                })}>
+                <option value="" disabled selected>
+                  Prefijo
+                </option>
                 {countries.map((country) => (
                   <option key={country.iso} value={country.prefix}>
                     <span>
@@ -360,7 +368,6 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
 
-
           <div className="w-full max-w-96">
             <label htmlFor="nationality">Nacionalidad</label>
             <select
@@ -390,7 +397,11 @@ export const FormUser = ({ formData, setFormData }) => {
               checked={termsAccepted}
               onChange={() => handleCheckboxChange("terms")}
             />
-            <Link href="/Term" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+            <Link
+              href="/Term"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer">
               Acepto los términos y condiciones.
             </Link>
           </div>
@@ -403,7 +414,11 @@ export const FormUser = ({ formData, setFormData }) => {
               checked={privacyAccepted}
               onChange={() => handleCheckboxChange("privacy")}
             />
-            <Link href="/Priv" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+            <Link
+              href="/Priv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer">
               Acepto la política de privacidad.
             </Link>
           </div>
@@ -412,9 +427,12 @@ export const FormUser = ({ formData, setFormData }) => {
             <button
               type="submit"
               className={`w-full py-2 px-4 rounded-lg
-                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white" : "bg-gray-400 text-white cursor-not-allowed"} ${loading ? "bg-bluePrimary" : "bg-[#70C247]"}`}
-              disabled={!termsAccepted && !privacyAccepted || loading}
-            >
+                ${
+                  termsAccepted && privacyAccepted
+                    ? "bg-[#70C247] text-white"
+                    : "bg-gray-400 text-white cursor-not-allowed"
+                } ${loading ? "bg-bluePrimary" : "bg-[#70C247]"}`}
+              disabled={(!termsAccepted && !privacyAccepted) || loading}>
               {loading ? (
                 <div className="flex items-center justify-center h-full">
                   <LoadingFallback className="w-6 h-6" />
@@ -431,4 +449,3 @@ export const FormUser = ({ formData, setFormData }) => {
     </div>
   );
 };
-

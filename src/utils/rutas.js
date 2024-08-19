@@ -6,6 +6,7 @@ const Admin = "/Dashboard/Inicio_Admin";
 const PacienteDash2 = "/Dashboard/Inicio_Paciente2";
 const Entries = "/Dashboard/Inicio_Entries";
 
+const Educacion = "/Educacion";
 const Alarm = "/Alarmas";
 const Mi_Agenda = "/Mi_Agenda";
 const Consultas = "/Consultas";
@@ -47,6 +48,7 @@ const Agenda_General = "/Agenda_General";
 const rutas = {
   Estudios,
   Importaciones,
+  Educacion,
   Agenda_General,
   Errores,
   DataEntries,
