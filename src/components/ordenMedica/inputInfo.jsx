@@ -6,7 +6,7 @@ export default function InputInfoText({ title, placeholder, onChange, text, icon
     return (
         <div className={`flex flex-col gap-2   bg-[#fafafc] ${className}`}>{title ?
             <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
-                {icon ? icon : <IconClinicalHistory className="w-3" />}
+                {icon ? icon : <IconClinicalHistory className="w-6" color={"#808080"} />}
                 {title}
             </label> : null}
             {text ? <textarea defaultValue={defaultValue} disabled={disabled} onChange={onChange} placeholder={placeholder} className="w-full min-h-24 text-start text-[#686868] font-normal text-base leading-6 bg-white border outline-none border-[#DCDBDB] rounded-lg px-4 py-2" />
