@@ -59,7 +59,7 @@ const Datos = () => {
             <MenuDropDown
               label="Importar archivo"
               icon={<IconExportar color="#487FFA" />}
-              classNameButton={"border-[#487FFA] border-2 bg-white text-start text-[#487FFA] font-bold text-base leading-5"}
+              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
               categories={[
                 {
                   items: [
