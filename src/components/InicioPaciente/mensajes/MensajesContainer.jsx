@@ -3,6 +3,7 @@ import { MensajeElement } from "./MensajeElement";
 import Elboton from "@/components/Buttons/Elboton";
 import IconMoreInfo from "@/components/icons/IconMoreInfo";
 import rutas from "@/utils/rutas";
+import Cookies from "js-cookie";
 
 const MensajesContainer = ({
   handleMensajeClick,
@@ -19,6 +20,11 @@ const MensajesContainer = ({
       isMessageFromUser: chat?.isMessageFromUser,
     }))
     .sort((a, b) => b.date - a.date);
+  const rol = Cookies.get("b");
+  const Inicio =
+    rol == "Paciente"
+      ? "/Dashboard/Inicio_Paciente"
+      : "/Dashboard/Inicio_Doctor";
   return (
     <div
       onClick={handleMensajeClick}
@@ -55,7 +61,7 @@ const MensajesContainer = ({
         </div>
         <div className="flex items-center justify-center py-1">
           <Elboton
-            href={`${rutas.Doctor}${rutas.Mensajes}`}
+            href={`${Inicio}${rutas.Mensajes}`}
             className="rounded-full"
             nombre="Nuevo Chat"
             icon={<IconMoreInfo color="white" />}
