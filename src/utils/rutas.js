@@ -27,6 +27,7 @@ const Anamnesis = "/Anamnesis";
 const Evaluacion = "/Evaluacion";
 const Evoluciones = "/Evoluciones";
 const Datos = "/Datos";
+const Citas = "/Citas";
 const Teleconsulta = "/Teleconsulta";
 const SignosVitales = "/Signos_Vitales";
 const ExamenFisico = "/Examen_Fisico";
@@ -86,6 +87,7 @@ const rutas = {
   Pasadas,
   CrearMensaje,
   Entries,
+  Citas,
 };
 
 export default rutas;
