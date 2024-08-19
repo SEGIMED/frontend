@@ -12,6 +12,8 @@ export const protectRoute = (pathname, rol, dispatch, router) => {
         return router.push(rutas.PacienteDash);
     } else if (rol === "Admin" && !lowerPath.includes("inicio_admin")) {
         return router.push(rutas.Admin);
+    } else if (rol === "Entries" && !lowerPath.includes("inicio_entries")) {
+        return router.push(rutas.Entries);
     } else if (
         (lowerPath.includes("inicio_doctor") && rol !== "Médico") ||
         (lowerPath.includes("inicio_paciente") && rol !== "Paciente") ||

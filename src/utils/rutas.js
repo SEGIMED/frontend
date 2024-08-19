@@ -11,6 +11,7 @@ const Doctor = "/Dashboard/Inicio_Doctor";
 const PacienteDash = "/Dashboard/Inicio_Paciente";
 const Admin = "/Dashboard/Inicio_Admin";
 const PacienteDash2 = "/Dashboard/Inicio_Paciente2";
+const Entries = "/Dashboard/Inicio_Entries";
 
 const Educacion = "/Educacion";
 const Alarm = "/Alarmas";
@@ -47,8 +48,12 @@ const CrearMensaje = "/crearMensaje";
 const Pendientes = "/Pendientes";
 const DataEntries = "/Data_Entries";
 const Errores = "/Errores";
+const Estudios = "/Estudios";
+const Importaciones = "/Importaciones";
 const Agenda_General = "/Agenda_General";
 const rutas = {
+  Estudios,
+  Importaciones,
   Educacion,
   Inicio,
   Agenda_General,
@@ -90,6 +95,7 @@ const rutas = {
   Mis_turnos,
   Pasadas,
   CrearMensaje,
+  Entries,
 };
 
 export default rutas;

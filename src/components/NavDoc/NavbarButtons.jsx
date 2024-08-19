@@ -11,143 +11,204 @@ import IconEducacion from "../icons/IconEducacion";
 import IconPreConsulta from "../icons/iconPreconsulta";
 import rutas from "@/utils/rutas";
 import IconMedChat from "../icons/IconMedChat";
+import IconClinicalHistory from "../icons/IconClinicalHistory";
+import IconImportar from "../icons/IconImportar";
 
 export const buttonsDoc = [
   {
-    name: "Tablero",
-    path: rutas.Doctor,
-    icon: IconCube,
-  },
-  {
-    name: "Mi perfil",
-    path: `${rutas.Doctor}${rutas.Mi_Perfil}`,
-    icon: IconDoctorNav,
-  },
-  {
-    name: "Consultas",
-    path: `${rutas.Doctor}${rutas.Consultas}`,
-    icon: IconRecordNav,
-  },
-  {
-    name: "Chats",
-    path: `${rutas.Doctor}${rutas.Mensajes}`,
-    icon: IconMessageNav,
-  },
-  {
-    name: "Mi Agenda",
-    path: `${rutas.Doctor}${rutas.Mi_Agenda}`,
-    icon: IconCalendarNav,
-  },
-  {
-    name: "Estadísticas",
-    path: `${rutas.Doctor}${rutas.Estadisticas}`,
-    icon: Estadistica,
-  },
-  {
-    name: "Alarmas",
-    path: `${rutas.Doctor}${rutas.Alarm}`,
-    icon: AlarmDash,
-  },
-  {
-    name: "Pacientes",
-    path: `${rutas.Doctor}${rutas.Pacientes}`,
-    icon: IconPatientNav,
-  },
-  {
-    name: "Educación",
-    path: `${rutas.Doctor}${rutas.Educacion}`,
-    icon: IconEducacion,
-  },
-  {
-    name: "Sugerencias",
-    path: `${rutas.Doctor}${rutas.Sugerencias}`,
-    icon: Sugerencias,
+    buttons: [
+      {
+        name: "Tablero",
+        path: rutas.Doctor,
+        icon: IconCube,
+      },
+      {
+        name: "Mi perfil",
+        path: `${rutas.Doctor}${rutas.Mi_Perfil}`,
+        icon: IconDoctorNav,
+      },
+      {
+        name: "Consultas",
+        path: `${rutas.Doctor}${rutas.Consultas}`,
+        icon: IconRecordNav,
+      },
+      {
+        name: "Chats",
+        path: `${rutas.Doctor}${rutas.Mensajes}`,
+        icon: IconMessageNav,
+      },
+      {
+        name: "Mi Agenda",
+        path: `${rutas.Doctor}${rutas.Mi_Agenda}`,
+        icon: IconCalendarNav,
+      },
+      {
+        name: "Estadísticas",
+        path: `${rutas.Doctor}${rutas.Estadisticas}`,
+        icon: Estadistica,
+      },
+      {
+        name: "Alarmas",
+        path: `${rutas.Doctor}${rutas.Alarm}`,
+        icon: AlarmDash,
+      },
+      {
+        name: "Pacientes",
+        path: `${rutas.Doctor}${rutas.Pacientes}`,
+        icon: IconPatientNav,
+      },
+      {
+        name: "Educación",
+        path: `${rutas.Doctor}${rutas.Educacion}`,
+        icon: IconEducacion,
+      },
+      {
+        name: "Sugerencias",
+        path: `${rutas.Doctor}${rutas.Sugerencias}`,
+        icon: Sugerencias,
+      },
+    ],
   },
 ];
 
 export const buttonsPaciente = [
   {
-    name: "Tablero",
-    path: rutas.PacienteDash,
-    icon: IconCube,
-  },
-  {
-    name: "Mi perfil",
-    path: `${rutas.PacienteDash}${rutas.Mi_Perfil}`,
-    icon: IconDoctorNav,
-  },
-  {
-    name: "Preconsultas",
-    path: `${rutas.PacienteDash}${rutas.Preconsulta}`,
-    icon: IconPreConsulta,
-  },
-  {
-    name: "Consultas",
-    path: `${rutas.PacienteDash}${rutas.Historial}`,
-    icon: IconRecordNav,
-  },
-  {
-    name: "Chats",
-    path: `${rutas.PacienteDash}${rutas.Mensajes}`,
-    icon: IconMessageNav,
-  },
-  {
-    name: "Mi Agenda",
-    path: `${rutas.PacienteDash}${rutas.Mi_Agenda}`,
-    icon: IconCalendarNav,
-  },
-  {
-    name: "Médicos",
-    path: `${rutas.PacienteDash}${rutas.Doctores}`,
-    icon: IconPatientNav,
-  },
-  {
-    name: "Alarmas",
-    path: `${rutas.PacienteDash}${rutas.Alarm}`,
-    icon: AlarmDash,
-  },
-  {
-    name: "Sugerencias",
-    path: `${rutas.PacienteDash}${rutas.Sugerencias}`,
-    icon: Sugerencias,
+    buttons: [
+      {
+        name: "Tablero",
+        path: rutas.PacienteDash,
+        icon: IconCube,
+      },
+      {
+        name: "Mi perfil",
+        path: `${rutas.PacienteDash}${rutas.Mi_Perfil}`,
+        icon: IconDoctorNav,
+      },
+      {
+        name: "Preconsultas",
+        path: `${rutas.PacienteDash}${rutas.Preconsulta}`,
+        icon: IconPreConsulta,
+      },
+      {
+        name: "Consultas",
+        path: `${rutas.PacienteDash}${rutas.Historial}`,
+        icon: IconRecordNav,
+      },
+      {
+        name: "Chats",
+        path: `${rutas.PacienteDash}${rutas.Mensajes}`,
+        icon: IconMessageNav,
+      },
+      {
+        name: "Mi Agenda",
+        path: `${rutas.PacienteDash}${rutas.Mi_Agenda}`,
+        icon: IconCalendarNav,
+      },
+      {
+        name: "Médicos",
+        path: `${rutas.PacienteDash}${rutas.Doctores}`,
+        icon: IconPatientNav,
+      },
+      {
+        name: "Alarmas",
+        path: `${rutas.PacienteDash}${rutas.Alarm}`,
+        icon: AlarmDash,
+      },
+      {
+        name: "Sugerencias",
+        path: `${rutas.PacienteDash}${rutas.Sugerencias}`,
+        icon: Sugerencias,
+      },
+    ],
   },
 ];
 
 export const buttonsAdmin = [
   {
-    name: "Tablero",
-    path: rutas.Admin,
-    icon: IconCube,
+    buttons: [
+      {
+        name: "Tablero",
+        path: rutas.Admin,
+        icon: IconCube,
+      },
+      {
+        name: "Estadísticas",
+        path: `${rutas.Admin}${rutas.Estadisticas}`,
+        icon: Estadistica,
+      },
+      {
+        name: "Médicos",
+        path: `${rutas.Admin}${rutas.Doctores}`,
+        icon: IconMedChat,
+      },
+      {
+        name: "Pacientes",
+        path: `${rutas.Admin}${rutas.Pacientes}`,
+        icon: IconDoctorNav,
+      },
+      {
+        name: "Data Entries",
+        path: `${rutas.Admin}${rutas.DataEntries}`,
+        icon: IconPatientNav,
+      },
+      {
+        name: "Errores",
+        path: `${rutas.Admin}${rutas.Errores}`,
+        icon: IconPreConsulta,
+      },
+      {
+        name: "Sugerencias",
+        path: `${rutas.Admin}${rutas.Sugerencias}`,
+        icon: Sugerencias,
+      },
+    ],
   },
-  {
-    name: "Estadísticas",
-    path: `${rutas.Admin}${rutas.Estadisticas}`,
-    icon: Estadistica,
-  },
-  {
-    name: "Médicos",
-    path: `${rutas.Admin}${rutas.Doctores}`,
-    icon: IconMedChat,
-  },
-  {
-    name: "Pacientes",
-    path: `${rutas.Admin}${rutas.Pacientes}`,
-    icon: IconDoctorNav,
-  },
-  {
-    name: "Data Entries",
-    path: `${rutas.Admin}${rutas.DataEntries}`,
-    icon: IconPatientNav,
-  },
-  {
-    name: "Errores",
-    path: `${rutas.Admin}${rutas.Errores}`,
-    icon: IconPreConsulta,
-  },
+];
 
+export const buttonsEntries = [
   {
-    name: "Sugerencias",
-    path: `${rutas.Admin}${rutas.Sugerencias}`,
-    icon: Sugerencias,
+    title: "Inicio",
+    buttons: [
+      {
+        name: "Tablero",
+        path: rutas.Entries,
+        icon: IconCube,
+      },
+    ],
+  },
+  {
+    title: "Usuarios",
+    buttons: [
+      {
+        name: "Pacientes",
+        path: `${rutas.Entries}${rutas.Pacientes}`,
+        icon: IconDoctorNav,
+      },
+      {
+        name: "Médicos",
+        path: `${rutas.Entries}${rutas.Doctores}`,
+        icon: IconMedChat,
+      },
+    ],
+  },
+  {
+    title: "Otros",
+    buttons: [
+      {
+        name: "Alarmas",
+        path: `${rutas.Entries}${rutas.Alarm}`,
+        icon: AlarmDash,
+      },
+      {
+        name: "Importaciones",
+        path: `${rutas.Entries}${rutas.Importaciones}`,
+        icon: IconImportar,
+      },
+      {
+        name: "Estudios",
+        path: `${rutas.Entries}${rutas.Estudios}`,
+        icon: IconClinicalHistory,
+      },
+    ],
   },
 ];

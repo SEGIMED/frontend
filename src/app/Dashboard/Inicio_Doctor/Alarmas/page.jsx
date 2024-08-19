@@ -10,7 +10,7 @@ import { PathnameShow } from "@/components/pathname/path";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import NotFound from "@/components/notFound/notFound";
 
-export default function HomeDoc() {
+export default function AlarmHome() {
   const [activeAlarms, setActiveAlarms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const lastSegmentTextToShow = PathnameShow();

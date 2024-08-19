@@ -9,6 +9,9 @@ import SignosVitales from "@/components/clinicalHistory/NewClinicalHistory/Signo
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import DynamicTable from "@/components/table/DynamicTable";
 import { useAppSelector } from "@/redux/hooks";
+import MenuDropDown from "@/components/dropDown/MenuDropDown";
+import IconOptions from "@/components/icons/IconOptions";
+import IconImportar from "@/components/icons/IconImportar";
 
 const Page = () => {
   const user = useAppSelector((state) => state.clinicalHistory.user);
@@ -43,6 +46,34 @@ const Page = () => {
     },
     {
       label: "Motivo de consulta",
+      key: "chiefComplaint",
+      showMobile: false,
+      width: "w-16",
+    },
+  ];
+
+  const Importaciones = [
+    {
+      label: "Fecha",
+      key: "timestamp",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Hora",
+      key: "timestamp",
+      showMobile: true,
+      width: "w-8",
+    },
+
+    {
+      label: "Titulo",
+      key: "chiefComplaint",
+      showMobile: true,
+      width: "w-16",
+    },
+    {
+      label: "Descripcion",
       key: "chiefComplaint",
       showMobile: false,
       width: "w-16",
@@ -145,6 +176,37 @@ const Page = () => {
           textError:
             "No se encontraron diagnósticos y tratamientos disponibles.",
         };
+      case "HC Importados":
+        return {
+          columns: Importaciones,
+          title: "HC Importados",
+          textError: "No se encontraron historias clinicas disponibles.",
+          renderDropDown: (row) => {
+            return (
+              <MenuDropDown
+                label="Opciones"
+                icon={<IconOptions color="white" />}
+                categories={[
+                  {
+                    items: [
+                      {
+                        label: "Ver Detalles",
+                        icon: <IconOptions color={"#B2B2B2"} />,
+                        // onClick: () => { setSelectedError(row); setShowModal(true) }
+                      },
+                      {
+                        label: "Ver archivo",
+                        icon: <IconImportar color={"#B2B2B2"} />,
+                        // onClick: () => { setSelectedSugerencia(row) }
+                      }
+                    ].filter(Boolean),
+                  },
+                ]}
+                className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+              />
+            );
+          }
+        };
       default:
         return {
           columns: CommonColumns,
@@ -154,7 +216,9 @@ const Page = () => {
     }
   };
 
-  const { columns, component, title, textError } =
+
+
+  const { columns, component, title, textError, renderDropDown } =
     getColumnsAndComponent(tabSelected);
 
   return (
@@ -170,7 +234,8 @@ const Page = () => {
               title={title}
               rows={infoPatient?.data}
               columns={columns}
-              clickable={tabSelected !== "Consultas"}
+              clickable={tabSelected !== "Consultas" && tabSelected !== "HC Importados"}
+              renderDropDown={renderDropDown}
               showHistoryIcon={true}
               renderCustomContent={component}
               textError={textError}

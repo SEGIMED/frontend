@@ -137,8 +137,14 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         getActivesPacientesDoctor().catch(console.error);
         //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
       }
+      if (rol === "Entries") {
+        getActivesAlarmsDoctor().catch(console.error);
+        getActivesPacientesDoctor().catch(console.error);
+        //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
+      }
     } else return;
   }, [rol]);
+
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
