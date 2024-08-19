@@ -12,6 +12,7 @@ const PacienteDash = "/Dashboard/Inicio_Paciente";
 const Admin = "/Dashboard/Inicio_Admin";
 const PacienteDash2 = "/Dashboard/Inicio_Paciente2";
 
+const Educacion = "/Educacion";
 const Alarm = "/Alarmas";
 const Mi_Agenda = "/Mi_Agenda";
 const Consultas = "/Consultas";
@@ -48,6 +49,7 @@ const DataEntries = "/Data_Entries";
 const Errores = "/Errores";
 const Agenda_General = "/Agenda_General";
 const rutas = {
+  Educacion,
   Inicio,
   Agenda_General,
   Errores,

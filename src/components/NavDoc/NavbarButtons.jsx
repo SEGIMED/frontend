@@ -55,9 +55,8 @@ export const buttonsDoc = [
   },
   {
     name: "Educación",
-    path: "https://circulacionpulmonar.com/",
+    path: `${rutas.Doctor}${rutas.Educacion}`,
     icon: IconEducacion,
-    external: true, // Indicador de que es un enlace externo
   },
   {
     name: "Sugerencias",
