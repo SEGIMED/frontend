@@ -142,6 +142,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
                 setAllUsers({ headers: { token: token } }).catch(console.error)
                 //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
             }
+            if (rol === "Entries") {
+                getActivesAlarmsDoctor().catch(console.error);
+                getActivesPacientesDoctor().catch(console.error);
+                //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
+            }
         } else return
     }, [rol]);
 
@@ -208,7 +213,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             </div>{" "}
             <div className="flex items-center justify-center gap-4 text-lg font-semibold">
                 <IconCurrentRouteNav className="hidden w-4 md:block" />
-                {["Inicio_Doctor", "Inicio_Paciente", "Inicio_Admin"].includes(lastSegment) ? (
+                {["Inicio_Doctor", "Inicio_Paciente", "Inicio_Admin", "Inicio_Entries"].includes(lastSegment) ? (
                     <p>Tablero</p>
                 ) : lastSegment === "Citas" ? (
                     <p>Mi Agenda</p>

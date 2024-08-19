@@ -11,6 +11,7 @@ import IconPasswordOpen from "../icons/IconPasswordOpen";
 import IconCheckBoton from "../icons/iconCheckBoton";
 import Link from "next/link";
 import LoadingFallback from "../loading/loading";
+import { findFlagUrlByIso2Code } from "country-flags-svg";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -31,8 +32,19 @@ export const FormUser = ({ formData, setFormData }) => {
   const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [errorMessage, setErrorMessage] =useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
+  const countries = [
+    { iso: 'AR', prefix: '+54', name: 'Argentina' },
+    { iso: 'PE', prefix: '+51', name: 'Perú' },
+    { iso: 'BR', prefix: '+55', name: 'Brasil' },
+    { iso: 'CL', prefix: '+56', name: 'Chile' },
+    { iso: 'CO', prefix: '+57', name: 'Colombia' },
+    { iso: 'VE', prefix: '+58', name: 'Venezuela' },
+    { iso: 'BO', prefix: '+591', name: 'Bolivia' },
+    { iso: 'EC', prefix: '+593', name: 'Ecuador' },
+    { iso: 'UY', prefix: '+598', name: 'Uruguay' },
+  ];
 
   const handleCheckboxChange = (type) => {
     if (type === "terms") {
@@ -49,7 +61,7 @@ export const FormUser = ({ formData, setFormData }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
-      const updatedData = { ...formData, ...data };
+      const updatedData = { ...formData, ...data, cellphone: data.cellphonePrefix + data.cellphone };
       setFormData(updatedData);
 
       const response = await ApiSegimed.post(
@@ -74,7 +86,6 @@ export const FormUser = ({ formData, setFormData }) => {
     }
   });
 
-  
 
   const passwordValue = watch("password");
 
@@ -89,7 +100,7 @@ export const FormUser = ({ formData, setFormData }) => {
   return (
     <div className="pb-36">
       <form onSubmit={onSubmit}>
-      <div className="flex flex-col items-center justify-center gap-3">
+        <div className="flex flex-col items-center justify-center gap-3">
           <div className="w-full max-w-96">
             <label htmlFor="email">Correo Electrónico</label>
             <input
@@ -148,7 +159,7 @@ export const FormUser = ({ formData, setFormData }) => {
                 },
                 pattern: {
                   value:
-                   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_+])[A-Za-z\d\W_+]{6,20}$/,
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_+])[A-Za-z\d\W_+]{6,20}$/,
                   message:
                     "La contraseña debe tener letras mayúscula, letras minúscula, un número y un carácter especial.",
                 },
@@ -160,49 +171,44 @@ export const FormUser = ({ formData, setFormData }) => {
             {showPasswordCriteria && (
               <ul className="mt-2 text-sm ">
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasUpperCase && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener una letra mayúscula
                 </li>
                 <li
-                  className={`flex gap-2  items-center whitespace-nowrap ${
-                    passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasLowerCase && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener una letra minúscula
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasSpecialChar && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener un carácter especial
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasMinLength && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe tener al menos 6 caracteres
                 </li>
                 <li
-                className={`flex gap-2 items-center whitespace-nowrap ${
-                passwordCriteria.hasNumber ? "text-[#70C247]" : ""
-                }`}>
-                {passwordCriteria.hasNumber && (
-                <IconCheckBoton className={"w-4"} />
-                )}{" "}
-                Debe contener un número
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasNumber ? "text-[#70C247]" : ""
+                    }`}>
+                  {passwordCriteria.hasNumber && (
+                    <IconCheckBoton className={"w-4"} />
+                  )}{" "}
+                  Debe contener un número
                 </li>
               </ul>
             )}
@@ -292,27 +298,68 @@ export const FormUser = ({ formData, setFormData }) => {
               </span>
             )}
           </div>
-
           <div className="w-full max-w-96">
-            <label htmlFor="cellphone">Número de Celular</label>
-            <input
-              id="cellphone"
-              type="text"
-              placeholder="Ingrese Numero de Celular"
-              className="w-full bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
-              {...register("cellphone", {
-                required: {
-                  value: true,
-                  message: "* Este dato es requerido *",
-                },
-              })}
-            />
+            <label htmlFor="cellphone-prefix">Número de Celular</label>
+
+            <div className="flex">
+              {/* Select para el prefijo con banderas */}
+              <select
+                id="cellphone-prefix"
+                className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
+                {...register("cellphonePrefix", {
+                  required: {
+                    value: true,
+                    message: "* Prefijo requerido *",
+                  },
+                })}
+              >
+                <option value="" disabled selected>Prefijo</option>
+                {countries.map((country) => (
+                  <option key={country.iso} value={country.prefix}>
+                    <span>
+                      {/* <img
+                        src={findFlagUrlByIso2Code(country.iso)}
+                        alt={`Bandera de ${country.name}`}
+                        className="inline-block w-4 h-4 mr-1"
+                      /> */}
+                      {`${country.prefix} (${country.name})`}
+                    </span>
+                  </option>
+                ))}
+              </select>
+
+              {/* Input para el número de celular */}
+              <input
+                id="cellphone"
+                type="text"
+                placeholder="Ingrese Número de Celular"
+                className="w-3/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
+                {...register("cellphone", {
+                  required: {
+                    value: true,
+                    message: "* Este dato es requerido *",
+                  },
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Número de celular inválido",
+                  },
+                })}
+              />
+            </div>
+
+            {/* Mostrar errores si existen */}
+            {errors.cellphonePrefix && (
+              <span className="text-red-500 text-sm font-medium">
+                {errors.cellphonePrefix.message}
+              </span>
+            )}
             {errors.cellphone && (
               <span className="text-red-500 text-sm font-medium">
                 {errors.cellphone.message}
               </span>
             )}
           </div>
+
 
           <div className="w-full max-w-96">
             <label htmlFor="nationality">Nacionalidad</label>
@@ -334,51 +381,47 @@ export const FormUser = ({ formData, setFormData }) => {
               </span>
             )}
           </div>
-      
-         
 
           <div className="w-full max-w-96 flex items-center text-[#487FFA]">
             <input
-            type="checkbox"
-            id="terms"
-            className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
-            checked={termsAccepted}
-            onChange={() => handleCheckboxChange("terms")}
+              type="checkbox"
+              id="terms"
+              className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
+              checked={termsAccepted}
+              onChange={() => handleCheckboxChange("terms")}
             />
             <Link href="/Term" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
               Acepto los términos y condiciones.
-              </Link>
+            </Link>
           </div>
-          
 
           <div className="w-full max-w-96 flex items-center text-[#487FFA]">
             <input
-            type="checkbox"
-            id="privacy"
-            className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
-            checked={privacyAccepted}
-            onChange={() => handleCheckboxChange("privacy")}
+              type="checkbox"
+              id="privacy"
+              className="mr-2 form-checkbox border-2 border-[#DCDBDB] rounded focus:outline-none focus:border-[#487FFA]"
+              checked={privacyAccepted}
+              onChange={() => handleCheckboxChange("privacy")}
             />
             <Link href="/Priv" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
-            Acepto la política de privacidad.
-           </Link>
-            </div>
+              Acepto la política de privacidad.
+            </Link>
+          </div>
 
-          
           <div className="w-full max-w-96 flex justify-center mt-4 mb-10">
             <button
               type="submit"
               className={`w-full py-2 px-4 rounded-lg
-                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white" : "bg-gray-400 text-white cursor-not-allowed"} ${loading ? "bg-bluePrimary" :"bg-[#70C247]" }`}
+                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white" : "bg-gray-400 text-white cursor-not-allowed"} ${loading ? "bg-bluePrimary" : "bg-[#70C247]"}`}
               disabled={!termsAccepted && !privacyAccepted || loading}
-              >
+            >
               {loading ? (
                 <div className="flex items-center justify-center h-full">
-                 <LoadingFallback className= "w-6 h-6" />
+                  <LoadingFallback className="w-6 h-6" />
                 </div>
               ) : (
-               <div className="flex justify-center items-center gap-3">
-                Registrar <IconEnter className="w-6" />
+                <div className="flex justify-center items-center gap-3">
+                  Registrar <IconEnter className="w-6" />
                 </div>
               )}
             </button>
