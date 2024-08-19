@@ -40,7 +40,7 @@ const MensajesContainer = ({
               <MensajeElement
                 key={chat._id}
                 message={chat?.message}
-                onClick={() => handleMensajeElementClick(chat._id)}
+                onClick={() => handleMensajeElementClick(chat.sender.userId)}
                 numberOfMessages={chat?.numberOfMessages}
                 sender={chat?.sender}
                 date={chat?.date}

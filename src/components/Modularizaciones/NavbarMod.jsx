@@ -213,7 +213,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     }
   };
   const handleMensajeElementClick = (id) => {
-    router.push(`${rutas.Inicio(rol)}${rutas.Mensajes}`);
+    router.push(`${rutas.Inicio(rol)}${rutas.Mensajes}/${id}`);
   };
 
   return (
