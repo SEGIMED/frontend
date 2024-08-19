@@ -123,7 +123,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
     dispatch(setSearchTerm(e.target.value));
   };
 
-  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+  const searchTerm = useAppSelector((state) => state.user.searchTerm);
 
   // const getActivesAlarm = async (headers) => {
   //   try {
@@ -335,10 +335,9 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={

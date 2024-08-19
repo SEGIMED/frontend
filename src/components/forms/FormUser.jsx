@@ -10,6 +10,7 @@ import IconPasswordClose from "../icons/IconPasswordClose";
 import IconPasswordOpen from "../icons/IconPasswordOpen";
 import IconCheckBoton from "../icons/iconCheckBoton";
 import Link from "next/link";
+import LoadingFallback from "../loading/loading";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -117,7 +118,7 @@ export const FormUser = ({ formData, setFormData }) => {
           <div
             className="w-full max-w-96"
             onBlur={() => setShowPasswordCriteria(false)}>
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">Nueva Contraseña</label>
             <div className="relative">
               <button
                 type="button"
@@ -367,16 +368,18 @@ export const FormUser = ({ formData, setFormData }) => {
           <div className="w-full max-w-96 flex justify-center mt-4 mb-10">
             <button
               type="submit"
-              className={`w-full py-2 px-4 rounded-lg focus:outline-none 
-                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white focus:bg-[#3c6dcf]" : "bg-gray-400 text-white cursor-not-allowed"}`}
-              disabled={!termsAccepted || !privacyAccepted}
+              className={`w-full py-2 px-4 rounded-lg
+                ${termsAccepted && privacyAccepted ? "bg-[#70C247] text-white" : "bg-gray-400 text-white cursor-not-allowed"} ${loading ? "bg-bluePrimary" :"bg-[#70C247]" }`}
+              disabled={!termsAccepted && !privacyAccepted || loading}
               >
               {loading ? (
-                <div className="flex justify-center">
-                  <IconEnter className="animate-spin" />
+                <div className="flex items-center justify-center h-full">
+                 <LoadingFallback className= "w-6 h-6" />
                 </div>
               ) : (
-                "Registrar"
+               <div className="flex justify-center items-center gap-3">
+                Registrar <IconEnter className="w-6" />
+                </div>
               )}
             </button>
           </div>

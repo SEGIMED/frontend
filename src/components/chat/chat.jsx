@@ -31,7 +31,7 @@ export default function Chat({ chat }) {
           }
           const unseenMessages= chat.messages.filter(message => !message.state && !message._id.startsWith("Message-"))
           if(unseenMessages.length ){
-            if(unseenMessages[unseenMessages.length - 1].target.userId === myId  ) 
+            if(unseenMessages[unseenMessages.length - 1]?.target?.userId === myId  ) 
             setMarkedChats(unseenMessages)
           } else { setMarkedChats([])}
 
