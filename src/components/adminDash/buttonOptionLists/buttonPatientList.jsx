@@ -36,7 +36,7 @@ export default function GeneratePatientButton  ({ pacienteId, cb }) {
                         {
                             label: "Ver Historia Clínica",
                             icon: <IconTablillaTilde color="lightGray" />,
-                            onClick: () => router.push(`${rutas.Admin}${rutas.Usuarios}/${pacienteId}?historiaClinica=true`)
+                            onClick: () => router.push(`${rutas.Admin}${rutas.Usuarios}/${pacienteId}?historyClinic=true`)
                         },
                         {
                             label: "Ver Antiguas Consultas",
@@ -44,7 +44,8 @@ export default function GeneratePatientButton  ({ pacienteId, cb }) {
                         },
                         {
                             label: "Ver Solicitudes",
-                            icon: <IconTablillaTilde color="lightGray" />
+                            icon: <IconTablillaTilde color="lightGray" />,
+                            onClick: () => router.push(`${rutas.Admin}${rutas.Usuarios}/${pacienteId}?request=true`)
                         },
                         {
                             label: "Ver Geolocalización",

@@ -29,9 +29,9 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-export default function TableAlarm({ pacientes }) {
+export default function TableAlarm({ pacientes, button }) {
   const router = useRouter();
-  const token = Cookies.get("a");
+  const role = Cookies.get("b");
 
   const handleStatus = async ({ id }) => {
     const token = Cookies.get("a");
@@ -92,7 +92,10 @@ export default function TableAlarm({ pacientes }) {
               </div>
             </div>
             <div className="w-[18%] md:w-[20%] items-center justify-center flex">
-              <MenuDropDown
+              {button ? 
+              (<div>{button}</div>) 
+              : 
+              (<MenuDropDown
                 icon={<IconOptions color="white" />}
                 items={[
                   {
@@ -107,7 +110,7 @@ export default function TableAlarm({ pacientes }) {
                   },
                 ]}
                 label="Opciones"
-              />
+              />)}
             </div>
           </div>
         ))}

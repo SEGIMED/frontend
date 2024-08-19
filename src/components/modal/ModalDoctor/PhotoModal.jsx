@@ -79,7 +79,8 @@ const PhotoModal = ({ isOpen, onClose }) => {
   const handleSaveChanges = async () => {
     setUrl(tempUrl);
     const urlSend = JSON.stringify(tempUrl);
-
+    
+  
     dispatch(adduser({ ...user, avatar: tempUrl, avatarDoc: urlSend }));
     const id = Cookies.get("c");
     const token = Cookies.get("a");
@@ -88,7 +89,7 @@ const PhotoModal = ({ isOpen, onClose }) => {
 
     onClose();
   };
-
+  
   return isOpen ? (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none"

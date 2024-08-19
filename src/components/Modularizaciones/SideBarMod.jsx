@@ -12,6 +12,7 @@ import LogoSegimed from "../logo/LogoSegimed";
 import IconOut from "../icons/iconOut";
 
 export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
+
     const pathname = usePathname();
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -37,27 +38,36 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
     };
 
     return (
-        <div
-            className={`flex ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"} lg:flex`}
-        >
+        <div className={`flex ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"} lg:flex`}>
             <div className="h-screen overflow-y-auto gap-2 w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white flex flex-col justify-between shadow-lg md:shadow-none">
                 <div className="flex flex-col justify-center gap-4 sm:gap-10">
                     <LogoSegimed className="w-40 md:w-[80%]" />
                     <ul className="flex flex-col gap-3 md:gap-4">
                         {buttons.map((section) => (
-                            <div key={section.title} className="flex flex-col gap-4">
+                            <div key={section.title || section.name} className="flex flex-col gap-4">
                                 {section.title ? <h3 className="text-[#808080] text-base font-normal">{section.title}</h3> : null}
-                                {section.buttons.map((button) => (
+                                {section?.buttons?.map((button) => (
                                     <SideBarItems
                                         key={button.path}
                                         name={button.name}
                                         path={button.path}
                                         icon={button.icon}
-                                        isActive={pathname === button.path}
+                                        isActive={pathname === button.path }
                                         onClick={toggleSidebar}
                                         external={button.external}
                                     />
                                 ))}
+                                {!section.buttons && (
+                                    <SideBarItems
+                                        key={section.path}
+                                        name={section.name}
+                                        path={section.path}
+                                        icon={section.icon}
+                                        isActive={pathname === section.path}
+                                        onClick={toggleSidebar}
+                                        external={section.external}
+                                    />
+                                )}
                             </div>
                         ))}
                         <Elboton
@@ -78,4 +88,5 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
             <div className="flex-1 bg-black opacity-50" onClick={toggleSidebar}></div>
         </div>
     );
+    
 };

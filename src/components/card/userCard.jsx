@@ -13,7 +13,7 @@ export default function UserCard({ user, button, role }) {
       <div className="flex gap-1 md:gap-5 items-center">
 
         {/* icon segun el role */}
-        {role === 2  && <IconMedChat color="gray" />}
+        {role === 2  && <IconMedChat color="gray" className="w-6"/>}
         {role === 3  && (
         user?.patientPulmonaryHypertensionRisks?.risk ? (
           <RealColorRisk

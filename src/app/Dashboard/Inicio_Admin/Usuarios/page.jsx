@@ -81,7 +81,7 @@ export default function Admin(params) {
                     key={paciente.id}
                     role={paciente.role}
                     user={paciente}
-                    button={<GeneratePatientButton pacienteId={paciente.id} cb={() => handleGeolocationClick(paciente)} />}
+                    button={<GeneratePatientButton pacienteId={paciente?.id} cb={() => handleGeolocationClick(paciente)} />}
                 />
                 ))
              ) : (
