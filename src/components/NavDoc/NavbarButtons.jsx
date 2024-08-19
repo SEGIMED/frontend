@@ -101,7 +101,7 @@ export const buttonsPaciente = [
       },
       {
         name: "Mi Agenda",
-        path: `${rutas.PacienteDash}${rutas.Mi_Agenda}`,
+        path: `${rutas.PacienteDash}${rutas.Citas}`,
         icon: IconCalendarNav,
       },
       {
