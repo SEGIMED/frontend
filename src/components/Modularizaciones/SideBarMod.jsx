@@ -15,7 +15,6 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  console.log(buttons);
   const handleLogout = () => {
     Cookies.remove("a");
     Cookies.remove("b");

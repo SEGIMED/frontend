@@ -26,7 +26,10 @@ export default function Elboton({
         className
       }>
       {icon}
-      <span className={`${classNameText}`}>{nombre} </span> {icon2}
+      <span className={`${classNameText && classNameText}`}>
+        {nombre}{" "}
+      </span>{" "}
+      {icon2}
     </Button>
   );
 }
