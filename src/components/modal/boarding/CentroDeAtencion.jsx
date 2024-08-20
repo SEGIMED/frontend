@@ -5,7 +5,7 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@
 import { useState, useEffect } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 
-export default function CentroDetAtención({ handleDisabled, state, handleChange }) {
+export default function CentroDetAtención({ handleDisabled, state, handleChange, rol }) {
     const [selectedKeys, setSelectedKeys] = useState(new Set());
     const [selectedCenters, setSelectedCenters] = useState([]); // Estado para los centros seleccionados
     const [selectedIds, setSelectedIds] = useState([]); // Estado para almacenar los IDs de los centros seleccionados
@@ -29,7 +29,7 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
         if (state.centerAttention2) {
             const keysFromState = new Set(state.centerAttention2.map((center) => center.name));
             const idsFromState = state.centerAttention2.map((center) => center.id);
-            handleDisabled(true)
+            handleDisabled(true);
 
             setSelectedKeys(keysFromState);
             setSelectedCenters(state.centerAttention2);
@@ -45,8 +45,12 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
         setSelectedIds(ids); // Actualizamos el estado con los IDs
         handleChange({ name: "centerAttention", option: ids });
         handleChange({ name: "centerAttention2", option: centers });
+        if (rol === "Paciente") {
+            handleChange({ name: "centerAttention", option: Number(ids[0]) });
+        }
+
         handleDisabled(true);
-    }
+    };
 
     return (
         <div className="w-full flex flex-col items-center gap-3">
@@ -55,7 +59,7 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
             </p>
 
             <Dropdown>
-                <DropdownTrigger className="w-auto ">
+                <DropdownTrigger className="w-auto">
                     <Button
                         style={{
                             borderRadius: "0.5rem",
@@ -75,9 +79,9 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
                 <DropdownMenu
                     aria-label="Seleccionar centro de atención"
                     variant="flat"
-                    closeOnSelect={false}
+                    closeOnSelect={rol === "Paciente"}  // Cerrar al seleccionar si es "Paciente"
                     disallowEmptySelection
-                    selectionMode="multiple"
+                    selectionMode={rol === "Paciente" ? "single" : "multiple"} // Modo de selección basado en el rol
                     selectedKeys={selectedKeys}  // Aseguramos que se mantengan seleccionadas las opciones
                     onSelectionChange={handleSelectionChange}
                 >

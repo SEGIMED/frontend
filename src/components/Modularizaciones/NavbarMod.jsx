@@ -171,6 +171,16 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         } else return
     }, [rol]);
 
+    useEffect(() => {
+        if (rol === "Médico") {
+            getUserDoctor().catch(console.error);
+
+        }
+        if (rol === "Paciente") {
+            getUser({ headers: { token: token } }).catch(console.error);
+        }
+    }, [onboarding]);
+
 
 
     const [showNotifications, setShowNotifications] = useState(false);
