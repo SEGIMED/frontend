@@ -28,8 +28,8 @@ const MensajesContainer = ({
   return (
     <div
       onClick={handleMensajeClick}
-      className="fixed top-0 left-0 w-screen h-screen z-50">
-      <div className="fixed flex flex-col gap-2 bg-red w-[90%] lg:w-[35%] md:w-[50%] h-fit max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-2 lg:px-4 z-50 top-[10%] right-[5%] md:right-[5%]">
+      className="fixed top-0 left-0 w-full h-full z-[1000]">
+      <div className="fixed flex flex-col gap-2 w-[90%] lg:w-[35%] md:w-[50%] min-h-[20%] max-h-[55%] md:max-h-[50%] shadow-lg bg-white rounded-2xl px-2 lg:px-4 z-50 top-[12%] lg:top-[10%] right-[5%] md:right-[2%]">
         <div className="flex justify-between items-center">
           <p className="text-2xl text-bluePrimary font-semibold py-1">
             Mensajes
@@ -41,7 +41,7 @@ const MensajesContainer = ({
           />
         </div>
         <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
-          {mappedChats && mappedChats?.length > 0 ? (
+          {mappedChats ? (
             mappedChats?.map((chat) => (
               <MensajeElement
                 key={chat._id}
