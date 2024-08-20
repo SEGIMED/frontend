@@ -7,19 +7,19 @@ import IconUser2 from "@/components/icons/iconUser2";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
 
-export default function ModalOrdenPte({ doctors, handleChange, errors, state }) {
+export default function ModalOrdenPte({ doctors, handleChange, errors, state, disabled }) {
     const [selectedDoctor, setSelectedDoctor] = useState(new Set());
     const [selectedDoctorName, setSelectedDoctorName] = useState("");
 
     useEffect(() => {
-        if (state?.doctorId) {
-            const doctor = doctors.find((item) => item.id === state.doctorId);
+        if (state?.physicianId) {
+            const doctor = doctors.find((item) => item.id === state.physicianId);
             if (doctor) {
                 setSelectedDoctor(new Set([doctor.id.toString()]));
                 setSelectedDoctorName(`${doctor.name} ${doctor.lastname}`);
             }
         }
-    }, [state?.doctorId, doctors]);
+    }, [state?.physicianId, doctors]);
 
     const options = [
         "Receta médica",
@@ -35,7 +35,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
     const handleDoctorChange = (key) => {
         setSelectedDoctor(key);
         const doctorId = Number(key.currentKey);
-        handleChange("doctorId", doctorId);
+        handleChange("physicianId", doctorId);
 
         const doctor = doctors.find((item) => item.id === doctorId);
         const doctorName = doctor ? `${doctor.name} ${doctor.lastname}` : "";
@@ -51,7 +51,8 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                 </label>
                 <Dropdown>
                     <DropdownTrigger className="w-full">
-                        <Button
+                        {disabled ? <Button
+                            disabled
                             style={{
                                 borderRadius: "0.5rem",
                                 textAlign: "start",
@@ -62,10 +63,26 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                                 background: "white"
                             }}
                             variant="bordered">
+
                             {selectedDoctorName || "Ingrese el nombre del médico"}
-                        </Button>
+                        </Button> : <Button
+
+                            style={{
+                                borderRadius: "0.5rem",
+                                textAlign: "start",
+                                borderWidth: "1px",
+                                justifyContent: "flex-start",
+                                opacity: "1",
+                                color: "#686868",
+                                background: "white"
+                            }}
+                            variant="bordered">
+
+                            {selectedDoctorName || "Ingrese el nombre del médico"}
+                        </Button>}
+
                     </DropdownTrigger>
-                    {doctors && (
+                    {doctors && !disabled ? (
                         <DropdownMenu
                             aria-label="Doctors"
                             variant="flat"
@@ -74,6 +91,8 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                             selectionMode="single"
                             selectedKeys={selectedDoctor}
                             onSelectionChange={handleDoctorChange}>
+
+
                             {doctors.map((item) => (
                                 <DropdownItem
                                     key={item.id}
@@ -83,9 +102,9 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                                 </DropdownItem>
                             ))}
                         </DropdownMenu>
-                    )}
+                    ) : null}
                 </Dropdown>
-                {errors.doctorId && <p className="text-red-500">Por favor seleccione un médico.</p>}
+                {errors.physicianId && <p className="text-red-500">Por favor seleccione un médico.</p>}
             </div>
             <div>
                 <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2">
@@ -105,10 +124,11 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                     options={options}
                     text2={"Seleccionar tipo"}
                     handleOptionChange={handleChange}
-                    name={"OrderType"}
-                    selectedOptions={state?.OrderType}
+                    name={"reqTypes"}
+                    selectedOptions={state?.reqTypes}
+                    disabled={disabled}
                 />
-                {errors.OrderType && <p className="text-red-500">Por favor seleccione un tipo de solicitud.</p>}
+                {errors.reqTypes && <p className="text-red-500">Por favor seleccione un tipo de solicitud.</p>}
             </div>
             <div className="relative">
                 <InputInfoText
@@ -116,10 +136,11 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state }) 
                     text={true}
                     title={"Motivo de solicitud"}
                     placeholder={"Escriba el motivo de su solicitud"}
-                    onChange={(e) => handleChange("motivo", e.target.value)}
-                    defaultValue={state?.motivo}
+                    onChange={(e) => handleChange("message", e.target.value)}
+                    defaultValue={state?.message}
+                    disabled={disabled}
                 />
-                {errors.motivo && <p className=" text-red-500">Por favor escriba el motivo de su solicitud.</p>}
+                {errors.message && <p className=" text-red-500">Por favor escriba el motivo de su solicitud.</p>}
             </div>
         </div>
     );

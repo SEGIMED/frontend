@@ -45,6 +45,18 @@ export default function HomePte() {
     }
   }, []);
 
+  const countries = [
+    { iso: 'AR', prefix: '+54', name: 'Argentina' },
+    { iso: 'PE', prefix: '+51', name: 'Perú' },
+    { iso: 'BR', prefix: '+55', name: 'Brasil' },
+    { iso: 'CL', prefix: '+56', name: 'Chile' },
+    { iso: 'CO', prefix: '+57', name: 'Colombia' },
+    { iso: 'VE', prefix: '+58', name: 'Venezuela' },
+    { iso: 'BO', prefix: '+591', name: 'Bolivia' },
+    { iso: 'EC', prefix: '+593', name: 'Ecuador' },
+    { iso: 'UY', prefix: '+598', name: 'Uruguay' },
+  ];
+
   const {
     register,
     handleSubmit,
@@ -67,6 +79,7 @@ export default function HomePte() {
     const patientDispatch = {
       ...paciente,
       ...data,
+      cellphone: data.cellphonePrefix + data.cellphone,
       sociodemographicDetails: {
         birthDate: data.birthDate,
         genre: data.genreId === "2" ? "Masculino" : "Femenino",
@@ -317,26 +330,57 @@ export default function HomePte() {
           </label>
           {edit ? (
             <div className="w-1/2 flex flex-col">
-              <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"}]`}
-                type="text"
-                defaultValue={paciente?.cellphone}
-                {...register("cellphone", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 6,
-                    message: "Debe tener al menos 6 caracteres",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "No puede tener más de 20 caracteres",
-                  },
-                  pattern: {
-                    value: /^\d+$/,
-                    message: "Solo se permiten números",
-                  },
-                })}
-              />
+              <div className="flex">
+                <select
+                  id="cellphone-prefix"
+                  className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
+                  {...register("cellphonePrefix", {
+                    required: {
+                      value: true,
+                      message: "* Prefijo requerido *",
+                    },
+                  })}
+                >
+                  <option value="" disabled selected>Prefijo</option>
+                  {countries.map((country) => (
+                    <option key={country.iso} value={country.prefix}>
+                      <span>
+                        {/* <img
+                        src={findFlagUrlByIso2Code(country.iso)}
+                        alt={`Bandera de ${country.name}`}
+                        className="inline-block w-4 h-4 mr-1"
+                      /> */}
+                        {`${country.prefix} (${country.name})`}
+                      </span>
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"}]`}
+                  type="text"
+                  defaultValue={paciente?.cellphone}
+                  {...register("cellphone", {
+                    required: "*Este campo es obligatorio",
+                    minLength: {
+                      value: 6,
+                      message: "Debe tener al menos 6 caracteres",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "No puede tener más de 20 caracteres",
+                    },
+                    pattern: {
+                      value: /^\d+$/,
+                      message: "Solo se permiten números",
+                    },
+                  })}
+                />
+              </div>
+              {errors.cellphonePrefix && (
+                <span className="text-red-500 text-sm font-medium">
+                  {errors.cellphonePrefix.message}
+                </span>
+              )}
               {errors.cellphone && (
                 <p className="text-red-500 text-sm">
                   {errors.cellphone.message}
@@ -464,7 +508,7 @@ export default function HomePte() {
           ]}
           title={"Geolocalizacion "}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary block text-white font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}

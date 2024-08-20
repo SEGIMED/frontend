@@ -27,13 +27,8 @@ import IconPersonalData from "@/components/icons/IconPersonalData.jsx";
 import IconMessages from "@/components/icons/IconMessages.jsx";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import MapModalPte from "@/components/modal/MapModalPte.jsx";
-import Ordenar from "@/components/Buttons/Ordenar";
-import IconOrder from "@/components/icons/IconOrder";
 import IconOptions from "@/components/icons/IconOptions";
-import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
-import IconAlarm from "@/components/icons/IconAlarm";
 import IconHooter from "@/components/icons/IconHooter";
-import IconAlphabetic from "@/components/icons/IconAlphabetic";
 import IconFilter from "@/components/icons/IconFilter";
 import IconTStar2 from "@/components/icons/IconStar2";
 import NotFound from "@/components/notFound/notFound";
@@ -45,6 +40,7 @@ import Elboton from "@/components/Buttons/Elboton";
 import IconRegresar from "@/components/icons/iconRegresar";
 import IconSelect from "@/components/icons/IconSelect";
 import { useRouter } from "next/navigation";
+import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -58,15 +54,19 @@ export default function HomeDoc() {
   const [patients, setPatients] = useState([]);
   const [patientsFavorites, setPatientsFavorites] = useState([]);
   const [ordenMedica, setOrdenMedica] = useState(false);
+  const [Pendientes, setPendientes] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    if (!searchParams.get("ordenMedica")) {
-      return;
+    if (searchParams.get("ordenMedica")) {
+      setOrdenMedica(searchParams.get("ordenMedica"));
     }
-    setOrdenMedica(searchParams.get("ordenMedica"));
+    if (searchParams.get("Pendientes")) {
+      setPendientes(searchParams.get("Pendientes"));
+    }
+    return;
   }, [searchParams]);
 
   const [pagination, setPagination] = useState({
@@ -81,6 +81,13 @@ export default function HomeDoc() {
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
   const lastSegmentTextToShow = PathnameShow();
+
+  useEffect(() => {
+    dispatch(setSearchBar(true));
+    return () => {
+      dispatch(setSearchBar(false));
+    };
+  }, [dispatch]);
 
   const getPatients = async (headers) => {
     const response = await ApiSegimed.get(
@@ -149,12 +156,10 @@ export default function HomeDoc() {
   }, [dispatch]);
 
   const filteredPatients = showFavorites ? patientsFavorites : patients;
-  console.log(filteredPatients);
 
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
     : filteredPatients;
-  console.log(sortedPatients, `xd`);
 
   const openModal = (patientId) => {
     setIsModalOpen(true);
@@ -180,12 +185,6 @@ export default function HomeDoc() {
       if (response.status === 201 || response.status === 200) {
         getFavorites({ headers: { token: token } }).catch(console.error);
         getPatients({ headers: { token: token } }).catch(console.error);
-        console.log(
-          `Patient ${
-            patient.isFavorite ? "removed from" : "added to"
-          } favorites successfully.`,
-          response
-        );
       } else {
         console.log("Something went wrong:", response);
       }
@@ -411,7 +410,11 @@ export default function HomeDoc() {
               /> */}
                 {ordenMedica ? (
                   <Elboton
-                    href={`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`}
+                    href={
+                      Pendientes
+                        ? `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`
+                        : `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`
+                    }
                     icon={<IconSelect color={"#487ffa"} />}
                     nombre={"Seleccionar "}
                     size={"md"}
@@ -458,7 +461,7 @@ export default function HomeDoc() {
                         items: [
                           {
                             label: "Ver Historia Clínica",
-                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Datos}`,
+                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}`,
                             icon: <IconClinicalHistory />,
                           },
                           {
@@ -522,7 +525,7 @@ export default function HomeDoc() {
           ]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}
-          button2={"bg-bluePrimary block font-font-Roboto"}
+          button2={"bg-bluePrimary text-white block font-font-Roboto"}
           progessBar={"hidden"}
           size={"h-[36rem] md:h-[35rem] md:w-[45rem]"}
           buttonText={{ end: `Continuar` }}

@@ -18,15 +18,15 @@ import Elboton from "@/components/Buttons/Elboton";
 import Alarmas from "@/components/Graficos/dashboardDoc/alarmas";
 import BarChart from "@/components/Graficos/graficoUltimos7dias.jsx/ultimos7dias";
 import ProximasConsultas from "@/components/dashDoc/proximaConsulta";
-import Citas from "./Citas/page";
 import IconPrev from "@/components/icons/IconPrev";
 import IconNext from "@/components/icons/IconNext";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import Agenda from "@/components/agenda/Agenda";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
-
+  const [scheduledConsultas, setScheduledConsultas] = useState([]);
   const [currentChart, setCurrentChart] = useState(0);
   const [currentTitle, setCurrentTitle] = useState(0);
   const [barChartData, setBarChartData] = useState(null);
@@ -34,25 +34,41 @@ export default function HomeDoc() {
   const [alarmsData, setAlarmsData] = useState({ actives: 0, inactives: 0 });
   const dataAlarms = useAppSelector((state) => state.alarms);
   const dataPtesGrafic = useAppSelector((state) => state.activePtes);
-
+  const getSchedulesByUserId = async () => {
+    try {
+      const response = await ApiSegimed.get("/schedulesByUserId");
+      setScheduledConsultas(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = Cookies.get("a");
 
         // Fetch data for the bar chart
-        const responseBarChart = await ApiSegimed.get("/user/login-record", { headers: { token } });
+        const responseBarChart = await ApiSegimed.get("/user/login-record", {
+          headers: { token },
+        });
         setBarChartData(responseBarChart.data);
-
+        getSchedulesByUserId();
         // Fetch data for active patients
-        const responseActiveData = await ApiSegimed.get("/statistics-patient-activity", { headers: { 'token': token } });
+        const responseActiveData = await ApiSegimed.get(
+          "/statistics-patient-activity",
+          { headers: { token: token } }
+        );
         setActiveData(responseActiveData.data);
 
         // Fetch data for alarms
-        const responseAlarmsData = await ApiSegimed.get("/alarms-by-patient", { headers: { 'token': token } });
-        const data = { actives: responseAlarmsData.data?.priorityCounts?.Activas, inactives: responseAlarmsData.data?.priorityCounts?.Inactivas };
+        const responseAlarmsData = await ApiSegimed.get("/alarms-by-patient", {
+          headers: { token: token },
+        });
+        const data = {
+          actives: responseAlarmsData.data?.priorityCounts?.Activas,
+          inactives: responseAlarmsData.data?.priorityCounts?.Inactivas,
+        };
         setAlarmsData(data);
-
       } catch (error) {
         console.error("Error fetching data:", error);
         setBarChartData(null);
@@ -82,8 +98,6 @@ export default function HomeDoc() {
     <p key={1}>Actividad</p>,
     <p key={2}>Alarmas</p>,
   ];
-
-  console.log(barChartData);
 
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
@@ -115,13 +129,13 @@ export default function HomeDoc() {
         </Link>
 
         <Link
-          href={`${rutas.Doctor}${rutas.Citas}`}
+          href={`${rutas.Doctor}${rutas.Agenda_General}`}
           className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
             <IconDashAgenda className="w-[25%] md:w-14" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
-              <span>Mi</span>
               <span>Agenda</span>
+              <span>General</span>
             </div>
           </div>
         </Link>
@@ -233,7 +247,7 @@ export default function HomeDoc() {
         {/* </div> */}
       </div>
       <div className="h-fit w-full border border-[#DCDBDB] rounded-2xl px-1 xs:px-5 py-2 bg-white">
-        <Citas title={"Mi agenda"} />
+        <Agenda title={"Mi agenda"} schedules={scheduledConsultas} />
       </div>
       <ProximasConsultas />
     </div>
