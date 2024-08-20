@@ -16,6 +16,8 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import DrugModal from "@/components/modal/ModalDoctor/DrugModal";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
+import NewModalDrugs from "@/components/modal/ModalDoctor/newModalDrugs";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 
 export default function HomeDoc() {
     const orden = useAppSelector((state) => state.formSlice.selectedOptions);
@@ -24,6 +26,7 @@ export default function HomeDoc() {
     const [searchTerm, setSearchTerm] = useState("");
     const [drugs, setDrugs] = useState([]);
     const [selectedDrug, setSelectedDrug] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
 
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -40,22 +43,27 @@ export default function HomeDoc() {
     const handleChange = (name, value) => {
         dispatch(setSelectedOption({ name, option: value }));
     };
-
     useEffect(() => {
         const fetchDrugs = async () => {
             if (searchTerm.length >= 3) {
                 try {
                     const response = await ApiSegimed.get(`/drug-prescription/search?searchDrug=${searchTerm}`);
-                    if (response.data) {
+                    if (response.data && response.data.length > 0) {
                         setDrugs(response.data);
+                    } else {
+                        // Si no hay coincidencias, selecciona el texto que el usuario ingresó
+                        setSelectedDrug({ name: searchTerm });
+                        setDrugs([{ id: "new", name: searchTerm }]);
                     }
                 } catch (error) {
                     console.error("Error fetching drugs:", error);
                 }
-            }
+            } else setDrugs([{ id: "-", name: searchTerm }]);
+            setSelectedDrug(null);
         };
         fetchDrugs();
     }, [searchTerm]);
+
 
     const onSubmit = async (orden) => {
         if (pendientes) {
@@ -69,35 +77,41 @@ export default function HomeDoc() {
                 console.error("Error creating patient request:", error);
             }
         }
+        console.log({ drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: orden.routeOfAdministrationId }, prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" } }, "esto es medicamentos");
 
-        Swal.fire({
-            icon: "success",
-            text: "Se ha creado la nueva orden",
-            confirmButtonColor: "#487FFA",
-            confirmButtonText: "Aceptar",
-        }).then(() => {
-            const targetRoute = pendientes
-                ? `${rutas.Doctor}${rutas.Pendientes}`
-                : `${rutas.Doctor}${rutas.Ordenes}`;
-            router.push(targetRoute);
-        });
+
+        // Swal.fire({
+        //     icon: "success",
+        //     text: "Se ha creado la nueva orden",
+        //     confirmButtonColor: "#487FFA",
+        //     confirmButtonText: "Aceptar",
+        // }).then(() => {
+        //     const targetRoute = pendientes
+        //         ? `${rutas.Doctor}${rutas.Pendientes}`
+        //         : `${rutas.Doctor}${rutas.Ordenes}`;
+        //     router.push(targetRoute);
+        // });
         dispatch(resetFormState());
     };
 
     const handleDrug = async (value) => {
-        if (value !== null) {
+        if (value !== null && value !== "new") {
             try {
                 const response = await ApiSegimed.get(`/drug-prescription/search?searchCommercialId=${value}`);
                 if (response.data) {
                     console.log(response.data);
-
+                    setSelectedId(value)
                     setSelectedDrug(response.data);
                     setIsDrugModalOpen(true);
                 }
             } catch (error) {
                 console.error("Error fetching drug details:", error);
             }
+        } else if (value === "new") {
+            setSelectedId(value)
+            setIsDrugModalOpen(true);
         }
+
     };
 
     const handleCloseDrugModal = () => {
@@ -147,6 +161,7 @@ export default function HomeDoc() {
                     onChange={(e) => handleChange("indication", e.target.value)}
                     className="md:px-6 py-2 px-3"
                 />
+
                 <div className="flex flex-col gap-2 md:px-6 py-2 px-3">
                     <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
                         <IconClinicalHistory className="w-6" color={"#808080"} />
@@ -157,7 +172,7 @@ export default function HomeDoc() {
                         variant="bordered"
                         onInputChange={(value) => setSearchTerm(value)}
                         placeholder="Escribe al menos 3 letras"
-                        className="max-w-xs"
+                        className="max-w-xs bg-white "
                         onSelectionChange={handleDrug}
                     >
                         {(drug) => <AutocompleteItem key={drug.id}>{drug.name}</AutocompleteItem>}
@@ -182,7 +197,17 @@ export default function HomeDoc() {
                     className="md:px-6 py-2 px-3"
                 />
             </div>
-            <DrugModal isOpen={isDrugModalOpen} onClose={handleCloseDrugModal} drug={selectedDrug} />
+            <ModalModularizado
+                isOpen={isDrugModalOpen}
+                onClose={handleCloseDrugModal}
+                Modals={[<NewModalDrugs handleOptionChange={handleChange} info={selectedDrug} drugs={drugs} id={selectedId} key={"modalDrugs"} />]}
+                title={"Agregar medicamento"}
+                button1={"hidden"}
+                button2={"bg-greenPrimary text-white block font-font-Roboto"}
+                progessBar={"hidden"}
+                size={"h-fit md:h-fit md:w-[35rem]"}
+                buttonText={{ end: `Guardar` }}
+            />
         </div>
     );
 }

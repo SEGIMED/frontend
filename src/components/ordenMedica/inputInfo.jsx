@@ -5,7 +5,7 @@ import IconClinicalHistory from "../icons/IconClinicalHistory";
 export default function InputInfoText({ title, placeholder, onChange, text, icon, className, defaultValue, disabled, classNameInput }) {
     return (
         <div className={`flex flex-col gap-2   bg-[#fafafc] ${className}`}>{title ?
-            <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
+            <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center ">
                 {icon ? icon : <IconClinicalHistory className="w-6" color={"#808080"} />}
                 {title}
             </label> : null}
