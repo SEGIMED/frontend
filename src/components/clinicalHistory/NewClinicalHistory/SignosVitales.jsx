@@ -53,16 +53,16 @@ const SignosVitales = ({ info }) => {
         </label>
         <div className="md:flex grid grid-cols-2 justify-start w-1/2 md:gap-4 gap-1">
           <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
-            150 mg/dl
+            -{" "}
           </p>
           <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
-            75 mg/dl
+            -{" "}
           </p>
           <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
-            77 mg/dl
+            -{" "}
           </p>
           <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
-            143 mg/dl
+            -{" "}
           </p>
         </div>
       </div>
