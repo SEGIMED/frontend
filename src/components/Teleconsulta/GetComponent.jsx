@@ -20,9 +20,10 @@ export default function GetComponent({typeConection,stream,updateStream}) {
 
     
         return (
-            <section className="w-40 h-40 flex flex-col gap-16 content-center">
+            <section className="w-full h-full flex flex-col gap-16 content-center">
                 
                 <video
+                className=" rounded-medium"
                  ref={videoRef} 
                  playsInline={true}
                  muted={false}

@@ -36,21 +36,25 @@ export default function CallVideo({id}){
 
 
     return (
+        <div  className="h-full w-full flex flex-col ">
+        <div className="flex items-center justify-center h-full w-full gap-6 flex-wrap">
         <DataContext.Provider value={id} >
-        <section className="w-[100%] h-[100%] flex flex-col justify-center center   " >
-            <article className="flex justify-around items-center gap-6">
-                <div id="localStream"> 
+        {/* <section className="w-full h-full flex flex-col justify-center center   " >
+            <article className="flex justify-around items-center gap-6"> */}
+                <div id="localStream" > 
                 <CameraView stream={stream}  typeConection={1} updateStream={updateStream}/>
                 </div>
 
               {
                 isLoading &&
-              (<div id="remoteStream">
+              (<div id="remoteStream" >
                 <CameraView />
                 </div>) || 'Loading...'
               } 
-            </article>
-        </section>
+            {/* </article>
+        </section> */}
         </DataContext.Provider>
+        </div>
+        </div>
     )
 }

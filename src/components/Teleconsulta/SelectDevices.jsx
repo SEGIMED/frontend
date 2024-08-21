@@ -63,11 +63,11 @@ export default function SelectDevices({updateStream}){
 
 
     return listDecives && (
-        <div className="flex w-20 h-9 justify-around content-center">
-             <div className="pt-3 flex justify-center items-center gap-5">
+
+             <div className="flex justify-end items-end gap-5">
                 <Microphone filterMicrophoneList={filterMicrophoneList} handleChangeMicrophone={handleChangeMicrophone}/>
                 <Camera filterCameraList={filterCameraList} handleChangeCamera={handleChangeCamera}/>
                 </div>
-        </div>
+   
     )
 }

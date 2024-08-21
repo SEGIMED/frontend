@@ -1,128 +1,61 @@
 "use client"
-import { useEffect, useRef, useState,useCallback } from "react";
-import IconCamera from "@/components/icons/IconCamera";
-import IconData from "@/components/icons/IconData";
-import IconFinish from "@/components/icons/IconFinish";
-import IconLive from "@/components/icons/IconLive";
-import IconMicrophone from "@/components/icons/IconMicrophone";
-import { useAppSelector } from "@/redux/hooks";
-import { socket } from "@/utils/socketio";
+import { useCallback, useEffect, useRef, useState } from "react";
 import rtcPer from "@/utils/RTCPeer";
-import observer from "@/utils/observer.js";
-import Cookies from "js-cookie";
-import Config from "@/components/Teleconsulta/config";
-import StateTarget from "@/components/Teleconsulta/StateTarget";
-import VideoCall from "@/components/Teleconsulta/VideoCall";
+import CallVideo from "@/components/Teleconsulta/CallVideo";
+import Elboton from "@/components/Buttons/Elboton";
+import IconRegresar from "@/components/icons/iconRegresar";
+
+import IconUpload from "@/components/icons/IconUpload";
+import { useRouter } from "next/navigation";
+import rutas from "@/utils/rutas";
+
 export default function TeleconsultaId (id) {
-    const [state , setState] = useState(false);
-
+    const [state , setState] = useState(false)
     const consultId = Number(id.params.id);
-    
-
-   
+    const router= useRouter()
     const handleChangeState = (s) => {
         rtcPer.init(consultId);
         setState(s)
     };
-
-
-    // useEffect(() => {
-        // navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
     
-        //         setStream(stream)
-        //         myVideo.current.srcObject = stream
-        //         const myId = Cookies.get("c"); 
-        //         const conection = rtcPer.init();
-        //         rtcPer.defineUserObj(myId);    
-        //     stream.getTracks().forEach(track => {
-        //         conection.addTrack(track,stream);
-        //     });
 
-        // })
-    // }, []);
+  
 
-
-    // useEffect(() => {
-        
-    //     observer.addViewMediaUser(remoteVideo)
-    //     socket._socket.emit("joinRoom", consultId, async (data) => {
-    //         setRoomData(data);
-    //     });
-    //     const init = async(offer)=>{
-    //         await rtcPer.setRemoteDescription(offer);
-    //         await rtcPer.createAsw(consultId);
-    //     }
-    //         socket._socket.on("onOffer",async (offer) =>{    
-    //             const conection = rtcPer.init();            
-    //             navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-                    
-    //                 setStream(stream)
-    //                 myVideo.current.srcObject = stream
-    //                 const myId = Cookies.get("c"); 
-                    
-    //                 rtcPer.defineUserObj(myId);    
-    //                 stream.getTracks().forEach(track => {
-    //                     rtcPer.peerConnection.addTrack(track,stream);
-    //                 });
-    //                     init(offer)                    
-    //             })
-    //         })
-    //         socket._socket.on("newCandidate",async (candidate) =>{
-    //             console.log("CANDIDATE PAGE",candidate)
-    //             await rtcPer.setCandidateRemote(candidate);
-    //         })
-    
-        
-    // }, []);
- 
     return (
+        
         <div className="h-full w-full flex flex-col justify-between bg-[#FAFAFC]">
-            {
-
-                state ? <VideoCall consultId={consultId}/> : <Config handleChangeState={handleChangeState}/>
-            }
-            {/* <div className="w-full flex justify-between items-center border-b-2">
-                <div className="flex justify-start items-center">
-                    <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
-                        <IconLive/> Datos de consultas
-                    </button>
-                    <button className="flex justify-center items-center gap-3 py-3 px-6 border-r-2">
-                        <IconData/> Datos del paciente
-                    </button>
-                </div>
-                <button className="flex justify-center items-center gap-3 bg-[#E73F3F] text-white py-2 px-6 rounded-xl mr-6">
+           
+            <div className="flex justify-between border-b-2 p-2">
+                <Elboton 
+                nombre={"Regresar"}
+                icon={<IconRegresar/>}
+                size={"lg"}
+                onPress={()=>{router.push(`${rutas.PacienteDash}${rutas.Preconsulta}${rutas.Teleconsulta}`)}}
+                />
+                <Elboton
+                nombre={"Lllenar Consulta"}
+                size={"lg"}
+                icon={<IconUpload/>}/>
+                {/* <button className="flex justify-center items-center gap-3 bg-[#E73F3F] text-white py-2 px-6 rounded-xl mr-6">
                     <IconFinish/> Finalizar
-                </button>
+                </button> */}
             </div>
             <div className="flex justify-center py-2 border-b-2">
-                <p>Dr. Kevin Lado</p>
+                <p>Sala de espera Teleconsulta</p>
             </div>
-            <div  className="h-full w-full flex justify-between items-center flex-col m-6">
-                <video
-                playsInline 
-                muted 
-                autoPlay 
-                ref={myVideo}  
-                className="h-full w-1/2 flex justify-center items-center bg-white rounded-xl border">
-                    
-                </video>
-                <video
-                playsInline 
-                muted 
-                autoPlay  
-                ref={remoteVideo}  
-                className="h-full w-1/2 flex justify-center items-center bg-white rounded-xl border">
-                    
-                </video>
-                <div className="pt-3 flex justify-center items-center gap-5">
-                    <button className="bg-[#0060FF] p-3 rounded-full">
-                        <IconMicrophone/>
-                    </button>
-                    <button className="bg-[#0060FF] p-3 rounded-full">
-                        <IconCamera/>
-                    </button>
-                </div>
-            </div> */}
+            
+            {
+                consultId && <CallVideo id={consultId}/>
+            }
+           
+            {/* {
+                state ? <VideoCall consultId={consultId} Role="Médico"/> : <Config handleChangeState={handleChangeState}/>
+
+            } */}
+                
+             
+            
         </div>
+        
     )
 }
