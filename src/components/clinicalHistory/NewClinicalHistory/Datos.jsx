@@ -18,6 +18,7 @@ import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import GeneratePDF from "@/components/pdf/pdfgenerator";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconEditar from "@/components/icons/iconEditar";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const Datos = () => {
   const pathname = usePathname();
@@ -44,10 +45,26 @@ const Datos = () => {
     setDataImportar(data);
   };
 
-  const submitModalData = () => {
-    console.log(dataImportar);
-    setIsModalOpen(false);
+  const submitModalData = async () => {
+    const payload = { userId: user.userId, studies: [dataImportar] };
+    console.log(payload);
+
+
+    try {
+      // Realizar la petición POST
+      const response = await ApiSegimed.post('/patient-studies', payload);
+
+      // Manejar la respuesta según sea necesario
+      console.log('Respuesta del servidor:', response.data);
+
+      // Cerrar el modal después de la petición
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error al enviar los datos:', error.message);
+      // Puedes agregar un manejo de errores aquí si es necesario
+    }
   };
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? (

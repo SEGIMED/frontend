@@ -8,7 +8,8 @@ import DropNext from '@/components/consulta/dropdown';
 
 export default function ImportarHC({ onData, text }) {
     const fileInputRef = useRef(null);
-    const [file, setFile] = useState(null);
+    const [study, setStudy] = useState(null);
+    const [studyBase, setStudyBase] = useState(null);
     const [title, setTitle] = useState("");
     const [studyType, setStudyType] = useState();
     const [description, setDescription] = useState("");
@@ -41,8 +42,21 @@ export default function ImportarHC({ onData, text }) {
         try {
             if (e.target.files.length) {
                 const selectedFile = e.target.files[0];
-                setFile(selectedFile);
-                sendData({ file: selectedFile, title, description, studyType });
+                setStudy(selectedFile)
+                // Guarda el archivo en estado para referencia futura
+
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    console.log(event.target.result);
+
+                    const base64String = event.target.result; // Contenido del archivo en base64
+                    setStudyBase(base64String);
+
+                    sendData({ study: base64String, title, description, studyType }); // Envía el archivo en base64 al backend
+                };
+
+                reader.readAsDataURL(selectedFile); // Lee el archivo como una URL de datos (base64)
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);
@@ -50,25 +64,25 @@ export default function ImportarHC({ onData, text }) {
     };
 
     const handleDeleteFile = () => {
-        setFile(null);
-        sendData({ file: null, title, description, studyType });
+        setStudy(null);
+        sendData({ study: null, title, description, studyType });
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
-        sendData({ file, title: e.target.value, description, studyType });
+        sendData({ studyBase, title: e.target.value, description, studyType });
     };
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
-        sendData({ file, title, description: e.target.value, studyType });
+        sendData({ studyBase, title, description: e.target.value, studyType });
     };
 
     const handleStudyType = (name, value) => {
         const selectedStudy = catalog.find(item => item.name === value);
         if (selectedStudy) {
             setStudyType(selectedStudy.id); // Guarda el id en lugar del nombre
-            sendData({ file, title, description, studyType: selectedStudy.id });
+            sendData({ studyBase, title, description, studyType: selectedStudy.id });
         }
     };
 
@@ -125,9 +139,9 @@ export default function ImportarHC({ onData, text }) {
                             />
                         </div>
                         <div>
-                            {file && (
+                            {study && (
                                 <div className="flex items-center gap-4">
-                                    <span>{file.name}</span>
+                                    <span>{study.name}</span>
                                     <button onClick={handleDeleteFile}>
                                         <IconDelete />
                                     </button>
