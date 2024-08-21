@@ -80,17 +80,17 @@ export default function HomeDoc() {
         console.log({ drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: orden.routeOfAdministrationId }, prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" } }, "esto es medicamentos");
 
 
-        // Swal.fire({
-        //     icon: "success",
-        //     text: "Se ha creado la nueva orden",
-        //     confirmButtonColor: "#487FFA",
-        //     confirmButtonText: "Aceptar",
-        // }).then(() => {
-        //     const targetRoute = pendientes
-        //         ? `${rutas.Doctor}${rutas.Pendientes}`
-        //         : `${rutas.Doctor}${rutas.Ordenes}`;
-        //     router.push(targetRoute);
-        // });
+        Swal.fire({
+            icon: "success",
+            text: "Se ha creado la nueva orden",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+        }).then(() => {
+            const targetRoute = pendientes
+                ? `${rutas.Doctor}${rutas.Pendientes}`
+                : `${rutas.Doctor}${rutas.Ordenes}`;
+            router.push(targetRoute);
+        });
         dispatch(resetFormState());
     };
 

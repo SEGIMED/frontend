@@ -1,28 +1,48 @@
-// ImportarHC.jsx
+import { ApiSegimed } from '@/Api/ApiSegimed';
 import IconDelete from '@/components/icons/IconDelete';
 import IconUpload from '@/components/icons/IconUpload';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import IconCurrentRouteNav from '@/components/icons/IconCurrentRouteNav';
 import InputInfoText from '@/components/ordenMedica/inputInfo';
-
+import DropNext from '@/components/consulta/dropdown';
 
 export default function ImportarHC({ onData, text }) {
     const fileInputRef = useRef(null);
     const [file, setFile] = useState(null);
     const [title, setTitle] = useState("");
+    const [studyType, setStudyType] = useState();
     const [description, setDescription] = useState("");
+    const [catalog, setCatalog] = useState([]);
+
+    useEffect(() => {
+        const getCatalog = async () => {
+            try {
+                const response = await ApiSegimed.get(
+                    "/catalog/get-catalog?catalogName=study_type"
+                );
+                if (response.data) {
+                    setCatalog(response.data); // Guarda los objetos completos
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getCatalog();
+    }, []);
 
     const handleButtonClick = (e) => {
         e.preventDefault(); // Previene el comportamiento predeterminado
         fileInputRef.current.click();
     };
 
+
     const handleOnChange = (e) => {
         try {
             if (e.target.files.length) {
                 const selectedFile = e.target.files[0];
                 setFile(selectedFile);
-                sendData({ file: selectedFile, title, description });
+                sendData({ file: selectedFile, title, description, studyType });
             }
         } catch (error) {
             console.error('Error al cargar archivo', error.message);
@@ -31,17 +51,25 @@ export default function ImportarHC({ onData, text }) {
 
     const handleDeleteFile = () => {
         setFile(null);
-        sendData({ file: null, title, description });
+        sendData({ file: null, title, description, studyType });
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
-        sendData({ file, title: e.target.value, description });
+        sendData({ file, title: e.target.value, description, studyType });
     };
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
-        sendData({ file, title, description: e.target.value });
+        sendData({ file, title, description: e.target.value, studyType });
+    };
+
+    const handleStudyType = (name, value) => {
+        const selectedStudy = catalog.find(item => item.name === value);
+        if (selectedStudy) {
+            setStudyType(selectedStudy.id); // Guarda el id en lugar del nombre
+            sendData({ file, title, description, studyType: selectedStudy.id });
+        }
     };
 
     const sendData = (data) => {
@@ -53,6 +81,27 @@ export default function ImportarHC({ onData, text }) {
     return (
         <div className="w-full flex flex-col justify-start gap-2">
             <div className='gap-2 flex flex-col'>
+                <div className='flex flex-col gap-2'>
+                    <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
+                        <IconCurrentRouteNav className={'w-4'} />
+                        <div>Tipo de archivo</div>
+                    </div>
+                    <DropNext
+                        style={{
+                            borderRadius: "0.5rem",
+                            textAlign: "start",
+                            borderWidth: "1px",
+                            justifyContent: "flex-start",
+                            opacity: "1",
+                            color: "#686868",
+                            background: "white"
+                        }}
+                        name={"StudyType"}
+                        handleOptionChange={handleStudyType}
+                        options={catalog.map(item => item.name)} // Muestra solo los nombres
+                        text2="Seleccionar tipo de archivo"
+                    />
+                </div>
                 {!text ?
                     <div className='flex flex-col gap-2'>
                         <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
