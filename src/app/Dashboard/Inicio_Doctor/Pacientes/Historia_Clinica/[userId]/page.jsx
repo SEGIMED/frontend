@@ -12,12 +12,18 @@ import { useAppSelector } from "@/redux/hooks";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconOptions from "@/components/icons/IconOptions";
 import IconImportar from "@/components/icons/IconImportar";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 
 const Page = () => {
   const user = useAppSelector((state) => state.clinicalHistory.user);
   const tabSelected = useAppSelector((state) => state.clinicalHistory.tab);
+  const importaciones = useAppSelector((state) => state.clinicalHistory.import);
   const infoPatient = useAppSelector((state) => state.clinicalHistory);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
+
+  console.log(importaciones);
+
 
   const ConsultasColumns = [
     {
@@ -55,26 +61,26 @@ const Page = () => {
   const Importaciones = [
     {
       label: "Fecha",
-      key: "timestamp",
+      key: "createdAt",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Hora",
-      key: "timestamp",
+      key: "createdAt",
       showMobile: true,
       width: "w-8",
     },
 
     {
       label: "Titulo",
-      key: "chiefComplaint",
+      key: "title",
       showMobile: true,
       width: "w-16",
     },
     {
       label: "Descripcion",
-      key: "chiefComplaint",
+      key: "description",
       showMobile: false,
       width: "w-16",
     },
@@ -232,7 +238,7 @@ const Page = () => {
           ) : (
             <DynamicTable
               title={title}
-              rows={infoPatient?.data}
+              rows={tabSelected !== "HC Importados" ? infoPatient?.data : importaciones}
               columns={columns}
               clickable={tabSelected !== "Consultas" && tabSelected !== "HC Importados"}
               renderDropDown={renderDropDown}
@@ -241,6 +247,18 @@ const Page = () => {
               textError={textError}
             />
           )}
+          {/* <ModalModularizado
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} />]}
+            title={"Ver detalles de importacion"}
+            button1={"hidden"}
+            button2={"bg-greenPrimary text-white block"}
+            progessBar={"hidden"}
+            size={"h-[35rem] md:h-fit md:w-[35rem]"}
+            buttonText={{ end: `Cerrar` }}
+
+          /> */}
         </>
       )}
     </>

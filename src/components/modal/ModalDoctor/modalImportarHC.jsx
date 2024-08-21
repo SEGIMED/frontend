@@ -6,7 +6,7 @@ import IconCurrentRouteNav from '@/components/icons/IconCurrentRouteNav';
 import InputInfoText from '@/components/ordenMedica/inputInfo';
 import DropNext from '@/components/consulta/dropdown';
 
-export default function ImportarHC({ onData, text }) {
+export default function ImportarHC({ onData, text, disabled }) {
     const fileInputRef = useRef(null);
     const [study, setStudy] = useState(null);
     const [studyBase, setStudyBase] = useState(null);
@@ -70,19 +70,19 @@ export default function ImportarHC({ onData, text }) {
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
-        sendData({ studyBase, title: e.target.value, description, studyType });
+        sendData({ study: studyBase, title: e.target.value, description, studyType });
     };
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
-        sendData({ studyBase, title, description: e.target.value, studyType });
+        sendData({ study: studyBase, title, description: e.target.value, studyType });
     };
 
     const handleStudyType = (name, value) => {
         const selectedStudy = catalog.find(item => item.name === value);
         if (selectedStudy) {
             setStudyType(selectedStudy.id); // Guarda el id en lugar del nombre
-            sendData({ studyBase, title, description, studyType: selectedStudy.id });
+            sendData({ study: studyBase, title, description, studyType: selectedStudy.id });
         }
     };
 
@@ -114,6 +114,7 @@ export default function ImportarHC({ onData, text }) {
                         handleOptionChange={handleStudyType}
                         options={catalog.map(item => item.name)} // Muestra solo los nombres
                         text2="Seleccionar tipo de archivo"
+                        disabled={disabled}
                     />
                 </div>
                 {!text ?
@@ -136,6 +137,7 @@ export default function ImportarHC({ onData, text }) {
                                 style={{ display: 'none' }}
                                 onChange={handleOnChange}
                                 accept="application/pdf, image/*"
+                                disabled={disabled}
                             />
                         </div>
                         <div>
@@ -157,6 +159,7 @@ export default function ImportarHC({ onData, text }) {
                         placeholder={"Añadí un título"}
                         icon={<IconCurrentRouteNav className={'w-4'} />}
                         className={'md:px-0'}
+                        disabled={disabled}
                     />
                     <InputInfoText
                         onChange={handleDescriptionChange}
@@ -164,6 +167,7 @@ export default function ImportarHC({ onData, text }) {
                         title={"Descripción"}
                         placeholder={"Añadí una descripción"}
                         icon={<IconCurrentRouteNav className={'w-4'} />}
+                        disabled={disabled}
                     />
                 </div>
             </div>

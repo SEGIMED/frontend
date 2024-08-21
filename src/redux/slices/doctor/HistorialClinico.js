@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: {},
   data: [],
+  import: [],
   loading: true,
   tab: "Datos",
 };
@@ -22,6 +23,10 @@ const clinicalHistorySlice = createSlice({
       state.user = action.payload;
       state.loading = false;
     },
+    addImportHistory: (state, action) => {
+      state.import = action.payload;
+      state.loading = false;
+    },
     clearClinicalHistory: (state) => {
       state.data = [];
       state.tab = "Datos";
@@ -38,5 +43,6 @@ export const {
   clearClinicalHistory,
   addUserHistory,
   changeTabs,
+  addImportHistory
 } = clinicalHistorySlice.actions;
 export default clinicalHistorySlice.reducer;
