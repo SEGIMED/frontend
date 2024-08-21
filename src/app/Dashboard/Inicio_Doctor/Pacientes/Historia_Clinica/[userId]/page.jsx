@@ -14,6 +14,8 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconImportar from "@/components/icons/IconImportar";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
+import { useState } from "react";
+import FileDisplay from "@/components/modal/ModalDoctor/modalDisplayFile";
 
 const Page = () => {
   const user = useAppSelector((state) => state.clinicalHistory.user);
@@ -21,8 +23,13 @@ const Page = () => {
   const importaciones = useAppSelector((state) => state.clinicalHistory.import);
   const infoPatient = useAppSelector((state) => state.clinicalHistory);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  const [selectedImport, setSelectedImport] = useState({});
 
-  console.log(importaciones);
+  // console.log(importaciones);
+  console.log(selectedImport);
+
 
 
   const ConsultasColumns = [
@@ -198,12 +205,12 @@ const Page = () => {
                       {
                         label: "Ver Detalles",
                         icon: <IconOptions color={"#B2B2B2"} />,
-                        // onClick: () => { setSelectedError(row); setShowModal(true) }
+                        onClick: () => { setSelectedImport(row); setIsModalOpen(true) }
                       },
                       {
                         label: "Ver archivo",
                         icon: <IconImportar color={"#B2B2B2"} />,
-                        // onClick: () => { setSelectedSugerencia(row) }
+                        onClick: () => { setSelectedImport(row); setIsModalOpenFile(true) }
                       }
                     ].filter(Boolean),
                   },
@@ -222,7 +229,13 @@ const Page = () => {
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
+  const closeModalFile = () => {
+    setIsModalOpenFile(false);
+  };
 
   const { columns, component, title, textError, renderDropDown } =
     getColumnsAndComponent(tabSelected);
@@ -247,18 +260,31 @@ const Page = () => {
               textError={textError}
             />
           )}
-          {/* <ModalModularizado
+          <ModalModularizado
             isOpen={isModalOpen}
             onClose={closeModal}
-            Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} />]}
+            Modals={[<ImportarHC key={"importar hc"} state={selectedImport} disabled={true} />]}
             title={"Ver detalles de importacion"}
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}
             progessBar={"hidden"}
             size={"h-[35rem] md:h-fit md:w-[35rem]"}
             buttonText={{ end: `Cerrar` }}
+            buttonIcon={<></>}
+          />
 
-          /> */}
+          <ModalModularizado
+            isOpen={isModalOpenFile}
+            onClose={closeModalFile}
+            Modals={[<FileDisplay key={"displayFile"} state={selectedImport} />]}
+            title={"Visualizacion de archivo"}
+            button1={"hidden"}
+            button2={"bg-greenPrimary text-white block"}
+            progessBar={"hidden"}
+            size={"h-[35rem] md:h-[40rem] md:w-[35rem]"}
+            buttonText={{ end: `Cerrar` }}
+            buttonIcon={<></>}
+          />
         </>
       )}
     </>

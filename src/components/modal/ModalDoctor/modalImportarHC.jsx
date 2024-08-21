@@ -6,7 +6,7 @@ import IconCurrentRouteNav from '@/components/icons/IconCurrentRouteNav';
 import InputInfoText from '@/components/ordenMedica/inputInfo';
 import DropNext from '@/components/consulta/dropdown';
 
-export default function ImportarHC({ onData, text, disabled }) {
+export default function ImportarHC({ onData, text, disabled, state }) {
     const fileInputRef = useRef(null);
     const [study, setStudy] = useState(null);
     const [studyBase, setStudyBase] = useState(null);
@@ -110,14 +110,16 @@ export default function ImportarHC({ onData, text, disabled }) {
                             color: "#686868",
                             background: "white"
                         }}
+                        disabled={disabled}
                         name={"StudyType"}
                         handleOptionChange={handleStudyType}
                         options={catalog.map(item => item.name)} // Muestra solo los nombres
                         text2="Seleccionar tipo de archivo"
-                        disabled={disabled}
+                        selectedOptions={state?.CatStudyTypePatientStudies?.name}
+
                     />
                 </div>
-                {!text ?
+                {!text && !disabled ?
                     <div className='flex flex-col gap-2'>
                         <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
                             <IconCurrentRouteNav className={'w-4'} />
@@ -160,6 +162,7 @@ export default function ImportarHC({ onData, text, disabled }) {
                         icon={<IconCurrentRouteNav className={'w-4'} />}
                         className={'md:px-0'}
                         disabled={disabled}
+                        defaultValue={state?.title}
                     />
                     <InputInfoText
                         onChange={handleDescriptionChange}
@@ -168,6 +171,7 @@ export default function ImportarHC({ onData, text, disabled }) {
                         placeholder={"Añadí una descripción"}
                         icon={<IconCurrentRouteNav className={'w-4'} />}
                         disabled={disabled}
+                        defaultValue={state?.description}
                     />
                 </div>
             </div>
