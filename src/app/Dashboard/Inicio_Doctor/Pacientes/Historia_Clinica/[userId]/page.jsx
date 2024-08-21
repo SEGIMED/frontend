@@ -268,7 +268,7 @@ const Page = () => {
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}
             progessBar={"hidden"}
-            size={"h-[35rem] md:h-fit md:w-[35rem]"}
+            size={"md:min-h-[4rem] md:w-[35rem]"}
             buttonText={{ end: `Cerrar` }}
             buttonIcon={<></>}
           />
@@ -281,7 +281,7 @@ const Page = () => {
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}
             progessBar={"hidden"}
-            size={"h-[35rem] md:h-[40rem] md:w-[35rem]"}
+            size={"md:min-h-[4rem] md:w-[35rem]"}
             buttonText={{ end: `Cerrar` }}
             buttonIcon={<></>}
           />
