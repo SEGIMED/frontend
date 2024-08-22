@@ -38,7 +38,7 @@ export default function PreconsultaPte({ params }) {
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-  console.log(formData, "el fucking estado a ver")
+  
   const [tests, setTests] = useState({
     laboratoryResults: {
       title: "Resultados de laboratorio",
@@ -148,17 +148,14 @@ export default function PreconsultaPte({ params }) {
     // Verifica si no hay draft en localStorage
     if (draft) {
       const parsedDraft = JSON.parse(draft);
-      console.log(parsedDraft, "esto es el draft");
+      
       setEnableButton(true);
       setAvailable(true);
       setDraftEnabled(true);
       dispatch(updateAllFormData({ draft: parsedDraft }));
       setIsLoading(false);
     }
-    // } else {
-    //   // Si no hay draft, intenta cargar desde la base de datos
-    //   getPreConsultationDraft();
-    // }
+    
   }, [scheduleId]);
 
   const getPreConsultationDraft = async () => {
@@ -166,7 +163,7 @@ export default function PreconsultaPte({ params }) {
       //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
       const res =await getPreConsultation(scheduleId)
       
-      console.log("me traje el borrador", res.data)
+      
       
       // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
       if (res) {
@@ -175,7 +172,7 @@ export default function PreconsultaPte({ params }) {
         setDraftEnabled(true);
         setIsLoading(false);
         const formatResponse = draftFormat(res.data); //aca la formatea en version barrador
-        console.log(formatResponse, "la data formateada antes del dispatch")
+        
         dispatch(updateAllFormData({ draft: formatResponse }));
         // console.log({ ...formatResponse, tests, scheduleId });
         // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
@@ -304,33 +301,31 @@ export default function PreconsultaPte({ params }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    console.log(formData, "esto es formdata");
-    
-    console.log(bodyForm, "esto es bodyform")
+   
     try {
-      // if (!bodyForm) {
-      //   console.error("No form data to submit");
-      //   setIsLoading(false);
-      //   return;
-      // }
-      // const isAnamnesisMissing = Object.values(formData.anamnesis).some(
-      //   (item) => item.description?.trim() === ''
-      // );
+      if (!bodyForm) {
+        console.error("No form data to submit");
+        setIsLoading(false);
+        return;
+      }
+      const isAnamnesisMissing = Object.values(formData.anamnesis).some(
+        (item) => item.description?.trim() === ''
+      );
       
-      // const isVitalSignMissing = vitalSignFormat.some(
-      //   (item) => item.measure === null
-      // );
-      // if (isAnamnesisMissing || isVitalSignMissing) {
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Error",
-      //     text: "Debe completar la información de anamnesis y los signos vitales",
-      //     confirmButtonColor: "#487FFA",
-      //     confirmButtonText: "Aceptar",
-      //   });
-      //   setIsLoading(false);
-      //   return;
-      // }
+      const isVitalSignMissing = vitalSignFormat.some(
+        (item) => item.measure === null
+      );
+      if (isAnamnesisMissing || isVitalSignMissing) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Debe completar la información de anamnesis y los signos vitales",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
+        });
+        setIsLoading(false);
+        return;
+      }
       if (available) {
         console.log({
           toCreate: bodyForm,
