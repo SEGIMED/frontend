@@ -1,7 +1,7 @@
 export const IMC = (peso, tallaEnCm) => {
-    if (peso && tallaEnCm) {
-        const tallaEnMetros = tallaEnCm / 100; // Convertir altura de cm a metros
-        return (peso / (tallaEnMetros * tallaEnMetros)).toFixed(1); // Calcular IMC
+    if (peso > 0 && tallaEnCm > 0) {
+      const tallaEnMetros = Number(tallaEnCm) / 100; // Convertir altura de cm a metros
+      return (Number(peso) / (tallaEnMetros * tallaEnMetros)).toFixed(1); // Calcular IMC
     }
-    return 0;
-}
+    return null; // Retornar null si los valores son inválidos
+  };

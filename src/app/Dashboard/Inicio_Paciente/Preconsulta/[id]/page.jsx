@@ -23,6 +23,8 @@ import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { draftFormat } from "@/utils/formatResponse";
 import { IMC } from "@/utils/normaliceVitalSigns";
+import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
+import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 
 export default function PreconsultaPte({ params }) {
   const dispatch = useAppDispatch();
@@ -36,6 +38,7 @@ export default function PreconsultaPte({ params }) {
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
+  console.log(formData, "el fucking estado a ver")
   const [tests, setTests] = useState({
     laboratoryResults: {
       title: "Resultados de laboratorio",
@@ -114,49 +117,65 @@ export default function PreconsultaPte({ params }) {
     },
   });
 
-  useEffect(() => {
-    // almacenamos cada cambio en un borrador en el local storage
-    if (draftEnabled) {
-      localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify({ ...formData, tests, scheduleId }));
-    }
-  }, [formData]);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     saveDraftToDatabase();
+  //   }, 1000); // Guarda cada 60 segundos
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //     saveDraftToDatabase(); // Guarda borrador al desmontar el componente
+  //   };
+  // }, []);
 
   useEffect(() => {
-    // Verificamos si existe un borrador de esta preconsulta en el local storage
-    const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
+    // almacenamos cada cambio en un borrador en el local storage
+    
+    if (draftEnabled) {
+      const draftData = { ...formData, tests, scheduleId };
+      
+      localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify(draftData))
+    }
+  }, [formData, tests]);
+
+
+  //aca tengo un problema !!! siempre existe el fucking borrador y no entra en getPreconsultationDraft
+  //si yo saliera y cambiara de ordenador , pierdo todo mi localstorage pero nunca me hace el get, como lo soluciono?
+  useEffect(() => {
+    getPreConsultationDraft()
+    const draft = localStorage.getItem(`preconsultationDraft${scheduleId}`);
+  
+    // Verifica si no hay draft en localStorage
     if (draft) {
-      console.log(draft);
+      const parsedDraft = JSON.parse(draft);
+      console.log(parsedDraft, "esto es el draft");
       setEnableButton(true);
       setAvailable(true);
       setDraftEnabled(true);
-      dispatch(updateAllFormData({ draft }));
+      dispatch(updateAllFormData({ draft: parsedDraft }));
       setIsLoading(false);
     }
-    else { // Si no existe un borrador en el local storage, entonces buscamos un borrador en la base de datos
-      getPreConsultation();
-      setIsLoading(false);
-    }
-    setIsLoading(false);
-  }, []);
+    // } else {
+    //   // Si no hay draft, intenta cargar desde la base de datos
+    //   getPreConsultationDraft();
+    // }
+  }, [scheduleId]);
 
-  const getPreConsultation = async () => {
+  const getPreConsultationDraft = async () => {
     try {
       //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
-      const res = await ApiSegimed.get(
-        `/get-preconsultation?scheduleId=${scheduleId}&status=1`,
-        {
-          headers: {
-            token: token,
-          },
-        }
-      );
+      const res =await getPreConsultation(scheduleId)
+      
+      console.log("me traje el borrador", res.data)
+      
       // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
       if (res) {
         setEnableButton(true);
         setAvailable(true);
         setDraftEnabled(true);
         setIsLoading(false);
-        const formatResponse = draftFormat(res.data);
+        const formatResponse = draftFormat(res.data); //aca la formatea en version barrador
+        console.log(formatResponse, "la data formateada antes del dispatch")
         dispatch(updateAllFormData({ draft: formatResponse }));
         // console.log({ ...formatResponse, tests, scheduleId });
         // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
@@ -170,6 +189,7 @@ export default function PreconsultaPte({ params }) {
         console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
         return;
       }
+      
     } catch (error) {
       console.error("Error fetching data", error);
       setEnableButton(false);
@@ -179,137 +199,145 @@ export default function PreconsultaPte({ params }) {
       console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
     }
   };
+  const saveDraftToDatabase = async () => {
+  
+    try {
+      const response = await patchPreconsultation(bodyForm)
+      
+    } catch (error) {
+      console.error
+    }
+  }
+  const bodyPainFormat = {
+    patient: Number(patientId),
+    patientPainMapId: Number(patientId),
+    painOwnerId: Number(patientId),
+    schedulingId: Number(scheduleId),
+    isTherePain: formData.bodySection.isTherePain,
+    painDurationId: formData.bodySection.painDuration,
+    painScaleId: formData.bodySection.painScale,
+    painTypeId: formData.bodySection.painType,
+    painAreas: formData.bodySection.painAreas
+      ? Object.values(formData.bodySection.painAreas)
+      : [],
+    painFrequencyId: formData.bodySection.painFrequency,
+    isTakingAnalgesic: formData.bodySection.isTakingAnalgesic,
+    doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks,
+    isWorstPainEver: formData.bodySection.isWorstPainEver,
+  };
+  const vitalSignFormat = [
+    formData.vitalSigns.height,
+    formData.vitalSigns.weight,
+    {
+      ...formData.vitalSigns.IMC,
+      measure: IMC(Number(formData.vitalSigns.weight), Number(formData.vitalSigns.height))
+    },
+    formData.vitalSigns.temperature,
+    formData.vitalSigns.Heart_Rate,
+    formData.vitalSigns.Systolic_Blood_Pressure,
+    formData.vitalSigns.Diastolic_Blood_Pressure,
+    formData.vitalSigns.Breathing_frequency,
+    formData.vitalSigns.Oxygen_saturation,
+  ];
+
+  //ESTO (bodyForm) ES LO QUE SE ENVIA POR BODY , debe contener si o si patient = patientID y appointmentSchedule  = scheduleID
+  const bodyForm = {
+    patient: Number(patientId),
+    appointmentSchedule: Number(scheduleId),
+    // Questions
+    lackOfAir: formData.questions.lackOfAir.active,
+    lackOfAirIncremented: formData.questions.lackOfAir.subquestions.lackOfAirIncremented.selectedOption,
+    lackOfAirClasification: formData.questions.lackOfAir.subquestions.lackOfAirClasification.selectedOption,
+    chestPainAtRest: formData.questions.chestPainAtRest.active,
+    chestPainOnExertion: formData.questions.chestPainOnExertion.active,
+    chestPainOnExertionAmount: formData.questions.chestPainOnExertion.subquestions.chestPainOnExertionAmount.selectedOption,
+    edemaPresence: formData.questions.edemaPresence.active,
+    edemaPresenceDescription: formData.questions.edemaPresence.subquestions.edemaPresenceDescription.selectedOption,
+    feelings: formData.questions.feelings.selectedOption,
+    healthChanges: formData.questions.healthChanges.active,
+    healthChangesDescription: formData.questions.healthChanges.description,
+    healthWorsened: formData.questions.healthWorsened.selectedOption,
+    mentalHealthAffected: formData.questions.mentalHealthAffected.active,
+    mentalHealthAffectedDescription: formData.questions.mentalHealthAffected.description,
+    energyStatus: formData.questions.energyStatus.selectedOption,
+    feed: formData.questions.feed.selectedOption,
+    hydrationStatus: formData.questions.hydrationStatus.selectedOption,
+    urineStatus: formData.questions.urineStatus.selectedOption,
+    exerciseStatus: formData.questions.exerciseStatus.selectedOption,
+    bodyPain: formData.questions.bodyPain.selectedOption,
+    // Estudios
+    laboratoryResults: tests.laboratoryResults.file,
+    laboratoryResultsDescription: tests.laboratoryResults.description,
+    electrocardiogram: tests.electrocardiogram.file,
+    electrocardiogramDescription: tests.electrocardiogram.description,
+    rxThorax: tests.rxThorax.file,
+    echocardiogram: tests.echocardiogram.file,
+    walkTest: tests.walkTest.file,
+    respiratoryFunctional: tests.respiratoryFunctional.file,
+    tomographies: tests.tomographies.file,
+    rightHeartCatheterization: tests.rightHeartCatheterization.file,
+    ccg: tests.ccg.file,
+    resonance: tests.resonance.file,
+    leftHeartCatheterization: tests.leftHeartCatheterization.file,
+    otherStudies: tests.otherStudies.file,
+    pendingStudies: tests.pendingStudies.description,
+    // Anamnesis
+    consultationReason: formData.anamnesis.consultationReason.description,
+    importantSymptoms: formData.anamnesis.importantSymptoms.description,
+    // Tratamiento
+    currentMedications: formData.tratamiento.currentMedications
+      ?.selectedOptions
+      ? Object.values(formData.tratamiento.currentMedications.selectedOptions)
+      : null,
+    // Signos vitales
+    abnormalGlycemia: formData.vitalSigns.abnormalGlycemia.active,
+    lastAbnormalGlycemia: Object.keys(
+      formData.vitalSigns.lastAbnormalGlycemia.options
+    ).length
+      ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options)
+      : null,
+    updateVitalSigns: vitalSignFormat,
+    // painRecordsToUpdate
+    // painRecordsToUpdate: [bodyPainFormat],
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    console.log(formData);
-    const bodyPainFormat = {
-      patient: Number(patientId),
-      patientPainMapId: Number(patientId),
-      painOwnerId: Number(patientId),
-      schedulingId: Number(scheduleId),
-      isTherePain: formData.bodySection.isTherePain,
-      painDurationId: formData.bodySection.painDuration,
-      painScaleId: formData.bodySection.painScale,
-      painTypeId: formData.bodySection.painType,
-      painAreas: formData.bodySection.painAreas
-        ? Object.values(formData.bodySection.painAreas)
-        : [],
-      painFrequencyId: formData.bodySection.painFrequency,
-      isTakingAnalgesic: formData.bodySection.isTakingAnalgesic,
-      doesAnalgesicWorks: formData.bodySection.doesAnalgesicWorks,
-      isWorstPainEver: formData.bodySection.isWorstPainEver,
-    };
-    const vitalSignFormat = [
-      formData.vitalSigns.height,
-      formData.vitalSigns.weight,
-      {
-        ...formData.vitalSigns.IMC,
-        measure: IMC(formData.vitalSigns.weight, formData.vitalSigns.height)
-      },
-      formData.vitalSigns.temperature,
-      formData.vitalSigns.Heart_Rate,
-      formData.vitalSigns.Systolic_Blood_Pressure,
-      formData.vitalSigns.Diastolic_Blood_Pressure,
-      formData.vitalSigns.Breathing_frequency,
-      formData.vitalSigns.Oxygen_saturation,
-    ];
-    const bodyForm = {
-      patient: Number(patientId),
-      appointmentSchedule: Number(scheduleId),
-      // Questions
-      lackOfAir: formData.questions.lackOfAir.active,
-      lackOfAirIncremented: formData.questions.lackOfAir.subquestions.lackOfAirIncremented.selectedOption,
-      lackOfAirClasification: formData.questions.lackOfAir.subquestions.lackOfAirClasification.selectedOption,
-      chestPainAtRest: formData.questions.chestPainAtRest.active,
-      chestPainOnExertion: formData.questions.chestPainOnExertion.active,
-      chestPainOnExertionAmount: formData.questions.chestPainOnExertion.subquestions.chestPainOnExertionAmount.selectedOption,
-      edemaPresence: formData.questions.edemaPresence.active,
-      edemaPresenceDescription: formData.questions.edemaPresence.subquestions.edemaPresenceDescription.selectedOption,
-      feelings: formData.questions.feelings.selectedOption,
-      healthChanges: formData.questions.healthChanges.active,
-      healthChangesDescription: formData.questions.healthChanges.description,
-      healthWorsened: formData.questions.healthWorsened.selectedOption,
-      mentalHealthAffected: formData.questions.mentalHealthAffected.active,
-      mentalHealthAffectedDescription: formData.questions.mentalHealthAffected.description,
-      energyStatus: formData.questions.energyStatus.selectedOption,
-      feed: formData.questions.feed.selectedOption,
-      hydrationStatus: formData.questions.hydrationStatus.selectedOption,
-      urineStatus: formData.questions.urineStatus.selectedOption,
-      exerciseStatus: formData.questions.exerciseStatus.selectedOption,
-      // Estudios
-      laboratoryResults: tests.laboratoryResults.file,
-      laboratoryResultsDescription: tests.laboratoryResults.description,
-      electrocardiogram: tests.electrocardiogram.file,
-      electrocardiogramDescription: tests.electrocardiogram.description,
-      rxThorax: tests.rxThorax.file,
-      echocardiogram: tests.echocardiogram.file,
-      walkTest: tests.walkTest.file,
-      respiratoryFunctional: tests.respiratoryFunctional.file,
-      tomographies: tests.tomographies.file,
-      rightHeartCatheterization: tests.rightHeartCatheterization.file,
-      ccg: tests.ccg.file,
-      resonance: tests.resonance.file,
-      leftHeartCatheterization: tests.leftHeartCatheterization.file,
-      otherStudies: tests.otherStudies.file,
-      pendingStudies: tests.pendingStudies.description,
-      // Anamnesis
-      consultationReason: formData.anamnesis.consultationReason.description,
-      importantSymptoms: formData.anamnesis.importantSymptoms.description,
-      // Tratamiento
-      currentMedications: formData.tratamiento.currentMedications
-        ?.selectedOptions
-        ? Object.values(formData.tratamiento.currentMedications.selectedOptions)
-        : null,
-      // Signos vitales
-      abnormalGlycemia: formData.vitalSigns.abnormalGlycemia.active,
-      lastAbnormalGlycemia: Object.keys(
-        formData.vitalSigns.lastAbnormalGlycemia.options
-      ).length
-        ? Object.values(formData.vitalSigns.lastAbnormalGlycemia.options)
-        : null,
-      updateVitalSigns: vitalSignFormat,
-      // painRecordsToUpdate
-      painRecordsToUpdate: [bodyPainFormat],
-    };
+    console.log(formData, "esto es formdata");
+    
+    console.log(bodyForm, "esto es bodyform")
     try {
-      if (!bodyForm) {
-        console.error("No form data to submit");
-        setIsLoading(false);
-        return;
-      }
-      const isAnamnesisMissing = Object.values(formData.anamnesis).some(
-        (item) => item.description?.trim() === ''
-      );
-      /* const isBodyPainMissing = Object.values(bodyPainFormat).some(
-        (item) => item === null
-      ); */
-      const isVitalSignMissing = vitalSignFormat.some(
-        (item) => item.measure === null
-      );
-      if (isAnamnesisMissing || isVitalSignMissing) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Debe completar la información de anamnesis y los signos vitales",
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-        });
-        setIsLoading(false);
-        return;
-      }
+      // if (!bodyForm) {
+      //   console.error("No form data to submit");
+      //   setIsLoading(false);
+      //   return;
+      // }
+      // const isAnamnesisMissing = Object.values(formData.anamnesis).some(
+      //   (item) => item.description?.trim() === ''
+      // );
+      
+      // const isVitalSignMissing = vitalSignFormat.some(
+      //   (item) => item.measure === null
+      // );
+      // if (isAnamnesisMissing || isVitalSignMissing) {
+      //   Swal.fire({
+      //     icon: "error",
+      //     title: "Error",
+      //     text: "Debe completar la información de anamnesis y los signos vitales",
+      //     confirmButtonColor: "#487FFA",
+      //     confirmButtonText: "Aceptar",
+      //   });
+      //   setIsLoading(false);
+      //   return;
+      // }
       if (available) {
         console.log({
           toCreate: bodyForm,
           preconsultationAlreadyExists: !!preconsultationAlreadyExists,
         });
-        const response = await ApiSegimed.patch(`/update-pre-consultation`, bodyForm, {
-          headers: {
-            token: token,
-            "Content-Type": "application/json",
-          },
-        });
+        console.log(bodyForm, "justo antes del submit")
+        const response =await patchPreconsultation(bodyForm)
         if (response) {
           Swal.fire({
             icon: "success",

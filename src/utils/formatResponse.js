@@ -1,5 +1,5 @@
 export const draftFormat = (data) => {
-    console.log(data);
+    console.log(data, "antes de formatear la data y que se vea el borrador ");
     let medications = {
         item0: '',
     };
@@ -8,6 +8,26 @@ export const draftFormat = (data) => {
         medications = { ...medications, [key]: item };
         return;
     });
+    const transformKey= (key)=>{
+        return key.replace(/ /g, '_')
+        .replace(/[^\w\s]/g, '');    
+    }
+    const vitalSigns=  data?.ProvisionalPreConsultationSchedule?.vitalSignDetailsScheduling && 
+    data?.ProvisionalPreConsultationSchedule?.vitalSignDetailsScheduling.reduce((acc, item) => {
+        // Verifica si el signo vital ya está en el objeto acumulador
+       if (item.measureType) {
+        const key = transformKey(item.measureType);
+            acc[key] = {
+                measure: item.measure,
+                measUnit: item.measUnit,
+                measureTimestamp: item.measureTimestamp
+            };
+        }
+        return acc;
+    }, {});
+    
+    // Ejemplo de cómo puedes acceder a los signos vitales
+    console.log(vitalSigns);
 
     return {
         questions: {
@@ -132,7 +152,7 @@ export const draftFormat = (data) => {
                 title: "¿Tiene alguna dolencia en su cuerpo?",
                 active: null,
                 binaryOptions: true,
-                selectedOption: null,
+                selectedOption: data?.bodyPain || null,
                 description: '',
             },
             mentalHealthAffected: {
@@ -148,7 +168,7 @@ export const draftFormat = (data) => {
                 title: "Califique su estado de energía - Fatiga",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data?.energyStatus || null,
+                selectedOption: data?.ProvisionalPreConsultationSchedule?.energyStatus || null,
                 showSlider: true,
                 description: '',
             },
@@ -211,7 +231,7 @@ export const draftFormat = (data) => {
                 cat: "antrophometric",
                 medicalEventId: null,
                 measureType: 4,
-                measure: null,
+                measure: vitalSigns?.Estatura?.measure || null,
                 key: "Talla",
                 label: "Estatura",
                 unit: "cm",
@@ -221,7 +241,7 @@ export const draftFormat = (data) => {
                 cat: "antrophometric",
                 medicalEventId: null,
                 measureType: 5,
-                measure: null,
+                measure: vitalSigns?.Peso?.measure || null,
                 key: "Peso",
                 label: "Peso",
                 unit: "kg",
@@ -232,7 +252,7 @@ export const draftFormat = (data) => {
                 key: "IMC",
                 medicalEventId: null,
                 measureType: 7,
-                measure: null,
+                measure: vitalSigns?.IMC?.measure || null,
                 label: "Índice de masa corporal",
                 unit: "kg/m2",
                 referenceValue: 24.69,
@@ -241,7 +261,7 @@ export const draftFormat = (data) => {
                 cat: "vitalSigns",
                 medicalEventId: null,
                 measureType: 1,
-                measure: null,
+                measure: vitalSigns?.Temperatura?.measure || null,
                 key: "Temperatura",
                 label: "Temperatura",
                 unit: "°C",
@@ -258,7 +278,7 @@ export const draftFormat = (data) => {
                 cat: "vitalSigns",
                 medicalEventId: null,
                 measureType: 7,
-                measure: null,
+                measure: vitalSigns?.Frecuencia_Cardiaca?.measure || null,
                 key: "Frecuencia Cardiaca",
                 label: "Frecuencia cardíaca",
                 unit: "lpm",
@@ -268,7 +288,7 @@ export const draftFormat = (data) => {
                 cat: "vitalSigns",
                 medicalEventId: null,
                 measureType: 2,
-                measure: null,
+                measure: vitalSigns?.Presin_Arterial_Sistlica?.measure || null,
                 key: "Presion Arterial Sistolica",
                 label: "Presión arterial sistólica",
                 unit: "mmHg",
@@ -278,7 +298,7 @@ export const draftFormat = (data) => {
                 cat: "vitalSigns",
                 medicalEventId: null,
                 measureType: 3,
-                measure: null,
+                measure: vitalSigns?.Presin_Arterial_Diastlica?.measure || null,
                 key: "Presion Arterial Diastolica",
                 label: "Presión arterial diastólica",
                 unit: "mmHg",
@@ -295,7 +315,7 @@ export const draftFormat = (data) => {
                 cat: "vitalSigns",
                 medicalEventId: null,
                 measureType: 5,
-                measure: null,
+                measure: vitalSigns?.Frecuencia_Respiratoria?.measure || null,
                 key: "Frecuencia Respiratoria",
                 label: "Frecuencia respiratoria",
                 unit: "rpm",
@@ -305,7 +325,7 @@ export const draftFormat = (data) => {
                 cat: "vitalSigns",
                 medicalEventId: null,
                 measureType: 6,
-                measure: null,
+                measure: vitalSigns?.Saturacin_de_Oxgeno?.measure || null,
                 key: "Saturacion de Oxigeno",
                 label: "Saturación de oxígeno",
                 unit: "%",
@@ -315,7 +335,7 @@ export const draftFormat = (data) => {
                 label: "  Glicemia:  ¿Tuvo valores fuera del rango normal en el último tiempo? (+ 140 mg/dl y - 80 mg/dl)",
                 binaryOptions: true,
                 active: null,
-                measure: 0,
+                measure: data?.abnormalGlycemia || 0,
                 description: '',
                 active: null,
             },
@@ -328,10 +348,10 @@ export const draftFormat = (data) => {
                 referenceValue: 100,
                 unit: 'mg/dl',
                 options: {
-                    option0: '',
-                    option1: '',
-                    option2: '',
-                    option3: '',
+                    option0: data?.lastAbnormalGlycemia[0] || " ",
+                    option1: data?.lastAbnormalGlycemia[1] || " ",
+                    option2: data?.lastAbnormalGlycemia[2] || " ",
+                    option3: data?.lastAbnormalGlycemia[3] || " ",
                 },
             },
         },

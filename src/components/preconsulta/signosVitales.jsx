@@ -11,17 +11,24 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
   const [imcValue, setImcValue] = useState(null);
 
   useEffect(() => {
-    if (vitalSigns.weight.measure && vitalSigns.height.measure) {
-      const getImcValue = IMC(vitalSigns.weight.measure, vitalSigns.height.measure);
-      setImcValue(getImcValue);
-    }
-    else {
-      setImcValue(0);
+    const weight = vitalSigns.weight?.measure;
+    const height = vitalSigns.height?.measure;
+  
+    if (weight && height && !isNaN(weight) && !isNaN(height)) {
+      const getImcValue = IMC(weight, height);
+      setImcValue(parseFloat(getImcValue));
+    } else {
+      setImcValue(null);
     }
   }, [vitalSigns]);
+  
 
-  const handleInput = (sign, value) => {
-    onVitalSignChange(sign, value);
+  const handleInput = (sign, value, option = null) => {
+    if (option) {
+      onVitalSignChange(sign, value, null, option);
+    } else {
+      onVitalSignChange(sign, value);
+    }
   };
 
   return (
@@ -42,7 +49,8 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
 
         {Object.keys(vitalSigns).map((sign, index) => {
           const data = vitalSigns[sign];
-          const defaulValueInput = data.measure > 0 ? data.measure : '';
+          const defaultValueInput = data.measure > 0 ? data.measure : '';
+
           return (
             <div
               key={index}
@@ -55,34 +63,37 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                 />
                 {data.label}
               </label>
-              {(sign !== 'abnormalGlycemia' && sign !== 'lastAbnormalGlycemia') &&
+
+              {(sign !== 'abnormalGlycemia' && sign !== 'lastAbnormalGlycemia') && (
                 <div className="w-full md:max-w-[50%] flex flex-row justify-start md:justify-end items-start gap-2 px-8 py-1">
                   <span className="w-[100px] flex md:flex-1 justify-start md:justify-end text-[#5F5F5F] font-normal text-sm">
                     {data.referenceValue} {data.unit}
                   </span>
-                  {sign !== 'IMC' ?
+
+                  {sign !== 'IMC' ? (
                     <input
                       type="number"
-                      placeholder={defaulValueInput}
+                      defaultValue={defaultValueInput}
                       min={0}
                       className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
                       onChange={(e) => handleInput(sign, Number(e.target.value))}
                     />
-                    :
+                  ) : (
                     <input
-                      type="number"
-                      placeholder={(sign === 'IMC' && imcValue) ? imcValue : defaulValueInput}
-                      value={(sign === 'IMC' && imcValue) ? imcValue : null}
-                      min={0}
-                      className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                      onChange={(e) => handleInput(sign, Number(e.target.value))}
-                    />
-                  }
-                </div>}
-              {sign === 'abnormalGlycemia' &&
+                    type="number"
+                    placeholder={imcValue !== null ? imcValue : ""}
+                    value={imcValue !== null ? imcValue : ""}
+                    min={0}
+                    className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                    onChange={(e) => handleInput(sign, Number(e.target.value))}
+                  />
+                  )}
+                </div>
+              )}
+
+              {sign === 'abnormalGlycemia' && (
                 <div className="md:max-w-[50%] flex justify-end items-center gap-2 md:px-8 py-1">
-                  <div
-                    className='flex py-2 md:py-0 justify-evenly gap-3'>
+                  <div className="flex py-2 md:py-0 justify-evenly gap-3">
                     <BotonPreconsulta
                       label="Sí"
                       onClick={() => onVitalSignChange(sign, null, true)}
@@ -95,28 +106,28 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                     />
                   </div>
                 </div>
-              }
-              {sign === 'lastAbnormalGlycemia' &&
+              )}
+
+              {sign === 'lastAbnormalGlycemia' && (
                 <div key={index} className="md:max-w-[50%] flex flex-col justify-end items-center gap-2 py-1">
                   <span className="w-full">
                     {data.referenceValue} {data.unit}
                   </span>
                   <div className="w-full flex flex-row gap-2">
-                    {Object.keys(data.options).map((option, index) => (
+                    {Object.keys(data.options).map((option, idx) => (
                       <input
-                        key={index}
+                        key={idx}
                         type="number"
                         placeholder={data.options[option] > 0 ? data.options[option] : ''}
-                        // defaultValue={}
                         className="w-full text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                        onChange={(e) => onVitalSignChange(sign, Number(e.target.value), null, option)}
+                        onChange={(e) => handleInput(sign, Number(e.target.value), option)}
                       />
                     ))}
                   </div>
                 </div>
-              }
+              )}
             </div>
-          )
+          );
         })}
       </details>
     </div>
