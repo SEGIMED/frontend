@@ -18,6 +18,7 @@ import { mapBoolean } from "@/utils/MapeoCuerpo";
 import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
 import IconArrowRight from "@/components/icons/iconArrowRight";
+import LoadingFallback from "@/components/loading/loading";
 
 
 const ProgressBar = ({ steps, currentIndex, progessBar }) => {
@@ -33,7 +34,7 @@ const ProgressBar = ({ steps, currentIndex, progessBar }) => {
     );
 };
 
-const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, titleClassName, funcionButton1, ruta, button1, buttonText1, button2, progessBar, size, verification, buttonText, funcion }) => {
+const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, titleClassName, funcionButton1, ruta, button1, buttonText1, button2, progessBar, size, verification, buttonText, funcion, loading }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
 
@@ -88,9 +89,13 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
                 </div>
                 <ProgressBar steps={Modals} currentIndex={index} progessBar={progessBar} />
                 <div className="flex flex-col items-center gap-5 justify-center w-full h-full ">
-                    <div className="px-8 bg-[#fafafc] h-[80%] md:h-[100%] w-[100%] justify-center items-center flex">
+                    {loading ? <div className="flex items-center justify-center w-full h-full">
+                        <LoadingFallback className="w-6 h-6" />
+                    </div> : <div className="px-8 bg-[#fafafc] h-[80%] md:h-[100%] w-[100%] justify-center items-center flex">
                         {Modals[index]}
-                    </div>
+                    </div>}
+
+
 
                 </div>
                 <div className="flex gap-2 pb-5 bg-white border-t rounded-b-lg justify-center items-center pt-3 border-t-[#DCDBDB] w-full">

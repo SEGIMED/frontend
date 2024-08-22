@@ -16,6 +16,7 @@ import {
   clearClinicalHistory,
   addUserHistory,
   changeTabs,
+  addImportHistory
 } from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
@@ -123,6 +124,13 @@ export default function SubNavbar({ id }) {
     }
   };
 
+  const getImportHistory = async () => {
+    const response = await ApiSegimed.get(
+      `/patient-studies?userId=${userId}`,
+    );
+    dispatch(addImportHistory(response.data));
+  };
+
   const getUser = async (headers) => {
     const response = await ApiSegimed.get(
       `/patient-details?id=${userId}`,
@@ -137,6 +145,7 @@ export default function SubNavbar({ id }) {
     if (token) {
       getUser({ headers: { token: token } }).catch(console.error);
       getConsultas({ headers: { token: token } }).catch(console.error);
+      getImportHistory().catch(console.error);
     }
 
     return () => {
