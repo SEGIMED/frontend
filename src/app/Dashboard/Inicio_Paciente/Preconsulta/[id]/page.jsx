@@ -117,16 +117,16 @@ export default function PreconsultaPte({ params }) {
     },
   });
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     saveDraftToDatabase();
-  //   }, 1000); // Guarda cada 60 segundos
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      saveDraftToDatabase();
+    }, 60000); // Guarda cada 60 segundos
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //     saveDraftToDatabase(); // Guarda borrador al desmontar el componente
-  //   };
-  // }, []);
+    return () => {
+      clearInterval(intervalId);
+      saveDraftToDatabase(); // Guarda borrador al desmontar el componente
+    };
+  }, []);
 
   useEffect(() => {
     // almacenamos cada cambio en un borrador en el local storage
@@ -200,7 +200,7 @@ export default function PreconsultaPte({ params }) {
     }
   };
   const saveDraftToDatabase = async () => {
-  
+    
     try {
       const response = await patchPreconsultation(bodyForm)
       
