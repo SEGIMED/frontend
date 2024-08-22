@@ -229,7 +229,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("Examen Físico")}
                   key="new"
                   textValue="Examen Fisico"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("Examen Físico"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -239,7 +239,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("Signos Vitales")}
                   key="copy"
                   textValue="Signos Vitales"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("Signos Vitales"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -249,7 +249,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("Diagnosticos y tratamientos")}
                   key="edit"
                   textValue="Diagnosticos y tratamientos"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("Diagnosticos y tratamientos"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -259,7 +259,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("HC Importados")}
                   key="importaciones"
                   textValue="HC Importados"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("HC Importados"));
                     setOpenDetails(!openDetails);
                   }}>
