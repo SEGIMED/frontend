@@ -24,14 +24,16 @@ import InputFilePreconsultation from "@/components/preconsulta/estudios";
 import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
+import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
+import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
 
 const DetallePaciente = (id) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
-  const medicalEventId = Cookies.get("medicalEventId");
-  const userId = Cookies.get("patientId");
-  const scheduleId = id.params.id; // id de agendamiento
+  const medicalEventId =Number(Cookies.get("medicalEventId")) ;
+  const userId =Number(Cookies.get("patientId"));
+  const scheduleId = Number(id.params.id); // id de agendamiento
   let vitalSigns;
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
@@ -119,11 +121,13 @@ const DetallePaciente = (id) => {
       ) ?? null,
   };
 
+  
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
       riskId: selectedRisk,
     });
+    
   }, [selectedRisk]);
   useEffect(() => {
     setSurgicalRisk({
@@ -475,7 +479,7 @@ const DetallePaciente = (id) => {
       }
     );
 
-    
+
     // patch medical event
     const medicalEvent = {
       id: Number(medicalEventId),
@@ -507,36 +511,30 @@ const DetallePaciente = (id) => {
   console.log(diagnosticPatch);
   console.log(medicalEventExist);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
+  //GETS de la data que necesito T_T
+  const fetchPatientDetail = async (userId) => {
+    try {
+      const response= await getPatientDetail(userId)
+      setPatient(response);
+    } catch (error) {
+      console.log("No existe este paciente", error);
+    }
+  };
+  const fetchPreconsultation = async (scheduleId) => {
+    try {
+      // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
 
-        const response1 = await ApiSegimed.get(
-          `/get-preconsultation?scheduleId=${scheduleId}`,
-          { headers: { token: token } }
-        );
-        console.log("esto es preconsulta", response1);
-        setPreconsult(response1.data);
-      } catch (error) {
-        console.log("Este agendamiento no tiene preconsulta", error);
-      }
-    };
-    const fetchData2 = async () => {
-      try {
-        // Segunda petición utilizando el userId de la primera respuesta - esto pide el paciente
-        const response2 = await ApiSegimed.get(
-          `/patient-details?id=${userId}`,
-          { headers: { token: token } }
-        );
-        const response = await ApiSegimed.get(`/patient/${userId}`, {
-          headers: { token: token },
-        });
-        setPatient({ ...response2.data, ...response.data });
-      } catch (error) {
-        console.log("No existe este paciente", error);
-      }
-    };
+      const response = await getPreConsultation(scheduleId)
+      console.log(response.data)
+      setPreconsult(response.data);
+    } catch (error) {
+      console.error("Este agendamiento no tiene preconsulta", error);
+    }
+  };
+
+  useEffect(() => {
+ 
+   
     const fetchData3 = async () => {
       try {
         // Tercera petición utilizando el scheduleId de params - esto pide el historial medico para saber siya hay diagnostico
@@ -550,8 +548,8 @@ const DetallePaciente = (id) => {
         console.log("No se ah echo un diagnostico anteriormente:", error);
       }
     };
-    fetchData();
-    fetchData2();
+    fetchPreconsultation(scheduleId);
+    fetchPatientDetail(userId);
     fetchData3();
   }, []);
   const handleBodyChange = (name, value) => {
