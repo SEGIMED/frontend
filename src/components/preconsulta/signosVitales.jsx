@@ -7,7 +7,7 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import BotonPreconsulta from "../Buttons/BotonPreconsulta";
 import { IMC } from "@/utils/normaliceVitalSigns";
 
-function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive, defaultOpen = false }) {
+function SignosVitales({ vitalSigns = {}, title, onVitalSignChange, onGlicemyaActive, defaultOpen = false }) {
   const [imcValue, setImcValue] = useState(null);
 
   useEffect(() => {
@@ -21,7 +21,6 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
       setImcValue(null);
     }
   }, [vitalSigns]);
-  
 
   const handleInput = (sign, value, option = null) => {
     if (option) {
@@ -48,7 +47,7 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
         </summary>
 
         {Object.keys(vitalSigns).map((sign, index) => {
-          const data = vitalSigns[sign];
+          const data = vitalSigns[sign] || {};
           const defaultValueInput = data.measure > 0 ? data.measure : '';
 
           return (
@@ -61,13 +60,13 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                   alt="circulo informacion"
                   className="w-6 h-6"
                 />
-                {data.label}
+                {data.label || 'Label not available'}
               </label>
 
               {(sign !== 'abnormalGlycemia' && sign !== 'lastAbnormalGlycemia') && (
                 <div className="w-full md:max-w-[50%] flex flex-row justify-start md:justify-end items-start gap-2 px-8 py-1">
                   <span className="w-[100px] flex md:flex-1 justify-start md:justify-end text-[#5F5F5F] font-normal text-sm">
-                    {data.referenceValue} {data.unit}
+                    {data.referenceValue || 'Reference value'} {data.unit || ''}
                   </span>
 
                   {sign !== 'IMC' ? (
@@ -80,13 +79,13 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
                     />
                   ) : (
                     <input
-                    type="number"
-                    placeholder={imcValue !== null ? imcValue : ""}
-                    value={imcValue !== null ? imcValue : ""}
-                    min={0}
-                    className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
-                    onChange={(e) => handleInput(sign, Number(e.target.value))}
-                  />
+                      type="number"
+                      placeholder={imcValue !== null ? imcValue : ""}
+                      value={imcValue !== null ? imcValue : ""}
+                      min={0}
+                      className="max-w-[100px] md:max-w-[240px] text-start text-[#5F5F5F] font-semibold text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-2 py-1"
+                      onChange={(e) => handleInput(sign, Number(e.target.value))}
+                    />
                   )}
                 </div>
               )}
@@ -111,10 +110,10 @@ function SignosVitales({ vitalSigns, title, onVitalSignChange, onGlicemyaActive,
               {sign === 'lastAbnormalGlycemia' && (
                 <div key={index} className="md:max-w-[50%] flex flex-col justify-end items-center gap-2 py-1">
                   <span className="w-full">
-                    {data.referenceValue} {data.unit}
+                    {data.referenceValue || 'Reference value'} {data.unit || ''}
                   </span>
                   <div className="w-full flex flex-row gap-2">
-                    {Object.keys(data.options).map((option, idx) => (
+                    {Object.keys(data.options || {}).map((option, idx) => (
                       <input
                         key={idx}
                         type="number"
