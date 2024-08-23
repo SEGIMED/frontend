@@ -474,6 +474,8 @@ const DetallePaciente = (id) => {
         descriptionIndication: "Tratamientos no farmacológicos",
       }
     );
+
+    
     // patch medical event
     const medicalEvent = {
       id: Number(medicalEventId),
