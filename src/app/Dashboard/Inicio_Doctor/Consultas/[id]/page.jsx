@@ -61,6 +61,8 @@ const DetallePaciente = (id) => {
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
+  console.log(medicalEventExist, "esto es medical event")
+
   const getValue = (formValue, preconsultValue) =>
     formValue !== undefined && formValue !== null ? formValue : preconsultValue;
 
@@ -414,11 +416,11 @@ const DetallePaciente = (id) => {
       medicalEventId: Number(medicalEventId),
     });
 
-    if (medicalEventExist?.physicalExaminations[0]?.id) {
+    if (medicalEventExist?.patientPhysicalExaminations[0]?.id) {
       setPhysicalExaminationPatch({
         physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
         description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-        id: Number(medicalEventExist.physicalExaminations[0].id),
+        id: Number(medicalEventExist.patientPhysicalExaminations[0].id),
       });
     }
     if (
@@ -450,12 +452,12 @@ const DetallePaciente = (id) => {
     setDiagnosticPatch(
       //diagnosticPatch
       {
-        id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
+        id: Number(medicalEventExist?.patientDiagnostics[0]?.id), // id del diagnostico - obligatorio
         diseaseId: 3,
         diagnosticNotes:
           data["Diagnostico"] !== ""
             ? data["Diagnostico"]
-            : medicalEventExist.diagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
+            : medicalEventExist?.patientDiagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
         medicalEventId: Number(medicalEventId),
         drugId: null,
         drugName:
@@ -467,7 +469,7 @@ const DetallePaciente = (id) => {
         medicalProcedureName:
           data["Procedimientos"] !== ""
             ? data["Procedimientos"]
-            : medicalEventExist?.medicalProcedures?.[0]?.medicalProcedureName ||
+            : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
               null, // Usa el valor del procedimiento existente si está vacío
         therapyId: null,
         therapyDescription:
@@ -750,11 +752,11 @@ const DetallePaciente = (id) => {
     );
 
     if (allSuccessful) {
-      const data = await ApiSegimed.patch(
-        `/schedule/${scheduleId}`,
-        { schedulingStatus: 2 },
-        { headers: { token: token } }
-      );
+      // const data = await ApiSegimed.patch(
+      //   `/schedule/${scheduleId}`,
+      //   { schedulingStatus: 2 },
+      //   { headers: { token: token } }
+      // );
       setLoading(true);
       Swal.fire({
         icon: "success",

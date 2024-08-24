@@ -19,7 +19,7 @@ export default function SignosVitalesInfo({
     { measureType: "Peso",mesureExample: "76 kg", measureUnit: "Kg", measure: "" },
     { measureType: "Índice de Masa Corporal",mesureExample: "24.69 kg/m2", measureUnit: "Kg/m²", measure: "" },
   ];*/
-
+  console.log(preconsult, "quiero ver preconsult en signos vitales")
   const defaultVitalSigns = [
     //antropometricDetails que esta en vital sings
     { measureType: "Estatura",mesureExample: "1.80 m", measureUnit: "Cm", measure: "" },

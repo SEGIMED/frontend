@@ -31,7 +31,7 @@ export default function ButtonNext({
   }, [selectedOptions]);
 
   useEffect(() => {
-    if (defaultValue?.physicalExaminations[0]?.physicalSubsystem) { setSelectedOptionState("Si") }
+    if (defaultValue?.patientPhysicalExaminations[0]?.physicalSubsystem) { setSelectedOptionState("Si") }
   }, [defaultValue]);
 
   const handleClick = (option) => {

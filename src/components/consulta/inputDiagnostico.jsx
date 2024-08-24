@@ -39,8 +39,8 @@ export default function InputDiagnostico({
   };
   useEffect(() => {
     setValueDiagnosticoSubtitle2([
-      diagnostico?.diagnostics[0]?.diagnosticNotes,
-      diagnostico?.medicalProcedures[0]?.medicalProcedureName,
+      diagnostico?.patientDiagnostics[0]?.diagnosticNotes,
+      diagnostico?.procedurePrescriptions[0]?.medicalProcedureName,
     ])
     setValueDiagnosticoSubtitle3(
       diagnostico?.drugPrescriptions && diagnostico.drugPrescriptions.length > 0

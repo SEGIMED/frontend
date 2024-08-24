@@ -7,12 +7,12 @@ import { setFormData } from "@/redux/slices/user/preconsultaFormSlice";
 
 
 export default function PrePte ({params}){
-    console.log(params.id)
+    
     const dispatch=useAppDispatch()
-    console.log(FormDataUtil)
+    
     useEffect(() => {
        const statePreconsulta= dispatch(setFormData(FormDataUtil))
-       console.log(statePreconsulta) 
+      
     }, []);
     return(
         <>

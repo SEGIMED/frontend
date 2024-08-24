@@ -357,7 +357,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"¿Desde hace cuánto tiempo tiene el dolor?"}
                       selectedOptions={
-                        bodySection.painDuration ||
+                        bodySection?.painDuration ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
                           ?.painDuration
                       }
@@ -439,7 +439,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"Tipo de dolor"}
                       selectedOptions={
-                        bodySection.painType ||
+                        bodySection?.painType ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
                           ?.painType
                       }
@@ -465,7 +465,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"¿Tomó analgésicos?"}
                       selectedOptions={
-                        bodySection.isTakingAnalgesic ||
+                        bodySection?.isTakingAnalgesic ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
                           ?.isTakingAnalgesic
                       }
@@ -481,7 +481,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"¿Calma con analgésicos?"}
                       selectedOptions={getSelectedOption(
-                        bodySection.doesAnalgesicWorks,
+                        bodySection?.doesAnalgesicWorks,
                         valuePreconsultation?.provisionalPreConsultationPainMap?.doesAnalgesicWorks)
                       }
                       options={[
