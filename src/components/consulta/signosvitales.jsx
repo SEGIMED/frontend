@@ -7,19 +7,17 @@ import IconPreConsulta from "../icons/iconPreconsulta";
 import IconCloseBoton from "../icons/IconCloseBoton";
 import DropNext from "./dropdown";
 import DropClaseFuncional from "./dropdownClaseFuncional";
+import { IMC } from "@/utils/normaliceVitalSigns";
+import Cookies from "js-cookie";
 
 export default function SignosVitalesInfo({
   paciente,
   title,
-  defaultOpen = false,
+  defaultOpen = true,
   preconsult,
 }) {
-  /*const defaultAnthropometricDetails = [
-    { measureType: "Estatura",mesureExample: "1.80 m", measureUnit: "Cm", measure: "" },
-    { measureType: "Peso",mesureExample: "76 kg", measureUnit: "Kg", measure: "" },
-    { measureType: "Índice de Masa Corporal",mesureExample: "24.69 kg/m2", measureUnit: "Kg/m²", measure: "" },
-  ];*/
-  console.log(preconsult, "quiero ver preconsult en signos vitales")
+  const role=Cookies.get("b")
+  console.log(preconsult,"dentro de signos vitales")
   const defaultVitalSigns = [
     //antropometricDetails que esta en vital sings
     { measureType: "Estatura",mesureExample: "1.80 m", measureUnit: "Cm", measure: "" },
@@ -47,7 +45,7 @@ export default function SignosVitalesInfo({
   const { register, setValue } = useFormContext();
 
   useEffect(() => {
-    setValue("glucemiaElevada", glucemiaElevada);
+    setValue("abnormalGlycemia", glucemiaElevada);
   }, [glucemiaElevada, setValue]);
 
   useEffect(() => {
@@ -92,16 +90,10 @@ export default function SignosVitalesInfo({
 
   useEffect(() => {
     setGlucemiaElevada(preconsult?.abnormalGlycemia);
-    const combinedAbnormalsGlycemia = combineAbnormalGlycemia(preconsult?.lastAbnormalGlycemia ?? [], ultimosValoresAnormales);
+    const combinedAbnormalsGlycemia =preconsult?.lastAbnormalGlycemia?.length ? preconsult?.lastAbnormalGlycemia : ultimosValoresAnormales;
     setUltimosValoresAnormales(combinedAbnormalsGlycemia);
   }, [preconsult]);
 
-  const combineAbnormalGlycemia = (lastAbnormalGlycemia, ultimosValoresAnormales) => {
-    return ultimosValoresAnormales.map((defaultGlycemia, index) => {
-      const patientGlycemia = lastAbnormalGlycemia[index];
-      return patientGlycemia ? patientGlycemia : defaultGlycemia;
-    });
-  };
 
   const handleAnormalValueChange = (index, event) => {
     const updatedValues = [...ultimosValoresAnormales];
@@ -112,7 +104,7 @@ export default function SignosVitalesInfo({
 
   return (
     <div className="flex flex-col">
-      <details open={defaultOpen}>
+      <details open={true}>
         <summary className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
           <div/>
           <div className="flex items-center">
@@ -122,9 +114,10 @@ export default function SignosVitalesInfo({
               <b className="font-semibold text-red-500">*</b>
             </p>
           </div >
-          <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
+          <div></div>
+          {/* <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
             <IconArrowDetailDown/>
-          </div>
+          </div> */}
         </summary>
 
         {anthropometricDetails.map((detail, detailIndex) => (
@@ -207,7 +200,7 @@ export default function SignosVitalesInfo({
                 glucemiaElevada === true ? "bg-greenPrimary text-white" : ""
               }`}
               onClick={handleGlucemiaSiClick}
-              {...register("glucemiaElevada")}
+              {...register("abnormalGlycemia")}
               value={glucemiaElevada}>
               Sí
               <IconPreConsulta
@@ -224,7 +217,7 @@ export default function SignosVitalesInfo({
                 glucemiaElevada === false ? "bg-[#ff0000] text-white" : ""
               }`}
               onClick={handleGlucemiaNoClick}
-              {...register("glucemiaElevada")}
+              {...register("abnormalGlycemia")}
               value={glucemiaElevada}>
               No
               <IconCloseBoton className="w-5 " color={

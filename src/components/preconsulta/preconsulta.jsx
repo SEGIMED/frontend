@@ -25,6 +25,7 @@ import { draftFormat } from "@/utils/formatResponse";
 import { IMC } from "@/utils/normaliceVitalSigns";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
+import SignosVitalesInfo from "../consulta/signosvitales";
 
 export default function PreconsultaPte({params}) {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ export default function PreconsultaPte({params}) {
   const [available, setAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [enableButton, setEnableButton] = useState(false);
+  const [preconsult, SetPreconsult]= useState()
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
@@ -544,6 +546,12 @@ export default function PreconsultaPte({params}) {
           onVitalSignChange={handleVitalSign}
           defaultOpen
         />
+       
+        {/* <SignosVitalesInfo
+        title={"Signos vitales"}
+        preconsult={preconsult}
+       
+        /> */}
         <InputCuerpoPre
           title={"Exploracion fisica"}
           onBodyChange={handleBodyChange}

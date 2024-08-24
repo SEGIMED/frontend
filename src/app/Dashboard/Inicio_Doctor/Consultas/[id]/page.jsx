@@ -291,7 +291,7 @@ const DetallePaciente = (id) => {
       vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
     ...restOfPreconsult,
   };
-
+  console.log("esto que mierda ", preconsultPhysical)
   const onSubmit = (data) => {
     //Antecedentes
     setBackground({
@@ -386,6 +386,7 @@ const DetallePaciente = (id) => {
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
+    console.log("aca se guardan los signos vitales", updateVitalSigns )
     setVitalSignsPreconsult(updateVitalSigns);
     setRestOfPreconsult({
       //anamnesis sin evolucion de la enfermedad
@@ -398,12 +399,7 @@ const DetallePaciente = (id) => {
           ? preconsult?.importantSymptoms
           : data["Sintomas importantes"],
       //vital signs
-      abnormalGlycemia:
-        data["glucemiaElevada"] === ""
-          ? preconsult?.abnormalGlycemia
-          : data["glucemiaElevada"] === "true"
-          ? true
-          : false,
+      abnormalGlycemia: data["abnormalGlycemia"],
       lastAbnormalGlycemia:
         data["lastAbnormalGlycemia"] === ""
           ? preconsult?.lastAbnormalGlycemia
@@ -698,6 +694,7 @@ const DetallePaciente = (id) => {
 
     // Preconsulta
     let response7;
+    console.log(preconsultPhysical, "antes del patch en preconsulPhysical")
     if (preconsultPhysical) {
       response7 = await ApiSegimed.patch(
         `/update-pre-consultation`,
@@ -706,6 +703,8 @@ const DetallePaciente = (id) => {
       );
     }
     if (response7 !== undefined) {
+      console.log(response7, "response")
+      console.log(response7.data, "ver response")
       responses.push(response7);
     }
     // Diagnóstico // postea pero no lo patchea
@@ -765,7 +764,7 @@ const DetallePaciente = (id) => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-      router.push(`/Dashboard/Inicio_Doctor/Consultas`);
+      // router.push(`/Dashboard/Inicio_Doctor/Consultas`);
     } else {
       setLoading(false);
       Swal.fire({
