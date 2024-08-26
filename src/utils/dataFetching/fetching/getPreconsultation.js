@@ -6,7 +6,7 @@ export default async function getPreConsultation  (scheduleId) {
     try {
       const res = await ApiSegimed.get(
         `/get-preconsultation?scheduleId=${scheduleId}&status=1`)
-        console.log(res.data)
+       
         return res
 
     } catch (error){

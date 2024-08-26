@@ -26,6 +26,7 @@ import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
+import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 
 const DetallePaciente = (id) => {
   const router = useRouter();
@@ -56,6 +57,7 @@ const DetallePaciente = (id) => {
   const [tests, setTests] = useState({});
   const [handleNav, setHandleNav] = useState("");
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
+  const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
   const [restOfPreconsult, setRestOfPreconsult] = useState([]);
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
@@ -291,6 +293,7 @@ const DetallePaciente = (id) => {
       vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
     ...restOfPreconsult,
   };
+
   console.log("esto que mierda ", preconsultPhysical)
   const onSubmit = (data) => {
     //Antecedentes
@@ -406,6 +409,13 @@ const DetallePaciente = (id) => {
           : data["lastAbnormalGlycemia"],
     });
 
+    setGlicemiaPreconsult({
+      lastAbnormalGlycemia:
+        data["lastAbnormalGlycemia"] === ""
+          ? preconsult?.lastAbnormalGlycemia
+          : data["lastAbnormalGlycemia"],
+    })
+
     setPhysicalExamination({
       physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
@@ -445,6 +455,7 @@ const DetallePaciente = (id) => {
         descriptionIndication: data["Tratamientos no farmacológicos"],
       });
     }
+
     setDiagnosticPatch(
       //diagnosticPatch
       {
@@ -553,6 +564,27 @@ const DetallePaciente = (id) => {
   const handleBodyChange = (name, value) => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
+
+  const handleSaveVitalSigns = async ()=>{
+    try {
+      const data= {
+         // ids
+        preconsultationId: Number(preconsult?.id),
+        patient: Number(userId),
+        appointmentSchedule: Number(scheduleId),
+        // status
+        status: "sent",
+        updateVitalSigns:
+      vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+    ...glicemiaPreconsult,
+      }
+      
+      const response= await patchPreconsultation(data)
+      
+    } catch (error) {
+      console.error("No pudo cargarse la data en el servidor", error.message)
+    }
+  }
 
   const handleSave = async () => {
     setLoading(true);
@@ -831,12 +863,26 @@ const DetallePaciente = (id) => {
               diagnostico={medicalEventExist}
               defaultOpen={handleNav === "anamnesis" ? true : false}
             />
+
+            {/* ACA ESTA SIGNOS VITALES , ANTROPOMETRICOS Y GLICEMIA  */}
             <SignosVitalesInfo
               title={"Signos vitales"}
               preconsult={preconsult}
               paciente={patient}
               defaultOpen={handleNav === "signos vitales" ? true : false}
             />
+            
+            <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={handleSaveVitalSigns}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
+
+
             <InputCuerpoPre
               title={"Exploracion fisica"}
               onBodyChange={handleBodyChange}

@@ -30,14 +30,18 @@ import SignosVitalesInfo from "../consulta/signosvitales";
 export default function PreconsultaPte({params}) {
   const dispatch = useAppDispatch();
   const scheduleId =Number(params)
-  console.log(scheduleId)
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
+  const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
+  const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
+  const [preconsult, setPreconsult]= useState()
+  
+
   const [draftEnabled, setDraftEnabled] = useState(false);
   const [available, setAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [enableButton, setEnableButton] = useState(false);
-  const [preconsult, SetPreconsult]= useState()
+  
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
@@ -120,7 +124,20 @@ export default function PreconsultaPte({params}) {
     },
   });
 
+  const fetchPreconsultation = async (scheduleId) => {
+    try {
+      // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
+
+      const response = await getPreConsultation(scheduleId)
+      console.log(response.data)
+      setPreconsult(response.data);
+    } catch (error) {
+      console.error("Este agendamiento no tiene preconsulta", error);
+    }
+  };
+
   useEffect(() => {
+    fetchPreconsultation(scheduleId)
     const intervalId = setInterval(() => {
       saveDraftToDatabase();
     }, 60000); // Guarda cada 60 segundos
@@ -509,6 +526,72 @@ export default function PreconsultaPte({params}) {
     );
   }
 
+  const onSubmit= (data)=>{
+    vitalSigns = [
+      { id: 1344, measureType: 1, measure: Number(data["Temperatura"]) },
+      {
+        id: 1344,
+        measureType: 2,
+        measure: Number(data["Presión Arterial Sistólica"]),
+      },
+      {
+        id: 1344,
+        measureType: 3,
+        measure: Number(data["Presión Arterial Diastólica"]),
+      },
+      {
+        id: 1344,
+        measureType: 5,
+        measure: Number(data["Frecuencia Respiratoria"]),
+      },
+      {
+        id: 1344,
+        measureType: 6,
+        measure: Number(data["Saturación de Oxígeno"]),
+      },
+      {
+        id: 1344,
+        measureType: 7,
+        measure: Number(data["Frecuencia Cardiaca"]),
+      },
+      { id: 1344, measureType: 8, measure: Number(data["Estatura"]) },
+      { id: 1344, measureType: 9, measure: Number(data["Peso"]) },
+      { id: 1344, measureType: 10, measure: Number(data["IMC"]) },
+    ];
+    const updateVitalSigns = vitalSigns.filter(
+      (sign) => sign.measure !== 0 && sign.measure !== ""
+    );
+    console.log("aca se guardan los signos vitales", updateVitalSigns )
+    setVitalSignsPreconsult(updateVitalSigns);
+    setGlicemiaPreconsult({
+      lastAbnormalGlycemia:
+        data["lastAbnormalGlycemia"] === ""
+          ? preconsult?.lastAbnormalGlycemia
+          : data["lastAbnormalGlycemia"],
+    })
+  }
+
+  const handleSaveVitalSigns = async ()=>{
+    try {
+      const data= {
+         // ids
+        preconsultationId: Number(preconsult?.id),
+        patient: Number(userId),
+        appointmentSchedule: Number(scheduleId),
+        // status
+        status: "sent",
+        updateVitalSigns:
+      vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+    ...glicemiaPreconsult,
+      }
+      
+      const response= await patchPreconsultation(data)
+      
+    } catch (error) {
+      console.error("No pudo cargarse la data en el servidor", error.message)
+    }
+  }
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
@@ -540,18 +623,28 @@ export default function PreconsultaPte({params}) {
             onDescriptionChange={handleDescription}
           />
         ))}
-        <SignosVitales
+        <form onChange={methods.handleSubmit(onSubmit)}>
+        {/* <SignosVitales
           title={"Signos vitales"}
           vitalSigns={formData?.vitalSigns}
           onVitalSignChange={handleVitalSign}
           defaultOpen
-        />
-       
-        {/* <SignosVitalesInfo
-        title={"Signos vitales"}
-        preconsult={preconsult}
-       
         /> */}
+       
+       <SignosVitalesInfo
+              title={"Signos vitales"}
+              preconsult={preconsult}
+        />
+            
+            <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={handleSaveVitalSigns}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
         <InputCuerpoPre
           title={"Exploracion fisica"}
           onBodyChange={handleBodyChange}
@@ -579,6 +672,7 @@ export default function PreconsultaPte({params}) {
           tratamiento={formData.tratamiento}
           defaultOpen
         />
+        </form>
         <div className="flex justify-center p-6 bg-[#fafafc]">
           <Elboton
             nombre={"Guardar Cambios"}
