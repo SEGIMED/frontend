@@ -47,25 +47,19 @@ export default function HomeDoc() {
     const token = Cookies.get("a");
     const lastSegmentTextToShow = PathnameShow();
 
-    const getPatients = async (headers) => {
+    const getPatients = async () => {
         const response = await ApiSegimed.get(
-            `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&&risk=${riskFilter}&physicianId=${userId}`,
-            headers
+            `/physician-order`, null
         );
         if (response.data) {
-            const pacientesFormateados = response.data.user.map((paciente) => {
-                const fechaFormateada = new Date(paciente.lastLogin)
-                    .toLocaleString()
-                    .replace(/\,/g, " -");
-                return { ...paciente, lastLogin: fechaFormateada };
-            });
-            console.log(pacientesFormateados);
-            setPatients(response.data.user);
-            setPagination((prev) => ({
-                ...prev,
-                totalUsers: response.data.totalUsers,
-                totalPages: response.data.totalPages,
-            }));
+
+            console.log(response.data);
+            setPatients(response.data);
+            // setPagination((prev) => ({
+            //     ...prev,
+            //     totalUsers: response.data.totalUsers,
+            //     totalPages: response.data.totalPages,
+            // }));
             setisLoading(false);
         }
     };
@@ -242,7 +236,7 @@ export default function HomeDoc() {
                     ) : sortedPatients.length === 0 ? (
                         <NotFound
                             text={
-                                "No tenes pacientes avtivos"
+                                "No hay ordenes medicas disponibles "
                             }
                             sizeText={"w-[100%]"}
                         />
@@ -256,14 +250,14 @@ export default function HomeDoc() {
                                 <div className="grid text-center grid-cols-3 w-[100%] justify-center md:w-[80%] md:text-left md:grid-cols-3 items-center  py-2 bg-white z-10">
 
                                     <div className="text-[#5F5F5F] ">
-                                        {paciente?.name} {paciente?.lastname}
+                                        {paciente?.patient?.name} {paciente?.patient?.lastname}
                                     </div>
                                     <div className="text-[#5F5F5F]">
-                                        {paciente?.name}
+                                        {paciente?.orderTypes}
                                     </div>
 
                                     <div className="text-[#5F5F5F] md:gap-3 block md:flex ">
-                                        {Fecha(paciente.lastLogin, 4)} <span className="hidden md:block"> {Hora(paciente.lastLogin)}</span>
+                                        {Fecha(paciente.date, 4)} <span className="hidden md:block"> {Hora(paciente.date)}</span>
                                     </div>
 
 

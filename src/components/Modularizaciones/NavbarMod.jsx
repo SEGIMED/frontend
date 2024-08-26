@@ -169,11 +169,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         chat.messages.forEach((mensaje) => {
           ultimoMensaje = mensaje;
           senderInfo = mensaje.sender;
-          if (mensaje.sender.userId == userId) {
+          if (mensaje.sender?.userId == userId) {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
-          if (mensaje.state === false && mensaje.sender.userId != userId) {
+          if (mensaje.state === false && mensaje.sender?.userId != userId) {
             cantidadMensajes++;
           }
         });
@@ -299,17 +299,16 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             {rol === "Médico"
               ? "Médico"
               : rol === "Paciente"
-              ? "Paciente"
-              : rol === "Admin"
-              ? "Administrador"
-              : ""}
+                ? "Paciente"
+                : rol === "Admin"
+                  ? "Administrador"
+                  : ""}
           </span>
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
-          }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+            }`}>
           <IconMail
             className="w-6 h-6"
             color={(showChats || hasUnreadMessages) && "white"}
@@ -324,10 +323,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={

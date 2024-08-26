@@ -279,16 +279,14 @@ export default function HomeDoc() {
 
           <button
             onClick={handleFavoriteClick}
-            className={`${
-              showFavorites
-                ? "bg-bluePrimary text-white"
-                : "bg-white text-bluePrimary  border-bluePrimary"
-            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+            className={`${showFavorites
+              ? "bg-bluePrimary text-white"
+              : "bg-white text-bluePrimary  border-bluePrimary"
+              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
-              className={`hidden md:block ${
-                showFavorites ? "text-white" : "text-bluePrimary"
-              } font-bold`}>
+              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
+                } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -424,13 +422,13 @@ export default function HomeDoc() {
                     onPress={() => {
                       dispatch(
                         setSelectedOption({
-                          name: "patient",
+                          name: "patientId",
                           option: paciente.id,
                         })
                       );
                     }}
                     classNameText={"hidden md:block "}
-                    // icon={<IconMas />}
+                  // icon={<IconMas />}
                   />
                 ) : (
                   <MenuDropDown

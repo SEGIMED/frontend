@@ -18,6 +18,8 @@ import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
 import NewModalDrugs from "@/components/modal/ModalDoctor/newModalDrugs";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import IconDelete from "@/components/icons/IconDelete";
+import IconMessage from "@/components/icons/IconMessage";
 
 export default function HomeDoc() {
     const orden = useAppSelector((state) => state.formSlice.selectedOptions);
@@ -26,11 +28,14 @@ export default function HomeDoc() {
     const [searchTerm, setSearchTerm] = useState("");
     const [drugs, setDrugs] = useState([]);
     const [selectedDrug, setSelectedDrug] = useState(null);
+    const [drugsToSend, setDrugsToSend] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
+
 
     const router = useRouter();
     const dispatch = useAppDispatch();
     const token = Cookies.get("a");
+    const userId = Cookies.get("b");
     const lastSegmentTextToShow = PathnameShow();
     const searchParams = useSearchParams();
 
@@ -64,34 +69,52 @@ export default function HomeDoc() {
         fetchDrugs();
     }, [searchTerm]);
 
+    const handleToggleDetails = (index) => {
+        const updatedDrugs = [...drugsToSend];
+        updatedDrugs[index].showDetails = !updatedDrugs[index].showDetails;
+        setDrugsToSend(updatedDrugs);
+    };
+
 
     const onSubmit = async (orden) => {
-        if (pendientes) {
-            const body = { status: true };
-            try {
-                const response = await ApiSegimed.patch(`/patient-medical-request?id=${orden.id}`, body);
-                if (response.data) {
-                    dispatch(resetFormState());
-                }
-            } catch (error) {
-                console.error("Error creating patient request:", error);
+        // if (pendientes) {
+        //     const body = { status: true };
+        //     try {
+        //         const response = await ApiSegimed.patch(`/patient-medical-request?id=${orden.id}`, body);
+        //         if (response.data) {
+        //             dispatch(resetFormState());
+        //         }
+        //     } catch (error) {
+        //         console.error("Error creating patient request:", error);
+        //     }
+        // } else
+        try {
+            const payload = { ...orden, bodyMedicam: drugsToSend }
+            console.log(payload);
+
+            const response = await ApiSegimed.post(`/physician-order`, payload);
+            if (response.data) {
+                dispatch(resetFormState());
+                Swal.fire({
+                    icon: "success",
+                    text: "Se ha creado la nueva orden",
+                    confirmButtonColor: "#487FFA",
+                    confirmButtonText: "Aceptar",
+                }).then(() => {
+                    const targetRoute = pendientes
+                        ? `${rutas.Doctor}${rutas.Pendientes}`
+                        : `${rutas.Doctor}${rutas.Ordenes}`;
+                    router.push(targetRoute);
+                });
             }
+        } catch (error) {
+            console.error("Error creating patient request:", error);
         }
-        console.log({ drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: orden.routeOfAdministrationId }, prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" } }, "esto es medicamentos");
+        // console.log({ drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: orden.routeOfAdministrationId }, prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" } }, "esto es medicamentos");
 
 
-        Swal.fire({
-            icon: "success",
-            text: "Se ha creado la nueva orden",
-            confirmButtonColor: "#487FFA",
-            confirmButtonText: "Aceptar",
-        }).then(() => {
-            const targetRoute = pendientes
-                ? `${rutas.Doctor}${rutas.Pendientes}`
-                : `${rutas.Doctor}${rutas.Ordenes}`;
-            router.push(targetRoute);
-        });
-        dispatch(resetFormState());
+
+
     };
 
     const handleDrug = async (value) => {
@@ -113,6 +136,28 @@ export default function HomeDoc() {
         }
 
     };
+
+    const handleDeleteDrug = (index) => {
+        const updatedDrugs = drugsToSend.filter((_, i) => i !== index);
+        setDrugsToSend(updatedDrugs);
+    };
+    console.log(drugsToSend, "medicamentos a mandar");
+
+
+    const handleInputChange = (index, field, value) => {
+        const updatedDrugs = [...drugsToSend];
+        updatedDrugs[index].prescriptionCreation[field] = value;
+        setDrugsToSend(updatedDrugs);
+    };
+
+
+    const submitDrug = () => {
+        setSearchTerm("")
+        setDrugsToSend([...drugsToSend, { drugDetailPresentationId: null, drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: Number(orden.routeOfAdministrationId), presentationId: Number(orden.presentationId), dose: Number(orden.dose), measureUnitId: Number(orden.measureUnitId) }, prescriptionCreation: { patientId: orden.patientId } }])
+        handleCloseDrugModal()
+    };
+
+    // , prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" }
 
     const handleCloseDrugModal = () => {
         setIsDrugModalOpen(false);
@@ -154,13 +199,8 @@ export default function HomeDoc() {
                     onChange={(e) => handleChange("diagnostic", e.target.value)}
                     className="md:px-6 py-2 px-3"
                 />
-                <InputInfoText
-                    text={true}
-                    title="Indicaciones"
-                    placeholder="Ingrese aquí las indicaciones para el paciente"
-                    onChange={(e) => handleChange("indication", e.target.value)}
-                    className="md:px-6 py-2 px-3"
-                />
+
+
 
                 <div className="flex flex-col gap-2 md:px-6 py-2 px-3">
                     <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
@@ -174,12 +214,96 @@ export default function HomeDoc() {
                         placeholder="Escribe al menos 3 letras"
                         className="max-w-xs bg-white "
                         onSelectionChange={handleDrug}
+                        value={searchTerm}
                     >
                         {(drug) => <AutocompleteItem key={drug.id}>{drug.name}</AutocompleteItem>}
                     </Autocomplete>
+
+
                 </div>
+                {drugsToSend.length > 0 ?
+                    <div className="flex flex-col gap-2 md:px-6 py-2 px-3 bg-[#fafafc]">
+                        <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
+                            <IconClinicalHistory className="w-6" color={"#808080"} />
+                            Medicamentos Añadidos
+                        </label>
+                        <div className="min-w-full bg-white border rounded-lg ">
+                            <div className="w-full flex">
+
+                                <p className="py-2 px-4 border-b w-[20%]">Nombre </p>
+                                <p className="py-2 px-4 border-b w-[20%]">Dosis</p>
+                                <p className="py-2 px-4 border-b w-[20%]">Frecuencia</p>
+                                <p className="py-2 px-4 border-b w-[20%]">Duración</p>
+                                <p className="py-2 px-4 border-b w-[20%] text-center">Acciones</p>
+
+                            </div>
+                            <div>
+                                {drugsToSend.map((drug, index) => (
+                                    <>
+
+                                        <div className="flex items-center border-b " key={index}>
+                                            <div className="py-2 px-4 w-[20%] ">{drug.drugCreation.drugName}</div>
+                                            <div className="py-2 px-4  w-[20%]">
+                                                <input
+                                                    type="number"
+                                                    onChange={(e) => handleInputChange(index, "doseMeasure", e.target.value)}
+                                                    className="w-full p-2 border border-gray-300 rounded-lg"
+                                                />
+                                            </div>
+                                            <div className="py-2 px-4  w-[20%]">
+                                                <input
+                                                    type="number"
+                                                    onChange={(e) => handleInputChange(index, "timeMeasure", e.target.value)}
+                                                    className="w-full p-2 border border-gray-300 rounded-lg"
+                                                />
+                                            </div>
+                                            <div className="py-2 px-4  w-[20%]">
+                                                <input
+                                                    onChange={(e) => handleInputChange(index, "timeMeasureType", e.target.value)}
+                                                    className="w-full p-2 border border-gray-300 rounded-lg"
+                                                />
+                                            </div>
+                                            <div className=" items-center flex  justify-center w-[20%] gap-4 ">
+                                                <button
+                                                    onClick={() => handleToggleDetails(index)}
+                                                >
+                                                    <IconMessage className={"w-8"} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteDrug(index)}
+                                                >
+                                                    <IconDelete />
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {drug.showDetails && (
+                                            <div className=" w-full flex border-b">
+
+                                                <InputInfoText
+                                                    text={true}
+                                                    title="Indicaciones"
+                                                    placeholder="Ingrese aquí cualquier otra aclaración"
+                                                    onChange={(e) => handleInputChange(index, "indications", e.target.value)}
+                                                    className="md:px-6 py-2 px-3 w-1/2"
+                                                />
+                                                <InputInfoText
+                                                    text={true}
+                                                    title="Observaciones"
+                                                    placeholder="Ingrese aquí cualquier otra aclaración"
+                                                    onChange={(e) => handleInputChange(index, "observations", e.target.value)}
+                                                    className="md:px-6 py-2 px-3 w-1/2"
+                                                />
+                                            </div>
+
+                                        )}
+                                    </>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    : null}
                 <div className="flex flex-col gap-2 md:px-6 py-2 px-3 bg-[#fafafc]">
-                    <label className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-start text-[#686868] font-medium text-base leading-5  ">
                         <IconDay /> Fecha
                     </label>
                     <input
@@ -193,7 +317,7 @@ export default function HomeDoc() {
                     text={true}
                     title="Texto adicional (opcional)"
                     placeholder="Ingrese aquí cualquier otra aclaración"
-                    onChange={(e) => handleChange("comments", e.target.value)}
+                    onChange={(e) => handleChange("additionalText", e.target.value)}
                     className="md:px-6 py-2 px-3"
                 />
             </div>
@@ -207,6 +331,7 @@ export default function HomeDoc() {
                 progessBar={"hidden"}
                 size={"h-fit md:h-fit md:w-[35rem]"}
                 buttonText={{ end: `Guardar` }}
+                funcion={submitDrug}
             />
         </div>
     );
