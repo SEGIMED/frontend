@@ -14,7 +14,6 @@ import ruteActual from "@/components/images/ruteActual.png";
 import mensaje from "@/components/images/mensaje.png";
 import avatar from "@/utils/defaultAvatar";
 import rutas from "@/utils/rutas";
-import { socket } from "@/utils/socketio";
 import IconMas from "@/components/icons/iconMas";
 import IconMedChat from "@/components/icons/IconMedChat";
 import { setSearchBar } from "@/redux/slices/user/searchBar";
@@ -26,7 +25,7 @@ export default function MensajesDoc() {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [reload, setReload] = useState(false);
-  const [seen, setSeen]  = useState(false);
+  const [seen, setSeen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const user = useAppSelector((state) => state.user);
@@ -68,25 +67,25 @@ export default function MensajesDoc() {
   };
 
   const handleImg = (img, userId) => {
-
-      return (
-        <img
-          src={img || avatar}
-          alt=""
-          className="w-8 h-8 object-cover rounded-3xl cursor-pointer"
-          onClick={() => handleImgClick(userId)}
-        />
-      );
-
+    return (
+      <img
+        src={img || avatar}
+        alt=""
+        className="w-8 h-8 object-cover rounded-3xl cursor-pointer"
+        onClick={() => handleImgClick(userId)}
+      />
+    );
   };
 
   const handleViewMessages = (chat) => {
-    router.push(`${rutas.PacienteDash}${rutas.Mensajes}/${chat.target?.userId}`);
+    router.push(
+      `${rutas.PacienteDash}${rutas.Mensajes}/${chat.target?.userId}`
+    );
   };
 
   const counterM = (messages) => {
     if (!messages.length) return false;
-    const unseenMessages = messages.filter(message => !message.state);
+    const unseenMessages = messages.filter((message) => !message.state);
     if (unseenMessages.length) {
       const lastMessage = messages[messages.length - 1];
       const userId = Cookies.get("c");
@@ -99,11 +98,17 @@ export default function MensajesDoc() {
   };
 
   const chatElements = useMemo(() => {
-    const filterChats = chats.filter(a => a.messages.length > 0);
+    const filterChats = chats.filter((a) => a.messages.length > 0);
 
     const sortedChats = filterChats.sort((a, b) => {
-      const dateA = a.messages.length > 0 ? new Date(a.messages[a.messages.length - 1].date) : new Date(0);
-      const dateB = b.messages.length > 0 ? new Date(b.messages[b.messages.length - 1].date) : new Date(0);
+      const dateA =
+        a.messages.length > 0
+          ? new Date(a.messages[a.messages.length - 1].date)
+          : new Date(0);
+      const dateB =
+        b.messages.length > 0
+          ? new Date(b.messages[b.messages.length - 1].date)
+          : new Date(0);
       return dateB - dateA;
     });
 
@@ -113,9 +118,9 @@ export default function MensajesDoc() {
         className="flex justify-between w-full border-b border-b-[#cecece] md:px-6 items-center overflow-hidden px-1 py-3">
         <title>{lastSegmentTextToShow}</title>
         <div className="flex gap-0 md:gap-4 items-center">
-          <IconMedChat color="gray" />
+          <IconMedChat color="gray" className="w-6 h-6" />
           <div className="w-8 h-8 flex justify-center items-center">
-            {handleImg(chat?.target?.avatar , chat?.target?.userId)}
+            {handleImg(chat?.target?.avatar, chat?.target?.userId)}
           </div>
           <div className="flex flex-col h-fit md:flex-row md:items-center overflow-hidden">
             <p className="text-start text-[#686868] md:font-normal font-semibold text-[1rem] leading-6 md:w-48 w-36 md:line-clamp-2 line-clamp-1">
@@ -141,7 +146,9 @@ export default function MensajesDoc() {
             nombre={"Mensajes"}
             size={"sm"}
             icon={<IconMensajeBoton />}
-            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${counterM(chat.messages) > 0 ? 'bg-bluePrimary' : 'bg-gray-400'}`}
+            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${
+              counterM(chat.messages) > 0 ? "bg-bluePrimary" : "bg-gray-400"
+            }`}
           />
         </div>
       </div>
@@ -174,4 +181,3 @@ export default function MensajesDoc() {
     </div>
   );
 }
-

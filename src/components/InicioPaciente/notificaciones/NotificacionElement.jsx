@@ -4,8 +4,6 @@ import { IconPoint } from "./IconPoint";
 
 export const NotificacionElement = ({ notificacion, onClick }) => {
   const message = formatNotificationMessage(notificacion);
-  console.log(notificacion);
-  if (!message) return null;
   return (
     <div
       className="flex items-center w-full p-1 lg:p-2 cursor-pointer"

@@ -50,7 +50,7 @@ export const SegiBot = () => {
           <div
             onClick={toggleChat}
             //Quitar margin y padding cuando se use el segi
-            className="fixed z-50 h-[5rem] flex items-center justify-center w-[5rem] md:h-auto md:w-[7%] p-2 bottom-[4%] right-[2%] rounded-full bg-[#487FFA] cursor-pointer">
+            className="fixed z-50 h-[5rem] flex items-center justify-center w-[5rem] md:h-auto md:w-[7%] p-2 bottom-[4%] right-[2%] rounded-full bg-[#487FFA] cursor-pointer shadow-[0_4px_26px_7px_rgba(0,0,0,0.25)]">
             {/* <Image src={Segi} alt="SegiBot" /> */}
             <Image
               src={Segi}
