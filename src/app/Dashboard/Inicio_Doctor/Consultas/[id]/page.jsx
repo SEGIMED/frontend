@@ -356,35 +356,35 @@ const DetallePaciente = (id) => {
     }
     //preconsulta
     vitalSigns = [
-      { id: 1344, measureType: 1, measure: Number(data["Temperatura"]) },
+      {  measureType: 1, measure: Number(data["Temperatura"]) },
       {
-        id: 1344,
+        
         measureType: 2,
         measure: Number(data["Presión Arterial Sistólica"]),
       },
       {
-        id: 1344,
+       
         measureType: 3,
         measure: Number(data["Presión Arterial Diastólica"]),
       },
       {
-        id: 1344,
+        
         measureType: 5,
         measure: Number(data["Frecuencia Respiratoria"]),
       },
       {
-        id: 1344,
+        
         measureType: 6,
         measure: Number(data["Saturación de Oxígeno"]),
       },
       {
-        id: 1344,
+        
         measureType: 7,
         measure: Number(data["Frecuencia Cardiaca"]),
       },
-      { id: 1344, measureType: 8, measure: Number(data["Estatura"]) },
-      { id: 1344, measureType: 9, measure: Number(data["Peso"]) },
-      { id: 1344, measureType: 10, measure: Number(data["IMC"]) },
+      {  measureType: 8, measure: Number(data["Estatura"]) },
+      {  measureType: 9, measure: Number(data["Peso"]) },
+      {  measureType: 10, measure: Number(data["IMC"]) },
     ];
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
@@ -869,7 +869,7 @@ const DetallePaciente = (id) => {
               title={"Signos vitales"}
               preconsult={preconsult}
               paciente={patient}
-              defaultOpen={handleNav === "signos vitales" ? true : false}
+             
             />
             
             <div className="flex justify-center p-6 bg-[#fafafc]">

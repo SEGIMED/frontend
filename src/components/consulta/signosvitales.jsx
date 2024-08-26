@@ -6,15 +6,16 @@ import { useFormContext } from "react-hook-form";
 import DropClaseFuncional from "./dropdownClaseFuncional";
 import { IMC } from "@/utils/normaliceVitalSigns";
 import Cookies from "js-cookie";
+import Elboton from "../Buttons/Elboton";
+import IconOptions from "../icons/IconOptions";
 
 export default function SignosVitalesInfo({
   paciente,
   title,
-  defaultOpen = true,
   preconsult,
 }) {
   const role=Cookies.get("b")
-  console.log(preconsult,"dentro de signos vitales")
+  
   const defaultVitalSigns = [
     //antropometricDetails que esta en vital sings
     { measureType: "Estatura",mesureExample: "180 Cm", measureUnit: "Cm", measure: "" },
@@ -29,16 +30,14 @@ export default function SignosVitalesInfo({
     { measureType: "Saturación de Oxígeno",mesureExample: "99 %", measureUnit: "%", measure: "" },
   ];
   const [imcValue, setImcValue]=useState()
-  const [anthropometricDetails, setAnthropometricDetails] = useState([]);
   const [vitalSigns, setVitalSigns] = useState([]);
-  const [glucemiaElevada, setGlucemiaElevada] = useState(null);
+  const[glucemiaElevada , setGlucemiaElevada]=useState();
   const [ultimosValoresAnormales, setUltimosValoresAnormales] = useState([
     "",
     "",
     "",
     "",
   ]);
-  const [isOpen, setIsOpen] = useState(defaultOpen);
   const { register, setValue } = useFormContext();
 
   
@@ -57,29 +56,48 @@ export default function SignosVitalesInfo({
         vital => vital.measureType === defaultVital.measureType
 
       );
-      return patientVital ? { ...patientVital, mesureExample: patientVital.mesureExample || defaultVital.mesureExample } : defaultVital;
+      return patientVital ? { ...patientVital, mesureExample: patientVital.mesureExample || defaultVital.mesureExample }
+       : defaultVital;
     });
   };
 
-  //no se como seguir 
+  const handleCalculateIMC = () => {
+    const estatura = vitalSigns.find(vital => vital.measureType === "Estatura")?.measure;
+    const peso = vitalSigns.find(vital => vital.measureType === "Peso")?.measure;
+  
+    if (peso && estatura) {
+      const imc = IMC(peso, estatura); // Calculate IMC
+      const updatedVitalSigns = [...vitalSigns];
+      const imcIndex = updatedVitalSigns.findIndex(vital => vital.measureType === "IMC");
+  
+      if (imcIndex !== -1) {
+        updatedVitalSigns[imcIndex].measure = imc;
+        setVitalSigns(updatedVitalSigns);
+  
+        // Register the calculated IMC value in the form's context
+        setValue("IMC", imc); 
+      }
+    }
+  };
+
   const handleVitalChange = (index, value) => {
     const updatedVitalSigns = [...vitalSigns];
     updatedVitalSigns[index].measure = value;
     setVitalSigns(updatedVitalSigns);
     const estatura = vitalSigns.find(vital => vital.measureType === "Estatura")?.measure;
     const peso = vitalSigns.find(vital => vital.measureType === "Peso")?.measure;
-    if (peso > 0 && estatura > 0) {
-      const imc=IMC(peso, estatura)
-      console.log(imc)
-      setImcValue (imc);
+    // if (peso > 0 && estatura > 0) {
+    //   const imc=IMC(peso, estatura)
+    //   console.log(imc)
+    //   setImcValue (imc);
       
-      // Actualiza el IMC en vitalSigns
-      const imcIndex = updatedVitalSigns.findIndex(vital => vital.measureType === "IMC");
-      if (imcIndex !== -1) {
-        updatedVitalSigns[imcIndex].measure = imcValue;
-      }
-      setVitalSigns(updatedVitalSigns);
-    }
+    //   // Actualiza el IMC en vitalSigns
+    //   const imcIndex = updatedVitalSigns.findIndex(vital => vital.measureType === "IMC");
+    //   if (imcIndex !== -1) {
+    //     updatedVitalSigns[imcIndex].measure = imcValue;
+    //   }
+    //   setVitalSigns(updatedVitalSigns);
+    // }
 
   };
 
@@ -129,16 +147,33 @@ export default function SignosVitalesInfo({
               <span className="ml-2">{vital.measureType}</span>
               <span className="ml-2">{vital.mesureExample}</span>
               </div>
-            
             </label>
+            <dvi className="flex w-full ">
+          
+            <input
+              type="number"
+              className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
+              defaultValue={vital.measure}
+              onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
+              {...register(vital.measureType)}
+            />
+              {vital.measureType === "IMC" && (
+                <Elboton
+                className={"ml-4"}
+                icon={<IconOptions color="white"/>}
+                size={"sm"}
+                onPress={handleCalculateIMC}/>
+             )}
+            </dvi>
             
-            {/* nose como seguir */}
-            {vital.measureType === "IMC" ? 
+           
+           
+            {/* {vital.measureType === "IMC" ? 
             (
               <input
               type="number"
               className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
-              defaultValue={vital.measure || imcValue}
+              defaultValue={vital.measure}
               onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
               {...register(vital.measureType)}
             />
@@ -151,7 +186,7 @@ export default function SignosVitalesInfo({
               onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
               {...register(vital.measureType)}
             />
-            )}
+            )} */}
             
           </div>
         ))}
@@ -190,12 +225,12 @@ export default function SignosVitalesInfo({
             />{" "}
             Escriba los últimos 4 valores de glicemia que tuvo.
           </label>
-          <div className="flex justify-between w-1/2 grid-cols-2 gap-1 md:flex md:gap-4 ">
+          <div className="flex w-1/2 grid-cols-2 gap-1 md:flex md:gap-4 ">
             {ultimosValoresAnormales.map((value, index) => (
               <input
                 key={index}
                 type="text"
-                className="md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full "
+                className="md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full"
                 defaultValue={value}
                 onChange={(event) => handleAnormalValueChange(index, event)}
                 {...register(`lastAbnormalGlycemia[${index}]` )}

@@ -12,7 +12,7 @@ import {
   updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia, updateAllFormData, updateFileUploaded, updateTestDescription, updateTestActive, updateTestSelectedOption, resetFormData,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import SignosVitales from "@/components/preconsulta/signosVitales";
+
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
@@ -35,7 +35,7 @@ export default function PreconsultaPte({params}) {
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
   const [preconsult, setPreconsult]= useState()
-  
+
 
   const [draftEnabled, setDraftEnabled] = useState(false);
   const [available, setAvailable] = useState(true);
@@ -137,7 +137,7 @@ export default function PreconsultaPte({params}) {
   };
 
   useEffect(() => {
-    fetchPreconsultation(scheduleId)
+    
     const intervalId = setInterval(() => {
       saveDraftToDatabase();
     }, 60000); // Guarda cada 60 segundos
@@ -149,14 +149,19 @@ export default function PreconsultaPte({params}) {
   }, []);
 
   useEffect(() => {
-    // almacenamos cada cambio en un borrador en el local storage
+    //ACA ESTOY HACIENDO TODO 
+    fetchPreconsultation(scheduleId)
+  }, []);
+
+  // useEffect(() => {
+  //   // almacenamos cada cambio en un borrador en el local storage
     
-    if (draftEnabled) {
-      const draftData = { ...formData, tests, scheduleId };
+  //   if (draftEnabled) {
+  //     const draftData = { ...formData, tests, scheduleId };
       
-      localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify(draftData))
-    }
-  }, [formData, tests]);
+  //     localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify(draftData))
+  //   }
+  // }, [formData, tests]);
 
 
   //aca tengo un problema !!! siempre existe el fucking borrador y no entra en getPreconsultationDraft
@@ -265,20 +270,20 @@ export default function PreconsultaPte({params}) {
     doesAnalgesicWorks: formData?.bodySection?.doesAnalgesicWorks,
     isWorstPainEver: formData?.bodySection?.isWorstPainEver,
   };
-  const vitalSignFormat = [
-    formData?.vitalSigns?.height,
-    formData?.vitalSigns?.weight,
-    {
-      ...formData?.vitalSigns?.IMC,
-      measure: IMC(Number(formData?.vitalSigns?.weight), Number(formData?.vitalSigns?.height))
-    },
-    formData?.vitalSigns?.temperature,
-    formData?.vitalSigns?.Heart_Rate,
-    formData?.vitalSigns?.Systolic_Blood_Pressure,
-    formData?.vitalSigns?.Diastolic_Blood_Pressure,
-    formData?.vitalSigns?.Breathing_frequency,
-    formData?.vitalSigns?.Oxygen_saturation,
-  ];
+  // const vitalSignFormat = [
+  //   formData?.vitalSigns?.height,
+  //   formData?.vitalSigns?.weight,
+  //   {
+  //     ...formData?.vitalSigns?.IMC,
+  //     measure: IMC(Number(formData?.vitalSigns?.weight), Number(formData?.vitalSigns?.height))
+  //   },
+  //   formData?.vitalSigns?.temperature,
+  //   formData?.vitalSigns?.Heart_Rate,
+  //   formData?.vitalSigns?.Systolic_Blood_Pressure,
+  //   formData?.vitalSigns?.Diastolic_Blood_Pressure,
+  //   formData?.vitalSigns?.Breathing_frequency,
+  //   formData?.vitalSigns?.Oxygen_saturation,
+  // ];
 
   //ESTO (bodyForm) ES LO QUE SE ENVIA POR BODY , debe contener si o si patient = patientID y appointmentSchedule  = scheduleID
   const bodyForm = {
@@ -330,13 +335,13 @@ export default function PreconsultaPte({params}) {
       ? Object.values(formData?.tratamiento?.currentMedications?.selectedOptions)
       : null,
     // Signos vitales
-    abnormalGlycemia: formData?.vitalSigns?.abnormalGlycemia?.active,
+    // abnormalGlycemia: formData?.vitalSigns?.abnormalGlycemia?.active,
     // lastAbnormalGlycemia: Object.keys(
     //   formData?.vitalSigns?.lastAbnormalGlycemia?.options
     // ).length
     //   ? Object.values(formData?.vitalSigns?.lastAbnormalGlycemia?.options)
     //   : null,
-    updateVitalSigns: vitalSignFormat,
+    // updateVitalSigns: vitalSignFormat,
     // painRecordsToUpdate
     // painRecordsToUpdate: [bodyPainFormat],
   };
@@ -421,24 +426,7 @@ export default function PreconsultaPte({params}) {
     dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
   };
 
-  const handleVitalSign = (vitalSign, value, active, key) => {
-    if (vitalSign === "abnormalGlycemia") {
-      dispatch(updateGlycemia({ vitalSign, active }));
-    }
-    if (vitalSign === "lastAbnormalGlycemia") {
-      console.log({ vitalSign, key, value });
-      dispatch(updateLastGlycemia({ vitalSign, key, value }));
-    } else {
-      dispatch(
-        updateVitalSign({
-          vitalSign,
-          value,
-          number: Number(patientId),
-          schedulingId: Number(scheduleId),
-        })
-      ); // actualizamos los signos vitales en el estado global
-    }
-  };
+ 
 
   const handleAnamnesis = (field, description) => {
     dispatch(updateAnamnesis({ field, description })); // actualizamos la descripción de la anamnesis en el estado global
@@ -527,7 +515,7 @@ export default function PreconsultaPte({params}) {
   }
 
   const onSubmit= (data)=>{
-    vitalSigns = [
+    const vitalSigns = [
       { id: 1344, measureType: 1, measure: Number(data["Temperatura"]) },
       {
         id: 1344,
@@ -576,7 +564,7 @@ export default function PreconsultaPte({params}) {
       const data= {
          // ids
         preconsultationId: Number(preconsult?.id),
-        patient: Number(userId),
+        patient: Number(patientId),
         appointmentSchedule: Number(scheduleId),
         // status
         status: "sent",
@@ -586,11 +574,13 @@ export default function PreconsultaPte({params}) {
       }
       
       const response= await patchPreconsultation(data)
-      
+      console.log(response.data)
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
     }
   }
+
+  
 
   return (
     <FormProvider {...methods}>
