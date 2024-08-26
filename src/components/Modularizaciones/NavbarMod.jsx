@@ -29,7 +29,6 @@ import MensajesContainer from "../InicioPaciente/mensajes/MensajesContainer";
 import rutas from "@/utils/rutas";
 import IconMail from "../icons/iconMail";
 import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
-import rutas from "@/utils/rutas";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
