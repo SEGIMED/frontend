@@ -13,6 +13,7 @@ import ModalInterconsulta from "@/components/interconsulta/ModalInterconsulta";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
 import IconRegresar from "@/components/icons/iconRegresar";
+import Link from "next/link";
 
 export default function Page() {
   const params = useParams();
@@ -70,7 +71,7 @@ export default function Page() {
   useEffect(() => {
     getInterconsultation();
   }, []);
-
+  console.log(interconsultation);
   return (
     <div className="h-full flex flex-col bg-[#fafafc]">
       <div className="flex items-center justify-between border-b border-b-[#cecece] px-4 py-2  bg-white sticky top-0 z-20 lg:z-50">
@@ -115,8 +116,36 @@ export default function Page() {
         </div>
       </div>
 
-      <InputInterconsulta title={"Problema"} disabled />
-
+      <InputInterconsulta
+        title={"Problema"}
+        disabled
+        value={interconsultation?.problemResume}
+      />
+      <div className="flex flex-col md:flex-row items-center justify-between px-3 md:px-6 py-2">
+        <label className="w-full md:w-1/3 flex  justify-start gap-3 font-medium py-2 text-center">
+          <IconCircle className="w-3" />
+          Archivos adjuntos
+        </label>
+        <div className="py-2 md:py-0 md:justify-start justify-evenly md:gap-3 w-full md:w-1/2">
+          {interconsultation?.files?.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              {interconsultation?.files?.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center justify-center p-2 border border-borderGray rounded-lg bg-gray-50 ">
+                  <Link
+                    href={item?.fileURL}
+                    target="_blank"
+                    className="w-full max-h-24 rounded-md flex justify-center gap-2">
+                    <IconCircle className={"w-4"} />
+                    <span>{`Archivo ${index + 1}`}</span>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
       <div className="flex flex-col md:flex-row items-center justify-between px-3 md:px-6 py-2">
         <label className="w-full md:w-1/3 flex  justify-start gap-3 font-medium py-2 text-center">
           <IconCircle className="w-3" />

@@ -7,6 +7,7 @@ export default function InputInterconsulta({
   title,
   disabled = false,
   value,
+  onChange,
 }) {
   return (
     <div className="flex flex-col gap-2 py-4 px-3 md:px-6">
@@ -18,9 +19,9 @@ export default function InputInterconsulta({
       <textarea
         className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-3 md:px-4 py-2 outline-[#a8a8a8]"
         placeholder="Describa toda la información posible"
-        value={disabled && value}
+        value={value}
         readOnly={disabled}
-        //  {...register("inputSubsistema")}
+        onChange={onChange}
       />
     </div>
   );
