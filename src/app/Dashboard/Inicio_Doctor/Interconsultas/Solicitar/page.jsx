@@ -11,7 +11,7 @@ import {
 import IconCircle from "@/components/icons/IconCircle";
 import { useEffect, useState, useMemo } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
-import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import InputInterconsulta from "@/components/interconsulta/texto";
 import BotonInterconsulta from "@/components/interconsulta/botones";
@@ -20,13 +20,12 @@ import { PathnameShow } from "@/components/pathname/path";
 import IconArrowRight from "@/components/icons/iconArrowRight";
 import Elboton from "@/components/Buttons/Elboton";
 import rutas from "@/utils/rutas";
-import IconUpload from "@/components/icons/IconUpload";
 import FileUploadButton from "@/components/Buttons/FileUploadButton";
 import Swal from "sweetalert2";
 
 export default function HomeDoc() {
   const lastSegmentTextToShow = PathnameShow();
-
+  const router = useRouter();
   const [catalog, setCatalog] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
   const [allPatients, setAllPatients] = useState([]);
@@ -201,6 +200,7 @@ export default function HomeDoc() {
           text: "Se le informará al médico para que responda lo mas pronto posible",
           icon: "success",
         });
+        router.push(`${rutas.Doctor}${rutas.Interconsultas}`);
       }
     } catch (error) {
       console.error(error);

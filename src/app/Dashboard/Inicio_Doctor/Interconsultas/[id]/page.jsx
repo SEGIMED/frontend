@@ -14,6 +14,8 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
 import IconRegresar from "@/components/icons/iconRegresar";
 import Link from "next/link";
+import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import FileDisplay from "@/components/modal/ModalDoctor/modalDisplayFile";
 
 export default function Page() {
   const params = useParams();
@@ -22,6 +24,8 @@ export default function Page() {
   const [interconsultation, setInterconsultation] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [medicalOpinion, setMedicalOpinion] = useState("");
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  const [selectedImport, setSelectedImport] = useState();
 
   const handleResolve = async () => {
     try {
@@ -38,6 +42,7 @@ export default function Page() {
           confirmButtonText: "Aceptar",
         }).then(() => {
           setShowModal(false);
+          router.push(`${rutas.Doctor}${rutas.Interconsultas}`);
         });
       }
     } catch (error) {
@@ -51,6 +56,14 @@ export default function Page() {
     }
   };
 
+  const handleShowModalFile = (file) => {
+    setIsModalOpenFile(true);
+    let File = {
+      study: file,
+    };
+    setSelectedImport(File);
+  };
+  const closeModalFile = () => setIsModalOpenFile(false);
   const getInterconsultation = async () => {
     try {
       const response = await ApiSegimed.get(
@@ -71,7 +84,6 @@ export default function Page() {
   useEffect(() => {
     getInterconsultation();
   }, []);
-  console.log(interconsultation);
   return (
     <div className="h-full flex flex-col bg-[#fafafc]">
       <div className="flex items-center justify-between border-b border-b-[#cecece] px-4 py-2  bg-white sticky top-0 z-20 lg:z-50">
@@ -128,19 +140,15 @@ export default function Page() {
         </label>
         <div className="py-2 md:py-0 md:justify-start justify-evenly md:gap-3 w-full md:w-1/2">
           {interconsultation?.files?.length > 0 && (
-            <div className="grid grid-cols-3 gap-2 mt-2">
+            <div className="grid grid-cols-4 gap-2 mt-2">
               {interconsultation?.files?.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center justify-center p-2 border border-borderGray rounded-lg bg-gray-50 ">
-                  <Link
-                    href={item?.fileURL}
-                    target="_blank"
-                    className="w-full max-h-24 rounded-md flex justify-center gap-2">
-                    <IconCircle className={"w-4"} />
-                    <span>{`Archivo ${index + 1}`}</span>
-                  </Link>
-                </div>
+                <Elboton
+                  key={item?.name}
+                  onPress={(e) => handleShowModalFile(item?.fileURL)}
+                  nombre={item?.fileName}
+                  classNameText={"text-bluePrimary"}
+                  className={"bg-white"}
+                />
               ))}
             </div>
           )}
@@ -182,6 +190,18 @@ export default function Page() {
         onSubmit={handleResolve}
         value={medicalOpinion}
         onChangeValue={setMedicalOpinion}
+      />
+      <ModalModularizado
+        isOpen={isModalOpenFile}
+        onClose={closeModalFile}
+        Modals={[<FileDisplay key={"displayFile"} state={selectedImport} />]}
+        title={"Visualizacion de archivo"}
+        button1={"hidden"}
+        button2={"bg-greenPrimary text-white block"}
+        progessBar={"hidden"}
+        size={"md:min-h-[4rem] md:w-[35rem]"}
+        buttonText={{ end: `Cerrar` }}
+        buttonIcon={<></>}
       />
     </div>
   );

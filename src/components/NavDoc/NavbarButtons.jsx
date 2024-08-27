@@ -53,6 +53,11 @@ export const buttonsDoc = [
         icon: AlarmDash,
       },
       {
+        name: "Interconsultas",
+        path: `${rutas.Doctor}${rutas.Interconsultas}`,
+        icon: IconRecordNav,
+      },
+      {
         name: "Pacientes",
         path: `${rutas.Doctor}${rutas.Pacientes}`,
         icon: IconPatientNav,

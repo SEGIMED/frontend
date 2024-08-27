@@ -169,7 +169,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         chat.messages.forEach((mensaje) => {
           ultimoMensaje = mensaje;
           senderInfo = mensaje.sender;
-          if (mensaje.sender.userId == userId) {
+          if (mensaje.sender?.userId == userId) {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
