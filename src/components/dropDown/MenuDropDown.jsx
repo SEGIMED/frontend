@@ -54,14 +54,14 @@ import { Link } from "@nextui-org/link";
 //     },
 //   ];
 
-const MenuDropDown = ({ icon, iconr, label, categories, items, className }) => {
+const MenuDropDown = ({ icon, iconr, label, categories, items, className, classNameButton }) => {
   return (
     <Dropdown
       classNames={{
         trigger: `${className}`,
         content: "w-full p-0",
       }}>
-      <DropdownTrigger className="flex justify-center lg:px-4 font-Roboto font-bold py-2 text-white rounded-xl lg:gap-3 bg-[#487FFA] items-center cursor-pointer">
+      <DropdownTrigger className={`flex justify-center lg:px-4 font-Roboto font-bold py-2 text-white rounded-xl lg:gap-3 bg-[#487FFA] items-center cursor-pointer ${classNameButton}`}>
         <div className="flex items-center md:gap-3">
           {icon && icon}
           <span className="hidden md:block font-semibold">{label}</span>
@@ -95,7 +95,7 @@ const MenuDropDown = ({ icon, iconr, label, categories, items, className }) => {
                     key={itemIndex}
                     as={item.href && Link}
                     href={item.href && item.href}
-                    onClick={item.onClick && item.onClick}
+                    onPress={item.onClick && item.onClick}
                     className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2 text-[#5F5F5F]"
                     startContent={item.icon}
                     endContent={item.iconr}
@@ -111,7 +111,7 @@ const MenuDropDown = ({ icon, iconr, label, categories, items, className }) => {
               <DropdownItem
                 key={index}
                 as={item.href && Link}
-                className="w-full flex items-center gap-2  text-sm cursor-pointer px-3 py-2"
+                className="w-full  text-[#5F5F5F] flex items-center gap-2  text-sm cursor-pointer px-3 py-2"
                 href={item.href && item.href}
                 onClick={item.onClick && item.onClick}
                 startContent={item.icon}

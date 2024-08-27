@@ -25,6 +25,9 @@ import { IconNotificaciones } from "../InicioPaciente/notificaciones/IconNotific
 import NotificacionesContainer from "../InicioPaciente/notificaciones/NotificacionesContainer";
 import useDataFetchingPte from "@/utils/SideBarFunctionsPaciente";
 import { protectRoute } from "@/utils/protectRutes";
+import MensajesContainer from "../InicioPaciente/mensajes/MensajesContainer";
+import rutas from "@/utils/rutas";
+import IconMail from "../icons/iconMail";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -32,6 +35,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   const [rol, setRol] = useState(null); // Initialize as null
 
   const notifications = useAppSelector((state) => state.notifications);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const chats = useAppSelector((state) => state.chat);
+  const [showChats, setShowChats] = useState(false);
   const user = useAppSelector((state) => state.user);
   const showSearch = useAppSelector((state) => state.searchBar);
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
@@ -45,6 +51,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   const IsEvent = /^(\/inicio_Doctor\/Citas\/\d+)$/.test(pathname);
   const IsMessage = /^(\/inicio_Doctor\/Mensajes\/\d+)$/.test(pathname);
   const formattedLastSegment = lastSegment.replace(/_/g, " ");
+  const [userDetails, setUserDetails] = useState([]);
 
   const segments = pathname.split("/");
   const secondLastSegment =
@@ -79,6 +86,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
+  };
+  const handleChatClick = () => {
+    setShowChats(!showChats);
   };
 
   const searchTerm = useAppSelector((state) => state.user.searchTerm);
@@ -127,14 +137,59 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         getActivesPacientesDoctor().catch(console.error);
         //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
       }
+      if (rol === "Entries") {
+        getActivesAlarmsDoctor().catch(console.error);
+        getActivesPacientesDoctor().catch(console.error);
+        //   ACA PONER PETICIONES DE ADMIN, MIRAR useDataFetching() Y SEGUIR FORMATO
+      }
     } else return;
   }, [rol]);
 
-  const [showNotifications, setShowNotifications] = useState(false);
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
+  const Inicio =
+    rol == "Paciente"
+      ? "/Dashboard/Inicio_Paciente"
+      : "/Dashboard/Inicio_Doctor";
+  const formattedChats = formatChat(chats, id);
+  const hasUnreadMessages = Object.values(formattedChats).some(
+    (chat) => chat.cantidadMensajes > 0
+  );
 
+  function formatChat(data, userId) {
+    const resultado = {};
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        const chat = data[key];
+        let ultimoMensaje = null;
+        let senderInfo = null;
+        let cantidadMensajes = 0;
+        let isMessageFromUser = false;
+        chat.messages.forEach((mensaje) => {
+          ultimoMensaje = mensaje;
+          senderInfo = mensaje.sender;
+          if (mensaje.sender.userId == userId) {
+            isMessageFromUser = true;
+            senderInfo = mensaje.target;
+          }
+          if (mensaje.state === false && mensaje.sender.userId != userId) {
+            cantidadMensajes++;
+          }
+        });
+        if (ultimoMensaje) {
+          resultado[key] = {
+            cantidadMensajes: cantidadMensajes, // Solo cuenta los mensajes no vistos
+            ultimoMensaje: ultimoMensaje, // Último mensaje
+            sender: senderInfo, // Información del sender
+            isMessageFromUser: isMessageFromUser,
+          };
+        }
+      }
+    }
+
+    return resultado;
+  }
   const handleNotificationElementClick = (id) => {
     try {
       ApiSegimed.patch("/notification-seen", null, {
@@ -169,6 +224,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       console.error(error);
     }
   };
+
+  const handleMensajeElementClick = (id) => {
+    router.push(`${Inicio}${rutas.Mensajes}/${id}`);
+  };
+
   return (
     <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="lg:hidden p-4">
@@ -245,6 +305,23 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
               : ""}
           </span>
         </div>
+        <button
+          onClick={handleChatClick}
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+          }`}>
+          <IconMail
+            className="w-6 h-6"
+            color={(showChats || hasUnreadMessages) && "white"}
+          />
+        </button>
+        {showChats && (
+          <MensajesContainer
+            handleMensajeElementClick={handleMensajeElementClick}
+            handleMensajeClick={handleChatClick}
+            formattedChats={formattedChats}
+          />
+        )}
         <button
           onClick={handleNotificationClick}
           className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${

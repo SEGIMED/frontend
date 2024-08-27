@@ -1,12 +1,32 @@
 "use client";
 
 import { PathnameShow } from "@/components/pathname/path";
-import prescriptions from "@/utils/dataMedicamentos";
 import MedicamentosTable from "@/components/InicioPaciente/medicamentos/tableMedicentos";
 import NotFound from "@/components/notFound/notFound";
+import { ApiSegimed } from "@/Api/ApiSegimed";
+import { useEffect, useState } from "react";
+import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 
 export default function Medicamentos() {
-    const lastSegmentTextToShow = PathnameShow()
+    const lastSegmentTextToShow = PathnameShow();
+    const [medicamentos, setMedicamentos] = useState([]);
+    const [loading, setLoading] = useState(true);  // Estado para manejar la carga
+
+    const getDrugs = async () => {
+        try {
+            const response = await ApiSegimed.get("/drug-prescription?id=3");
+            console.log(response.data);
+            setMedicamentos(response.data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);  // Detener la carga después de obtener los datos
+        }
+    };
+
+    useEffect(() => {
+        getDrugs();
+    }, []);
 
     return (
         <div className="h-[100%] text-[#686868] w-[100%]">
@@ -25,11 +45,13 @@ export default function Medicamentos() {
                     <div className="bg-white md:w-[25%]"></div>
                 </div>
 
-                {prescriptions.length === 0 ? (
+                {loading ? (
+                    <SkeletonList count={10} />  // Mostrar esqueleto mientras se cargan los datos
+                ) : medicamentos.length === 0 ? (
                     <NotFound text="Actualmente no tenes ningún medicamento asignado." />
                 ) : (
-                    prescriptions.map((prescription, index) => (
-                        <MedicamentosTable key={index} medicamento={prescription} />
+                    medicamentos.map((medicamento, index) => (
+                        <MedicamentosTable key={index} medicamento={medicamento} />
                     ))
                 )}
             </div>

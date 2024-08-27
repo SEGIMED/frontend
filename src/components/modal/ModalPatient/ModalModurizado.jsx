@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
 import { useRouter } from "next/navigation";
 import IconArrowRight from "@/components/icons/iconArrowRight";
+import LoadingFallback from "@/components/loading/loading";
 
 const ProgressBar = ({ steps, currentIndex, progessBar }) => {
   return (
@@ -38,6 +39,7 @@ const ModalModularizado = ({
   verification,
   buttonText,
   funcion,
+  loading,
 }) => {
   const [index, setIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -100,9 +102,15 @@ const ModalModularizado = ({
           progessBar={progessBar}
         />
         <div className="flex flex-col items-center gap-5 justify-center w-full h-full ">
-          <div className="px-8 bg-[#fafafc] h-[80%] md:h-[100%] w-[100%] justify-center items-center flex">
-            {Modals[index]}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <LoadingFallback className="w-6 h-6" />
+            </div>
+          ) : (
+            <div className="px-8 bg-[#fafafc] h-[80%] md:h-[100%] w-[100%] justify-center items-center flex">
+              {Modals[index]}
+            </div>
+          )}
         </div>
         <div className="flex gap-2 pb-5 bg-white border-t rounded-b-lg justify-center items-center pt-3 border-t-[#DCDBDB] w-full">
           <button
