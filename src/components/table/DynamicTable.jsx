@@ -115,6 +115,9 @@ function DynamicTable({
     }
   };
 
+  const formatPatientName = (row) => {
+    return `${row.patientUser.name} ${row.patientUser.lastname}`;
+  };
   // Helper function to translate healthCenter values
 
   const renderPatientPulmonaryRisk = (row) => {
