@@ -35,6 +35,10 @@ export default function CallVideo({id}){
         setIsLoading(true);
         getMediaUser.getPermissions().then(handleChangeStream).catch(err => console.log(err));
         socket._socket.emit("joinRoom",id)
+
+        return ()=>{
+            socket._socket.emit('setState',{id:consultId,state:'Salio de la llamada'});
+        }
     },[])
 
 
