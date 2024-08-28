@@ -1,27 +1,31 @@
+'use client'
+
 import React from 'react';
-import html2pdf from 'html2pdf.js';
-import logo from '@/utils/logoSegimed';
 import LogoSegimed from '../logo/LogoSegimed';
-import IconDownload from '../icons/IconDownload';
 import { Fecha } from '@/utils/NormaliceFechayHora';
 
 const PDFExportComponent = ({ data }) => {
-    const handleDownloadPDF = () => {
-        const element = document.getElementById('pdf-content');
+    // const handleGeneratePDF = () => {
+    //     const element = document.getElementById('pdf-content');
 
-        // Opciones de configuración para html2pdf
-        const opt = {
-            margin: 0,
-            filename: 'reporte.pdf',
-            image: { type: 'png', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
-        };
+    //     const opt = {
+    //         margin: 0,
+    //         filename: 'reporte.pdf',
+    //         image: { type: 'png', quality: 0.98 },
+    //         html2canvas: { scale: 2 },
+    //         jsPDF: { unit: 'in', orientation: 'portrait' },
+    //         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
+    //     };
 
-        // Genera el PDF
-        html2pdf().from(element).set(opt).save();
-    };
+    //     // Genera el PDF y devuelve un Blob
+    //     html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
+    //         // Llama a la función de devolución de llamada con el PDF generado
+    //         if (onPdfGenerated) {
+    //             onPdfGenerated(pdfBlob);
+    //         }
+    //     });
+    // };
+
 
     return (
         <div>
@@ -131,10 +135,10 @@ const PDFExportComponent = ({ data }) => {
                     </div>
                 </div>
             </div>
-            <button onClick={handleDownloadPDF} className="bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2 ">
+            {/* <button onClick={handleDownloadPDF} className="bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2 ">
                 <IconDownload />
 
-            </button>
+            </button> */}
         </div >
     );
 };

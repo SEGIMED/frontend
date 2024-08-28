@@ -20,34 +20,61 @@ import NewModalDrugs from "@/components/modal/ModalDoctor/newModalDrugs";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconDelete from "@/components/icons/IconDelete";
 import IconMessage from "@/components/icons/IconMessage";
+import html2pdf from "html2pdf.js";
+import PDFExportComponent from "@/components/pdf/pdfOrder";
+
 
 export default function HomeDoc() {
     const orden = useAppSelector((state) => state.formSlice.selectedOptions);
     const [pendientes, setPendientes] = useState(false);
     const [isDrugModalOpen, setIsDrugModalOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState([]);
     const [drugs, setDrugs] = useState([]);
     const [selectedDrug, setSelectedDrug] = useState(null);
     const [drugsToSend, setDrugsToSend] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
+    const [ordenType, setOrdenType] = useState("");
+    const [errors, setErrors] = useState({});
+    const [downloadActive, setDownloadActive] = useState(false); // Estado para controlar la descarga del PDF
+    const [orderPdf, setOrderPdf] = useState('');
 
 
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const token = Cookies.get("a");
-    const userId = Cookies.get("b");
     const lastSegmentTextToShow = PathnameShow();
     const searchParams = useSearchParams();
 
+
+    // validacion de type y id seleccionado para poder recargar la pagina y que sigan los datos
     useEffect(() => {
+        const id = searchParams.get("id");
+        const type = searchParams.get("type");
+
+        if (!id) {
+            router.push(`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true&type=${type}`);
+            return; // Asegúrate de que no se ejecute el resto del código si falta `id`.
+        }
+
+        if (!type) {
+            router.push(`${rutas.Doctor}${rutas.Ordenes}`);
+            return; // Asegúrate de que no se ejecute el resto del código si falta `type`.
+        }
+
         if (searchParams.get("Pendientes")) {
             setPendientes(true);
         }
+
+        setOrdenType(type);
+        dispatch(setSelectedOption({ name: "orderTypes", option: type }));
+        dispatch(setSelectedOption({ name: "patientId", option: Number(id) }));
+
     }, [searchParams]);
 
     const handleChange = (name, value) => {
         dispatch(setSelectedOption({ name, option: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
     };
+    // autocomplete
     useEffect(() => {
         const fetchDrugs = async () => {
             if (searchTerm.length >= 3) {
@@ -69,6 +96,7 @@ export default function HomeDoc() {
         fetchDrugs();
     }, [searchTerm]);
 
+
     const handleToggleDetails = (index) => {
         const updatedDrugs = [...drugsToSend];
         updatedDrugs[index].showDetails = !updatedDrugs[index].showDetails;
@@ -76,23 +104,80 @@ export default function HomeDoc() {
     };
 
 
+    // validacion de campos
+    const validateFields = () => {
+        let tempErrors = {};
+
+        if (!orden.diagnostic || orden.diagnostic.trim() === "") {
+            tempErrors.diagnostic = "El diagnóstico es obligatorio.";
+        }
+
+        if (drugsToSend.length > 0) {
+            drugsToSend.forEach((drug, index) => {
+                if (!drug.prescriptionCreation.doseMeasure) {
+                    tempErrors[`doseMeasure-${index}`] = "La dosis es obligatoria.";
+                }
+                if (!drug.prescriptionCreation.timeMeasure) {
+                    tempErrors[`timeMeasure-${index}`] = "La frecuencia es obligatoria.";
+                }
+                if (!drug.prescriptionCreation.timeMeasureType) {
+                    tempErrors[`timeMeasureType-${index}`] = "La duración es obligatoria.";
+                }
+            });
+        }
+
+
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
+
+    const handleGeneratePDF = async () => {
+        const element = document.getElementById('pdf-content');
+        const opt = {
+            margin: 0,
+            filename: 'reporte.pdf',
+            image: { type: 'png', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
+        };
+
+        // Genera el PDF y devuelve un Blob
+        const pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
+
+        // Convertir el Blob a base64 usando FileReader
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64String = event.target.result // Obtener solo la cadena base64
+                resolve(base64String);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(pdfBlob); // Leer el Blob como una URL de datos (base64)
+        });
+    };
+
     const onSubmit = async (orden) => {
-        // if (pendientes) {
-        //     const body = { status: true };
-        //     try {
-        //         const response = await ApiSegimed.patch(`/patient-medical-request?id=${orden.id}`, body);
-        //         if (response.data) {
-        //             dispatch(resetFormState());
-        //         }
-        //     } catch (error) {
-        //         console.error("Error creating patient request:", error);
-        //     }
-        // } else
+        if (!validateFields()) {
+            return; // Si hay errores, no enviar el formulario
+        }
+
         try {
-            const payload = { ...orden, bodyMedicam: drugsToSend }
+            const base64 = await handleGeneratePDF();
+
+            const pdfBlob = await fetch(base64).then(res => res.blob());
+
+            // Crear una URL temporal para el Blob
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+
+            // Abrir el PDF en una nueva pestaña
+            window.open(pdfUrl, '_blank');
+
+            const payload = { ...orden, bodyMedicam: drugsToSend, orderPdf: base64 };
             console.log(payload);
 
-            const response = await ApiSegimed.post(`/physician-order`, payload);
+            // const response = await ApiSegimed.post(`/physician-order`, payload);
+
             if (response.data) {
                 dispatch(resetFormState());
                 Swal.fire({
@@ -109,14 +194,17 @@ export default function HomeDoc() {
             }
         } catch (error) {
             console.error("Error creating patient request:", error);
+            Swal.fire({
+                icon: "error",
+                text: "Hubo un error al crear la orden.",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+            });
+        } finally {
+            setDownloadActive(false);
         }
-        // console.log({ drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: orden.routeOfAdministrationId }, prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" } }, "esto es medicamentos");
-
-
-
-
     };
-
+    // busca datos de la droga seleccionada
     const handleDrug = async (value) => {
         if (value !== null && value !== "new") {
             try {
@@ -134,30 +222,69 @@ export default function HomeDoc() {
             setSelectedId(value)
             setIsDrugModalOpen(true);
         }
-
     };
 
     const handleDeleteDrug = (index) => {
         const updatedDrugs = drugsToSend.filter((_, i) => i !== index);
         setDrugsToSend(updatedDrugs);
     };
-    console.log(drugsToSend, "medicamentos a mandar");
 
 
     const handleInputChange = (index, field, value) => {
         const updatedDrugs = [...drugsToSend];
         updatedDrugs[index].prescriptionCreation[field] = value;
         setDrugsToSend(updatedDrugs);
+        setErrors((prev) => ({ ...prev, [`${field}-${index}`]: "" })); // Resetear error al cambiar el valor
     };
 
 
+
+    // validacion de creacion de medicamentos
+    const validateDrug = (drug) => {
+        const errors = {};
+
+
+        if (!drug.drugName) errors.drugName = "El nombre del medicamento es requerido.";
+        if (!drug.commercialDrugName) errors.commercialDrugName = "El nombre comercial del medicamento es requerido.";
+        if (!drug.routeOfAdministrationId) errors.routeOfAdministrationId = "La ruta de administración es requerida.";
+        if (!drug.presentationId) errors.presentationId = "La presentación es requerida.";
+        if (isNaN(drug.dose) || drug.dose <= 0) errors.dose = "La dosis debe ser un número positivo.";
+        if (!drug.measureUnitId) errors.measureUnitId = "La unidad de medida es requerida.";
+
+        return errors;
+    };
+
+    // guarda los datos que llegan del modal de nueva droga
     const submitDrug = () => {
-        setSearchTerm("")
-        setDrugsToSend([...drugsToSend, { drugDetailPresentationId: null, drugCreation: { drugName: drugs[0].name, commercialDrugName: orden.commercialDrugName, routeOfAdministrationId: Number(orden.routeOfAdministrationId), presentationId: Number(orden.presentationId), dose: Number(orden.dose), measureUnitId: Number(orden.measureUnitId) }, prescriptionCreation: { patientId: orden.patientId } }])
-        handleCloseDrugModal()
-    };
+        // Crear un objeto con los valores actuales
+        const drug = {
+            drugName: drugs[0].name,
+            commercialDrugName: orden.commercialDrugName,
+            routeOfAdministrationId: Number(orden.routeOfAdministrationId),
+            presentationId: Number(orden.presentationId),
+            dose: Number(orden.dose),
+            measureUnitId: Number(orden.measureUnitId),
+        };
 
-    // , prescriptionCreation: { patientId: orden.patient, indications: orden.indication, observations: orden.observations, doseMeasure: orden.doseMeasure, timeMeasure: orden.timeMeasure, timeMeasureType: "Hs" }
+        // Validar los campos
+        const validationErrors = validateDrug(drug);
+
+        if (Object.keys(validationErrors).length > 0) {
+            // Si hay errores, actualizar el estado de errores y salir
+            setErrors(validationErrors);
+            return;
+        }
+
+        // Limpiar el término de búsqueda y agregar el medicamento si no hay errores
+        setSearchTerm("");
+        setDrugsToSend([...drugsToSend, {
+            drugDetailPresentationId: null,
+            drugCreation: drug,
+            prescriptionCreation: { patientId: orden.patientId }
+        }]);
+
+        handleCloseDrugModal();
+    };
 
     const handleCloseDrugModal = () => {
         setIsDrugModalOpen(false);
@@ -173,8 +300,9 @@ export default function HomeDoc() {
                     onClick={() => {
                         const targetRoute = pendientes
                             ? `${rutas.Doctor}${rutas.Pendientes}`
-                            : `${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true`;
+                            : `${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true&&type=${ordenType}`;
                         router.push(targetRoute);
+                        dispatch(resetFormState());
                     }}
                 >
                     <IconRegresar />
@@ -198,6 +326,7 @@ export default function HomeDoc() {
                     placeholder="Ingrese aquí el diagnóstico"
                     onChange={(e) => handleChange("diagnostic", e.target.value)}
                     className="md:px-6 py-2 px-3"
+                    error={errors.diagnostic}
                 />
 
 
@@ -208,6 +337,7 @@ export default function HomeDoc() {
                         Medicamentos
                     </label>
                     <Autocomplete
+                        aria-label="drugs"
                         defaultItems={drugs}
                         variant="bordered"
                         onInputChange={(value) => setSearchTerm(value)}
@@ -240,61 +370,57 @@ export default function HomeDoc() {
                             <div>
                                 {drugsToSend.map((drug, index) => (
                                     <>
-
-                                        <div className="flex items-center border-b " key={index}>
-                                            <div className="py-2 px-4 w-[20%] ">{drug.drugCreation.drugName}</div>
-                                            <div className="py-2 px-4  w-[20%]">
+                                        <div className="flex items-center border-b" key={index}>
+                                            <div className="py-2 px-4 w-[20%]">{drug.drugCreation.drugName}</div>
+                                            <div className="py-2 px-4 w-[20%]">
                                                 <input
                                                     type="number"
                                                     onChange={(e) => handleInputChange(index, "doseMeasure", e.target.value)}
-                                                    className="w-full p-2 border border-gray-300 rounded-lg"
+                                                    className={`w-full p-2 border rounded-lg outline-none ${errors[`doseMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                             </div>
-                                            <div className="py-2 px-4  w-[20%]">
+
+                                            <div className="py-2 px-4 w-[20%]">
                                                 <input
                                                     type="number"
                                                     onChange={(e) => handleInputChange(index, "timeMeasure", e.target.value)}
-                                                    className="w-full p-2 border border-gray-300 rounded-lg"
+                                                    className={`w-full p-2 border rounded-lg outline-none ${errors[`timeMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                             </div>
-                                            <div className="py-2 px-4  w-[20%]">
+
+                                            <div className="py-2 px-4 w-[20%]">
                                                 <input
                                                     onChange={(e) => handleInputChange(index, "timeMeasureType", e.target.value)}
-                                                    className="w-full p-2 border border-gray-300 rounded-lg"
+                                                    className={`w-full p-2 border rounded-lg outline-none ${errors[`timeMeasureType-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                             </div>
-                                            <div className=" items-center flex  justify-center w-[20%] gap-4 ">
-                                                <button
-                                                    onClick={() => handleToggleDetails(index)}
-                                                >
+                                            <div className="items-center flex justify-center w-[20%] gap-4">
+                                                <button onClick={() => handleToggleDetails(index)}>
                                                     <IconMessage className={"w-8"} />
                                                 </button>
-                                                <button
-                                                    onClick={() => handleDeleteDrug(index)}
-                                                >
+                                                <button onClick={() => handleDeleteDrug(index)}>
                                                     <IconDelete />
                                                 </button>
                                             </div>
                                         </div>
                                         {drug.showDetails && (
-                                            <div className=" w-full flex border-b">
-
+                                            <div className="w-full flex border-b">
                                                 <InputInfoText
                                                     text={true}
                                                     title="Indicaciones"
                                                     placeholder="Ingrese aquí cualquier otra aclaración"
                                                     onChange={(e) => handleInputChange(index, "indications", e.target.value)}
                                                     className="md:px-6 py-2 px-3 w-1/2"
-                                                />
+                                                    error={errors[index]?.indications} />
                                                 <InputInfoText
                                                     text={true}
                                                     title="Observaciones"
                                                     placeholder="Ingrese aquí cualquier otra aclaración"
                                                     onChange={(e) => handleInputChange(index, "observations", e.target.value)}
                                                     className="md:px-6 py-2 px-3 w-1/2"
+                                                    error={errors[index]?.observations}
                                                 />
                                             </div>
-
                                         )}
                                     </>
                                 ))}
@@ -302,7 +428,7 @@ export default function HomeDoc() {
                         </div>
                     </div>
                     : null}
-                <div className="flex flex-col gap-2 md:px-6 py-2 px-3 bg-[#fafafc]">
+                {/* <div className="flex flex-col gap-2 md:px-6 py-2 px-3 bg-[#fafafc]">
                     <label className="flex items-center gap-2 text-start text-[#686868] font-medium text-base leading-5  ">
                         <IconDay /> Fecha
                     </label>
@@ -312,7 +438,7 @@ export default function HomeDoc() {
                         className="w-1/2 outline-none p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
                         onChange={(e) => handleChange("date", e.target.value)}
                     />
-                </div>
+                </div> */}
                 <InputInfoText
                     text={true}
                     title="Texto adicional (opcional)"
@@ -324,7 +450,7 @@ export default function HomeDoc() {
             <ModalModularizado
                 isOpen={isDrugModalOpen}
                 onClose={handleCloseDrugModal}
-                Modals={[<NewModalDrugs handleOptionChange={handleChange} info={selectedDrug} drugs={drugs} id={selectedId} key={"modalDrugs"} />]}
+                Modals={[<NewModalDrugs handleOptionChange={handleChange} info={selectedDrug} drugs={drugs} id={selectedId} key={"modalDrugs"} error={errors} />]}
                 title={"Agregar medicamento"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
@@ -333,6 +459,7 @@ export default function HomeDoc() {
                 buttonText={{ end: `Guardar` }}
                 funcion={submitDrug}
             />
+            <PDFExportComponent />
         </div>
     );
 }

@@ -23,7 +23,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state, di
 
     const options = [
         "Receta médica",
-        "Resumen de historia clínica ",
+        "Resumen de historia clínica",
         "Autorización de medicamentos",
         "Autorización de estudios",
         "Aptos físicos",

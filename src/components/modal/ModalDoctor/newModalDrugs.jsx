@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import InputInfoText from "@/components/ordenMedica/inputInfo";
-import IconCircle from "@/components/icons/IconCircle";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { Checkbox } from "@nextui-org/react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 
-export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
+export default function NewModalDrugs({ drugs, id, handleOptionChange, info, error }) {
     const [selectedDrug, setSelectedDrug] = useState(null);
     const [presentation, setPresentation] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -28,63 +27,38 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
     }, [info]);
 
     useEffect(() => {
-        if (searchTerm.length >= 3 && !presentation.some((drug) => drug.name.toLowerCase() === searchTerm.toLowerCase())) {
-            setPresentation((prevPresentation) => [
-                ...prevPresentation,
-                { id: `new-${searchTerm}`, name: searchTerm },
-            ]);
-        }
-    }, [searchTerm, presentation]);
+        // trae catalogos
+        const fetchData = async () => {
+            try {
+                const [measureResponse, routesResponse, presentationsResponse] = await Promise.all([
+                    ApiSegimed.get("/catalog/get-catalog?catalogName=measure_units"),
+                    ApiSegimed.get("/catalog/get-catalog?catalogName=route_of_administration"),
+                    ApiSegimed.get("/catalog/get-catalog?catalogName=drug_presentations")
+                ]);
 
-    useEffect(() => {
-        getCatalogMeasure();
-        getCatalogRoutesOfAdministration();
-        getCatalogDrugPresentations();
+                if (measureResponse.data) {
+                    const filteredMeasures = measureResponse.data.filter(unit => unit.id >= 30);
+                    setMeasureUnits(filteredMeasures);
+                }
+
+                if (routesResponse.data) {
+                    setRoutesOfAdministration(routesResponse.data);
+                }
+
+                if (presentationsResponse.data) {
+                    setDrugPresentations(presentationsResponse.data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const handleInputChange = (name, value) => {
         if (handleOptionChange) {
             handleOptionChange(name, value);
-        }
-    };
-
-    const getCatalogMeasure = async () => {
-        try {
-            const response = await ApiSegimed.get(
-                "/catalog/get-catalog?catalogName=measure_units"
-            );
-            if (response.data) {
-                const filteredMeasures = response.data.filter(unit => unit.id >= 30);
-                setMeasureUnits(filteredMeasures);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const getCatalogRoutesOfAdministration = async () => {
-        try {
-            const response = await ApiSegimed.get(
-                "/catalog/get-catalog?catalogName=route_of_administration"
-            );
-            if (response.data) {
-                setRoutesOfAdministration(response.data);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const getCatalogDrugPresentations = async () => {
-        try {
-            const response = await ApiSegimed.get(
-                "/catalog/get-catalog?catalogName=drug_presentations"
-            );
-            if (response.data) {
-                setDrugPresentations(response.data);
-            }
-        } catch (error) {
-            console.error(error);
         }
     };
 
@@ -104,25 +78,31 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
                     Nombre comercial
                 </label>
 
-                {info?.result && !isSelectedNewDrug ? (
+                {presentation.length > 0 && !isSelectedNewDrug ? (
                     <Autocomplete
+                        aria-label="comercial name"
                         defaultItems={presentation}
                         variant="bordered"
                         placeholder="Ingrese nombre comercial"
                         className="w-full bg-white"
                         onInputChange={(value) => setSearchTerm(value)}
                         onSelectionChange={(value) => handleInputChange("commercialDrugName", value)}
+
                     >
+
                         {(drug) => <AutocompleteItem key={drug.name}>{drug.name}</AutocompleteItem>}
                     </Autocomplete>
                 ) : (
                     <InputInfoText
-                        classNameInput="md:w-full"
+                        classNameInput={`md:w-full ${error?.commercialDrugName ? 'border-red-500' : ''}`}
                         placeholder={"Ingrese el nombre comercial"}
-                        onChange={(e) => handleInputChange("commercialDrugName", e.target.value)}
+                        onChange={(e) => { handleInputChange("commercialDrugName", e.target.value); setSearchTerm(e.target.value) }}
+                        error={!!error?.commercialDrugName}
+
+                        defaultValue={searchTerm}
                     />
                 )}
-                {info ?
+                {presentation.length > 0 ?
                     <Checkbox isSelected={isSelectedNewDrug} onValueChange={setIsSelectedNewDrug}>
                         <p className="text-[#686868]">Nuevo medicamento</p>
                     </Checkbox>
@@ -137,7 +117,7 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
 
                     {!isSelectedNewDose ? (
                         <select
-                            className="w-1/2 py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
+                            className={`w-1/2 py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${error?.dose ? 'border-red-500' : ''}`}
                             onChange={(e) => handleInputChange("dose", e.target.value)}
                         >
                             <option value="">Seleccione la cantidad</option>
@@ -148,14 +128,15 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
                         </select>
                     ) : (
                         <InputInfoText
-                            classNameInput="md:w-full"
+                            classNameInput={`md:w-full ${error?.dose ? 'border-red-500' : ''}`}
                             placeholder={"Ingrese la cantidad "}
                             onChange={(e) => handleInputChange("dose", e.target.value)}
+                            error={!!error?.dose}
                         />
                     )}
 
                     <select
-                        className="w-1/2 py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
+                        className={`w-1/2 py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${error?.measureUnitId ? 'border-red-500' : ''}`}
                         onChange={(e) => handleInputChange("measureUnitId", e.target.value)}
                     >
                         <option value="">Unidad de medida</option>
@@ -177,7 +158,7 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
                     <IconClinicalHistory color="#808080" /> Vía de administración
                 </div>
                 <select
-                    className="py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
+                    className={`py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${error?.routeOfAdministrationId ? 'border-red-500' : ''}`}
                     onChange={(e) => handleInputChange("routeOfAdministrationId", e.target.value)}
                 >
                     <option value="">Seleccione vía de administración</option>
@@ -194,7 +175,7 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info }) {
                     <IconClinicalHistory color="#808080" /> Forma de presentación
                 </div>
                 <select
-                    className="py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
+                    className={`py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${error?.presentationId ? 'border-red-500' : ''}`}
                     onChange={(e) => handleInputChange("presentationId", e.target.value)}
                 >
                     <option value="">Seleccione una presentación</option>
