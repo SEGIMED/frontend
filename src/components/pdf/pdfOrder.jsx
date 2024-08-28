@@ -3,28 +3,24 @@
 import React from 'react';
 import LogoSegimed from '../logo/LogoSegimed';
 import { Fecha } from '@/utils/NormaliceFechayHora';
-
+import html2pdf from 'html2pdf.js';
 const PDFExportComponent = ({ data }) => {
-    // const handleGeneratePDF = () => {
-    //     const element = document.getElementById('pdf-content');
+    const handleGeneratePDF = () => {
+        const element = document.getElementById('pdf-content');
 
-    //     const opt = {
-    //         margin: 0,
-    //         filename: 'reporte.pdf',
-    //         image: { type: 'png', quality: 0.98 },
-    //         html2canvas: { scale: 2 },
-    //         jsPDF: { unit: 'in', orientation: 'portrait' },
-    //         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
-    //     };
+        const opt = {
+            margin: 0,
+            filename: 'reporte.pdf',
+            image: { type: 'png', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
+        };
 
-    //     // Genera el PDF y devuelve un Blob
-    //     html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
-    //         // Llama a la función de devolución de llamada con el PDF generado
-    //         if (onPdfGenerated) {
-    //             onPdfGenerated(pdfBlob);
-    //         }
-    //     });
-    // };
+        // Genera el PDF y devuelve un Blob
+        html2pdf().from(element).set(opt).save()
+
+    };
 
 
     return (
@@ -135,10 +131,10 @@ const PDFExportComponent = ({ data }) => {
                     </div>
                 </div>
             </div>
-            {/* <button onClick={handleDownloadPDF} className="bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2 ">
+            <button onClick={handleGeneratePDF} className="bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2 ">
                 <IconDownload />
 
-            </button> */}
+            </button>
         </div >
     );
 };

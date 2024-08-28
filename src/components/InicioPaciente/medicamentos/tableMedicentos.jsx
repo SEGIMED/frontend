@@ -43,9 +43,9 @@ export default function MedicamentosTable({ medicamento }) {
                             </p>
                         </button>
                     </div>
-                    {/* <div>
+                    <div>
                         <PDFExportComponent data={medicamento} />
-                    </div> */}
+                    </div>
                 </div>
             </div>
             <div className=" flex-col md:flex-row md:flex w-[100%] px-10 py-5 gap-5 space-y-4 md:space-y-0 bg-[#fafafc]">
