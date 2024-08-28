@@ -4,6 +4,8 @@ import React from 'react';
 import LogoSegimed from '../logo/LogoSegimed';
 import { Fecha } from '@/utils/NormaliceFechayHora';
 import html2pdf from 'html2pdf.js';
+import IconDownload from '../icons/IconDownload';
+
 const PDFExportComponent = ({ data }) => {
     const handleGeneratePDF = () => {
         const element = document.getElementById('pdf-content');
