@@ -42,7 +42,7 @@ export default function HomeDoc() {
         try {
             // Validar que `window` esté definido
             if (typeof window === 'undefined') {
-                throw new Error('El entorno no soporta la generación de PDFs.');
+                return
             }
 
             // Importar html2pdf dinámicamente
