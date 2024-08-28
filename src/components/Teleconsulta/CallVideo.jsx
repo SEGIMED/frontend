@@ -4,7 +4,7 @@ import getMediaUser from "./getMediaUser";
 import CameraView from "./CameraView";
 import rtcPer from "@/utils/RTCPeer";
 import DataContext from "./DataContext";
-
+import { socket } from "@/utils/socketio";
 export default function CallVideo({id}){
     /* 
         Acá tengo que mostrar 2 vista.
@@ -20,17 +20,21 @@ export default function CallVideo({id}){
     const [isLoading, setIsLoading] = useState(false);
     
     const handleChangeStream = (newStream) => {
-        setStream(newStream)
+        if(newStream){
+            rtcPer.updateTracks(newStream)
+            setStream(newStream)
+        }
     }
 
     const updateStream = () => {
-        getMediaUser.getUpdateStream().then(handleChangeStream).catch(err => console.log(err))
+        getMediaUser.getUpdateStream().then(handleChangeStream).catch(err => console.log(err));
     }
     
     useEffect(()=>{
         rtcPer.init();
         setIsLoading(true);
-        getMediaUser.getPermissions().then(handleChangeStream).catch(err => console.log(err))
+        getMediaUser.getPermissions().then(handleChangeStream).catch(err => console.log(err));
+        socket._socket.emit("joinRoom",id)
     },[])
 
 

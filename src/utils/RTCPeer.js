@@ -1,6 +1,7 @@
 'use client'
 
 import { socket } from "./socketio.js";
+import getMediaUser from "@/components/Teleconsulta/getMediaUser.js";
 import Observer from "./observer.js";
 /*
     Modificar para que se haga todo lo que tenga que ver con la conexion y agregar tracks desde aquí.
@@ -39,6 +40,26 @@ class RTCPeer{
 
     init(){
         if(this.configuration) this.peerConnection = new RTCPeerConnection(this.configuration);
+
+        socket._socket.on('videoCall',(data) => {
+            const {consultId,message} = data;
+
+            if(message === 'newoffer'){
+                const {offer} = data;
+                this.setRemoteDescription(offer).then(()=> {
+                    this.createAsw(consultId).then(asw => socket._socket.emit('videoCall',{
+                        consultId,
+                        message:'newasw',
+                        asw 
+                    }))
+                })
+            } else {
+                const {asw} = data;
+                this.setRemoteDescription(asw).then(()=>{
+                    console.log('Se creo una description remota del el paciente',)
+                })
+            }
+        })
     }
 
     
@@ -53,7 +74,7 @@ try {
     this.peerConnection.addEventListener('icecandidate', (event) => {
         console.log("esto es el candidate evente en createOffer", event)  //no entra el eventListener
         if (event.candidate) {
-            socket.emit("newCandidate",{id, candidate: event.candidate});
+            socket.emit("newCandidate",{consultId:id, candidate: event.candidate});
         }
     });
     this.peerConnection.addEventListener('connectionstatechange', (event) => {
@@ -90,7 +111,7 @@ try {
     this.peerConnection.addEventListener('icecandidate', (event) => {
         console.log("esto es el candidate evente en createasw", event)  //no entra el eventListener
         if (event.candidate) {
-            socket.emit("newCandidate",{id, candidate: event.candidate});
+            socket.emit("newCandidate",{consultId:id, candidate: event.candidate});
         }
     });
     this.peerConnection.addEventListener('connectionstatechange', (event) => {
@@ -121,6 +142,7 @@ try {
                 const remoteDesc = new RTCSessionDescription(description);
                 await this.peerConnection.setRemoteDescription(remoteDesc);
                 this.state= true;
+                return true;
             }
             throw new Error('Ya tienes una descripcion remota')
         } catch (error) {
@@ -132,11 +154,36 @@ try {
      setCandidateRemote(candidate){
             
      this.peerConnection.addIceCandidate(candidate).catch((e) => {
-        console.log(e.name)
+        console.log(e.message)
      })
        
     }
 
+    updateTracks(stream){
+        try {
+            if(!this.peerConnection) throw new Error('Error aún no se creado la instancia de RTCPeerConnection')
+            const listSenders = this.peerConnection.getSenders()
+            //clean of the tracks 
+            if(listSenders?.length){
+                listSenders.forEach(sender => this.peerConnection.removeTrack(sender))
+            }
+            
+            //
+            if(stream){
+                stream.getTracks().forEach(track =>  this.peerConnection.addTrack(track,stream));
+            } else {
+                getMediaUser.getUpdateStream().then(newStream => newStream.getTracks().
+                forEach(track => this.peerConnection.addTrack(track,newStream))).
+                catch(error => console.log(error.message))
+            }
+
+
+
+
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
     
 
 

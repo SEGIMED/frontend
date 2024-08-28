@@ -1,6 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from "react";
-import DeviceSelect from "./DeviceSelect";
+import { useEffect, useRef } from "react";
 import SelectDevices from "./SelectDevices";
 
 export default function GetComponent({typeConection,stream,updateStream}) {

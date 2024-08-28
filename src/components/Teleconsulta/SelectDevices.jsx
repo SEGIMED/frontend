@@ -1,15 +1,17 @@
 'use client'
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState,useContext } from "react";
 import getMediaUser from "./getMediaUser";
-import IconMicrophone from "../icons/IconMicrophone";
 import Camera from "./Camera";
 import Microphone from "./Microphone";
+import { socket } from "@/utils/socketio";
+import DataContext from "./DataContext";
 
 export default function SelectDevices({updateStream}){
        const [listDecives , setListDecives] = useState(null);
        const [MicrophoneSelected, setMicrophoneSelected] = useState(null);
        const [CameraSelected, setCameraSelected] = useState(null);
-    
+       const consultId = useContext(DataContext);
+
 
        const setPreferent = (type,id) => {
        
@@ -24,7 +26,9 @@ export default function SelectDevices({updateStream}){
 
        const handleChangeCamera = (id) => { setPreferent('video',id); setCameraSelected(id)}
        const handleChangeMicrophone = (id) => { setPreferent('audio',id);setMicrophoneSelected(id) }
-
+       const handleReady = () => {
+        socket._socket.emit('setState', {id:consultId,state:'Listo'});
+       }
        const filterCameraList = useMemo(()=>{
             if(listDecives){
                 const cameraList = listDecives.filter(device => device.kind === "videoinput");
@@ -62,12 +66,13 @@ export default function SelectDevices({updateStream}){
     },[])
 
 
-    return listDecives && (
+    return listDecives &&  (
 
              <div className="flex justify-end items-end gap-5">
                 <Microphone filterMicrophoneList={filterMicrophoneList} handleChangeMicrophone={handleChangeMicrophone}/>
                 <Camera filterCameraList={filterCameraList} handleChangeCamera={handleChangeCamera}/>
-                </div>
-   
+                <button className="p-6 border-black border-small" onClick={handleReady}>Listo</button>
+             </div>
+            
     )
 }
