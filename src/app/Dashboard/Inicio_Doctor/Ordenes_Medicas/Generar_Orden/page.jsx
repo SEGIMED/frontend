@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Cookies from "js-cookie";
 import { PathnameShow } from "@/components/pathname/path";
@@ -20,7 +20,6 @@ import NewModalDrugs from "@/components/modal/ModalDoctor/newModalDrugs";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconDelete from "@/components/icons/IconDelete";
 import IconMessage from "@/components/icons/IconMessage";
-// import html2pdf from "html2pdf.js";
 import PDFExportComponent from "@/components/pdf/pdfOrder";
 
 
@@ -38,6 +37,51 @@ export default function HomeDoc() {
     const [downloadActive, setDownloadActive] = useState(false); // Estado para controlar la descarga del PDF
     const [orderPdf, setOrderPdf] = useState('');
 
+
+    const generatePDF = async () => {
+        try {
+            // Validar que `window` esté definido
+            if (typeof window === 'undefined') {
+                throw new Error('El entorno no soporta la generación de PDFs.');
+            }
+
+            // Importar html2pdf dinámicamente
+            const html2pdf = (await import('html2pdf.js')).default;
+
+            const element = document.getElementById('pdf-content');
+
+            // Verificar si el elemento existe
+            if (!element) {
+                throw new Error('Elemento con el ID especificado no encontrado.');
+            }
+
+            const opt = {
+                margin: 0,
+                filename: 'reporte.pdf',
+                image: { type: 'png', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
+            };
+
+            const pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
+
+            const base64String = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64String = event.target.result
+                    resolve(base64String);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(pdfBlob);
+            });
+
+            return base64String;
+        } catch (error) {
+            console.error('Error generando el PDF:', error);
+            throw error; // Opcional: Lanza el error para manejarlo fuera de esta función si es necesario
+        }
+    };
 
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -104,6 +148,7 @@ export default function HomeDoc() {
     };
 
 
+
     // validacion de campos
     const validateFields = () => {
         let tempErrors = {};
@@ -131,31 +176,6 @@ export default function HomeDoc() {
         return Object.keys(tempErrors).length === 0;
     };
 
-    // const handleGeneratePDF = async () => {
-    //     const element = document.getElementById('pdf-content');
-    //     const opt = {
-    //         margin: 0,
-    //         filename: 'reporte.pdf',
-    //         image: { type: 'png', quality: 0.98 },
-    //         html2canvas: { scale: 2 },
-    //         jsPDF: { unit: 'in', orientation: 'portrait' },
-    //         pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
-    //     };
-
-    //     // Genera el PDF y devuelve un Blob
-    //     const pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
-
-    //     // Convertir el Blob a base64 usando FileReader
-    //     return new Promise((resolve, reject) => {
-    //         const reader = new FileReader();
-    //         reader.onload = (event) => {
-    //             const base64String = event.target.result // Obtener solo la cadena base64
-    //             resolve(base64String);
-    //         };
-    //         reader.onerror = reject;
-    //         reader.readAsDataURL(pdfBlob); // Leer el Blob como una URL de datos (base64)
-    //     });
-    // };
 
     const onSubmit = async (orden) => {
         if (!validateFields()) {
@@ -163,15 +183,16 @@ export default function HomeDoc() {
         }
 
         try {
-            // const base64 = await handleGeneratePDF();
+            const base64 = await generatePDF();
 
-            // const pdfBlob = await fetch(base64).then(res => res.blob());
 
-            // // Crear una URL temporal para el Blob
-            // const pdfUrl = URL.createObjectURL(pdfBlob);
+            const pdfBlob = await fetch(base64).then(res => res.blob());
 
-            // // Abrir el PDF en una nueva pestaña
-            // window.open(pdfUrl, '_blank');
+            // Crear una URL temporal para el Blob
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+
+            // Abrir el PDF en una nueva pestaña
+            window.open(pdfUrl, '_blank');
 
             const payload = { ...orden, bodyMedicam: drugsToSend, orderPdf: base64 };
             console.log(payload);
@@ -236,6 +257,7 @@ export default function HomeDoc() {
         setDrugsToSend(updatedDrugs);
         setErrors((prev) => ({ ...prev, [`${field}-${index}`]: "" })); // Resetear error al cambiar el valor
     };
+
 
 
 
@@ -314,6 +336,7 @@ export default function HomeDoc() {
                 <h1 className="font-bold ml-4 md:block hidden">Generar órden médica</h1>
                 <button
                     onClick={() => onSubmit(orden)}
+                    // onClick={() => generatePDF()}
                     className="bg-greenPrimary text-white md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out"
                 >
                     <IconMas />
