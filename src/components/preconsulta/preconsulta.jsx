@@ -343,7 +343,7 @@ export default function PreconsultaPte({params}) {
     //   : null,
     // updateVitalSigns: vitalSignFormat,
     // painRecordsToUpdate
-    // painRecordsToUpdate: [bodyPainFormat],
+    painRecordsToUpdate: [bodyPainFormat],
   };
 
   const handleSubmit = async (event) => {

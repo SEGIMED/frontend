@@ -27,6 +27,7 @@ import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
+import getMedicalEventDetail from "@/utils/dataFetching/fetching/getMedicalEventDetail";
 
 export default function ConsultaDoc ({id, preconsult}) {
 
@@ -36,7 +37,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const medicalEventId =Number(Cookies.get("medicalEventId")) ;
   const userId =Number(Cookies.get("patientId"));
   const scheduleId = Number(id); // id de agendamiento
-  let vitalSigns;
+
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
   
@@ -63,8 +64,8 @@ export default function ConsultaDoc ({id, preconsult}) {
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-    console.log(formData)
-  console.log(medicalEventExist, "esto es medical event")
+   
+ 
 
   const getValue = (formValue, preconsultValue) =>
     formValue !== undefined && formValue !== null ? formValue : preconsultValue;
@@ -298,7 +299,7 @@ export default function ConsultaDoc ({id, preconsult}) {
     ...restOfPreconsult,
   };
 
-  console.log("esto que mierda ", preconsultPhysical)
+  
   const onSubmit = (data) => {
     //Antecedentes
     setBackground({
@@ -359,7 +360,7 @@ export default function ConsultaDoc ({id, preconsult}) {
       setBackgroundPatch(backgroundPatch);
     }
     //preconsulta
-    vitalSigns = [
+    const vitalSigns = [
       {  measureType: 1, measure: Number(data["Temperatura"]) },
       {
         
@@ -521,8 +522,7 @@ export default function ConsultaDoc ({id, preconsult}) {
     // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
     setMedicalEventPatch(medicalEventPatch);
   };
-  console.log(diagnosticPatch);
-  console.log(medicalEventExist);
+  
 
   //GETS de la data que necesito T_T
   const fetchPatientDetail = async (userId) => {
@@ -534,40 +534,30 @@ export default function ConsultaDoc ({id, preconsult}) {
     }
   };
   
-
-  useEffect(() => {
- 
-   
-    const fetchData3 = async () => {
-      try {
-        // Tercera petición utilizando el scheduleId de params - esto pide el historial medico para saber siya hay diagnostico
-        const response3 = await ApiSegimed.get(
-          `/medical-event/get-medical-event-detail?scheduleId=${scheduleId}`,
-          { headers: { token: token } }
-        );
-        console.log("esto es medical event", response3.data);
-        setMedicalEventExist(response3.data);
-      } catch (error) {
-        console.log("No se ah echo un diagnostico anteriormente:", error);
-      }
-    };
-   
-    fetchPatientDetail(userId);
-    fetchData3();
-  }, []);
-  const handleBodyChange = (name, value) => {
-    dispatch(updateBodyPainLevel({ name, option: value }));
+  const fetchMedicalEvent = async (scheduleId) => {
+    try {
+      
+      const response = getMedicalEventDetail(scheduleId)
+      setMedicalEventExist(response.data);
+    } catch (error) {
+      console.log("No se ah echo un diagnostico anteriormente:", error);
+    }
   };
 
+  //-------------------------------------------------------------------------------
+  //Handles que necesito para patch de data 
+  const necesaryData= {
+    // ids
+   preconsultationId: Number(preconsult?.id),
+   patient: Number(userId),
+   appointmentSchedule: Number(scheduleId),
+   // status
+   status: "sent"
+    }
   const handleSaveVitalSigns = async ()=>{
     try {
       const data= {
-         // ids
-        preconsultationId: Number(preconsult?.id),
-        patient: Number(userId),
-        appointmentSchedule: Number(scheduleId),
-        // status
-        status: "sent",
+       ...necesaryData,
         updateVitalSigns:
       vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
     ...glicemiaPreconsult,
@@ -576,9 +566,37 @@ export default function ConsultaDoc ({id, preconsult}) {
       const response= await patchPreconsultation(data)
       
     } catch (error) {
-      console.error("No pudo cargarse la data en el servidor", error.message)
+      console.error("No pudo cargarse la data de signos vitales en el servidor", error.message)
     }
   }
+  const handleBodySave = async ()=>{
+    try {
+        const data= {
+         ...necesaryData,
+         painRecordsToUpdate: [bodyOBJFormat],
+        }
+        
+        const response= await patchPreconsultation(data)
+        
+        
+      } catch (error) {
+        console.error("No pudo cargarse la data en el servidor", error.message)
+      }
+    
+
+  }
+
+  useEffect(() => {
+ 
+    fetchPatientDetail(userId);
+    fetchMedicalEvent(scheduleId);
+  }, []);
+
+  const handleBodyChange = (name, value) => {
+    dispatch(updateBodyPainLevel({ name, option: value }));
+  };
+
+  
 
   const handleSave = async () => {
     setLoading(true);
@@ -884,6 +902,16 @@ export default function ConsultaDoc ({id, preconsult}) {
               defaultOpen={handleNav === "exploracion fisica" ? true : false}
               valuePreconsultation={preconsult}
             />
+            <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={handleBodySave}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
+
             <InputExam
               title={"Examen fisico"}
               defaultOpen={handleNav === "examen fisico" ? true : false}

@@ -15,7 +15,7 @@ export default function SignosVitalesInfo({
   preconsult,
 }) {
   const role=Cookies.get("b")
-  
+ 
   const defaultVitalSigns = [
     //antropometricDetails que esta en vital sings
     { measureType: "Estatura",mesureExample: "180 Cm", measureUnit: "Cm", measure: "" },
@@ -148,7 +148,7 @@ export default function SignosVitalesInfo({
               <span className="ml-2">{vital.mesureExample}</span>
               </div>
             </label>
-            <dvi className="flex w-full ">
+            <div className="flex w-full ">
           
             <input
               type="number"
@@ -164,7 +164,7 @@ export default function SignosVitalesInfo({
                 size={"sm"}
                 onPress={handleCalculateIMC}/>
              )}
-            </dvi>
+            </div>
             
            
            
