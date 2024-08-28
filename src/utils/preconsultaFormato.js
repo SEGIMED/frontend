@@ -439,3 +439,21 @@
       },
     }
   }
+
+  export const BodySection= {
+    bodySection: {
+      isTherePain: null,
+      painDuration: null,
+      painScale: 1,
+      painType: null,
+      painAreas: null,
+      painFrequency: null,
+      isTakingAnalgesic: null,
+      doesAnalgesicWorks: null,
+      isWorstPainEver: null,
+      painOwner: null,
+      scheduling: null,
+      medicalEvent: null,
+    },
+    
+  }

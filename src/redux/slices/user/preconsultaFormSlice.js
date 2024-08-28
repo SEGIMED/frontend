@@ -96,7 +96,7 @@ const preconsultaFormSlice = createSlice({
       state.formData.vitalSigns[vitalSign].options[key] = value;
     },
     setFormData(state, action) {
-      state.formData = action.payload;
+      state.formData= action.payload;
     },
     resetForm(state) {
       state.formData = initialState.formData;
