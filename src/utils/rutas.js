@@ -6,6 +6,7 @@ const Admin = "/Dashboard/Inicio_Admin";
 const PacienteDash2 = "/Dashboard/Inicio_Paciente2";
 const Entries = "/Dashboard/Inicio_Entries";
 
+const Educacion = "/Educacion";
 const Alarm = "/Alarmas";
 const Mi_Agenda = "/Mi_Agenda";
 const Consultas = "/Consultas";
@@ -27,6 +28,7 @@ const Anamnesis = "/Anamnesis";
 const Evaluacion = "/Evaluacion";
 const Evoluciones = "/Evoluciones";
 const Datos = "/Datos";
+const Citas = "/Citas";
 const Teleconsulta = "/Teleconsulta";
 const SignosVitales = "/Signos_Vitales";
 const ExamenFisico = "/Examen_Fisico";
@@ -42,10 +44,13 @@ const DataEntries = "/Data_Entries";
 const Errores = "/Errores";
 const Estudios = "/Estudios";
 const Importaciones = "/Importaciones";
+const Solicitudes = "/Solicitudes";
 const Agenda_General = "/Agenda_General";
 const rutas = {
+  Solicitudes,
   Estudios,
   Importaciones,
+  Educacion,
   Agenda_General,
   Errores,
   DataEntries,
@@ -86,6 +91,7 @@ const rutas = {
   Pasadas,
   CrearMensaje,
   Entries,
+  Citas,
 };
 
 export default rutas;

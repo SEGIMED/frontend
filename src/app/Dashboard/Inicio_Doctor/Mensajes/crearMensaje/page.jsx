@@ -46,7 +46,6 @@ export default function DoctoresPte() {
   const token = Cookies.get("a");
   const lastSegmentTextToShow = PathnameShow();
 
-
   useEffect(() => {
     dispatch(setSearchBar(true));
     return () => {
@@ -83,7 +82,7 @@ export default function DoctoresPte() {
         { headers: { token: token } }
       );
       if (response.data) {
-        console.log(response.data, "medicos")
+        console.log(response.data, "medicos");
         setMedicos(response.data.user);
         setPagination((prev) => ({
           ...prev,
@@ -172,7 +171,6 @@ export default function DoctoresPte() {
   }
 
   const crearChat = (id) => {
-
     socket.emit("createChat", { id });
   };
 
@@ -228,15 +226,16 @@ export default function DoctoresPte() {
               <Elboton
                 nombre={"Médicos"}
                 size={"md"}
-                icon={<IconMedChat />}
+                icon={<IconMedChat className="w-6 h-6" />}
                 onPress={() => {
                   setFlag(true);
                   handlePageChange(1);
                 }}
-                className={"bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA] mr-2"}
+                className={
+                  "bg-white text-[#487FFA] font-Roboto font-bold rounded-lg border-solid border-2 border-[#487FFA] mr-2"
+                }
               />
             )}
-
           </div>
         </div>
         <Elboton
@@ -247,40 +246,38 @@ export default function DoctoresPte() {
         />
       </div>
       <div className="items-start w-full md:overflow-y-auto">
-        {flag ? (
-          medicos.map((medico) => (
-            <PatientCard
-              key={medico.id}
-              paciente={medico}
-              flag={true}
-              button={
-                <Elboton
-                  href={`${rutas.Doctor}${rutas.Mensajes}/${medico.id}`}
-                  nombre={"Enviar Mensaje"}
-                  icon={<IconMensajeBoton />}
-                  size={"sm"}
-                  onPress={() => crearChat(medico.id)}
-                />
-              }
-            />
-          ))
-        ) : (
-          sortedPatients.map((paciente) => (
-            <PatientCard
-              key={paciente.id}
-              paciente={paciente}
-              button={
-                <Elboton
-                  href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}
-                  nombre={"Enviar Mensaje"}
-                  icon={<IconMensajeBoton />}
-                  size={"sm"}
-                  onPress={() => crearChat(paciente.id)}
-                />
-              }
-            />
-          ))
-        )}
+        {flag
+          ? medicos.map((medico) => (
+              <PatientCard
+                key={medico.id}
+                paciente={medico}
+                flag={true}
+                button={
+                  <Elboton
+                    href={`${rutas.Doctor}${rutas.Mensajes}/${medico.id}`}
+                    nombre={"Enviar Mensaje"}
+                    icon={<IconMensajeBoton />}
+                    size={"sm"}
+                    onPress={() => crearChat(medico.id)}
+                  />
+                }
+              />
+            ))
+          : sortedPatients.map((paciente) => (
+              <PatientCard
+                key={paciente.id}
+                paciente={paciente}
+                button={
+                  <Elboton
+                    href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}
+                    nombre={"Enviar Mensaje"}
+                    icon={<IconMensajeBoton />}
+                    size={"sm"}
+                    onPress={() => crearChat(paciente.id)}
+                  />
+                }
+              />
+            ))}
       </div>
       <div className="flex justify-center items-center gap-5 bg-[#FAFAFC] font-bold h-[15%]">
         <button
@@ -303,4 +300,3 @@ export default function DoctoresPte() {
     </div>
   );
 }
-
