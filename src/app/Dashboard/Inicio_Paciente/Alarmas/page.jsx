@@ -40,8 +40,11 @@ export default function AlarmPte() {
 
   const getMyAlarms = async () => {
     const headers = { headers: { token: token } };
-    const response = await ApiSegimed.get(`/alarms-by-patient/${myID}`, headers);
-    console.log(response.data.alarms)
+    const response = await ApiSegimed.get(
+      `/alarms-by-patient/${myID}`,
+      headers
+    );
+    console.log(response.data.alarms);
     setAlarms(response.data.alarms);
   };
 
@@ -56,8 +59,6 @@ export default function AlarmPte() {
     (alarm) => alarm.patient === Number(myId) && alarm.solved === false
     // (alarm) => alarm.patient === Number(myId)
   );
-
-
 
   // const unsolvedAlarms = misAlarmas.filter((a, b) => {
   //   if (sortResolvedFirst) {
@@ -116,7 +117,7 @@ export default function AlarmPte() {
         onClose={closeModal}
         Modals={Modals}
         title={"Importante"}
-        ruta={`${rutas.PacienteDash}${rutas.Alarm}/${myID}`}
+        ruta={`${rutas.PacienteDash}${rutas.Alarm}/Solicitar`}
         button1={"hidden"}
         button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
