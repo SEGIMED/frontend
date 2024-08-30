@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Consulta from "@/components/consulta/dataconsulta";
 import InputConsulta from "@/components/consulta/inputconsulta";
-import InputFile from "@/components/consulta/inputfile";
+
 import SignosVitalesInfo from "@/components/consulta/signosvitales";
 import InputDiagnostico from "@/components/consulta/inputDiagnostico";
 import InputExam from "@/components/consulta/inputExam";
-import Component from "@/components/consulta/inputCuerpo";
+
 import { useForm, FormProvider } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Elboton from "@/components/Buttons/Elboton";
@@ -17,7 +17,7 @@ import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import IdDrug from "@/utils/IdDrug";
+import PreconsultaQuestion from "../preconsulta/PreconsultaQuestion";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
 import InputFilePreconsultation from "@/components/preconsulta/estudios";
@@ -25,7 +25,6 @@ import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
-import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 import getMedicalEventDetail from "@/utils/dataFetching/fetching/getMedicalEventDetail";
 
@@ -37,15 +36,22 @@ export default function ConsultaDoc ({id, preconsult}) {
   const medicalEventId =Number(Cookies.get("medicalEventId")) ;
   const userId =Number(Cookies.get("patientId"));
   const scheduleId = Number(id); // id de agendamiento
+  const [medicalEventExist, setMedicalEventExist] = useState();
+  const [handleNav, setHandleNav] = useState("Preconsulta");
+  const [cardiovascularRisk, setCardiovascularRisk] = useState();
+  const [htpRisk, setHTPRisk] = useState();
+  const [hpGroup, setHpGroup] = useState();
+  const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
+  const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
+
 
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
   
   const [physicalExamination, setPhysicalExamination] = useState();
   const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
-  const [cardiovascularRisk, setCardiovascularRisk] = useState();
-  const [surgicalRisk, setSurgicalRisk] = useState();
-  const [hpGroup, setHpGroup] = useState();
+
+
   const [background, setBackground] = useState();
   const [backgroundPatch, setBackgroundPatch] = useState();
   const [diagnostic, setDiagnostic] = useState();
@@ -54,18 +60,35 @@ export default function ConsultaDoc ({id, preconsult}) {
   const [selectedRisk2, setSelectedRisk2] = useState();
   const [selectedGroup, setSelectedGroup] = useState();
   const [heartFailureRisk, setHeartFailureRisk] = useState();
-  const [medicalEventExist, setMedicalEventExist] = useState();
+
   const [medicalEventPatch, setMedicalEventPatch] = useState();
   const [tests, setTests] = useState({});
-  const [handleNav, setHandleNav] = useState("");
-  const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
-  const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
+  
+
   const [restOfPreconsult, setRestOfPreconsult] = useState([]);
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
    
- 
+
+  //FUNCIONES PARA PRECONSULTA
+  const handleQuestionActive = (question, label, active) => {
+    dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
+  };
+
+  const handleSubquestionOption = (question, subquestion, selectedOption) => {
+    dispatch(
+      subquestionSelectedOption({ question, subquestion, selectedOption })
+    ); // guardamos la opción seleccionada de la subpregunta
+  };
+
+  const handleQuestionOption = (question, selectedOption) => {
+    dispatch(questionSelectedOption({ question, selectedOption })); // guardamos la opción seleccionada
+  };
+
+  const handleDescription = (question, description) => {
+    dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
+  };
 
   const getValue = (formValue, preconsultValue) =>
     formValue !== undefined && formValue !== null ? formValue : preconsultValue;
@@ -139,9 +162,9 @@ export default function ConsultaDoc ({id, preconsult}) {
     
   }, [selectedRisk]);
   useEffect(() => {
-    setSurgicalRisk({
+    setHTPRisk({
       patientId: Number(userId),
-      surgicalRiskId: selectedRisk2,
+      pulmonaryHypertensionRiskId: selectedRisk2,
     });
   }, [selectedRisk2]);
   useEffect(() => {
@@ -537,7 +560,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const fetchMedicalEvent = async (scheduleId) => {
     try {
       
-      const response = getMedicalEventDetail(scheduleId)
+      const response =await  getMedicalEventDetail(scheduleId)
       setMedicalEventExist(response.data);
     } catch (error) {
       console.log("No se ah echo un diagnostico anteriormente:", error);
@@ -591,7 +614,7 @@ export default function ConsultaDoc ({id, preconsult}) {
     fetchPatientDetail(userId);
     fetchMedicalEvent(scheduleId);
   }, []);
-
+  console.log(medicalEventExist)
   const handleBodyChange = (name, value) => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
@@ -646,20 +669,12 @@ export default function ConsultaDoc ({id, preconsult}) {
 
     // Riesgo quirúrgico - funciona patch y post
     let response3;
-    if (
-      patient?.patientSurgicalRisks === null &&
-      surgicalRisk.surgicalRiskId > 0
-    ) {
-      response3 = await ApiSegimed.post(
-        `/patient-new-surgical-risk`,
-        surgicalRisk,
-        { headers: { token: token } }
-      );
-    } else if (surgicalRisk.surgicalRiskId > 0) {
+    if(
+      htpRisk.pulmonaryHypertensionRiskId > 0
+    )  {
       response3 = await ApiSegimed.patch(
         `/patient-update-surgical-risk`,
-        surgicalRisk,
-        { headers: { token: token } }
+        htpRisk
       );
     }
     if (response3 !== undefined) {
@@ -821,6 +836,8 @@ export default function ConsultaDoc ({id, preconsult}) {
     }
   };
 
+
+  //SELECT DE CONSULTA
   const handleClic = (title) => {
     if (handleNav === title) {
       setHandleNav("");
@@ -833,54 +850,88 @@ export default function ConsultaDoc ({id, preconsult}) {
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
         <SubNavbarConsulta handleClic={handleClic} />
+
+        
+        
         {loading === false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
-            <Consulta
-              title={"Datos del paciente"}
-              paciente={patient}
-              defaultOpen={handleNav === "datos del paciente" ? true : false}
-            />
-            <InputConsulta
-              title={"Antecedentes"}
-              risk={["Riesgo cardiovascular"]}
-              risk2={["Riesgo quirúrgico"]}
-              riskGroup={["Grupo HTP"]}
-              groupHTP={["I", "II", "III", "IV", "V"]}
-              options={["Bajo", "Moderado", "Alto", "Muy alto"]}
-              options2={["Bajo", "Moderado", "Alto"]}
-              subtitle={[
-                "Antecedentes quirúrgicos",
-                "Antecedentes patologicos",
-                "Antecedentes no patologicos",
-                "Antecedentes familiares",
-                "Antecedentes de infancia",
-                "Medicación actual",
-                "Alergias",
-                "Vacunas",
-              ]}
-              defaultOpen={handleNav === "antecedentes" ? true : false}
-              paciente={patient}
-              onRiskChange={setSelectedRisk}
-              onRiskChange2={setSelectedRisk2}
-              onGroupChange={setSelectedGroup}
-            />
-            <InputConsulta
-              title={"Anamnesis"}
-              subtitle={[
-                "Motivo de consulta",
-                "Evolucion de la enfermedad",
-                "Sintomas importantes",
-              ]}
-              preconsult={preconsult}
-              diagnostico={medicalEventExist}
-              defaultOpen={handleNav === "anamnesis" ? true : false}
-            />
 
-            {/* ACA ESTA SIGNOS VITALES , ANTROPOMETRICOS Y GLICEMIA  */}
-            <SignosVitalesInfo
+          {/* PRECONSULTA */}
+
+           {(handleNav === "Preconsulta" || "") && formData && formData.questions && (
+            Object.keys(formData.questions).map((question, index) => (
+            <PreconsultaQuestion
+            key={index}
+            question={question}
+            section={formData.questions[question]}
+            sectionIndex={index}
+            onQuestionActive={handleQuestionActive}
+            onSubquestionChange={handleSubquestionOption}
+            onQuestionChange={handleQuestionOption}
+            onDescriptionChange={handleDescription}
+            preconsult={preconsult}
+            />
+             ))
+            )}
+           
+           {/* ANAMNESIS Y ANTECEDENTES */}
+
+            {handleNav ==="Anamnesis" &&
+            <div>
+            <Consulta
+            title={"Datos del paciente"}
+            paciente={patient}
+            defaultOpen
+            />
+            <InputConsulta
+            title={"Anamnesis"}
+            subtitle={[
+              "Motivo de consulta",
+              "Evolucion de la enfermedad",
+              "Sintomas importantes",
+            ]}
+            preconsult={preconsult}
+            diagnostico={medicalEventExist}
+            defaultOpen
+            />
+            <InputConsulta
+            title={"Antecedentes"}
+            risk={["Riesgo cardiovascular"]}
+            risk2={["Riesgo Hipertensión Pulmonar"]}
+            riskGroup={["Grupo HTP"]}
+            groupHTP={["I", "II", "III", "IV", "V"]}
+            options={["Bajo", "Moderado", "Alto", "Muy alto"]}
+            options2={["Bajo", "Moderado", "Alto"]}
+            subtitle={[
+              "Antecedentes quirúrgicos",
+              "Antecedentes patologicos",
+              "Antecedentes no patologicos",
+              "Antecedentes familiares",
+              "Antecedentes de infancia",
+              "Medicación actual",
+              "Alergias",
+              "Vacunas",
+            ]}
+            defaultOpen
+            paciente={patient}
+            onRiskChange={setSelectedRisk}
+            onRiskChange2={setSelectedRisk2}
+            onGroupChange={setSelectedGroup}
+            />
+            </div> 
+            }
+            
+            
+
+            {/* ACA ESTA SIGNOS VITALES , ANTROPOMETRICOS Y GLICEMIA TODO LO DE EXAMEN FISICO  */}
+
+            {handleNav === "ExamenFisico" &&
+            <dvi>
+               <SignosVitalesInfo
               title={"Signos vitales"}
               preconsult={preconsult}
               paciente={patient}
+              defaultOpen
              
             />
             
@@ -899,7 +950,7 @@ export default function ConsultaDoc ({id, preconsult}) {
               title={"Exploracion fisica"}
               onBodyChange={handleBodyChange}
               bodySection={formData?.bodySection}
-              defaultOpen={handleNav === "exploracion fisica" ? true : false}
+              defaultOpen
               valuePreconsultation={preconsult}
             />
             <div className="flex justify-center p-6 bg-[#fafafc]">
@@ -914,25 +965,21 @@ export default function ConsultaDoc ({id, preconsult}) {
 
             <InputExam
               title={"Examen fisico"}
-              defaultOpen={handleNav === "examen fisico" ? true : false}
+              defaultOpen
               diagnostico={medicalEventExist}
             />
-            {/*<InputConsulta title={"Comentarios"} subtitle={["Anotaciones"]} />*/}
-            {/*<InputFile title={"Estudios"} Links={preconsult} />*/}
-            <InputFilePreconsultation
-              title={"Estudios"}
-              onUploadFile={handleUploadTestFile}
-              onDescriptionChange={handleTestDescription}
-              onTestActive={handleTestActive}
-              onTestSelectedOption={handleTestSelectedOption}
-              tests={tests}
-              defaultOpen={handleNav === "estudios" ? true : false}
-            />
-            <InputConsulta
+              
+              </dvi>}
+           
+
+              {/*  DIAGNOSTICO Y TRATAMIENTO CON EVOLUCION */}
+            {handleNav === "DiagnosticoyTratamiento" &&
+            <div>
+              <InputConsulta
               title={"Evolucion"}
               diagnostico={medicalEventExist}
               subtitle={["Anotaciones sobre la consulta"]}
-              defaultOpen={handleNav === "evolucion" ? true : false}
+              defaultOpen
             />
             <InputDiagnostico
               diagnostico={medicalEventExist}
@@ -942,12 +989,30 @@ export default function ConsultaDoc ({id, preconsult}) {
                 "Tratamientos no farmacológicos",
                 "Pauta de alarma",
               ]}
-              defaultOpen={
-                handleNav === "diagnostico y tratamientos" ? true : false
-              }
+              defaultOpen
               subtitle2={["Diagnostico", "Procedimientos"]}
               subtitle3={"Medicamentos"}
             />
+              </div>}
+          
+            {/* ESTUDIOS */}
+            {handleNav === "Estudios" &&
+            <InputFilePreconsultation
+            title={"Estudios"}
+            onUploadFile={handleUploadTestFile}
+            onDescriptionChange={handleTestDescription}
+            onTestActive={handleTestActive}
+            onTestSelectedOption={handleTestSelectedOption}
+            tests={tests}
+            defaultOpen
+          />
+            }
+            
+
+
+
+
+            
           </form>
         ) : (
           <div className="flex items-center justify-center h-20">

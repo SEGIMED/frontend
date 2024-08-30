@@ -16,6 +16,12 @@ export default function PrePte({ params }) {
     try {
       const response = await getPreConsultation(scheduleId);
       setPreconsult(response.data);
+    
+      if (response.data) {
+        const formatPreconsult = draftFormat(response.data);
+       
+        dispatch(setFormData(formatPreconsult));
+      } 
     } catch (error) {
       console.error("Este agendamiento no tiene preconsulta", error);
     }
@@ -27,12 +33,7 @@ export default function PrePte({ params }) {
   }, []);
 
   
-  useEffect(() => {
-    if (preconsult) {
-      const formatPreconsult = draftFormat(preconsult);
-      dispatch(setFormData(formatPreconsult));
-    } 
-  }, []);
+ 
 
   return (
     <>

@@ -204,86 +204,6 @@ export default function PreconsultaPte({params, preconsult}) {
 
 
 
-  // useEffect(() => {
-  //   // almacenamos cada cambio en un borrador en el local storage
-    
-  //   if (draftEnabled && formData) {
-  //     const draftData = { ...formData, tests, scheduleId };
-      
-  //     localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify(draftData))
-  //   }
-  // }, [formData, tests]);
-
-
-  //aca tengo un problema !!! siempre existe el fucking borrador y no entra en getPreconsultationDraft
-  //si yo saliera y cambiara de ordenador , pierdo todo mi localstorage pero nunca me hace el get, como lo soluciono?
-  // useEffect(() => {
-    
-  //   // Verificamos si existe un borrador de esta preconsulta en el local storage
-  //   const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
-  //   if (draft) {
-  //     console.log(draft);
-  //     setEnableButton(true);
-  //     setAvailable(true);
-  //     setDraftEnabled(true);
-  //     dispatch(updateAllFormData({ draft }));
-  //     setIsLoading(false);
-  //   }
-   
-  //   setIsLoading(false);
-  // }, [scheduleId]);
-
-  // const getPreConsultationDraft = async () => {
-  //   try {
-  //     //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
-  //     const res =await getPreConsultation(scheduleId)
-      
-      
-      
-  //     // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
-  //     if (res) {
-  //       setEnableButton(true);
-  //       setAvailable(true);
-  //       setDraftEnabled(true);
-  //       setIsLoading(false);
-  //       const formatResponse = draftFormat(res.data); //aca la formatea en version barrador
-        
-  //       dispatch(updateAllFormData({ draft: formatResponse }));
-  //       // console.log({ ...formatResponse, tests, scheduleId });
-  //       // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
-  //       return;
-  //     }
-  //     else {
-  //       setEnableButton(false);
-  //       setAvailable(false);
-  //       setDraftEnabled(true);
-  //       setIsLoading(false);
-  //       console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
-  //       return;
-  //     }
-      
-  //   } catch (error) {
-  //     console.error("Error fetching data", error);
-  //     setEnableButton(false);
-  //     setAvailable(false);
-  //     setDraftEnabled(true);
-  //     setIsLoading(false);
-  //     console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
-  //   }
-  // };
-  // const saveDraftToDatabase = async () => {
-    
-  //   try {
-  //     const cleanBodyForm = Object.fromEntries(
-  //       Object.entries(bodyForm).filter(([key, value]) => value !== null && value !== undefined)
-  //     );
-  //     console.log(cleanBodyForm,"antes del patch automatico")
-  //     const response = await patchPreconsultation(cleanBodyForm)
-  //     console.log(response.data, "el patch automatico")
-  //   } catch (error) {
-  //     console.error
-  //   }
-  // }
 
 
 
@@ -608,7 +528,7 @@ export default function PreconsultaPte({params, preconsult}) {
             </p>
           </div>
         </div>
-        {formData?.questions && Object.keys(formData?.questions).map((question, index) => (
+        {formData && formData?.questions && Object.keys(formData?.questions).map((question, index) => (
           <PreconsultaQuestion
             key={index}
             question={question}
@@ -622,13 +542,7 @@ export default function PreconsultaPte({params, preconsult}) {
           />
         ))}
         <form onChange={methods.handleSubmit(onSubmit)}>
-        {/* <SignosVitales
-          title={"Signos vitales"}
-          vitalSigns={formData?.vitalSigns}
-          onVitalSignChange={handleVitalSign}
-          defaultOpen
-        /> */}
-       
+     
        <SignosVitalesInfo
               title={"Signos vitales"}
               preconsult={preconsult}
@@ -643,6 +557,8 @@ export default function PreconsultaPte({params, preconsult}) {
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
+
+
             <InputCuerpoPre
               title={"Exploracion fisica"}
               onBodyChange={handleBodyChange}
@@ -650,6 +566,8 @@ export default function PreconsultaPte({params, preconsult}) {
               defaultOpen
               valuePreconsultation={preconsult}
             />
+
+            
         <InputFilePreconsultation
           title={"Estudios"}
           onUploadFile={handleUploadTestFile}

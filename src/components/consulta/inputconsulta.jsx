@@ -33,7 +33,7 @@ export default function InputConsulta({
   const [valuesBackground, setValuesBackground] = useState([]);
   const [valueEvolution, setValueEvolution] = useState([]);
   const [riskCardiovascularButton, setRiskCardiovascularButton] = useState();
-  const [riskSurgicalButton, setRiskSurgicalButton] = useState();
+  const [riskHTPButton, setRiskHTPButton] = useState();
   const [
     groupPatientPulmonaryHypertensionRisksButton,
     setGroupPatientPulmonaryHypertensionButton,
@@ -43,8 +43,8 @@ export default function InputConsulta({
     if (paciente?.patientCardiovascularRisks?.risk) {
       setRiskCardiovascularButton(paciente?.patientCardiovascularRisks?.risk);
     }
-    if (paciente?.patientSurgicalRisks?.risk) {
-      setRiskSurgicalButton(paciente?.patientSurgicalRisks?.risk);
+    if (paciente?.patientPulmonaryHypertensionRisks?.risk) {
+      setRiskHTPButton(paciente?.patientPulmonaryHypertensionRisks?.risk);
     }
     /*if (paciente?.patientPulmonaryHypertensionGroups?.group) { //esto es la logica de elegir varios botones del grupo a la vez
       const group = paciente.patientPulmonaryHypertensionGroups.group;
@@ -96,7 +96,9 @@ export default function InputConsulta({
     setGroupPatientPulmonaryHypertensionButton(updatedSelection);
     if (onGroupChange) onGroupChange(updatedSelection.map(RomanToInt));
   };
+  
 */
+
   const handleGroupChange = (sub) => {
     setGroupPatientPulmonaryHypertensionButton(sub);
     if (onGroupChange) onGroupChange(RomanToInt(sub));
@@ -185,12 +187,12 @@ export default function InputConsulta({
                 <button
                   key={optionIndex}
                   className={`p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2  ${
-                    riskSurgicalButton === option
-                      ? riskSurgicalButton === "Bajo"
+                    riskHTPButton === option
+                      ? riskHTPButton === "Bajo"
                         ? "bg-greenPrimary text-white"
-                        : riskSurgicalButton === "Moderado"
+                        : riskHTPButton === "Moderado"
                         ? "bg-[#f5e400] text-white"
-                        : riskSurgicalButton === "Alto"
+                        : riskHTPButton === "Alto"
                         ? "bg-[#e73f3f] text-white"
                         : "bg-white "
                       : "bg-white"
@@ -201,7 +203,7 @@ export default function InputConsulta({
                   }}>
                   <IconPreConsulta
                     color={
-                      riskSurgicalButton === option
+                      riskHTPButton === option
                         ? "white"
                         : option === "Bajo"
                         ? "#70c247"

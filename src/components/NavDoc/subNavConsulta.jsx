@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import rutas from "@/utils/rutas";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconSubNavbar from "../icons/IconSubNavbar";
 import IconRegresar from "../icons/iconRegresar";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
-import { useRouter } from "next/navigation";
+
 
 import {
   Dropdown,
@@ -22,20 +22,13 @@ import {
 
 export default function SubNavbarConsulta({ id, handleClic }) {
   const [openDetails, setOpenDetails] = useState(false);
-  const pathname = usePathname();
-  const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
-
-  const getLinkClass = (routeLastSegment) =>
-    `/${lastSegment}` === routeLastSegment
-      ? "bg-white" // Estilo para la pestaña activa
-      : "cursor-pointer ";
-
-  const router = useRouter();
+  
+ 
 
   return (
     <div className="border-b border-b-[#cecece] bg-[#fafafc] flex  flex-row-reverse md:flex-row justify-around items-center md:pr-6">
       <Navbar
-        className="flex justify-start items-center w-[86%] md:w-full bg-[#fafafc]"
+        className="flex justify-start items-center w-[86%] md:w-full bg-[#fafafc] cursor-pointer"
         classNames={{
           item: [
             "flex",
@@ -52,45 +45,56 @@ export default function SubNavbarConsulta({ id, handleClic }) {
           ],
           wrapper: ["px-0"],
         }}>
-        <NavbarContent className="gap-0 px-0 overflow-x-auto">
+        <NavbarContent className="gap-0 px-0 overflow-x-auto md:flex hidden ">
           <NavbarItem
-            className={getLinkClass(rutas.Datos)}
+           
             onClick={() =>
-              handleClic("datos del paciente")
+              handleClic("Preconsulta")
             }>
-            <div className="flex items-center gap-2" aria-current="page">
-              <IconClinicalHistory /> Datos del Paciente
+            <div className="flex items-center gap-2 " aria-current="page">
+              <IconClinicalHistory /> Preconsulta
             </div>
           </NavbarItem>
           <NavbarItem
-            className={getLinkClass(rutas.Consultas)}
+            
             onClick={() =>
-              handleClic("antecedentes")
+              handleClic("Anamnesis")
             }>
             <div className="flex items-center gap-2" aria-current="page">
-              <IconSubNavbar /> Antecedentes
+              <IconSubNavbar /> Anamnesis
             </div>
           </NavbarItem>
           
           <NavbarItem
-            className={getLinkClass(rutas.Anamnesis)}
+         
             onClick={() =>
-              handleClic("anamnesis")
+              handleClic("ExamenFisico")
             }>
             <div className="flex items-center gap-2">
-              <IconSubNavbar /> Anamnesis
+              <IconSubNavbar /> Examen Fisico
             </div>
           </NavbarItem>
           <NavbarItem
-            className={getLinkClass(rutas.Anamnesis)}
+            
             onClick={() =>
-              handleClic("signos vitales")
+              handleClic("DiagnosticoyTratamiento")
             }>
             <div className="flex items-center gap-2">
-              <IconSubNavbar /> Signos vitales
+              <IconSubNavbar /> Diagnostico y Tratamiento
             </div>
           </NavbarItem>
-          <NavbarItem className="flex items-center gap-2">
+          <NavbarItem
+            
+            onClick={() =>
+              handleClic("Estudios")
+            }>
+            <div className="flex items-center gap-2">
+              <IconSubNavbar /> Estudios
+            </div>
+          </NavbarItem>
+          </NavbarContent>
+          <NavbarContent className="gap-0 px-0 overflow-x-auto md:hidden flex">
+          <NavbarItem className="flex items-center gap-2 cursor-pointer md:hidden ">
             <Dropdown>
               <DropdownTrigger>
                 <Button
@@ -112,59 +116,59 @@ export default function SubNavbarConsulta({ id, handleClic }) {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
               <DropdownItem
-                  className={getLinkClass(rutas.ExamenFisico)}
+                
                   key="new">
                   <div
                     className="w-full"
                     onClick={() =>
-                      handleClic("exploracion fisica")
+                      handleClic("Preconsulta")
                     }
                     >
-                    <p>Exploración fisica</p>
+                    <p>Preconsulta</p>
                   </div>
                 </DropdownItem>
                 <DropdownItem
-                  className={getLinkClass(rutas.ExamenFisico)}
-                  key="new">
+                 
+                  key="new1">
                   <div
                     className="w-full"
                     onClick={() =>
-                      handleClic("examen fisico")
+                      handleClic("Anamnesis")
                     }>
                     
+                    <p>Anamnesis</p>
+                  </div>
+                </DropdownItem>
+                <DropdownItem
+                
+                  key="copy1">
+                  <div
+                    onClick={() =>
+                      handleClic("ExamenFisico")
+                    }>
                     <p>Examen Fisico</p>
                   </div>
                 </DropdownItem>
                 <DropdownItem
-                  className={getLinkClass(rutas.SignosVitales)}
-                  key="copy">
+                 
+                  key="copy2">
                   <div
                     onClick={() =>
-                      handleClic("estudios")
-                    }>
-                    <p>Estudios</p>
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-                  className={getLinkClass(rutas.SignosVitales)}
-                  key="copy">
-                  <div
-                    onClick={() =>
-                      handleClic("evolucion")
+                      handleClic("DiagnosticoyTratamiento")
                     }
                     className="w-full">
-                    <p>Evolucion</p>
+                    <p>Diagnostico y Tratamiento</p>
                   </div>
                 </DropdownItem>
                 <DropdownItem
-                  className={getLinkClass(rutas.Diagnostico)}
-                  key="edit">
+              
+                  key="edit1">
                   <div
                     className="w-full"
                     onClick={() =>
-                      handleClic("diagnostico y tratamientos")
+                      handleClic("Estudios")
                     }>
-                    <p>Diagnosticos y tratamientos</p>
+                    <p>Estudios</p>
                   </div>
                 </DropdownItem>
               </DropdownMenu>

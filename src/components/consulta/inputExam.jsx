@@ -11,7 +11,7 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
 export default function InputExam({ title, subtitle , defaultOpen = false, diagnostico }) {
-
+    
     const { register } = useFormContext()
     const [isOpen, setIsOpen] = useState(defaultOpen);
     const [subsistemas, setSubsistemas] = useState(false); // Estado para manejar si hay dolor
@@ -29,8 +29,8 @@ export default function InputExam({ title, subtitle , defaultOpen = false, diagn
     };
 
     useEffect(() => {
-        if (diagnostico?.patientPhysicalExaminations[0]?.physicalSubsystem) {
-            setSelectedOption(diagnostico?.patientPhysicalExaminations[0]?.physicalSubsystem);
+        if (diagnostico?.physicalExaminations[0]?.physicalSubsystem) {
+            setSelectedOption(diagnostico?.physicalExaminations[0]?.physicalSubsystem);
             setSubsistemas(true);
         }
     }, [diagnostico]);
@@ -63,7 +63,7 @@ export default function InputExam({ title, subtitle , defaultOpen = false, diagn
                                         colorBackground={"#487FFA"} 
                                         colorText={"white"}
                                         handleOptionChange={handleOptionChange}
-                                        selectedOptions={diagnostico?.patientPhysicalExaminations[0]?.physicalSubsystem || null}
+                                        selectedOptions={diagnostico?.physicalExaminations[0]?.physicalSubsystem || null}
                                         />
                                 </div>
                                 
@@ -79,7 +79,7 @@ export default function InputExam({ title, subtitle , defaultOpen = false, diagn
                             className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-6 py-3 outline-[#a8a8a8]"
                             placeholder="Describa toda la información posible"  
                             {...register("inputSubsistema")} 
-                            defaultValue={diagnostico?.patientPhysicalExaminations[0]?.description || ""}                           
+                            defaultValue={diagnostico?.physicalExaminations[0]?.description || ""}                           
                             />
                     </div>
                 </div>
