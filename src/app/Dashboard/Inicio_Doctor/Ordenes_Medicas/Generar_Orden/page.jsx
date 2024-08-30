@@ -21,10 +21,12 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconDelete from "@/components/icons/IconDelete";
 import IconMessage from "@/components/icons/IconMessage";
 import PDFExportComponent from "@/components/pdf/pdfOrder";
+import { validateDrug } from "@/utils/OrderValidation";
 
 
 export default function HomeDoc() {
     const orden = useAppSelector((state) => state.formSlice.selectedOptions);
+    const user = useAppSelector((state) => state.user);
     const [pendientes, setPendientes] = useState(false);
     const [isDrugModalOpen, setIsDrugModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState([]);
@@ -34,54 +36,7 @@ export default function HomeDoc() {
     const [selectedId, setSelectedId] = useState(null);
     const [ordenType, setOrdenType] = useState("");
     const [errors, setErrors] = useState({});
-    const [downloadActive, setDownloadActive] = useState(false); // Estado para controlar la descarga del PDF
-    const [orderPdf, setOrderPdf] = useState('');
-
-
-    const generatePDF = async () => {
-        try {
-            // Validar que `window` esté definido
-            if (typeof window === 'undefined') {
-                return
-            }
-
-            // Importar html2pdf dinámicamente
-            const html2pdf = (await import('html2pdf.js')).default;
-
-            const element = document.getElementById('pdf-content');
-
-            // Verificar si el elemento existe
-            if (!element) {
-                throw new Error('Elemento con el ID especificado no encontrado.');
-            }
-
-            const opt = {
-                margin: 0,
-                filename: 'reporte.pdf',
-                image: { type: 'png', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
-            };
-
-            const pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
-
-            const base64String = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const base64String = event.target.result
-                    resolve(base64String);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(pdfBlob);
-            });
-
-            return base64String;
-        } catch (error) {
-            console.error('Error generando el PDF:', error);
-            throw error; // Opcional: Lanza el error para manejarlo fuera de esta función si es necesario
-        }
-    };
+    const [patientDetails, setPatientDetails] = useState(null);
 
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -140,6 +95,24 @@ export default function HomeDoc() {
         fetchDrugs();
     }, [searchTerm]);
 
+    useEffect(() => {
+        const fetchPatientDetails = async () => {
+            try {
+                const response = await ApiSegimed.get(`/patient-details?id=${orden.patientId}`);
+
+                if (response.data) {
+                    setPatientDetails(response.data); // Asigna la respuesta al estado solo si hay datos
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (orden.patientId) {
+            fetchPatientDetails();
+        }
+    }, [orden.patientId]);
+
 
     const handleToggleDetails = (index) => {
         const updatedDrugs = [...drugsToSend];
@@ -147,7 +120,52 @@ export default function HomeDoc() {
         setDrugsToSend(updatedDrugs);
     };
 
+    // genera pdf
+    const generatePDF = async () => {
+        try {
+            // Validar que `window` esté definido
+            if (typeof window === 'undefined') {
+                return
+            }
 
+            // Importar html2pdf dinámicamente
+            const html2pdf = (await import('html2pdf.js')).default;
+
+            const element = document.getElementById('pdf-content');
+
+            // Verificar si el elemento existe
+            if (!element) {
+                throw new Error('Elemento con el ID especificado no encontrado.');
+            }
+
+            const opt = {
+                margin: 0,
+                filename: 'reporte.pdf',
+                image: { type: 'png', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
+            };
+
+            const pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
+            // const pdfBlob = await html2pdf().from(element).set(opt).save()
+
+            const base64String = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64String = event.target.result
+                    resolve(base64String);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(pdfBlob);
+            });
+
+            return base64String;
+        } catch (error) {
+            console.error('Error generando el PDF:', error);
+            throw error; // Opcional: Lanza el error para manejarlo fuera de esta función si es necesario
+        }
+    };
 
     // validacion de campos
     const validateFields = () => {
@@ -177,6 +195,8 @@ export default function HomeDoc() {
     };
 
 
+
+
     const onSubmit = async (orden) => {
         if (!validateFields()) {
             return; // Si hay errores, no enviar el formulario
@@ -186,18 +206,18 @@ export default function HomeDoc() {
             const base64 = await generatePDF();
 
 
-            const pdfBlob = await fetch(base64).then(res => res.blob());
+            // const pdfBlob = await fetch(base64).then(res => res.blob());
 
-            // Crear una URL temporal para el Blob
-            const pdfUrl = URL.createObjectURL(pdfBlob);
+            // // Crear una URL temporal para el Blob
+            // const pdfUrl = URL.createObjectURL(pdfBlob);
 
-            // Abrir el PDF en una nueva pestaña
-            window.open(pdfUrl, '_blank');
+            // // Abrir el PDF en una nueva pestaña
+            // window.open(pdfUrl, '_blank');
 
             const payload = { ...orden, bodyMedicam: drugsToSend, orderPdf: base64 };
             console.log(payload);
 
-            // const response = await ApiSegimed.post(`/physician-order`, payload);
+            const response = await ApiSegimed.post(`/physician-order`, payload);
 
             if (response.data) {
                 dispatch(resetFormState());
@@ -221,8 +241,6 @@ export default function HomeDoc() {
                 confirmButtonColor: "#487FFA",
                 confirmButtonText: "Aceptar",
             });
-        } finally {
-            setDownloadActive(false);
         }
     };
     // busca datos de la droga seleccionada
@@ -231,7 +249,7 @@ export default function HomeDoc() {
             try {
                 const response = await ApiSegimed.get(`/drug-prescription/search?searchCommercialId=${value}`);
                 if (response.data) {
-                    console.log(response.data);
+
                     setSelectedId(value)
                     setSelectedDrug(response.data);
                     setIsDrugModalOpen(true);
@@ -259,23 +277,6 @@ export default function HomeDoc() {
     };
 
 
-
-
-    // validacion de creacion de medicamentos
-    const validateDrug = (drug) => {
-        const errors = {};
-
-
-        if (!drug.drugName) errors.drugName = "El nombre del medicamento es requerido.";
-        if (!drug.commercialDrugName) errors.commercialDrugName = "El nombre comercial del medicamento es requerido.";
-        if (!drug.routeOfAdministrationId) errors.routeOfAdministrationId = "La ruta de administración es requerida.";
-        if (!drug.presentationId) errors.presentationId = "La presentación es requerida.";
-        if (isNaN(drug.dose) || drug.dose <= 0) errors.dose = "La dosis debe ser un número positivo.";
-        if (!drug.measureUnitId) errors.measureUnitId = "La unidad de medida es requerida.";
-
-        return errors;
-    };
-
     // guarda los datos que llegan del modal de nueva droga
     const submitDrug = () => {
         // Crear un objeto con los valores actuales
@@ -286,6 +287,7 @@ export default function HomeDoc() {
             presentationId: Number(orden.presentationId),
             dose: Number(orden.dose),
             measureUnitId: Number(orden.measureUnitId),
+            measureUnitId2: orden.measureUnitId2,
         };
 
         // Validar los campos
@@ -336,9 +338,7 @@ export default function HomeDoc() {
                 <h1 className="font-bold ml-4 md:block hidden">Generar órden médica</h1>
                 <button
                     onClick={() => onSubmit(orden)}
-                    // onClick={() => generatePDF()}
-                    className="bg-greenPrimary text-white md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out"
-                >
+                    className="bg-greenPrimary text-white md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out">
                     <IconMas />
                     <p>Generar</p>
                 </button>
@@ -351,9 +351,6 @@ export default function HomeDoc() {
                     className="md:px-6 py-2 px-3"
                     error={errors.diagnostic}
                 />
-
-
-
                 <div className="flex flex-col gap-2 md:px-6 py-2 px-3">
                     <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
                         <IconClinicalHistory className="w-6" color={"#808080"} />
@@ -451,17 +448,6 @@ export default function HomeDoc() {
                         </div>
                     </div>
                     : null}
-                {/* <div className="flex flex-col gap-2 md:px-6 py-2 px-3 bg-[#fafafc]">
-                    <label className="flex items-center gap-2 text-start text-[#686868] font-medium text-base leading-5  ">
-                        <IconDay /> Fecha
-                    </label>
-                    <input
-                        id="date"
-                        type="date"
-                        className="w-1/2 outline-none p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                        onChange={(e) => handleChange("date", e.target.value)}
-                    />
-                </div> */}
                 <InputInfoText
                     text={true}
                     title="Texto adicional (opcional)"
@@ -482,7 +468,7 @@ export default function HomeDoc() {
                 buttonText={{ end: `Guardar` }}
                 funcion={submitDrug}
             />
-            <PDFExportComponent />
+            <PDFExportComponent data={orden} user={user} drugs={drugsToSend} patient={patientDetails} />
         </div>
     );
 }

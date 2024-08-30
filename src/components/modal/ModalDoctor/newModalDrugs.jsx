@@ -121,23 +121,33 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info, err
                             onChange={(e) => handleInputChange("dose", e.target.value)}
                         >
                             <option value="">Seleccione la cantidad</option>
-                            <option value="1">30</option>
-                            <option value="2">20</option>
-                            <option value="3">333</option>
-                            <option value="4">42</option>
+                            <option value="100">100</option>
+                            <option value="150">150</option>
+                            <option value="200">200</option>
+                            <option value="400">400</option>
+                            <option value="500">500</option>
+                            <option value="600">600</option>
+                            <option value="1000">1000</option>
                         </select>
                     ) : (
                         <InputInfoText
                             classNameInput={`md:w-full ${error?.dose ? 'border-red-500' : ''}`}
                             placeholder={"Ingrese la cantidad "}
-                            onChange={(e) => handleInputChange("dose", e.target.value)}
+                            onChange={(e) => { handleInputChange("dose", e.target.value) }}
                             error={!!error?.dose}
                         />
                     )}
 
                     <select
                         className={`w-1/2 py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${error?.measureUnitId ? 'border-red-500' : ''}`}
-                        onChange={(e) => handleInputChange("measureUnitId", e.target.value)}
+                        onChange={(e) => {
+                            const selectedId = e.target.value;
+                            const selectedUnit = measureUnits.find(unit => unit.id === selectedId); // Encuentra la unidad seleccionada
+                            handleInputChange("measureUnitId", selectedId); // Guarda el ID
+                            if (selectedUnit) {
+                                handleInputChange("measureUnitId2", selectedUnit.name); // Guarda el nombre
+                            }
+                        }}
                     >
                         <option value="">Unidad de medida</option>
                         {measureUnits.map(unit => (
