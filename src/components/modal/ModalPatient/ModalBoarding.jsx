@@ -123,7 +123,6 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
             setDisabled(true);
         } else {
             const infoSend = mapBoolean(formStateGlobal);
-            console.log(infoSend);
             try {
                 const response = await ApiSegimed.patch(
                     `/onboarding?tipo=${rol === "Médico" ? 2 : 3}&id=${user.userId}`,
@@ -131,8 +130,6 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
                     infoSend
                 );
                 setOnboarding(true)
-
-                console.log(response.data);
                 onClose();
             } catch (error) {
                 console.error("Error al enviar la información:", error);

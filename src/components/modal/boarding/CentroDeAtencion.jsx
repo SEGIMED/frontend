@@ -41,9 +41,10 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
         setSelectedKeys(keys);
         const centers = catalog.filter((item) => keys.has(item.name));
         const ids = centers.map((item) => item.id); // Obtenemos los IDs de los centros seleccionados
+        const numericIds = ids.map(id => Number(id));
         setSelectedCenters(centers); // Actualizamos el estado con los centros seleccionados
         setSelectedIds(ids); // Actualizamos el estado con los IDs
-        handleChange({ name: "centerAttention", option: ids });
+        handleChange({ name: "centerAttention", option: numericIds });
         handleChange({ name: "centerAttention2", option: centers });
         if (rol === "Paciente") {
             handleChange({ name: "centerAttention", option: Number(ids[0]) });
