@@ -70,9 +70,6 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                     <p className='text-xl'><strong>Diagnóstico : </strong></p>
                                     <p>{data?.diagnostic}</p>
                                 </div>
-
-
-
                             </div>
                             <div className='flex flex-col justify-center  w-[50%] font-semibold '>
                                 <p>{user?.name} {user?.lastname}</p>
@@ -85,7 +82,7 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                             <div className='mt-3 flex justify-end'>Fecha :  {Fecha(date)}</div>
                             <hr className='mt-5 solid border-black' />
                         </div>
-                        <div className="page-break"></div> {/* Este es el salto de página */}
+                        <div className="page-break"></div>
                         <div className='flex flex-col h-[100%]'>
                             <div className='flex justify-between h-[5rem] w-full'>
                                 <div className='justify-center flex items-center h-full '>

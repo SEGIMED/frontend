@@ -141,7 +141,7 @@ export default function HomeDoc() {
             const opt = {
                 margin: 0,
                 filename: 'reporte.pdf',
-                image: { type: 'png', quality: 0.98 },
+                image: { type: 'jpeg', quality: 0.7 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'in', orientation: 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
@@ -206,20 +206,24 @@ export default function HomeDoc() {
             const base64 = await generatePDF();
 
 
-            // const pdfBlob = await fetch(base64).then(res => res.blob());
+            const pdfBlob = await fetch(base64).then(res => res.blob());
 
-            // // Crear una URL temporal para el Blob
-            // const pdfUrl = URL.createObjectURL(pdfBlob);
+            // Crear una URL temporal para el Blob
+            const pdfUrl = URL.createObjectURL(pdfBlob);
 
-            // // Abrir el PDF en una nueva pestaña
-            // window.open(pdfUrl, '_blank');
+            // Abrir el PDF en una nueva pestaña
+            window.open(pdfUrl, '_blank');
+            console.log(base64);
 
             const payload = { ...orden, bodyMedicam: drugsToSend, orderPdf: base64 };
+            // const payload = { ...orden, bodyMedicam: drugsToSend };
             console.log(payload);
 
             const response = await ApiSegimed.post(`/physician-order`, payload);
 
             if (response.data) {
+                console.log(response.data);
+
                 dispatch(resetFormState());
                 Swal.fire({
                     icon: "success",
