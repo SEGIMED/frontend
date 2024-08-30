@@ -27,24 +27,25 @@ import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 import SignosVitalesInfo from "../consulta/signosvitales";
 
-export default function PreconsultaPte({params}) {
+export default function PreconsultaPte({params, preconsult}) {
   const dispatch = useAppDispatch();
   const scheduleId =Number(params)
   const token = Cookies.get("a");
   const patientId = Cookies.get("c");
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
-  const [preconsult, setPreconsult]= useState()
+
 
 
   const [draftEnabled, setDraftEnabled] = useState(false);
   const [available, setAvailable] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [enableButton, setEnableButton] = useState(false);
   
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
+  console.log(preconsult)
   console.log(formData)
   const [tests, setTests] = useState({
     laboratoryResults: {
@@ -124,39 +125,89 @@ export default function PreconsultaPte({params}) {
     },
   });
 
-  const fetchPreconsultation = async (scheduleId) => {
-    try {
-      // Primera petición utilizando el scheduleId de params - esto pide la preconsulta
+  
 
-      const response = await getPreConsultation(scheduleId)
-      console.log(response.data)
-      setPreconsult(response.data);
-    } catch (error) {
-      console.error("Este agendamiento no tiene preconsulta", error);
-    }
+  // useEffect(() => {
+    
+  //   const intervalId = setInterval(() => {
+  //     saveDraftToDatabase();
+  //   }, 60000); // Guarda cada 60 segundos
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //     saveDraftToDatabase(); // Guarda borrador al desmontar el componente
+  //   };
+  // }, []);
+
+  //util que necesito
+  const getValue = (formValue, preconsultValue) =>
+    formValue !== undefined && formValue !== null ? formValue : preconsultValue;
+
+  const bodyOBJFormat = {
+    patient: Number(patientId),
+    patientPainMapId: Number(patientId),
+    painOwnerId: Number(patientId),
+    schedulingId: Number(scheduleId),
+    isTherePain:
+      getValue(
+        preconsult?.provisionalPreConsultationPainMap?.isTherePain,
+        formData?.bodySection?.isTherePain
+       
+      ) ?? null,
+    painDurationId:
+      getValue(
+        formData?.bodySection?.painDuration,
+        preconsult?.provisionalPreConsultationPainMap?.painDuration
+      ) ?? null,
+    painScaleId:
+      getValue(
+        formData?.bodySection?.painScale,
+        preconsult?.provisionalPreConsultationPainMap?.painScale
+      ) ?? null,
+    painTypeId:
+      getValue(
+        formData?.bodySection?.painType,
+        preconsult?.provisionalPreConsultationPainMap?.painType
+      ) ?? null,
+    painAreas: [
+      ...((formData?.bodySection?.painAreas &&
+        Object.values(formData.bodySection.painAreas)) ||
+        []),
+      ...((preconsult?.provisionalPreConsultationPainMap?.painAreas &&
+        Object.values(
+          preconsult.provisionalPreConsultationPainMap.painAreas
+        )) ||
+        []),
+    ],
+    painFrequencyId:
+      getValue(
+        formData?.bodySection?.painFrequency,
+        preconsult?.provisionalPreConsultationPainMap?.painFrequency
+      ) ?? null,
+    isTakingAnalgesic:
+      getValue(
+        formData?.bodySection?.isTakingAnalgesic,
+        preconsult?.provisionalPreConsultationPainMap?.isTakingAnalgesic
+      ) ?? null,
+    doesAnalgesicWorks:
+      getValue(
+        formData?.bodySection?.doesAnalgesicWorks,
+        preconsult?.provisionalPreConsultationPainMap?.doesAnalgesicWorks
+      ) ?? null,
+    isWorstPainEver:
+      getValue(
+        formData?.bodySection?.isWorstPainEver,
+        preconsult?.provisionalPreConsultationPainMap?.isWorstPainEver
+      ) ?? null,
   };
 
-  useEffect(() => {
-    
-    const intervalId = setInterval(() => {
-      saveDraftToDatabase();
-    }, 60000); // Guarda cada 60 segundos
 
-    return () => {
-      clearInterval(intervalId);
-      saveDraftToDatabase(); // Guarda borrador al desmontar el componente
-    };
-  }, []);
 
-  useEffect(() => {
-    //ACA ESTOY HACIENDO TODO 
-    fetchPreconsultation(scheduleId)
-  }, []);
 
   // useEffect(() => {
   //   // almacenamos cada cambio en un borrador en el local storage
     
-  //   if (draftEnabled) {
+  //   if (draftEnabled && formData) {
   //     const draftData = { ...formData, tests, scheduleId };
       
   //     localStorage.setItem(`preconsultationDraft${scheduleId}`, JSON.stringify(draftData))
@@ -166,124 +217,75 @@ export default function PreconsultaPte({params}) {
 
   //aca tengo un problema !!! siempre existe el fucking borrador y no entra en getPreconsultationDraft
   //si yo saliera y cambiara de ordenador , pierdo todo mi localstorage pero nunca me hace el get, como lo soluciono?
-  useEffect(() => {
-    // Verifica el borrador en local storage
-    const draft = localStorage.getItem(`preconsultationDraft${scheduleId}`);
+  // useEffect(() => {
     
-    if (draft) {
-      const parsedDraft = JSON.parse(draft);
-      
-      // Verifica la validez del borrador y sincroniza con el servidor
-      const checkDraftValidity = async () => {
-        try {
-          const res = await getPreConsultation(scheduleId);
-          if (res) {
-            // Actualiza estado con datos del servidor
-            const formatResponse = draftFormat(res.data);
-            dispatch(updateAllFormData({ draft: formatResponse }));
-          } else {
-            // Usa el borrador del local storage
-            dispatch(updateAllFormData({ draft: parsedDraft }));
-          }
-          setIsLoading(false);
-          setEnableButton(true);
-          setAvailable(true);
-        } catch (error) {
-          console.error("Error fetching data", error);
-          setIsLoading(false);
-          setEnableButton(false);
-          setAvailable(false);
-        }
-      };
-      checkDraftValidity();
-    } else {
-      // No hay borrador en local storage, verifica en el servidor
-      getPreConsultationDraft();
-    }
-  }, [scheduleId]);
+  //   // Verificamos si existe un borrador de esta preconsulta en el local storage
+  //   const draft = JSON.parse(localStorage.getItem(`preconsultationDraft${scheduleId}`));
+  //   if (draft) {
+  //     console.log(draft);
+  //     setEnableButton(true);
+  //     setAvailable(true);
+  //     setDraftEnabled(true);
+  //     dispatch(updateAllFormData({ draft }));
+  //     setIsLoading(false);
+  //   }
+   
+  //   setIsLoading(false);
+  // }, [scheduleId]);
 
-  const getPreConsultationDraft = async () => {
-    try {
-      //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
-      const res =await getPreConsultation(scheduleId)
+  // const getPreConsultationDraft = async () => {
+  //   try {
+  //     //Primero verificamos si esta preconsulta ya está guardada en la base de datos o no
+  //     const res =await getPreConsultation(scheduleId)
       
       
       
-      // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
-      if (res) {
-        setEnableButton(true);
-        setAvailable(true);
-        setDraftEnabled(true);
-        setIsLoading(false);
-        const formatResponse = draftFormat(res.data); //aca la formatea en version barrador
+  //     // Si ya existe en la base de datos, entonces seteamos el estado preconsultationAlreadyExists en true para no mostrar la preconsulta.
+  //     if (res) {
+  //       setEnableButton(true);
+  //       setAvailable(true);
+  //       setDraftEnabled(true);
+  //       setIsLoading(false);
+  //       const formatResponse = draftFormat(res.data); //aca la formatea en version barrador
         
-        dispatch(updateAllFormData({ draft: formatResponse }));
-        // console.log({ ...formatResponse, tests, scheduleId });
-        // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
-        return;
-      }
-      else {
-        setEnableButton(false);
-        setAvailable(false);
-        setDraftEnabled(true);
-        setIsLoading(false);
-        console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
-        return;
-      }
+  //       dispatch(updateAllFormData({ draft: formatResponse }));
+  //       // console.log({ ...formatResponse, tests, scheduleId });
+  //       // console.log({ draftInDatabase: true, preconsultationDraft: res.data });
+  //       return;
+  //     }
+  //     else {
+  //       setEnableButton(false);
+  //       setAvailable(false);
+  //       setDraftEnabled(true);
+  //       setIsLoading(false);
+  //       console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
+  //       return;
+  //     }
       
-    } catch (error) {
-      console.error("Error fetching data", error);
-      setEnableButton(false);
-      setAvailable(false);
-      setDraftEnabled(true);
-      setIsLoading(false);
-      console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
-    }
-  };
-  const saveDraftToDatabase = async () => {
+  //   } catch (error) {
+  //     console.error("Error fetching data", error);
+  //     setEnableButton(false);
+  //     setAvailable(false);
+  //     setDraftEnabled(true);
+  //     setIsLoading(false);
+  //     console.log('La preconsulta ya no puede ser editada, el paciente ya tuvo la consulta');
+  //   }
+  // };
+  // const saveDraftToDatabase = async () => {
     
-    try {
-      const cleanBodyForm = Object.fromEntries(
-        Object.entries(bodyForm).filter(([key, value]) => value !== null && value !== undefined)
-      );
-      console.log(cleanBodyForm,"antes del patch automatico")
-      const response = await patchPreconsultation(cleanBodyForm)
-      console.log(response.data, "el patch automatico")
-    } catch (error) {
-      console.error
-    }
-  }
-  const bodyPainFormat = {
-    patient: Number(patientId),
-    patientPainMapId: Number(patientId),
-    painOwnerId: Number(patientId),
-    schedulingId: Number(scheduleId),
-    isTherePain: formData?.bodySection?.isTherePain,
-    painDurationId: formData?.bodySection?.painDuration,
-    painScaleId: formData?.bodySection?.painScale,
-    painTypeId: formData?.bodySection?.painType,
-    painAreas: formData?.bodySection?.painAreas
-      ? Object.values(formData?.bodySection?.painAreas)
-      : [],
-    painFrequencyId: formData?.bodySection?.painFrequency,
-    isTakingAnalgesic: formData?.bodySection?.isTakingAnalgesic,
-    doesAnalgesicWorks: formData?.bodySection?.doesAnalgesicWorks,
-    isWorstPainEver: formData?.bodySection?.isWorstPainEver,
-  };
-  // const vitalSignFormat = [
-  //   formData?.vitalSigns?.height,
-  //   formData?.vitalSigns?.weight,
-  //   {
-  //     ...formData?.vitalSigns?.IMC,
-  //     measure: IMC(Number(formData?.vitalSigns?.weight), Number(formData?.vitalSigns?.height))
-  //   },
-  //   formData?.vitalSigns?.temperature,
-  //   formData?.vitalSigns?.Heart_Rate,
-  //   formData?.vitalSigns?.Systolic_Blood_Pressure,
-  //   formData?.vitalSigns?.Diastolic_Blood_Pressure,
-  //   formData?.vitalSigns?.Breathing_frequency,
-  //   formData?.vitalSigns?.Oxygen_saturation,
-  // ];
+  //   try {
+  //     const cleanBodyForm = Object.fromEntries(
+  //       Object.entries(bodyForm).filter(([key, value]) => value !== null && value !== undefined)
+  //     );
+  //     console.log(cleanBodyForm,"antes del patch automatico")
+  //     const response = await patchPreconsultation(cleanBodyForm)
+  //     console.log(response.data, "el patch automatico")
+  //   } catch (error) {
+  //     console.error
+  //   }
+  // }
+
+
 
   //ESTO (bodyForm) ES LO QUE SE ENVIA POR BODY , debe contener si o si patient = patientID y appointmentSchedule  = scheduleID
   const bodyForm = {
@@ -311,29 +313,29 @@ export default function PreconsultaPte({params}) {
     exerciseStatus: formData?.questions?.exerciseStatus?.selectedOption,
     bodyPain: formData?.questions?.bodyPain?.selectedOption,
     // Estudios
-    laboratoryResults: tests.laboratoryResults.file,
-    laboratoryResultsDescription: tests.laboratoryResults.description,
-    electrocardiogram: tests.electrocardiogram.file,
-    electrocardiogramDescription: tests.electrocardiogram.description,
-    rxThorax: tests.rxThorax.file,
-    echocardiogram: tests.echocardiogram.file,
-    walkTest: tests.walkTest.file,
-    respiratoryFunctional: tests.respiratoryFunctional.file,
-    tomographies: tests.tomographies.file,
-    rightHeartCatheterization: tests.rightHeartCatheterization.file,
-    ccg: tests.ccg.file,
-    resonance: tests.resonance.file,
-    leftHeartCatheterization: tests.leftHeartCatheterization.file,
-    otherStudies: tests.otherStudies.file,
-    pendingStudies: tests.pendingStudies.description,
+    // laboratoryResults: tests.laboratoryResults.file,
+    // laboratoryResultsDescription: tests.laboratoryResults.description,
+    // electrocardiogram: tests.electrocardiogram.file,
+    // electrocardiogramDescription: tests.electrocardiogram.description,
+    // rxThorax: tests.rxThorax.file,
+    // echocardiogram: tests.echocardiogram.file,
+    // walkTest: tests.walkTest.file,
+    // respiratoryFunctional: tests.respiratoryFunctional.file,
+    // tomographies: tests.tomographies.file,
+    // rightHeartCatheterization: tests.rightHeartCatheterization.file,
+    // ccg: tests.ccg.file,
+    // resonance: tests.resonance.file,
+    // leftHeartCatheterization: tests.leftHeartCatheterization.file,
+    // otherStudies: tests.otherStudies.file,
+    // pendingStudies: tests.pendingStudies.description,
     // Anamnesis
-    consultationReason: formData?.anamnesis?.consultationReason?.description,
-    importantSymptoms: formData?.anamnesis?.importantSymptoms?.description,
+    // consultationReason: formData?.anamnesis?.consultationReason?.description,
+    // importantSymptoms: formData?.anamnesis?.importantSymptoms?.description,
     // Tratamiento
-    currentMedications: formData?.tratamiento?.currentMedications
-      ?.selectedOptions
-      ? Object.values(formData?.tratamiento?.currentMedications?.selectedOptions)
-      : null,
+    // currentMedications: formData?.tratamiento?.currentMedications
+    //   ?.selectedOptions
+    //   ? Object.values(formData?.tratamiento?.currentMedications?.selectedOptions)
+    //   : null,
     // Signos vitales
     // abnormalGlycemia: formData?.vitalSigns?.abnormalGlycemia?.active,
     // lastAbnormalGlycemia: Object.keys(
@@ -343,7 +345,7 @@ export default function PreconsultaPte({params}) {
     //   : null,
     // updateVitalSigns: vitalSignFormat,
     // painRecordsToUpdate
-    painRecordsToUpdate: [bodyPainFormat],
+    // painRecordsToUpdate: [bodyOBJFormat],
   };
 
   const handleSubmit = async (event) => {
@@ -351,18 +353,31 @@ export default function PreconsultaPte({params}) {
     setIsLoading(true);
    
     try {
-      if (!bodyForm) {
-        console.error("No form data to submit");
-        setIsLoading(false);
-        return;
+
+      const response =await patchPreconsultation(bodyForm)
+      if (response) {
+        Swal.fire({
+          icon: "success",
+          title: "Preconsulta creada con éxito",
+          text: "",
+          confirmButtonColor: "#487FFA",
+          confirmButtonText: "Aceptar",
+        });
+        console.log({ resupuestaCreate: response.data });
       }
-      const isAnamnesisMissing = Object.values(formData.anamnesis).some(
-        (item) => item.description?.trim() === ''
-      );
+
+      // if (!bodyForm) {
+      //   console.error("No form data to submit");
+      //   setIsLoading(false);
+      //   return;
+      // }
+      // const isAnamnesisMissing = Object.values(formData.anamnesis).some(
+      //   (item) => item.description?.trim() === ''
+      // );
       
-      const isVitalSignMissing = vitalSignFormat.some(
-        (item) => item.measure === null
-      );
+      // const isVitalSignMissing = vitalSignFormat.some(
+      //   (item) => item.measure === null
+      // );
       // if (isAnamnesisMissing || isVitalSignMissing) {
       //   Swal.fire({
       //     icon: "error",
@@ -374,23 +389,15 @@ export default function PreconsultaPte({params}) {
       //   setIsLoading(false);
       //   return;
       // }
+     
       if (available) {
         console.log({
           toCreate: bodyForm,
           preconsultationAlreadyExists: !!preconsultationAlreadyExists,
         });
         console.log(bodyForm, "justo antes del submit")
-        const response =await patchPreconsultation(bodyForm)
-        if (response) {
-          Swal.fire({
-            icon: "success",
-            title: "Preconsulta creada con éxito",
-            text: "",
-            confirmButtonColor: "#487FFA",
-            confirmButtonText: "Aceptar",
-          });
-          console.log({ resupuestaCreate: response.data });
-        }
+        
+       
         setIsLoading(false);
         return;
       } else {
@@ -601,7 +608,7 @@ export default function PreconsultaPte({params}) {
             </p>
           </div>
         </div>
-        {Object.keys(formData?.questions).map((question, index) => (
+        {formData?.questions && Object.keys(formData?.questions).map((question, index) => (
           <PreconsultaQuestion
             key={index}
             question={question}
@@ -611,6 +618,7 @@ export default function PreconsultaPte({params}) {
             onSubquestionChange={handleSubquestionOption}
             onQuestionChange={handleQuestionOption}
             onDescriptionChange={handleDescription}
+            preconsult={preconsult}
           />
         ))}
         <form onChange={methods.handleSubmit(onSubmit)}>
@@ -635,12 +643,13 @@ export default function PreconsultaPte({params}) {
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
-        <InputCuerpoPre
-          title={"Exploracion fisica"}
-          onBodyChange={handleBodyChange}
-          bodySection={formData?.bodySection}
-          defaultOpen
-        />
+            <InputCuerpoPre
+              title={"Exploracion fisica"}
+              onBodyChange={handleBodyChange}
+              bodySection={formData?.bodySection}
+              defaultOpen
+              valuePreconsultation={preconsult}
+            />
         <InputFilePreconsultation
           title={"Estudios"}
           onUploadFile={handleUploadTestFile}
@@ -650,7 +659,7 @@ export default function PreconsultaPte({params}) {
           tests={formData.tests}
           defaultOpen
         />
-        <AnamnesisPreconsulta
+        {/* <AnamnesisPreconsulta
           title={"Anamnesis"}
           onAnamnesisChange={handleAnamnesis}
           anamnesis={formData.anamnesis}
@@ -661,7 +670,7 @@ export default function PreconsultaPte({params}) {
           onTratamientoChange={handleTratamientoDescription}
           tratamiento={formData.tratamiento}
           defaultOpen
-        />
+        /> */}
         </form>
         <div className="flex justify-center p-6 bg-[#fafafc]">
           <Elboton

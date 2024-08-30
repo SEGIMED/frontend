@@ -9,10 +9,10 @@ const preconsultaFormSlice = createSlice({
   name: "preconsultaForm",
   initialState,
   reducers: {
-    updateAllFormData(state, action) {
-      const { draft } = action.payload;
-      state.formData = draft;
-    },
+    // updateAllFormData(state, action) {
+    //   const { draft } = action.payload;
+    //   state.formData = draft;
+    // },
     resetFormData(state, action) {
       state.formData = action.payload;
     },

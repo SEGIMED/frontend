@@ -25,9 +25,9 @@ export default function InputFilePreconsultation({ tests, title, onTestSelectedO
                         <IconArrowDetailDown />
                     </div>
                 </summary>
-                {Object.keys(tests).map((test, index) => (
+                {tests ? Object.keys(tests).map((test, index) => (
                     <FileUpload key={index} data={tests[test]} onTestSelectedOption={onTestSelectedOption} onTestActive={onTestActive} onUploadFile={onUploadFile} onDescriptionChange={onDescriptionChange} test={test} label={tests[test].title} Link={tests[test].file} />
-                ))}
+                )) : null}
             </details>
         </div>
     );

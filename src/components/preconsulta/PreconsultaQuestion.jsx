@@ -32,9 +32,11 @@ const SimpleQuestionBox = ({ question, label, index, selectedOption, onQuestionC
   )
 }
 
-function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive, onSubquestionChange, onQuestionChange, onDescriptionChange }) {
+function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive, onSubquestionChange, onQuestionChange, onDescriptionChange, preconsult }) {
   const [currentDescription, setCurrentDescription] = useState('');
-
+  console.log(question, "question")
+  console.log(section, "section")
+  console.log(preconsult, "preconsult")
   const handleChangeDescription = (e) => {
     setCurrentDescription(e.target.value);
     onDescriptionChange(question, e.target.value);
@@ -98,6 +100,7 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
               aria-label="Nivel de dolor"
               size="lg"
               step={1}
+             
               showSteps={true}
               maxValue={10}
               minValue={1}
@@ -113,6 +116,7 @@ function PreconsultaQuestion({ question, section, sectionIndex, onQuestionActive
                 { value: 9, label: "9" },
                 { value: 10, label: "10" },
               ]}
+              value={section.selectedOption || 1}
               defaultValue={section.selectedOption || 1}
               className="max-w-md"
               showTooltip={true}
