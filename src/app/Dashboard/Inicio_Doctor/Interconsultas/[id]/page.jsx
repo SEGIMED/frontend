@@ -147,7 +147,7 @@ export default function Page() {
                   onPress={(e) => handleShowModalFile(item?.fileURL)}
                   nombre={item?.fileName}
                   classNameText={"text-bluePrimary"}
-                  className={"bg-white"}
+                  className="w-fit px-3 py-1 border bg-white border-[#cecece] rounded-lg"
                 />
               ))}
             </div>

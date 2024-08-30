@@ -433,7 +433,7 @@ export default function HomeDoc() {
           />
           <BotonInterconsulta
             Icon={IconCheckRedBoton}
-            label="Urgencia"
+            label="Prioritaria"
             active={questions.isPriority === true}
             onClick={() => handleQuestionFieldChange("isPriority", true)}
           />
