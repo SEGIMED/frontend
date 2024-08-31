@@ -133,6 +133,11 @@ function DynamicTable({
       </div>
     );
   };
+
+  const formatIsApproved = (boolean) => {
+    return boolean === true ? "Aprobado" : "No Aprobado";
+  };
+
   const isRowEmpty = (row) => {
     // Verifica si todas las columnas relevantes están vacías
     return columns.every((column) => {
@@ -229,6 +234,8 @@ function DynamicTable({
                         ? formatDate(row[column.key])
                         : column.label === "Hora"
                         ? formatHour(row[column.key])
+                        : column.key == "IsApproved"
+                        ? formatIsApproved(row[column.key])
                         : column.key?.includes(".")
                         ? column.key
                             .split(".")

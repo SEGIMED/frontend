@@ -150,6 +150,7 @@ const Page = () => {
       cancelButtonColor: "#E73F3F",
     }).then((response) => {
       if (response.isConfirmed) {
+        dispatch(resetMessages());
         router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
       }
     });

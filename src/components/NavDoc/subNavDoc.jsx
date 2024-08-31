@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import rutas from "@/utils/rutas";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconSubNavbar from "../icons/IconSubNavbar";
 import IconRegresar from "../icons/iconRegresar";
@@ -16,7 +16,7 @@ import {
   clearClinicalHistory,
   addUserHistory,
   changeTabs,
-  addImportHistory
+  addImportHistory,
 } from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
@@ -36,6 +36,7 @@ export default function SubNavbar({ id }) {
   const getSelectedClass = (name) =>
     selectedTab === name ? "bg-white" : "cursor-pointer ";
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const combineDetails = (details, defaultDetails) => {
     return details.length > 0 ? details : defaultDetails;
@@ -125,9 +126,7 @@ export default function SubNavbar({ id }) {
   };
 
   const getImportHistory = async () => {
-    const response = await ApiSegimed.get(
-      `/patient-studies?userId=${userId}`,
-    );
+    const response = await ApiSegimed.get(`/patient-studies?userId=${userId}`);
     dispatch(addImportHistory(response.data));
   };
 
@@ -279,12 +278,12 @@ export default function SubNavbar({ id }) {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
-        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
-          <IconRegresar />
-          <p className="hidden md:block">Regresar</p>
-        </button>
-      </Link>
+      <button
+        onClick={() => router.back()}
+        className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+        <IconRegresar />
+        <p className="hidden md:block">Regresar</p>
+      </button>
     </div>
   );
 }
