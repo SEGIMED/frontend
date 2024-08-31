@@ -32,6 +32,7 @@ module.exports = {
         greenPrimary: "#70C247",
         textPrimary: "#808080",
         textSubtitle: "#686868",
+        borderGray: "#D7D7D7",
       },
       darkMode: "class",
       animation: {

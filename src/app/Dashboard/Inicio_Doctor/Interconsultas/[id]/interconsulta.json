@@ -1,0 +1,39 @@
+{
+  "id": 18,
+  "patient": 27,
+  "physicianRequester": 2,
+  "physicianQueried": 1,
+  "medicalSpecialty": 4,
+  "interconsultationStartTimestamp": "2024-08-12T20:40:47.000Z",
+  "interconsultationEndTimestamp": null,
+  "interconsultationStatus": 6,
+  "reasonForConsultation": "Se puede llevar a quirofano?.",
+  "medicalOpinion": null,
+  "interconsultation_status": 6,
+  "requestingPhysician": {
+    "name": "Carlos Andre",
+    "lastname": "Soca Pucllas"
+  },
+  "patientDetails": {
+    "name": "Ernesto",
+    "lastname": "Sagardia"
+  },
+  "queriedPhysician": {
+    "name": "Santiago",
+    "lastname": "Perez Baglivo"
+  },
+  "statusCategory": {
+    "name": "Solicitada"
+  },
+  "files": [
+    {
+      "fileURL": "www.hepatic 2"
+    },
+    {
+      "fileURL": "www.Rayos "
+    },
+    {
+      "fileURL": "www.anali de orina"
+    }
+  ]
+}

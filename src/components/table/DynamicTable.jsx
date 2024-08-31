@@ -7,6 +7,8 @@ import IconArrowDetailUp from "../icons/IconArrowDetailUp";
 import IconConsulta from "../icons/IconConsulta";
 import NotFound from "../notFound/notFound";
 import SkeletonList from "../skeletons/HistorialSkeleton";
+import { specialitySwitch } from "@/utils/medicalSpecialitys";
+import { healthCenterSwitch } from "@/utils/healthCenters";
 
 //Ejemplo con consulta (data)
 // [{
@@ -76,6 +78,9 @@ const formatHour = (dateString) => {
   });
 };
 
+const formatTypeInterconsult = (isPriority) =>
+  isPriority ? "Prioritaria" : "Rutina";
+
 const getStatusScheduleTextAndColor = (status) => {
   switch (status) {
     case 1: // Agendada
@@ -100,7 +105,7 @@ function DynamicTable({
   renderCustomContent,
   showHistoryIcon,
   textError,
-  loading
+  loading,
 }) {
   const [activeIndex, setActiveIndex] = useState(null); // Track which row's content is visible
 
@@ -110,31 +115,10 @@ function DynamicTable({
     }
   };
 
-  // Helper function to translate healthCenter values
-
-  function specialtySwitch(caseNumber) {
-    const switchCases = {
-      1: "Cardiología",
-      2: "Medicina Interna",
-      3: "Medicina Familiar",
-      4: "Neumología",
-      5: "Cirugía de Tórax",
-      6: "Cirugía Cardiovascular",
-    };
-
-    return switchCases[caseNumber] || "No hay especialización";
-  }
-  function healthCenterSwitch(caseNumber) {
-    const switchCases = {
-      1: "Centro Gallego",
-    };
-
-    return switchCases[caseNumber] || "Centro Desconocido";
-  }
-
   const formatPatientName = (row) => {
     return `${row.patientUser.name} ${row.patientUser.lastname}`;
   };
+  // Helper function to translate healthCenter values
 
   const renderPatientPulmonaryRisk = (row) => {
     return (
@@ -161,11 +145,9 @@ function DynamicTable({
 
   const filteredRows = rows?.filter((row) => !isRowEmpty(row));
 
-
   if (loading) {
     return <SkeletonList count={10} />;
   }
-
 
   return (
     <>
@@ -187,10 +169,13 @@ function DynamicTable({
             {columns.map((column, index) => (
               <th
                 key={index}
-                className={`${index == 0 && !showRisks && !showHistoryIcon && "lg:pl-6"
-                  } lg:px-2 font-normal py-2 lg:text-left text-center ${column.showMobile ? "table-cell" : "hidden md:table-cell"
-                  }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${column.width
-                  }`}>
+                className={`${
+                  index == 0 && !showRisks && !showHistoryIcon && "lg:pl-6"
+                } lg:px-2 font-normal py-2 lg:text-left text-center ${
+                  column.showMobile ? "table-cell" : "hidden md:table-cell"
+                }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${
+                  column.width
+                }`}>
                 {column.label}
               </th>
             ))}
@@ -203,8 +188,9 @@ function DynamicTable({
             filteredRows?.map((row, rowIndex) => (
               <Fragment key={rowIndex}>
                 <tr
-                  className={`hover:bg-gray-100 ${clickable ? "cursor-pointer" : "cursor-default"
-                    } border-b-[1px] border-b-[#D7D7D7] `}
+                  className={`hover:bg-gray-100 ${
+                    clickable ? "cursor-pointer" : "cursor-default"
+                  } border-b-[1px] border-b-[#D7D7D7] `}
                   onClick={() => handleRowClick(rowIndex)}>
                   {showRisks && (
                     <td className="py-2 lg:pl-3 w-[10px] max-w-[10px] hidden md:table-cell">
@@ -219,31 +205,35 @@ function DynamicTable({
                   {columns.map((column, colIndex) => (
                     <td
                       key={colIndex}
-                      className={`${colIndex === 0 &&
+                      className={`${
+                        colIndex === 0 &&
                         !showRisks &&
                         !showHistoryIcon &&
                         "lg:pl-6"
-                        }  lg:px-3 py-2 text-[#686868] whitespace-normal ${column.showMobile
+                      }  lg:px-3 py-2 text-[#686868] whitespace-normal ${
+                        column.showMobile
                           ? "table-cell"
                           : "hidden md:table-cell"
-                        }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
+                      }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
                       {column.key === "patientUser.name"
                         ? formatPatientName(row)
                         : column.key === "healthCenter"
-                          ? healthCenterSwitch(row[column.key])
-                          : column.key === "medical_specialty"
-                            ? specialtySwitch(row[column.key])
-                            : column.key === "patientPulmonaryHypertensionRisks"
-                              ? renderPatientPulmonaryRisk(row)
-                              : column.label === "Fecha"
-                                ? formatDate(row[column.key])
-                                : column.label === "Hora"
-                                  ? formatHour(row[column.key])
-                                  : column.key?.includes(".")
-                                    ? column.key
-                                      .split(".")
-                                      .reduce((acc, part) => acc && acc[part], row)
-                                    : row[column.key]}
+                        ? healthCenterSwitch(row[column.key])
+                        : column.label === "Especialidad"
+                        ? specialitySwitch(row[column.key])
+                        : column.key === "patientPulmonaryHypertensionRisks"
+                        ? renderPatientPulmonaryRisk(row)
+                        : column.key == "isPriority"
+                        ? formatTypeInterconsult(row[column.key])
+                        : column.label === "Fecha"
+                        ? formatDate(row[column.key])
+                        : column.label === "Hora"
+                        ? formatHour(row[column.key])
+                        : column.key?.includes(".")
+                        ? column.key
+                            .split(".")
+                            .reduce((acc, part) => acc && acc[part], row)
+                        : row[column.key]}
                     </td>
                   ))}
                   {renderDropDown && (
