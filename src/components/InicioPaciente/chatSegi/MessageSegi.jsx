@@ -2,10 +2,10 @@ import Segi from "@/components/InicioPaciente/chatSegi/segi.png";
 import Image from "next/image";
 import DefaultPhoto from "@/components/images/defaultPhoto.png";
 import Markdown from "react-markdown";
-export const MessageSegi = ({ key, message, sender, name, avatar }) => {
+export const MessageSegi = ({ index, message, sender, name, avatar }) => {
   return (
     <div
-      key={key}
+      key={index}
       className={`p-2 animate-fade-in font-poppins flex gap-1 flex-col ${
         sender != "bot" ? "justify-end items-end" : "justify-start items-start"
       }`}>
