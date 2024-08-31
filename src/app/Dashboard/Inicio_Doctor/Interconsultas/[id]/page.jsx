@@ -86,7 +86,7 @@ export default function Page() {
   }, []);
   return (
     <div className="h-full flex flex-col bg-[#fafafc]">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] px-4 py-2  bg-white sticky top-0 z-20 lg:z-50">
+      <div className=" items-center justify-between border-b border-b-[#cecece] px-4 py-2  bg-white lg:sticky flex top-0 z-20 lg:z-50">
         <div></div>
         <h1 className="font-bold w-1/3 md:w-3/4 text-center">
           Ver Interconsulta
@@ -98,34 +98,28 @@ export default function Page() {
         />
       </div>
       <div className="flex flex-col md:flex-row items-center justify-between   px-3 md:px-6 py-2">
-        <label className="w-full md:w-1/2 flex  justify-start gap-3 font-medium py-2">
+        <label className="w-full flex  justify-start gap-3 font-medium py-2">
           <IconCircle className="w-3" />
           <p>Paciente:</p>
         </label>
-        <div className="w-1/2">
-          <span className="w-fit px-3 py-1 border bg-white border-[#cecece] rounded-lg">{`${interconsultation?.patientDetails?.name} ${interconsultation?.patientDetails?.lastname}`}</span>
-        </div>
+        <span className="w-full px-3 py-2 border bg-white border-[#cecece] rounded-lg">{`${interconsultation?.patientDetails?.name} ${interconsultation?.patientDetails?.lastname}`}</span>
       </div>
-      <div className="flex flex-col md:flex-row items-center justify-between   px-3 md:px-6 py-2">
-        <label className="w-full md:w-1/2 flex  justify-start gap-3 font-medium py-2">
+      <div className="flex flex-col md:flex-row items-center justify-between px-3 md:px-6 py-2">
+        <label className="w-full flex  justify-start gap-3 font-medium py-2">
           <IconCircle className="w-3" />
           <p>Especialidades:</p>
         </label>
-        <div className="w-1/2">
-          <span className="w-fit px-3 py-1 border bg-white border-[#cecece] rounded-lg">
-            {specialitySwitch(interconsultation?.medicalSpecialty)}
-          </span>
-        </div>
+        <span className="w-full px-3 py-2 border bg-white border-[#cecece] rounded-lg">
+          {specialitySwitch(interconsultation?.medicalSpecialty)}
+        </span>
       </div>
 
       <div className="flex flex-col md:flex-row items-center justify-between  px-3 md:px-6 py-2">
-        <label className="w-full md:w-1/2 flex justify-start gap-3 font-medium py-2">
+        <label className="w-full flex justify-start gap-3 font-medium py-2">
           <IconCircle className="w-3" />
           <p>Colega de la institución</p>
         </label>
-        <div className="w-1/2">
-          <span className="w-fit px-3 py-1 border bg-white border-[#cecece] rounded-lg">{`${interconsultation?.queriedPhysician?.name} ${interconsultation?.queriedPhysician?.lastname}`}</span>
-        </div>
+        <span className="w-full px-3 py-2 border bg-white border-[#cecece] rounded-lg">{`${interconsultation?.queriedPhysician?.name} ${interconsultation?.queriedPhysician?.lastname}`}</span>
       </div>
 
       <InputInterconsulta
@@ -182,6 +176,7 @@ export default function Page() {
           nombre="Resolver Interconsulta"
           icon2={<IconArrowRight />}
           onPress={() => setShowModal(true)}
+          className={"bg-greenPrimary"}
         />
       </div>
       <ModalInterconsulta

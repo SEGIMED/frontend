@@ -261,7 +261,7 @@ export default function HomeDoc() {
           size={"md"}
           defaultItems={allPatients}
           placeholder="Selecciona un paciente"
-          className="md:w-1/2 w-full bg-white py-1"
+          className="md:w-1/2 w-full py-1 hover:"
           onSelectionChange={handlePatientChange}
           variant="bordered"
           aria-label="Selecciona un paciente"
@@ -273,7 +273,7 @@ export default function HomeDoc() {
             },
           }}
           classNames={{
-            base: ["shadow-none", "bg-white", "font-semibold"],
+            base: ["shadow-none", "font-semibold"],
             selectorButton: ["text-[#686868]"],
             label: "text-[#686868]",
           }}>
@@ -327,7 +327,7 @@ export default function HomeDoc() {
           <IconCircle className="w-3" />
           <p>Colega de la institución</p>
         </label>
-        <Dropdown>
+        {/* <Dropdown>
           <DropdownTrigger className="md:w-1/2 w-full">
             {selectedSpecialtiesValue ? (
               <Button
@@ -379,7 +379,36 @@ export default function HomeDoc() {
               ))}
             </DropdownMenu>
           ) : null}
-        </Dropdown>
+        </Dropdown> */}
+        <Autocomplete
+          size={"md"}
+          defaultItems={filteredDoctors}
+          placeholder="Selecciona un Doctor"
+          className="md:w-1/2 w-full py-1"
+          onSelectionChange={handleDoctorChange}
+          variant="bordered"
+          aria-label="Selecciona un Doctor"
+          color="primary"
+          inputProps={{
+            className: "text-[#686868]",
+            classNames: {
+              innerWrapper: "bg-white",
+            },
+          }}
+          listboxProps={{
+            emptyContent: "No se encontraron Médicos",
+          }}
+          classNames={{
+            base: ["shadow-none", "font-semibold"],
+            selectorButton: ["text-[#686868]"],
+            label: "text-[#686868]",
+          }}>
+          {(item) => (
+            <AutocompleteItem key={item.id}>
+              {item.name + " " + item.lastname}
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
       </div>
 
       <InputInterconsulta
@@ -390,7 +419,7 @@ export default function HomeDoc() {
         }
       />
 
-      <div className="flex flex-col md:flex-row items-center justify-between px-3 md:px-6 py-2">
+      <div className="flex flex-col px-3 md:px-6 py-2">
         <label className="w-full md:w-1/3 flex  justify-start gap-3 font-medium py-2 text-center">
           <IconCircle className="w-3" />
           Adjuntar archivos
@@ -466,12 +495,12 @@ export default function HomeDoc() {
         }
       />
       <div className="w-full justify-center flex py-4">
-        <button
-          onClick={handleSubmit(onSubmit)}
-          className="flex items-center px-6 py-2 bg-greenPrimary rounded-xl gap-3 text-white font-bold">
-          Solicitar interconsulta
-          <IconArrowRight />
-        </button>
+        <Elboton
+          nombre={"Solicitar Interconsulta"}
+          onPress={onSubmit}
+          icon2={<IconArrowRight />}
+          className={"bg-greenPrimary"}
+        />
       </div>
     </div>
   );
