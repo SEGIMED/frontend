@@ -22,7 +22,7 @@ import NotFound from "@/components/notFound/notFound";
 const Modals = [
   <Alarm1 key={"alarma 1"} />,
   <Alarm2 key={"alarma 2"} />,
-  <Alarm3 key={"alarma 3"} />,
+  // <Alarm3 key={"alarma 3"} />,
 ];
 
 export default function AlarmPte() {
@@ -44,8 +44,8 @@ export default function AlarmPte() {
       `/alarms-by-patient/${myID}`,
       headers
     );
-    console.log(response.data.alarms);
-    setAlarms(response.data.alarms);
+    console.log(response.data);
+    setAlarms(response.data);
   };
 
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function AlarmPte() {
   }, []);
 
   const UnsolvedAlarmas = alarms?.filter(
-    (alarm) => alarm.patient === Number(myId) && alarm.solved === false
+    (alarm) => alarm.patient.id === Number(myId) && alarm.solved === false
     // (alarm) => alarm.patient === Number(myId)
   );
 
@@ -98,18 +98,19 @@ export default function AlarmPte() {
           Crear Alarma
         </button>
       </div>
-      <div className="grid grid-cols-5 md:grid-cols-7 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
-        <p className="font-bold text-[#5F5F5F]">Prioridad</p>
+      <div className="grid grid-cols-4 md:grid-cols-5 items-center border-b border-b-[#cecece] text-center md:text-start p-2 bg-white static md:sticky top-14 z-10 md:z-4 ">
+        {/* <p className="font-bold text-[#5F5F5F]">Prioridad</p> */}
         <p className="font-bold text-[#5F5F5F]">Fecha</p>
         <p className="font-bold text-[#5F5F5F]">Hora</p>
         <p className="font-bold text-[#5F5F5F]">HTP</p>
         <p className="font-bold text-[#5F5F5F] hidden md:block">Status</p>
+        <p className="font-bold text-[#5F5F5F]">Descripción</p>
       </div>
       <div className="overflow-auto h-full">
         {UnsolvedAlarmas.length === 0 ? (
           <NotFound text="No hay alarmas activas" />
         ) : (
-          <TableAlarmPte paciente={UnsolvedAlarmas} />
+          <TableAlarmPte alarms={UnsolvedAlarmas} />
         )}
       </div>
       <ModalModularizado

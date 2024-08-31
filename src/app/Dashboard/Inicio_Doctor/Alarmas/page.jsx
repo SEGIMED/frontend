@@ -19,9 +19,8 @@ export default function AlarmHome() {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const activeAlarms = response?.data?.alarms?.filter(
-          (alarma) => !alarma.solved
-        );
+        console.log(response.data);
+        const activeAlarms = response?.data?.filter((alarma) => !alarma.solved);
         setActiveAlarms(activeAlarms);
       }
     } catch (error) {
@@ -68,8 +67,8 @@ export default function AlarmHome() {
             <div className="w-[12%] md:w-[5%] md:block"></div>
             <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-6 py-2 z-10">
               <p className="text-[#5F5F5F] hidden md:block">Prioridad</p>
-              <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Fecha</p>
+              <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Paciente</p>
               <p className="text-[#5F5F5F] hidden md:block">HTP</p>
               <p className="text-[#5F5F5F] hidden md:block">Motivo de alarma</p>
@@ -77,14 +76,11 @@ export default function AlarmHome() {
           </div>
           {isLoading ? (
             <SkeletonList count={10} />
-          ) : activeAlarms.length === 0 ? (
-            <NotFound
-              text="No tenes alarmas pendientes."
-              sizeText="w-[100%]"
-            />
+          ) : activeAlarms?.length === 0 ? (
+            <NotFound text="No tenes alarmas pendientes." sizeText="w-[100%]" />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
-              <TableAlarm pacientes={activeAlarms} />
+              <TableAlarm alarms={activeAlarms} />
             </div>
           )}
         </div>

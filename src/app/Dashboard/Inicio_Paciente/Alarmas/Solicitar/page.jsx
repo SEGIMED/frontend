@@ -4,12 +4,16 @@ import IconFatArrow from "@/components/icons/iconFatarrowDash";
 import IconRegresar from "@/components/icons/iconRegresar";
 import { useState, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addMessage } from "@/redux/slices/chat/alarmasChat";
+import { addMessage, resetMessages } from "@/redux/slices/chat/alarmasChat";
 import { socket } from "@/utils/socketio";
 import IconSendMensaje from "@/components/icons/IconSendMensaje";
 import Avatars from "@/components/avatar/avatarChat";
 import rutas from "@/utils/rutas";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import Segi from "@/components/InicioPaciente/chatSegi/segi.png";
 
+import Image from "next/image";
 const Page = () => {
   const [messageInput, setMessageInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,10 +22,11 @@ const Page = () => {
   const user = useAppSelector((state) => state.user);
   const userId = user?.id;
   const role = user?.role;
+  const router = useRouter();
   const socketRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const mensajesEndRef = useRef(null);
-
+  console.log(messages);
   useEffect(() => {
     // Initialize the socket connection
     if (!socketRef.current) {
@@ -31,32 +36,48 @@ const Page = () => {
     const currentSocket = socketRef.current;
 
     // Set up the event listener
-    currentSocket.on("sendAlarmasBotMessage", (response) => {
-      setTimeout(() => {
-        dispatch(
-          addMessage({
-            sender: "bot",
-            message: response,
-            time: new Date().toISOString(),
-          })
-        );
-        if (
-          response ===
-          "Has alcanzado el límite de mensajes. Por favor, intenta nuevamente en unos segundos."
-        ) {
-          currentSocket.emit("resetMessageCount", { type: "Alarmas" }, () => {
-            console.log("Se solicitó reiniciar el contador de mensajes");
-          });
-          setLoading(false);
-        } else {
-          setLoading(false);
-        }
-      }, 3500);
+    currentSocket?.on("sendAlarmasBotMessage", (response) => {
+      if (response.includes("Evaluaremos tu caso")) {
+        Swal.fire({
+          icon: "success",
+          title: "Alarma creada con éxito",
+          text: "Gracias por responder todas las preguntas. Evaluaremos tu caso cuidadosamente y te daremos una respuesta en las próximas horas.",
+          allowOutsideClick: false,
+        }).then(() => {
+          dispatch(resetMessages());
+          router.back();
+        });
+      } else {
+        setTimeout(() => {
+          dispatch(
+            addMessage({
+              sender: "bot",
+              message: response,
+              time: new Date().toISOString(),
+            })
+          );
+          if (
+            response ===
+            "Has alcanzado el límite de mensajes. Por favor, intenta nuevamente en unos segundos."
+          ) {
+            currentSocket?.emit(
+              "resetMessageCount",
+              { type: "Alarmas" },
+              () => {
+                console.log("Se solicitó reiniciar el contador de mensajes");
+              }
+            );
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        }, 3500);
+      }
     });
 
     // Clean up the event listener when the component unmounts
     return () => {
-      currentSocket.off("sendAlarmasBotMessage");
+      currentSocket?.off("sendAlarmasBotMessage");
     };
   }, [dispatch]);
 
@@ -64,7 +85,11 @@ const Page = () => {
     const currentSocket = socketRef.current;
 
     // Ensure the chatbot is created when the component mounts
-    currentSocket.emit("createChatBot", { type: "Alarmas" }); // Especifica que el tipo es "Alarmas"
+    currentSocket?.emit("createChatBot", { type: "Alarmas" }); // Especifica que el tipo es "Alarmas"
+    console.log("se creo el chatbot");
+    return () => {
+      currentSocket?.emit("destroyChatBot", { type: "Alarmas" });
+    };
   }, []);
 
   useEffect(() => {
@@ -114,23 +139,31 @@ const Page = () => {
     }
   };
 
+  const handleCancelAlarm = () => {
+    Swal.fire({
+      icon: "warning",
+      title: "¿Esta seguro que desea cerrar la conversación?",
+      text: "Si usted cierra esta conversación no se creará ninguna alarma y deberá iniciar el proceso nuevamente para crear una.",
+      confirmButtonText: "Finalizar",
+      cancelButtonText: "Regresar",
+      showCancelButton: true,
+      cancelButtonColor: "#E73F3F",
+    }).then((response) => {
+      if (response.isConfirmed) {
+        router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
+      }
+    });
+  };
+
   return (
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center gap-2 px-4 py-2 border-b border-b-[#cecece] bg-[#FAFAFC]">
-        <div className="flex items-center ">
-          <IconFatArrow />
-          <p className="text-lg font-normal leading-6 text-[#5F5F5F] ">
-            {user?.fullName || "Usuario"}
-          </p>
-        </div>
-        <div>
-          <Elboton
-            href={`${rutas.PacienteDash}${rutas.Alarm}`}
-            size={"lg"}
-            nombre={"Regresar"}
-            icon={<IconRegresar />}
-          />
-        </div>
+        <Elboton
+          onPress={handleCancelAlarm}
+          size={"lg"}
+          nombre={"Finalizar"}
+          icon={<IconRegresar />}
+        />
       </div>
 
       <div className="text-[#686868] w-full flex h-full flex-col bg-[#FAFAFC]">
@@ -153,18 +186,18 @@ const Page = () => {
                       ? "self-start text-left"
                       : "self-end text-right flex-row-reverse gap-3"
                   }`}>
-                  {message?.sender !== "bot" && (
-                    <span
-                      onClick={() => {
-                        if (message?.sender !== "bot") {
-                          router.push(
-                            `${rutas.Doctor}${rutas.Pacientes}/${message?.sender}`
-                          );
-                        }
-                      }}
-                      className={`cursor-pointer`}>
-                      <Avatars
-                        avatar1={null /* Asigna el avatar si es necesario */}
+                  {message?.sender !== "bot" ? (
+                    <span className={`cursor-pointer`}>
+                      <Avatars avatar1={user?.avatar} />
+                    </span>
+                  ) : (
+                    <span className={`cursor-pointer`}>
+                      <Image
+                        src={Segi}
+                        alt="SegiBot"
+                        className="border border-bluePrimary rounded-full"
+                        width={36}
+                        height={36}
                       />
                     </span>
                   )}
@@ -181,16 +214,6 @@ const Page = () => {
                   <small className="inline-block px-3 py-2 rounded-lg">
                     {message?.message}
                   </small>
-                </div>
-                {/* Mostrar la hora del mensaje */}
-                <div
-                  className={`text-xs text-gray-500 mt-1 ${
-                    message?.sender === "bot" ? "self-start" : "self-end"
-                  }`}>
-                  {new Date(message?.time).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
                 </div>
               </div>
             ))}

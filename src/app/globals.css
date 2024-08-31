@@ -10,7 +10,9 @@ body {
   color: #686868;
   background: white;
 }
-
+.swal2-confirm{
+  background-color: #70C247!important;
+}
 @media screen and (max-width: 640px) {
   .rbc-timeslot-group {
     min-height: 100px!important;
