@@ -176,6 +176,8 @@ export const SidePte = ({ search, toggleSidebar }) => {
     } catch (error) {
       console.error(error.message);
     }
+    
+    
   };
 
   useEffect(() => {

@@ -4,9 +4,17 @@ import { dataClear } from "@/redux/slices/chat/chat";
 import Cookies from "js-cookie";
 import { baseURL } from "@/Api/ApiSegimed";
 
+
 class Socket {
   constructor() {
-    this._socket = null;
+    const token = Cookies.get("a");
+    const refreshToken = Cookies.get("d");
+    this._socket =  io(`${baseURL}/room-consult`, {
+      query: {
+        token: token,
+        refreshToken: refreshToken,
+      },
+    });
     this._observer = null;
     this._token = null;
     this._dispatch = null;
@@ -55,6 +63,9 @@ class Socket {
         dispatch(addChat(newChat));
       });
     });
+
+    
+  
 
     this._socket.on("newAccessToken", ({ newAccessToken }) => {
       Cookies.set("a", newAccessToken);

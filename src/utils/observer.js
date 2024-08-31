@@ -1,26 +1,37 @@
+'use client'
+
+import { current } from "@reduxjs/toolkit";
+
 class Observer{
     constructor(){
-        this.usersViewMedia = {}
+        this.remoteUser = null;
+        this.userObj = null;
+        this.remoteStateRef = null;
         this.stateRef = null;
         if(!Observer.instance){
             Observer.instance = this;
         }
         return Observer.instance
     }
-    addViewMediaUser(userId,videoRef){
-        this.usersViewMedia[userId] = videoRef;
+
+    addViewMediaUser(videoRef){
+        this.remoteUser = videoRef.current
     }
-    addViewState(stateRef){
-        this.stateRef = stateRef;
+    addViewRemoteState(stateRef){
+        this.remoteStateRef = stateRef.current;
     }
 
+    addViewState(state){
+        this.stateRef = state.current 
+    }
+    
     setState(str){
         if(this.stateRef){
             this.stateRef.innerText = str;
         }
     }
-    setStreamVideo(userId,data){
-        this.usersViewMedia[userId].srcObject = data;
+    setStreamVideo(data){
+        this.remoteUser.srcObject = data; 
     }
 }
 
