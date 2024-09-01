@@ -13,6 +13,7 @@ import rutas from "@/utils/rutas";
 import IconMedChat from "../icons/IconMedChat";
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconImportar from "../icons/IconImportar";
+import Interconsulta from "../icons/IconInterconsulta";
 
 export const buttonsDoc = [
   {
@@ -55,7 +56,7 @@ export const buttonsDoc = [
       {
         name: "Interconsultas",
         path: `${rutas.Doctor}${rutas.Interconsultas}`,
-        icon: IconRecordNav,
+        icon: Interconsulta,
       },
       {
         name: "Pacientes",

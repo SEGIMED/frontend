@@ -14,7 +14,7 @@ export default function BotonInterconsulta({
   return type === "green" ? (
     <div
       className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border  border-[#cecece] ${
-        disabled && "cursor-pointer"
+        !disabled && "cursor-pointer"
       } ${active ? "bg-[#70C247]" : "bg-white"}`}
       onClick={!disabled && onClick}>
       <p className={`text-sm font-normal leading-4 ${active && "text-white"}`}>
@@ -29,8 +29,8 @@ export default function BotonInterconsulta({
   ) : (
     <div
       className={`flex items-center justify-center rounded-lg gap-2 w-fit px-3 py-1 border  border-[#cecece] ${
-        disabled && "cursor-pointer"
-      } ${active ? "bg-red-500" : "bg-white"}`}
+        !disabled && "cursor-pointer"
+      } ${active ? "bg-[#E73F3F]" : "bg-white"}`}
       onClick={!disabled && onClick}>
       <p className={`text-sm font-normal leading-4 ${active && "text-white"}`}>
         {label}

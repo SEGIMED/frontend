@@ -24,6 +24,7 @@ const ModalInterconsulta = ({
       onOpenChange={onOpenChange}
       onClose={onClose}
       placement={"center"}
+      disableAnimation
       classNames={{
         closeButton: "text-xl",
       }}>

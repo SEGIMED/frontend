@@ -11,6 +11,7 @@ import rutas from "@/utils/rutas";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
 import Elboton from "@/components/Buttons/Elboton";
+import IconMoreInfo from "@/components/icons/IconMoreInfo";
 
 const Page = () => {
   const [interconsultations, setInterconsultations] = useState([]);
@@ -22,6 +23,7 @@ const Page = () => {
       <Elboton
         nombre={"Solicitar"}
         href={`${rutas.Doctor}${rutas.Interconsultas}/Solicitar`}
+        icon={<IconMoreInfo color="white" />}
       />
     );
   };
@@ -92,10 +94,6 @@ const Page = () => {
         icon={<IconOptions color="white" />}
         items={[
           {
-            label: "Resolver",
-            icon: <IconAccion />,
-          },
-          {
             label: "Ver detalles",
             icon: <IconConsulta />,
             onClick: () =>
@@ -111,7 +109,7 @@ const Page = () => {
       <TableToolBar
         title={"Listado de Interconsultas"}
         showBackButton={false}
-        button={<SolicitarButton />}
+        button2={<SolicitarButton />}
       />
       <DynamicTable
         columns={columns}

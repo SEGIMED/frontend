@@ -30,8 +30,6 @@ const Page = () => {
   // console.log(importaciones);
   console.log(selectedImport);
 
-
-
   const ConsultasColumns = [
     {
       label: "Fecha",
@@ -205,20 +203,26 @@ const Page = () => {
                       {
                         label: "Ver Detalles",
                         icon: <IconOptions color={"#B2B2B2"} />,
-                        onClick: () => { setSelectedImport(row); setIsModalOpen(true) }
+                        onClick: () => {
+                          setSelectedImport(row);
+                          setIsModalOpen(true);
+                        },
                       },
                       {
                         label: "Ver archivo",
                         icon: <IconImportar color={"#B2B2B2"} />,
-                        onClick: () => { setSelectedImport(row); setIsModalOpenFile(true) }
-                      }
+                        onClick: () => {
+                          setSelectedImport(row);
+                          setIsModalOpenFile(true);
+                        },
+                      },
                     ].filter(Boolean),
                   },
                 ]}
                 className={"w-[40px] md:w-full lg:w-fit mx-auto"}
               />
             );
-          }
+          },
         };
       default:
         return {
@@ -251,9 +255,15 @@ const Page = () => {
           ) : (
             <DynamicTable
               title={title}
-              rows={tabSelected !== "HC Importados" ? infoPatient?.data : importaciones}
+              rows={
+                tabSelected !== "HC Importados"
+                  ? infoPatient?.data
+                  : importaciones
+              }
               columns={columns}
-              clickable={tabSelected !== "Consultas" && tabSelected !== "HC Importados"}
+              clickable={
+                tabSelected !== "Consultas" && tabSelected !== "HC Importados"
+              }
               renderDropDown={renderDropDown}
               showHistoryIcon={true}
               renderCustomContent={component}
@@ -263,7 +273,13 @@ const Page = () => {
           <ModalModularizado
             isOpen={isModalOpen}
             onClose={closeModal}
-            Modals={[<ImportarHC key={"importar hc"} state={selectedImport} disabled={true} />]}
+            Modals={[
+              <ImportarHC
+                key={"importar hc"}
+                state={selectedImport}
+                disabled={true}
+              />,
+            ]}
             title={"Ver detalles de importacion"}
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}
@@ -276,7 +292,9 @@ const Page = () => {
           <ModalModularizado
             isOpen={isModalOpenFile}
             onClose={closeModalFile}
-            Modals={[<FileDisplay key={"displayFile"} state={selectedImport} />]}
+            Modals={[
+              <FileDisplay key={"displayFile"} state={selectedImport} />,
+            ]}
             title={"Visualizacion de archivo"}
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}

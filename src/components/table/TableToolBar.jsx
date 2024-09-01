@@ -3,7 +3,7 @@ import Elboton from "../Buttons/Elboton";
 import IconRegresar from "../icons/iconRegresar";
 import Ordenar from "@/components/Buttons/Ordenar";
 
-const TableToolBar = ({ title, showBackButton, button }) => {
+const TableToolBar = ({ title, showBackButton, button, button2 }) => {
   const router = useRouter();
   return (
     <div className="flex justify-between py-2 lg:px-4 px-2 items-center bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] ">
@@ -26,7 +26,7 @@ const TableToolBar = ({ title, showBackButton, button }) => {
       <h1 className="font-Poppins font-bold md:text-xl text-center ">
         {title}
       </h1>
-      <Ordenar />
+      {button2 ? button2 : <Ordenar />}
     </div>
   );
 };

@@ -7,12 +7,12 @@ export default function MatriculaNumber({ handleDisabled, state }) {
 
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if (state.mariculaNac) { handleDisabled() }
+        if (state.nacionalRegistration) { handleDisabled() }
     }, [state]);
 
     const handleSelect = (event) => {
-        const domicilio = event.target.value;
-        dispatch(setSelectedOption({ name: 'mariculaNac', option: domicilio }));
+        const matricula = event.target.value;
+        dispatch(setSelectedOption({ name: 'nacionalRegistration', option: matricula }));
         handleDisabled();
     }
     return (
@@ -21,7 +21,7 @@ export default function MatriculaNumber({ handleDisabled, state }) {
                 Ingrese su número de matrícula nacional
             </p>
             <div className="w-full">
-                <input type="text" onChange={handleSelect} defaultValue={state.mariculaNac} className="w-full px-4 py-2 outline-none border border-[#D7D7D7] rounded-lg" placeholder="Escriba su matrícula nacional" />
+                <input type="text" onChange={handleSelect} defaultValue={state.nacionalRegistration} className="w-full px-4 py-2 outline-none border border-[#D7D7D7] rounded-lg" placeholder="Escriba su matrícula nacional" />
             </div>
         </div>
     );

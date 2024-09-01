@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import rutas from "@/utils/rutas";
 import Link from "next/link";
@@ -27,11 +27,14 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import { socket } from "@/utils/socketio";
+import { addMessage, toogleChat } from "@/redux/slices/chat/chatBot";
 
 export default function SubNavbar({ id }) {
   const [openDetails, setOpenDetails] = useState(false);
   const params = useParams();
   const selectedTab = useAppSelector((state) => state.clinicalHistory.tab);
+  const segiChat = useAppSelector((state) => state.chatBot.messages);
   const userId = params?.userId;
   const getSelectedClass = (name) =>
     selectedTab === name ? "bg-white" : "cursor-pointer ";
@@ -129,7 +132,22 @@ export default function SubNavbar({ id }) {
     const response = await ApiSegimed.get(`/patient-studies?userId=${userId}`);
     dispatch(addImportHistory(response.data));
   };
-
+  const handleClinicalHistorySegi = () => {
+    dispatch(toogleChat(true));
+    if (
+      segiChat[segiChat.length - 1].message !=
+      "Tienes alguna pregunta sobre la historia clínica de este paciente?"
+    ) {
+      dispatch(
+        addMessage({
+          sender: "bot",
+          message:
+            "Tienes alguna pregunta sobre la historia clínica de este paciente?",
+          time: new Date().toISOString(),
+        })
+      );
+    }
+  };
   const getUser = async (headers) => {
     const response = await ApiSegimed.get(
       `/patient-details?id=${userId}`,
@@ -139,16 +157,18 @@ export default function SubNavbar({ id }) {
   };
 
   useEffect(() => {
-    const token = Cookies.get("a");
     dispatch(setLoading(true));
-    if (token) {
-      getUser({ headers: { token: token } }).catch(console.error);
-      getConsultas({ headers: { token: token } }).catch(console.error);
-      getImportHistory().catch(console.error);
+    getUser().catch(console.error);
+    getConsultas().catch(console.error);
+    getImportHistory().catch(console.error);
+    if (socket.isConnected()) {
+      socket.emit("sendPatientInfo", { message: userId });
+      handleClinicalHistorySegi();
     }
 
     return () => {
       dispatch(clearClinicalHistory());
+      dispatch(toogleChat(false));
     };
   }, [userId, dispatch]);
 
