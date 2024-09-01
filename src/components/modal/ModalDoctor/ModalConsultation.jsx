@@ -18,7 +18,14 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
 
-const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
+const ModalConsultation = ({
+  isOpen,
+  onClose,
+  doctorId,
+  patientId,
+  reason,
+  callback,
+}) => {
   const role = Cookies.get("b");
   const {
     register,
@@ -28,7 +35,11 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
     reset,
     formState: { errors },
     setError,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      reasonForConsultation: reason,
+    },
+  });
 
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
@@ -68,19 +79,15 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
   }, [onClose]);
 
   useEffect(() => {
-    if (!isOpen) {
+    // Set or update default values when isOpen changes or when `reason` prop changes
+    if (isOpen) {
       reset({
-        patient: "",
-        typeOfMedicalConsultation: "",
-        reasonForConsultation: "",
-        healthCenter: "",
-        date: "",
-        time: "",
-        scheduledStartTimestamp: "",
-        scheduledEndTimestamp: "",
+        reasonForConsultation: reason,
       });
+    } else {
+      reset();
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reason, reset]);
 
   useEffect(() => {
     const startDateTime = combineDateTime(date, time);
@@ -125,9 +132,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
       setDisabled(true);
       const { date, time, ...rest } = data;
 
-      const token = Cookies.get("a");
-      const headers = { headers: { token: token } };
-      const response = await ApiSegimed.post("/schedules", rest, headers);
+      const response = await ApiSegimed.post("/schedules", rest);
 
       handleClose();
       if (response.data) {
@@ -137,6 +142,8 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             icon: "success",
             confirmButtonColor: "#487FFA",
             confirmButtonText: "Aceptar",
+          }).then(() => {
+            if (callback) callback();
           });
         } else {
           Swal.fire({
@@ -183,9 +190,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
         onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
-        <form
-          onSubmit={onSubmit}
-          className="flex flex-col h-full">
+        <form onSubmit={onSubmit} className="flex flex-col h-full">
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-3">
               <IconCurrentRouteNav className="w-4" />
@@ -280,8 +285,9 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </div>
             <select
               id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                }`}
+              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                errors.healthCenter ? "border-red-500" : ""
+              }`}
               {...register("healthCenter", {
                 required: {
                   value: true,
@@ -376,7 +382,6 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             </button>
           </div>
         </form>
-
       </div>
     </div>
   ) : null;

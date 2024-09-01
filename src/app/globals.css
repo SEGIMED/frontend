@@ -10,7 +10,12 @@ body {
   color: #686868;
   background: white;
 }
-
+.swal2-confirm{
+  background-color: #70C247!important;
+}
+.swal2-cancel{
+  background-color: #E73F3F!important;
+}
 @media screen and (max-width: 640px) {
   .rbc-timeslot-group {
     min-height: 100px!important;

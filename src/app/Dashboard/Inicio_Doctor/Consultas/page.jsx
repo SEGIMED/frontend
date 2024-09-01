@@ -30,6 +30,7 @@ import DynamicTable from "@/components/table/DynamicTable";
 import IconConsulta from "@/components/icons/IconConsulta";
 import IconAccion from "@/components/icons/IconAccion";
 import { setSearchBar } from "@/redux/slices/user/searchBar";
+import IconCheckBoton from "@/components/icons/iconCheckBoton";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -84,7 +85,7 @@ export default function HomeDoc() {
       const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
       return diffA - diffB;
     })
-    .filter((cita) => cita.schedulingStatus === 1 && cita.IsApproved === true);
+    .filter((cita) => cita.schedulingStatus === 1);
 
   const lastSegmentTextToShow = PathnameShow();
 
@@ -97,6 +98,9 @@ export default function HomeDoc() {
     Cookies.set("medicalEventId", idEvent, { expires: 7 });
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
   };
+  //TODO-Abrir modal con mas información de la consulta y opcion para aceptar o rechazar consulta pedida por el paciente
+  const handleApproveSchedule = (row) => {};
+
   const handleDeleteClick = (patient) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -168,6 +172,12 @@ export default function HomeDoc() {
       width: "w-16",
     },
     {
+      label: "Aprobada",
+      key: "IsApproved",
+      showMobile: false,
+      width: "w-8",
+    },
+    {
       label: "Motivo de consulta",
       key: "reasonForConsultation",
       showMobile: false,
@@ -189,17 +199,22 @@ export default function HomeDoc() {
                 onClick: () => handleReviewClick(row),
               },
               {
-                label: "Ver consultas",
+                label: "Ver consulta",
                 icon: <IconPersonalData />,
                 onClick: () =>
                   handleCokiePatient(row.id, row.patient, row.medicalEvent.id),
+              },
+              {
+                label: "Aprobar Consulta",
+                icon: <IconCheckBoton className={"w-6"} color="#B2B2B2" />,
+                onClick: () => handleApproveSchedule(row),
               },
               {
                 label: "Eliminar consulta",
                 icon: <IconDelete color="#B2B2B2" />,
                 onClick: () => handleDeleteClick(row),
               },
-            ].filter(Boolean),
+            ],
           },
         ]}
         className={"w-[40px] md:w-full lg:w-fit mx-auto"}
