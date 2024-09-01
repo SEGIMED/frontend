@@ -31,9 +31,15 @@ const AlarmSelector = (id) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModalPhone, setIsShowModalPhone] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isRevaluatedAlarm, setIsRevaluatedAlarm] = useState(false);
   const router = useRouter();
   const userId = Cookies.get("c");
+  console.log(isRevaluatedAlarm);
   const handlePreAction = (next) => {
+    if (isRevaluatedAlarm) {
+      next();
+      return;
+    }
     Swal.fire({
       title: "Reevaluar la prioridad de la alarma?",
       input: "select",
@@ -63,6 +69,7 @@ const AlarmSelector = (id) => {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     }).then(() => {
+      setIsRevaluatedAlarm(true);
       if (next) next();
     });
   };
@@ -170,7 +177,10 @@ const AlarmSelector = (id) => {
           <div className="flex gap-4 items-center">
             <img
               alt={"Avatar del paciente"}
-              src={selectedAlarm?.patient.avatar}
+              src={
+                selectedAlarm?.patient.avatar ||
+                "https://res.cloudinary.com/dya1ekkd5/image/upload/v1718858700/qelavq2pd0lv2z4nk0hw.jpg"
+              }
               className="rounded-full w-16 h-16"
             />
             <div className="flex flex-col gap-1 items-start">

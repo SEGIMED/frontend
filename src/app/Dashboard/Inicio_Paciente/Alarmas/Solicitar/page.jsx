@@ -1,6 +1,5 @@
 "use client";
 import Elboton from "@/components/Buttons/Elboton";
-import IconFatArrow from "@/components/icons/iconFatarrowDash";
 import IconRegresar from "@/components/icons/iconRegresar";
 import { useState, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -14,83 +13,78 @@ import { useRouter } from "next/navigation";
 import Segi from "@/components/InicioPaciente/chatSegi/segi.png";
 
 import Image from "next/image";
+import Cookies from "js-cookie";
 const Page = () => {
   const [messageInput, setMessageInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messages = useAppSelector((state) => state.alarmasChat?.messages);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const userId = user?.id;
-  const role = user?.role;
   const router = useRouter();
-  const socketRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const mensajesEndRef = useRef(null);
-  console.log(messages);
+  const [socketInitialized, setSocketInitialized] = useState(false);
+
   useEffect(() => {
-    // Initialize the socket connection
-    if (!socketRef.current) {
-      socketRef.current = socket._socket; // Ensure socket is initialized
+    setTimeout(() => {
+      if (socket.isConnected()) {
+        setSocketInitialized(true);
+      }
+    }, 500);
+  }, []);
+  useEffect(() => {
+    if (!socketInitialized) return;
+
+    // Emitir solo cuando el socket esté conectado
+    if (socket.isConnected()) {
+      socket._socket.emit("createChatBot", { type: "Alarmas" });
+      socket._socket.on("sendAlarmasBotMessage", (response) => {
+        if (response.includes("Evaluaremos tu caso")) {
+          Swal.fire({
+            icon: "success",
+            title: "Alarma creada con éxito",
+            text: "Gracias por responder todas las preguntas. Evaluaremos tu caso cuidadosamente y te daremos una respuesta en las próximas horas.",
+            allowOutsideClick: false,
+          }).then(() => {
+            dispatch(resetMessages());
+            router.back();
+          });
+        } else {
+          setTimeout(() => {
+            dispatch(
+              addMessage({
+                sender: "bot",
+                message: response,
+                time: new Date().toISOString(),
+              })
+            );
+            if (
+              response ===
+              "Has alcanzado el límite de mensajes. Por favor, intenta nuevamente en unos segundos."
+            ) {
+              socket._socket.emit(
+                "resetMessageCount",
+                { type: "Alarmas" },
+                () => {
+                  console.log("Se solicitó reiniciar el contador de mensajes");
+                }
+              );
+              setLoading(false);
+            } else {
+              setLoading(false);
+            }
+          }, 5000);
+        }
+      });
     }
 
-    const currentSocket = socketRef.current;
-
-    // Set up the event listener
-    currentSocket?.on("sendAlarmasBotMessage", (response) => {
-      if (response.includes("Evaluaremos tu caso")) {
-        Swal.fire({
-          icon: "success",
-          title: "Alarma creada con éxito",
-          text: "Gracias por responder todas las preguntas. Evaluaremos tu caso cuidadosamente y te daremos una respuesta en las próximas horas.",
-          allowOutsideClick: false,
-        }).then(() => {
-          dispatch(resetMessages());
-          router.back();
-        });
-      } else {
-        setTimeout(() => {
-          dispatch(
-            addMessage({
-              sender: "bot",
-              message: response,
-              time: new Date().toISOString(),
-            })
-          );
-          if (
-            response ===
-            "Has alcanzado el límite de mensajes. Por favor, intenta nuevamente en unos segundos."
-          ) {
-            currentSocket?.emit(
-              "resetMessageCount",
-              { type: "Alarmas" },
-              () => {
-                console.log("Se solicitó reiniciar el contador de mensajes");
-              }
-            );
-            setLoading(false);
-          } else {
-            setLoading(false);
-          }
-        }, 3500);
+    return () => {
+      if (socket.isConnected()) {
+        socket._socket.emit("destroyChatBot", { type: "Alarmas" });
+        socket._socket.off("sendAlarmasBotMessage");
       }
-    });
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      currentSocket?.off("sendAlarmasBotMessage");
     };
-  }, [dispatch]);
-
-  useEffect(() => {
-    const currentSocket = socketRef.current;
-
-    // Ensure the chatbot is created when the component mounts
-    currentSocket?.emit("createChatBot", { type: "Alarmas" }); // Especifica que el tipo es "Alarmas"
-    console.log("se creo el chatbot");
-    return () => {
-      currentSocket?.emit("destroyChatBot", { type: "Alarmas" });
-    };
-  }, []);
+  }, [socketInitialized, dispatch, router]);
 
   useEffect(() => {
     if (messagesContainerRef.current) {
@@ -113,9 +107,9 @@ const Page = () => {
       setTimeout(() => {
         setLoading(true);
 
-        // Ensure the socket is initialized before sending a message
-        if (socketRef.current) {
-          socketRef.current.emit(
+        // Ensure the socket._socket is initialized before sending a message
+        if (socket) {
+          socket._socket.emit(
             "sendUserChatBotMessage",
             { message: messageInput, type: "Alarmas" }, // Especifica que el tipo es "Alarmas"
             (response) => {
@@ -218,6 +212,29 @@ const Page = () => {
                 </div>
               </div>
             ))}
+            {loading && (
+              <div
+                className={
+                  "p-2 px-4 lg:px-8 font-poppins flex flex-col justify-start"
+                }>
+                <span className={`cursor-pointer`}>
+                  <Image
+                    src={Segi}
+                    alt="SegiBot"
+                    className="border border-bluePrimary rounded-full"
+                    width={36}
+                    height={36}
+                  />
+                </span>
+                <div
+                  className={`px-1 md:px-3 py-1 md:py-2 w-fit max-w-[70%] border-[#D7D7D7] border md:max-w-[45%] bg-[#FFFFFF] rounded-2xl shadow-sm mb-2            
+                  rounded-tl-none ms-4 lg:ms-[55px]`}>
+                  <small className="inline-block px-3 py-2 rounded-lg">
+                    Segi esta pensando...
+                  </small>
+                </div>
+              </div>
+            )}
             <div ref={mensajesEndRef} />
           </div>
         </div>
