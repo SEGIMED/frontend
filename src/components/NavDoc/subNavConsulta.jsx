@@ -26,7 +26,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
  
 
   return (
-    <div className="border-b border-b-[#cecece] bg-[#fafafc] flex  flex-row-reverse md:flex-row justify-around items-center md:pr-6">
+    <div className="border-b border-b-[#cecece] bg-[#fafafc] flex  flex-row items-center ">
       <Navbar
         className="flex justify-start items-center w-[86%] md:w-full bg-[#fafafc] cursor-pointer"
         classNames={{
@@ -94,7 +94,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
           </NavbarItem>
           </NavbarContent>
           <NavbarContent className="gap-0 px-0 overflow-x-auto md:hidden flex">
-          <NavbarItem className="flex items-center gap-2 cursor-pointer md:hidden ">
+          <NavbarItem className="flex items-center gap-2 cursor-pointer ">
             <Dropdown>
               <DropdownTrigger>
                 <Button
