@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
 import IconArrowRight from "@/components/icons/iconArrowRight";
 import LoadingFallback from "@/components/loading/loading";
+import IconArrowLeft from "@/components/icons/IconArrowLeft";
 
 
 const ProgressBar = ({ steps, currentIndex, progessBar }) => {
@@ -43,6 +44,7 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
     function handleClickOutside(event) {
         if (event.target === event.currentTarget) {
             onClose();
+            setIndex(0)
         }
     }
 
@@ -65,6 +67,7 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
         } else {
             if (ruta)
                 router.push(`${ruta}`)
+            setIndex(0)
             onClose();
         }
     };
@@ -99,12 +102,12 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
 
                 </div>
                 <div className="flex gap-2 pb-5 bg-white border-t rounded-b-lg justify-center items-center pt-3 border-t-[#DCDBDB] w-full">
-                    <button
-                        disabled={disabled}
+                    {index !== 0 ? <button
+
                         onClick={funcionButton1 ? funcionButton1 : handlePrev}
                         className={` py-2 px-4 items-center flex rounded-lg gap-2 w-fit ${button1} disabled:bg-gray-400`}>
-                        <p className="block  font-bold">{buttonText1 ? buttonText1 : `Regresar`}</p>
-                    </button>
+                        <p className="font-bold flex gap-2 items-center">{buttonIcon ? buttonIcon : <IconArrowLeft iconColor={`white`} />}{buttonText1 ? buttonText1 : `Regresar`}</p>
+                    </button> : null}
                     <button
                         disabled={disabled}
                         onClick={funcion ? funcion : handleNext}
