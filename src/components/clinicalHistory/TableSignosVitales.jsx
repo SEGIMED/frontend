@@ -90,10 +90,10 @@ export default function SignosVitales({ pacientes, subtitle }) {
                   tiempo? (+ 140 mg/dl y - 80 mg/dl)
                 </label>
                 <div className="flex justify-end w-1/3 gap-4">
-                  <button className="px-4 py-1 border-2 rounded-xl border-[#DCDBDB]">
+                  <button className="px-4 py-1 border-2 rounded-lg border-[#DCDBDB]">
                     Si
                   </button>
-                  <button className="px-4 py-1 border-2 rounded-xl border-[#DCDBDB]">
+                  <button className="px-4 py-1 border-2 rounded-lg border-[#DCDBDB]">
                     No
                   </button>
                 </div>
@@ -108,16 +108,16 @@ export default function SignosVitales({ pacientes, subtitle }) {
                   Escriba los últimos 4 valores mas anormales que tuvo.
                 </label>
                 <div className="md:flex grid grid-cols-2 justify-start w-1/2 md:gap-4 gap-1">
-                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-lg border-[#DCDBDB] w-full md:w-fit h-fit">
                     150 mg/dl
                   </p>
-                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-lg border-[#DCDBDB] w-full md:w-fit h-fit">
                     75 mg/dl
                   </p>
-                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-lg border-[#DCDBDB] w-full md:w-fit h-fit">
                     77 mg/dl
                   </p>
-                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full md:w-fit h-fit">
+                  <p className="px-[2px] md:px-4 text-center py-1 border-2 rounded-lg border-[#DCDBDB] w-full md:w-fit h-fit">
                     143 mg/dl
                   </p>
                 </div>

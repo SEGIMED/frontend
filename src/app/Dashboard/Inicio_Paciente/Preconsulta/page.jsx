@@ -82,13 +82,13 @@ export default function HomePte() {
     <div className="h-full text-[#686868] w-full flex flex-col">
       {/* <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
         <button
-                    className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+                    className="flex px-6 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
                     onClick={handleSortClick}>
                     <p className="text-base font-bold leading-5 text-white text-start">Ordenar</p>
                     <IconOrder />
                 </button>
         <button
-          className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+          className="flex px-6 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
           onClick={() => {
             router.push(
               `${rutas.PacienteDash}${rutas.Preconsulta}${rutas.Teleconsulta}`

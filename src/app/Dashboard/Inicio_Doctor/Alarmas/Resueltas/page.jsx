@@ -57,7 +57,7 @@ export default function HomeDoc() {
           </h1>
           <div className="flex gap-3">
             <Link href={`${rutas.Doctor}${rutas.Alarm}`}>
-              <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+              <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">
                 <IconArrowLeft iconColor="white" />
                 Regresar
               </button>

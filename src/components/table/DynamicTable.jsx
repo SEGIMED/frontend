@@ -198,7 +198,7 @@ function DynamicTable({
             <th className="lg:pr-3 py-2 text-left  w-[30px] md:w-[80px]"></th>
           </tr>
         </thead>
-        <tbody className="bg-white  lg:text-left text-center text-[#686868]">
+        <tbody className="bg-white lg:text-left text-center text-[#686868]">
           {filteredRows?.length > 0 ? (
             filteredRows?.map((row, rowIndex) => (
               <Fragment key={rowIndex}>

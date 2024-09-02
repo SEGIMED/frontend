@@ -298,6 +298,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           <p>Mi Agenda</p>
         ) : lastSegment === "Doctores" ? (
           <p>Médicos</p>
+        ) : lastSegment === "crearMensaje" ? (
+          <p>Crear Mensaje</p>
         ) : IsEvent ? (
           <p>Evento</p>
         ) : IsMessage ? (
@@ -310,12 +312,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       </div>
       {showSearch && (
         <div
-          className={`hidden md:flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
+          className={`hidden md:flex justify-between w-[20rem] items-center gap-2 border bg-white border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar "
-            className="text-start text-[#808080] bg-[#FAFAFC] font-normal text-normal leading-6 outline-none"
+            className="text-start text-[#808080]  font-normal text-normal leading-6 outline-none"
             value={searchTerm}
           />
           <button>
@@ -346,7 +348,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
             }`}>
           <IconMail
             className="w-6 h-6"
@@ -362,7 +364,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
             }`}>
           <IconNotificaciones

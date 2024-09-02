@@ -86,7 +86,7 @@ export default function ClinicalHistory({
             {edit ? (
               <div>
                 <details className="relative">
-                  <summary className="flex justify-center items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 cursor-pointer text-white font-bold">
+                  <summary className="flex justify-center items-center px-6 py-2 bg-[#487FFA] rounded-lg gap-3 cursor-pointer text-white font-bold">
                     <IconAdd />
                     <p>Añadir</p>
                     <IconDown />
@@ -115,33 +115,33 @@ export default function ClinicalHistory({
           <ul className="bg-white py-5 px-2 w-full right-4 gap-3 z-10">
             {paciente[dataType] && typeof paciente[dataType] === "object"
               ? Object.entries(paciente[dataType]).map(([key, value]) => (
-                  <li key={key} className="flex justify-start items-center p-4">
-                    <label className="flex gap-3 w-1/2 font-medium p-4 ">
-                      <IconCircle className="w-3" /> {key}
-                    </label>
-                    {edit ? (
-                      <div className="w-1/2 flex justify-between items-center gap-2">
-                        <input
-                          className="w-full text-start bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1 items-center "
-                          type="text"
-                          defaultValue={value}
-                          {...register(key, {
-                            required: "*Este campo es obligatorio",
-                            minLength: 2,
-                            maxLength: 20,
-                          })}
-                        />
-                        <button type="button" onClick={() => handleDelete(key)}>
-                          <IconDelete />
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="w-1/2 text-start px-6 py-1 ">
-                        {value}
-                      </span>
-                    )}
-                  </li>
-                ))
+                <li key={key} className="flex justify-start items-center p-4">
+                  <label className="flex gap-3 w-1/2 font-medium p-4 ">
+                    <IconCircle className="w-3" /> {key}
+                  </label>
+                  {edit ? (
+                    <div className="w-1/2 flex justify-between items-center gap-2">
+                      <input
+                        className="w-full text-start bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1 items-center "
+                        type="text"
+                        defaultValue={value}
+                        {...register(key, {
+                          required: "*Este campo es obligatorio",
+                          minLength: 2,
+                          maxLength: 20,
+                        })}
+                      />
+                      <button type="button" onClick={() => handleDelete(key)}>
+                        <IconDelete />
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="w-1/2 text-start px-6 py-1 ">
+                      {value}
+                    </span>
+                  )}
+                </li>
+              ))
               : null}
             {nuevasPatologias.map((patologia, index) => (
               <li

@@ -85,7 +85,7 @@ export default function HomeDoc() {
     <div className="h-full text-[#686868] w-full flex flex-col">
       <div className="flex justify-between items-center border-b border-b-[#cecece] px-6 py-2">
         <button
-          className="flex px-2 md:px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+          className="flex px-2 md:px-6 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
           onClick={handleSortClick}>
           <p className="text-start text-white font-bold text-base leading-5">
             Ordenar
@@ -94,7 +94,7 @@ export default function HomeDoc() {
         </button>
         <h1 className="font-bold">Teleconsultas</h1>
         {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Historial}R`}>
-          <button className="flex px-2 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+          <button className="flex px-2 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
             <IconFolder className="h-6" />
             <p className="text-start text-[#487FFA] font-bold text-base leading-5">
               Pasadas
@@ -108,7 +108,7 @@ export default function HomeDoc() {
           toggleMenu={toggleFilterMenu}
         /> */}
         <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-          <button className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]">
+          <button className="flex px-6 py-2 rounded-lg gap-1 items-center bg-[#487FFA]">
             <IconRegresar />
             <p className="text-start text-white font-bold text-base leading-5">
               Regresar

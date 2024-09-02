@@ -139,7 +139,7 @@ export default function HomeDoc() {
         <h1 className="font-bold w-1/3 md:w-3/4 text-center">
           Solicitar interconsulta
         </h1>
-        <button className="flex items-center  px-1 md:px-4 py-2 bg-bluePrimary rounded-xl text-white font-bold w-1/2 md:w-fit">
+        <button className="flex items-center  px-1 md:px-4 py-2 bg-bluePrimary rounded-lg text-white font-bold w-1/2 md:w-fit">
           <p className="text-center w-full">Ver Interconsultas</p>
         </button>
       </div>
@@ -287,7 +287,7 @@ export default function HomeDoc() {
       <div className="w-full justify-center flex py-4">
         <button
           onClick={handleSubmit(onSubmit)}
-          className="flex items-center px-6 py-2 bg-greenPrimary rounded-xl gap-3 text-white font-bold">
+          className="flex items-center px-6 py-2 bg-greenPrimary rounded-lg gap-3 text-white font-bold">
           Solicitar interconsulta
           <IconArrowRight />
         </button>

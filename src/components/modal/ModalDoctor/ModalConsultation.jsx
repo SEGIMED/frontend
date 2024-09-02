@@ -370,7 +370,7 @@ const ModalConsultation = ({ isOpen, onClose, doctorId, patientId }) => {
             <button
               disabled={disabled}
               type="submit"
-              className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white">
+              className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-lg text-white">
               Continuar
               <IconArrowNextConsult />
             </button>

@@ -77,7 +77,7 @@ export default function AlarmPte() {
         {/* <Ordenar funcion={handleSortToggle} /> */}
 
         <button
-          className=" flex text-sm md:text-base items-center px-2 md:px-4 py-2 bg-white rounded-xl g text-[#487FFA] 
+          className=" flex text-sm md:text-base items-center px-2 md:px-4 py-2 bg-white rounded-lg g text-[#487FFA] 
                     font-bold border-solid border-[#487FFA] border-3"
           onClick={() => {
             router.push(`${rutas.PacienteDash}${rutas.Alarm}/resueltas`);
@@ -88,7 +88,7 @@ export default function AlarmPte() {
 
         <h1 className="font-bold text-center">Listado de Alarmas</h1>
         <button
-          className="flex text-sm md:text-base items-center px-2 py-2 bg-[#E73F3F] rounded-xl  text-white
+          className="flex text-sm md:text-base items-center px-2 py-2 bg-[#E73F3F] rounded-lg  text-white
           font-bold border-solid border-red-600 border-3"
           onClick={() => {
             setIsModalOpen(true);

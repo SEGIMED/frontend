@@ -200,6 +200,7 @@ export default function HomeDoc() {
       <MenuDropDown
         label={"Mas"}
         icon={<IconOptions color="white" />}
+        className={"w-[40px] md:w-full lg:w-fit mx-auto"}
         categories={[
           {
             title: "Opciones",
@@ -237,14 +238,14 @@ export default function HomeDoc() {
           <h1 className="hidden font-bold md:text-xl md:block">Pasadas</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Teleconsultas
                 </p>
               </button>
             </Link> */}
             <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid bg-[#487FFA] border-2 ">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid bg-[#487FFA] border-2 ">
                 <IconRegresar />
                 <p className="text-sm font-bold leading-5 text-white text-start md:text-base">
                   Regresar

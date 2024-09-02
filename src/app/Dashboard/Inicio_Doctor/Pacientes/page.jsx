@@ -265,7 +265,7 @@ export default function HomeDoc() {
           {ordenMedica ? (
             <button
               type="button"
-              className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+              className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
               onClick={() => {
                 router.push(`${rutas.Doctor}${rutas.Ordenes}`);
               }}>
@@ -279,16 +279,14 @@ export default function HomeDoc() {
 
           <button
             onClick={handleFavoriteClick}
-            className={`${
-              showFavorites
+            className={`${showFavorites
                 ? "bg-bluePrimary text-white"
                 : "bg-white text-bluePrimary  border-bluePrimary"
-            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
-              className={`hidden md:block ${
-                showFavorites ? "text-white" : "text-bluePrimary"
-              } font-bold`}>
+              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
+                } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -430,7 +428,7 @@ export default function HomeDoc() {
                       );
                     }}
                     classNameText={"hidden md:block "}
-                    // icon={<IconMas />}
+                  // icon={<IconMas />}
                   />
                 ) : (
                   <MenuDropDown
@@ -498,7 +496,7 @@ export default function HomeDoc() {
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
         <p>
@@ -507,7 +505,7 @@ export default function HomeDoc() {
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
           Siguiente
           <IconNext />
         </button>

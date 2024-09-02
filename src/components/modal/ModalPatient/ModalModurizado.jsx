@@ -35,7 +35,7 @@ const ProgressBar = ({ steps, currentIndex, progessBar }) => {
     );
 };
 
-const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, titleClassName, funcionButton1, ruta, button1, buttonText1, button2, progessBar, size, verification, buttonText, funcion, loading }) => {
+const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, titleClassName, funcionButton1, ruta, button1, buttonText1, button2, progessBar, size, verification, buttonText, funcion, loading, handleSubmit }) => {
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
 
@@ -60,14 +60,23 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
 
 
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (index < Modals.length - 1) {
             setIndex(index + 1);
-            if (verification) { setDisabled(true); }
+            if (verification) {
+                setDisabled(true);
+            }
         } else {
-            if (ruta)
-                router.push(`${ruta}`)
-            setIndex(0)
+            if (ruta) {
+                router.push(`${ruta}`);
+            }
+
+            if (handleSubmit) {
+                // Esperar a que handleSubmit se complete antes de continuar
+                await handleSubmit();
+            }
+
+            setIndex(0);
             onClose();
         }
     };

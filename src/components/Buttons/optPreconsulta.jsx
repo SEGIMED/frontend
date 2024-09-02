@@ -13,7 +13,7 @@ export default function Ver({ id, ruta }) {
   return (
     <>
       <button
-        className="flex px-3 py-2 bg-[#487FFA] rounded-xl gap-1 items-center"
+        className="flex px-3 py-2 bg-[#487FFA] rounded-lg gap-1 items-center"
         onClick={() => {
           router.push(ruta);
         }}>
