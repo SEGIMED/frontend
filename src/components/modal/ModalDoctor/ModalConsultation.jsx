@@ -16,7 +16,12 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import rutas from "@/utils/rutas";
+import { healthCenterSwitch } from "@/utils/healthCenters";
+import Elboton from "@/components/Buttons/Elboton";
+import IconCheckGreenBoton from "@/components/icons/IconCheckGreen";
+import IconCancel from "@/components/icons/iconCancel";
+import IconCheckBoton from "@/components/icons/iconCheckBoton";
+import IconPatientNav from "@/components/icons/IconPatientNav";
 
 const ModalConsultation = ({
   isOpen,
@@ -25,6 +30,9 @@ const ModalConsultation = ({
   patientId,
   reason,
   callback,
+  readOnly = false,
+  approveButtons,
+  consulta,
 }) => {
   const role = Cookies.get("b");
   const {
@@ -40,7 +48,6 @@ const ModalConsultation = ({
       reasonForConsultation: reason,
     },
   });
-
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
 
@@ -79,15 +86,22 @@ const ModalConsultation = ({
   }, [onClose]);
 
   useEffect(() => {
-    // Set or update default values when isOpen changes or when `reason` prop changes
     if (isOpen) {
-      reset({
-        reasonForConsultation: reason,
-      });
+      if (consulta) {
+        reset({
+          reasonForConsultation: reason || consulta?.reasonForConsultation,
+          typeOfMedicalConsultation: consulta?.typeOfMedicalConsultation,
+          healthCenter: consulta?.healthCenter,
+          date: new Date(consulta?.scheduledStartTimestamp)
+            .toISOString()
+            .split("T")[0],
+          time: formatTime(consulta?.scheduledStartTimestamp),
+        });
+      }
     } else {
       reset();
     }
-  }, [isOpen, reason, reset]);
+  }, [isOpen, reason, consulta, reset]);
 
   useEffect(() => {
     const startDateTime = combineDateTime(date, time);
@@ -105,6 +119,12 @@ const ModalConsultation = ({
     setValue("physician", doctorId);
   }, [date, time, setValue, patientId, doctorId]);
 
+  const formatTime = (timestamp) => {
+    let date = new Date(timestamp);
+    const hours = date.getHours().toString().padStart(2, "0"); // "HH"
+    const minutes = date.getMinutes().toString().padStart(2, "0"); // "MM"
+    return `${hours}:${minutes}`; // "HH:MM"
+  };
   const onSubmit = handleSubmit(async (data) => {
     try {
       const selectedTime = new Date(
@@ -183,7 +203,55 @@ const ModalConsultation = ({
       onClose();
     }
   }
-
+  const handleApproveConsulta = async () => {
+    Swal.fire({
+      icon: "question",
+      title: "Esta seguro de esta acción",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await ApiSegimed.patch(`/schedule/${consulta.id}`, {
+            schedulingStatus: 1,
+            IsApproved: true,
+          });
+          Swal.fire({
+            icon: "success",
+            title: "La consulta ha sido aceptada",
+          }).then(() => handleClose());
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Fallo al aceptar la consulta",
+            text: error.msg,
+          });
+        }
+      }
+    });
+  };
+  const handleDismissConsulta = async () => {
+    Swal.fire({
+      icon: "question",
+      title: "Esta seguro de esta acción",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await ApiSegimed.patch(`/schedule/${consulta.id}`, {
+            schedulingStatus: 3,
+          });
+          Swal.fire({
+            icon: "success",
+            title: "La consulta ha sido cancelada",
+          }).then(() => handleClose());
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Fallo al cancelar la consulta",
+            text: error.msg,
+          });
+        }
+      }
+    });
+  };
   return isOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto">
       <div
@@ -194,7 +262,7 @@ const ModalConsultation = ({
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-3">
               <IconCurrentRouteNav className="w-4" />
-              <p>Agendar consulta</p>
+              {consulta ? <p>Detalles de consulta</p> : <p>Agendar consulta</p>}
             </div>
             <button
               onClick={handleClose}
@@ -202,6 +270,18 @@ const ModalConsultation = ({
               <IconClose className="w-8" />
             </button>
           </div>
+          {consulta && (
+            <div className="flex flex-col justify-around gap-2  py-2 px-5">
+              <div className="flex items-center justify-start gap-3 text-sm font-semibold">
+                <IconPatientNav className={"w-5"} color={"black"} /> Paciente
+              </div>
+              <span className="py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg">
+                {consulta.patientUser.name +
+                  " " +
+                  consulta.patientUser.lastname}
+              </span>
+            </div>
+          )}
           <div className="flex flex-col justify-around px-5 pb-2">
             <div className="flex items-center justify-start gap-2 text-sm font-semibold">
               <IconTypeQueries /> Tipo de consultas
@@ -212,12 +292,9 @@ const ModalConsultation = ({
                   id="consultaFisica"
                   type="radio"
                   value="1"
-                  {...register("typeOfMedicalConsultation", {
-                    required: {
-                      value: true,
-                      message: "* Este dato es requerido *",
-                    },
-                  })}
+                  readOnly={readOnly}
+                  checked={consulta && consulta?.typeOfMedicalConsultation == 1}
+                  {...register("typeOfMedicalConsultation")}
                 />
                 <label htmlFor="consultaFisica" className="">
                   Consulta Física
@@ -230,15 +307,11 @@ const ModalConsultation = ({
                   type="radio"
                   disabled
                   value="2"
-                  {...register("typeOfMedicalConsultation", {
-                    required: {
-                      value: true,
-                      message: "* Debes seleccionar una opción *",
-                    },
-                  })}
+                  checked={consulta && consulta?.typeOfMedicalConsultation == 2}
+                  {...register("typeOfMedicalConsultation")}
                 />
                 <label htmlFor="teleconsulta" className="">
-                  Teleconsulta(Próximamente)
+                  Teleconsulta
                 </label>
               </div>
             </div>
@@ -253,7 +326,7 @@ const ModalConsultation = ({
 
           <div className="w-full border" />
 
-          <div className="flex flex-col justify-around gap-2  pb-2 px-5">
+          <div className="flex flex-col justify-around gap-2  py-2 px-5">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconReasonQuerie /> Motivo de consulta
             </div>
@@ -261,12 +334,8 @@ const ModalConsultation = ({
               id="reasonForConsultation"
               placeholder="Ingrese el motivo de la consulta"
               className="py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg"
-              {...register("reasonForConsultation", {
-                required: {
-                  value: true,
-                  message: "* ¿Cuál es el motivo de consulta? *",
-                },
-              })}
+              disabled={readOnly}
+              {...register("reasonForConsultation")}
             />
             <div className="relative">
               {errors.reasonForConsultation && (
@@ -279,25 +348,25 @@ const ModalConsultation = ({
 
           <div className="w-full border" />
 
-          <div className="flex flex-col justify-around gap-2 px-5 pb-2">
+          <div className="flex flex-col justify-around gap-2 px-5 py-2">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconCenterAtenttion /> Centro de atención
             </div>
-            <select
-              id="healthCenter"
-              className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                errors.healthCenter ? "border-red-500" : ""
-              }`}
-              {...register("healthCenter", {
-                required: {
-                  value: true,
-                  message:
-                    "* ¿En cuál centro de atención quieres ser atendido? *",
-                },
-              })}>
-              <option value="">Seleccione el centro de atención</option>
-              <option value="1">Centro Gallego</option>
-            </select>
+            {readOnly ? (
+              <span className="py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg">
+                {healthCenterSwitch(consulta.healthCenter)}
+              </span>
+            ) : (
+              <select
+                id="healthCenter"
+                className={` py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
+                  errors.healthCenter ? "border-red-500" : ""
+                }`}
+                {...register("healthCenter")}>
+                <option value="">Seleccione el centro de atención</option>
+                <option value="1">Centro Gallego</option>
+              </select>
+            )}
             <div className="relative">
               {errors.healthCenter && (
                 <span className="absolute left-0 top-full mt-1 text-sm font-medium text-red-500">
@@ -309,7 +378,7 @@ const ModalConsultation = ({
 
           <div className="w-full border" />
 
-          <div className="flex flex-col justify-around gap-2 px-5 pb-2">
+          <div className="flex flex-col justify-around gap-2 px-5 py-2">
             <div className="flex items-center justify-start gap-3 text-sm font-semibold">
               <IconDate /> Fecha
             </div>
@@ -325,12 +394,8 @@ const ModalConsultation = ({
                   type="date"
                   placeholder=""
                   className="w-60 p-2 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                  {...register("date", {
-                    required: {
-                      value: true,
-                      message: "* Selecciona la fecha *",
-                    },
-                  })}
+                  disabled={readOnly}
+                  {...register("date")}
                 />
                 <div className="relative">
                   {errors.date && (
@@ -350,16 +415,10 @@ const ModalConsultation = ({
                 <input
                   id="time"
                   type="time"
-                  min="08:00"
-                  max="20:00"
                   placeholder=""
                   className="w-60 py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded"
-                  {...register("time", {
-                    required: {
-                      value: true,
-                      message: "* Selecciona la hora *",
-                    },
-                  })}
+                  disabled={readOnly}
+                  {...register("time")}
                 />
                 <div className="relative">
                   {errors.time && (
@@ -372,15 +431,33 @@ const ModalConsultation = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-center w-full p-3 border-t-2">
-            <button
-              disabled={disabled}
-              type="submit"
-              className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white">
-              Continuar
-              <IconArrowNextConsult />
-            </button>
-          </div>
+          {!readOnly && (
+            <div className="flex items-center justify-center w-full p-3 border-t-2">
+              <button
+                disabled={disabled}
+                type="submit"
+                className="flex items-center justify-center gap-3 bg-[#487FFA] py-3 px-6 rounded-xl text-white">
+                Continuar
+                <IconArrowNextConsult />
+              </button>
+            </div>
+          )}
+          {approveButtons && (
+            <div className="flex justify-center gap-4 border-t-2 p-3">
+              <Elboton
+                nombre={"Aprobar"}
+                onPress={handleApproveConsulta}
+                icon2={<IconCheckBoton className={"w-6"} color={"white"} />}
+                className={"bg-greenPrimary"}
+              />
+              <Elboton
+                onPress={handleDismissConsulta}
+                nombre={"Rechazar"}
+                icon2={<IconCancel className={"w-6"} color={"white"} />}
+                className={"bg-redPrimary"}
+              />
+            </div>
+          )}
         </form>
       </div>
     </div>

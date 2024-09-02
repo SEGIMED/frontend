@@ -21,13 +21,16 @@ import { setSearchBar } from "@/redux/slices/user/searchBar";
 import IconCheckBoton from "@/components/icons/iconCheckBoton";
 import Elboton from "@/components/Buttons/Elboton";
 import IconSignoExclamacion from "@/components/icons/IconSignoExclamacion";
+import IconArrowLeft from "@/components/icons/IconArrowLeft";
+import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation";
 
-export default function HomeDoc() {
+export default function Page() {
   const token = Cookies.get("a");
   const dispatch = useAppDispatch();
   const [scheduledConsultas, setScheduledConsultas] = useState([]);
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [selectedConsulta, setSelectedConsulta] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +39,6 @@ export default function HomeDoc() {
       dispatch(setSearchBar(false));
     };
   }, [dispatch]);
-  const consultas = useAppSelector((state) => state);
   const currentDate = new Date();
 
   const getSchedulesByUserId = async () => {
@@ -60,17 +62,14 @@ export default function HomeDoc() {
   // Obtener consultas del estado
   const router = useRouter();
   // Obtener pacientes del estado
-  const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
-  router.push(`/Dashboard/Inicio_Doctor/Consultas`);
 
   useEffect(() => {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
-
-  const consultasToAprove = scheduledConsultas.filter(
-    (consulta) =>
-      consulta.IsApproved === false && consulta.schedulingStatus == 1
-  );
+  const handleCloseModal = async () => {
+    setIsConsultationModalOpen(false);
+    await getSchedulesByUserId();
+  };
   //ordenamiento por fecha desde el front por ahora
   const sortedConsultas = [...scheduledConsultas]
     .sort((a, b) => {
@@ -79,63 +78,16 @@ export default function HomeDoc() {
       const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
       return diffA - diffB;
     })
-    .filter((cita) => cita.schedulingStatus === 1 && cita.IsApproved === true);
+    .filter((cita) => cita.schedulingStatus === 1 && cita.IsApproved === false);
 
   const lastSegmentTextToShow = PathnameShow();
 
-  const handleReviewClick = (consulta) => {
-    setIsReviewModalOpen(true);
-    setSelectedPatientId(consulta?.patient);
-  };
-  const handleCokiePatient = (schedule, id, idEvent) => {
-    Cookies.set("patientId", id, { expires: 7 });
-    Cookies.set("medicalEventId", idEvent, { expires: 7 });
-    router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
+  const handleShowConsultaModal = (consulta) => {
+    console.log(consulta);
+    setIsConsultationModalOpen(true);
+    setSelectedConsulta(consulta);
   };
 
-  const handleDeleteClick = (patient) => {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
-      },
-      buttonsStyling: true,
-    });
-    swalWithBootstrapButtons
-      .fire({
-        title:
-          "Cancelar consulta con el paciente: " +
-          patient.patientUser.name +
-          " " +
-          patient.patientUser.lastname,
-        text: "Una vez cancelada no podrás revertir esta acción",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si",
-        cancelButtonText: "No",
-        reverseButtons: true,
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          // falta agregar el numero 5 de eliminado en el catalogo
-          await ApiSegimed.patch(
-            `/schedule/${patient.id}`,
-            { schedulingStatus: 5 },
-            { headers: { token: token } }
-          );
-          swalWithBootstrapButtons.fire({
-            title: "Cancelada!",
-            text:
-              "La consulta con el paciente: " +
-              patient.patientUser.name +
-              " " +
-              patient.patientUser.lastname +
-              " ha sido cancelada.",
-            icon: "success",
-          });
-        }
-      });
-  };
   const columns = [
     {
       label: "Nombre",
@@ -172,20 +124,9 @@ export default function HomeDoc() {
             title: "Opciones",
             items: [
               {
-                label: "Dejar Review",
-                icon: <IconCorazonMini />,
-                onClick: () => handleReviewClick(row),
-              },
-              {
-                label: "Ver consulta",
+                label: "Ver detalles",
                 icon: <IconPersonalData />,
-                onClick: () =>
-                  handleCokiePatient(row.id, row.patient, row.medicalEvent.id),
-              },
-              {
-                label: "Cancelar consulta",
-                icon: <IconDelete color="#B2B2B2" />,
-                onClick: () => handleDeleteClick(row),
+                onClick: () => handleShowConsultaModal(row),
               },
             ],
           },
@@ -194,33 +135,18 @@ export default function HomeDoc() {
       />
     );
   };
-
-  const PendientComponent = () => (
-    <div className="flex flex-row justify-between items-center">
-      <div className="flex items-center gap-4 px-1 lg:px-0">
-        <IconSignoExclamacion className={"w-8 lg:w-6"} />
-        <p className="text-redPrimary text-md lg:text-lg">
-          Tienes {consultasToAprove.length} consultas pendientes de aprobación
-        </p>
-      </div>
-      <Elboton
-        nombre={"Ver pendientes"}
-        href={`${rutas.Doctor}${rutas.Consultas}/Pendientes`}
-        className={"border-redPrimary border-1 bg-white"}
-        classNameText={"text-redPrimary px-1"}
-      />
-    </div>
-  );
-
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
       <title>{lastSegmentTextToShow}</title>
       <div className="flex flex-col w-full h-full">
         <div className="w-full flex justify-center md:justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
           {/* <Ordenar /> */}
-          <div></div>
-
-          <h1 className="hidden font-bold md:text-xl md:block">Proximas</h1>
+          <Elboton
+            nombre={"Regresar"}
+            onPress={() => router.back()}
+            icon={<IconArrowLeft iconColor={"white"} />}
+          />
+          <h1 className="hidden font-bold md:text-xl md:block">Pendientes</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
@@ -244,19 +170,19 @@ export default function HomeDoc() {
           rows={sortedConsultas}
           renderDropDown={renderDropDown}
           showRisks={true}
-          textError={"No tiene consultas próximas"}
-          firstRowComponent={
-            consultasToAprove?.length > 0 && <PendientComponent />
-          }
           loading={loading}
+          textError={"No tiene consultas pendientes"}
         />
-        {isReviewModalOpen && (
-          <ReviewModalApte
-            onClose={() => setIsReviewModalOpen(false)}
-            id={selectedPatientId}
-          />
-        )}
       </div>
+      {isConsultationModalOpen && (
+        <ModalConsultation
+          isOpen={isConsultationModalOpen}
+          readOnly={true}
+          consulta={selectedConsulta}
+          onClose={handleCloseModal}
+          approveButtons={true}
+        />
+      )}
     </div>
   );
 }
