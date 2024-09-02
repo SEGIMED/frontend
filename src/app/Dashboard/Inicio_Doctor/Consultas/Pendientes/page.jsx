@@ -180,6 +180,7 @@ export default function Page() {
           readOnly={true}
           consulta={selectedConsulta}
           onClose={handleCloseModal}
+          approveButtons={true}
         />
       )}
     </div>

@@ -31,6 +31,7 @@ const ModalConsultation = ({
   reason,
   callback,
   readOnly = false,
+  approveButtons,
   consulta,
 }) => {
   const role = Cookies.get("b");
@@ -261,11 +262,7 @@ const ModalConsultation = ({
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-3">
               <IconCurrentRouteNav className="w-4" />
-              {consulta ? (
-                <p>Solicitud de consulta</p>
-              ) : (
-                <p>Agendar consulta</p>
-              )}
+              {consulta ? <p>Detalles de consulta</p> : <p>Agendar consulta</p>}
             </div>
             <button
               onClick={handleClose}
@@ -445,7 +442,7 @@ const ModalConsultation = ({
               </button>
             </div>
           )}
-          {consulta && (
+          {approveButtons && (
             <div className="flex justify-center gap-4 border-t-2 p-3">
               <Elboton
                 nombre={"Aprobar"}
