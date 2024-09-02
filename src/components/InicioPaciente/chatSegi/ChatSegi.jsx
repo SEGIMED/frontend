@@ -4,18 +4,30 @@ import { MessageSegi } from "./MessageSegi";
 import IconSendArrow from "../../icons/IconSendArrow";
 import { socket } from "@/utils/socketio";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addMessage } from "@/redux/slices/chat/chatBot";
+import { addMessage, toogleAlarms } from "@/redux/slices/chat/chatBot";
 import { useEffect, useState, useRef } from "react";
+import IconAlarmRed from "@/components/icons/iconAlarmRed";
+import IconAlarm from "@/components/icons/IconAlarm";
+import IconRecordNav from "@/components/icons/IconRecordNav";
+import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
+import IconAlarmYellow from "@/components/icons/IconAlarmYellow";
+import IconAlarmGreen from "@/components/icons/iconAlarmGreen";
+import IconAlarmBlue from "@/components/icons/iconAlarmBlue";
+import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
+import Elboton from "@/components/Buttons/Elboton";
+import rutas from "@/utils/rutas";
 
 export const ChatSegi = ({ toggleChat }) => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const messages = useAppSelector((state) => state.chatBot?.messages);
+  const showAlarms = useAppSelector((state) => state.chatBot?.showAlarms);
+  const alarmsData = useAppSelector((state) => state.chatBot?.alarmsData);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const chatContainerRef = useRef(null);
   const socketRef = useRef(socket.getSocket());
-
+  console.log(alarmsData);
   useEffect(() => {
     const currentSocket = socketRef.current;
 
@@ -94,6 +106,19 @@ export const ChatSegi = ({ toggleChat }) => {
       handleSendMessage();
     }
   };
+
+  const PriorityIcon = ({ priority }) => {
+    switch (priority) {
+      case "Alta":
+        return <IconAlarmRed className="w-10" />;
+      case "Media":
+        return <IconAlarmYellow className="w-10" />;
+      case "Baja":
+        return <IconAlarmGreen className="w-10" />;
+      case "Indefinida":
+        return <IconAlarmBlue color={"gray"} className="w-10" />;
+    }
+  };
   return (
     <div className="fixed z-30 h-[75%] max-h-[700px] md:max-h-[600px] w-[90%] md:h-[85%] md:max-w-[600px] md:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
       <div className="flex flex-col h-full">
@@ -126,37 +151,95 @@ export const ChatSegi = ({ toggleChat }) => {
           </button>
         </div>
         <div className="bg-white h-[90%] md:max-h-[600px] xl:max-h-[800px] relative">
-          <div
-            className="h-[90%] flex flex-col px-2 overflow-y-auto scroll-smooth scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-bluePrimary scrollbar-track-[#FAFAFC] scrollbar-thin"
-            ref={chatContainerRef}>
-            {messages?.map((msg, index) => (
-              <MessageSegi
-                key={index}
-                index={index}
-                name={msg.sender}
-                message={msg.message}
-                sender={msg.sender}
-                avatar={user.avatar}
-              />
-            ))}
-            {loading && (
-              <MessageSegi name="Segi" message="Escribiendo..." sender="bot" />
-            )}
-          </div>
-          <div className="w-full h-[10%] px-4">
-            <div className="border h-10 border-bluePrimary w-full rounded-2xl overflow-hidden flex items-center">
-              <input
-                className="w-[90%] px-4 outline-none"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Envia un mensaje a Segi"
-                onKeyDown={handleKeyDown}
-              />
-              <button onClick={handleSendMessage} disabled={loading}>
-                <IconSendArrow className="w-8 h-8" color="#487FFA" />
-              </button>
-            </div>
-          </div>
+          {showAlarms ? (
+            <>
+              <div className="border border-bluePrimary flex gap-1 my-6 p-2 items-center w-fit mx-auto rounded-xl">
+                <IconAlarmRed className={"w-8"} />
+                <p className="text-bluePrimary font-semibold">
+                  Tienes {alarmsData.length} alarmas activas
+                </p>
+              </div>
+              <div className="px-5 lg:px-8 flex flex-col gap-6 my-6">
+                {alarmsData.slice(0, 4).map((alarma, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex gap-3 items-center mx-auto">
+                      <PriorityIcon priority={alarma.ia_priority} />
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2 lg:gap-6 items-center">
+                          <p className="w-[50%]">
+                            {alarma.patient.name} {alarma.patient.lastname}
+                          </p>
+                          <IconCurrentRouteNav className={"w-4"} />
+                          <p className="w-[45%]">{alarma.ia_priority}</p>
+                        </div>
+                        <div className="flex gap-2 lg:gap-6">
+                          <p>
+                            {Fecha(alarma.createdAt)} - {Hora(alarma.createdAt)}
+                          </p>
+                          <IconCurrentRouteNav className={"w-3"} />
+                          <p>Grupo HTP:</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex justify-center gap-4 mt-4">
+                <Elboton
+                  nombre={"Ir a Segi"}
+                  className={"bg-white border-bluePrimary border"}
+                  classNameText={"text-bluePrimary"}
+                  onPress={() => dispatch(toogleAlarms())}
+                />
+                <Elboton
+                  nombre={"Ir a Alarmas"}
+                  href={`${rutas.Doctor}${rutas.Alarm}`}
+                  className={"bg-white border-bluePrimary border"}
+                  classNameText={"text-bluePrimary"}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="h-[90%] flex flex-col px-2 overflow-y-auto scroll-smooth scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-bluePrimary scrollbar-track-[#FAFAFC] scrollbar-thin"
+                ref={chatContainerRef}>
+                {messages?.map((msg, index) => (
+                  <MessageSegi
+                    key={index}
+                    index={index}
+                    name={msg.sender}
+                    message={msg.message}
+                    sender={msg.sender}
+                    avatar={user.avatar}
+                  />
+                ))}
+                {loading && (
+                  <MessageSegi
+                    name="Segi"
+                    message="Escribiendo..."
+                    sender="bot"
+                  />
+                )}
+              </div>
+              <div className="w-full h-[10%] px-4">
+                <div className="border h-10 border-bluePrimary w-full rounded-2xl overflow-hidden flex items-center">
+                  <input
+                    className="w-[90%] px-4 outline-none"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Envia un mensaje a Segi"
+                    onKeyDown={handleKeyDown}
+                  />
+                  <button onClick={handleSendMessage} disabled={loading}>
+                    <IconSendArrow className="w-8 h-8" color="#487FFA" />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
