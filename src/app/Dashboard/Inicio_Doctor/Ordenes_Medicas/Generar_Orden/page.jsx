@@ -30,13 +30,16 @@ export default function HomeDoc() {
     const [pendientes, setPendientes] = useState(false);
     const [isDrugModalOpen, setIsDrugModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState([]);
+    const [searchTermDiagnostic, setSearchTermDiagnostic] = useState([]);
     const [drugs, setDrugs] = useState([]);
+    const [cie10, setCie10] = useState([]);
     const [selectedDrug, setSelectedDrug] = useState(null);
     const [drugsToSend, setDrugsToSend] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [ordenType, setOrdenType] = useState("");
     const [errors, setErrors] = useState({});
     const [patientDetails, setPatientDetails] = useState(null);
+
 
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -94,6 +97,25 @@ export default function HomeDoc() {
         };
         fetchDrugs();
     }, [searchTerm]);
+
+    // autocomplete de diagnostico
+    useEffect(() => {
+        const fetchCie = async () => {
+            if (searchTermDiagnostic.length >= 4) {
+                try {
+                    const response = await ApiSegimed.get(`/cie10?search=${searchTermDiagnostic}`);
+
+                    if (response.data) {
+                        setCie10(response.data);
+                    }
+                } catch (error) {
+                    console.error("Error fetching cie10:", error);
+                }
+            }
+
+        };
+        fetchCie();
+    }, [searchTermDiagnostic]);
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
@@ -247,6 +269,7 @@ export default function HomeDoc() {
             });
         }
     };
+
     // busca datos de la droga seleccionada
     const handleDrug = async (value) => {
         if (value !== null && value !== "new") {
@@ -348,13 +371,33 @@ export default function HomeDoc() {
                 </button>
             </div>
             <div className="gap-3 flex flex-col overflow-auto w-full h-full bg-[#fafafc] pb-3">
-                <InputInfoText
+                {/* <InputInfoText
                     title="Diagnóstico"
                     placeholder="Ingrese aquí el diagnóstico"
                     onChange={(e) => handleChange("diagnostic", e.target.value)}
                     className="md:px-6 py-2 px-3"
                     error={errors.diagnostic}
-                />
+                /> */}
+                <div className="flex flex-col gap-2 md:px-6 py-2 px-3">
+                    <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
+                        <IconClinicalHistory className="w-6" color={"#808080"} />
+                        Diagnóstico
+                    </label>
+                    <Autocomplete
+                        aria-label="diagnostic"
+                        defaultItems={cie10}
+                        variant="bordered"
+                        onInputChange={(value) => setSearchTermDiagnostic(value)}
+                        placeholder="Ingrese aquí el diagnóstico"
+                        className=" bg-white "
+                        isInvalid={errors.diagnostic ? true : false}
+                        onSelectionChange={(value) => handleChange("diagnostic", value)}
+                        value={searchTerm}
+                    >
+                        {(cie) => <AutocompleteItem key={cie.id}>{cie.description}</AutocompleteItem>}
+                    </Autocomplete>
+                    {errors.diagnostic && <span className="text-red-500 text-sm">{errors.diagnostic}</span>}
+                </div>
                 <div className="flex flex-col gap-2 md:px-6 py-2 px-3">
                     <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
                         <IconClinicalHistory className="w-6" color={"#808080"} />
@@ -366,13 +409,12 @@ export default function HomeDoc() {
                         variant="bordered"
                         onInputChange={(value) => setSearchTerm(value)}
                         placeholder="Escribe al menos 3 letras"
-                        className="max-w-xs bg-white "
+                        className="md:max-w-xs bg-white  "
                         onSelectionChange={handleDrug}
                         value={searchTerm}
                     >
                         {(drug) => <AutocompleteItem key={drug.id}>{drug.name}</AutocompleteItem>}
                     </Autocomplete>
-
 
                 </div>
                 {drugsToSend.length > 0 ?
@@ -382,71 +424,74 @@ export default function HomeDoc() {
                             Medicamentos Añadidos
                         </label>
                         <div className="min-w-full bg-white border rounded-lg ">
-                            <div className="w-full flex">
-
+                            <div className="hidden md:flex w-full">
                                 <p className="py-2 px-4 border-b w-[20%]">Nombre </p>
                                 <p className="py-2 px-4 border-b w-[20%]">Dosis</p>
                                 <p className="py-2 px-4 border-b w-[20%]">Frecuencia</p>
                                 <p className="py-2 px-4 border-b w-[20%]">Duración</p>
                                 <p className="py-2 px-4 border-b w-[20%] text-center">Acciones</p>
-
                             </div>
                             <div>
                                 {drugsToSend.map((drug, index) => (
-                                    <>
-                                        <div className="flex items-center border-b" key={index}>
-                                            <div className="py-2 px-4 w-[20%]">{drug.drugCreation.drugName}</div>
-                                            <div className="py-2 px-4 w-[20%]">
+                                    <div key={index} className="border-b">
+                                        <div className="md:flex md:items-center">
+                                            <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between ">  <span className="md:hidden block">Nombre:</span><p className="w-1/2">{drug.drugCreation.drugName}</p></div>
+                                            <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between">
+                                                <span className="md:hidden block">Dosis:</span>
                                                 <input
                                                     type="number"
                                                     onChange={(e) => handleInputChange(index, "doseMeasure", e.target.value)}
-                                                    className={`w-full p-2 border rounded-lg outline-none ${errors[`doseMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
+                                                    className={`md:w-full w-1/2 p-2 border rounded-lg outline-none ${errors[`doseMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                             </div>
-
-                                            <div className="py-2 px-4 w-[20%]">
+                                            <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between">
+                                                <span className="md:hidden block">Frecuencia:</span>
                                                 <input
                                                     type="number"
                                                     onChange={(e) => handleInputChange(index, "timeMeasure", e.target.value)}
-                                                    className={`w-full p-2 border rounded-lg outline-none ${errors[`timeMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
+                                                    className={`md:w-full w-1/2 p-2 border rounded-lg outline-none ${errors[`timeMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                             </div>
-
-                                            <div className="py-2 px-4 w-[20%]">
+                                            <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between">
+                                                <span className="md:hidden block">Duración:</span>
                                                 <input
                                                     onChange={(e) => handleInputChange(index, "timeMeasureType", e.target.value)}
-                                                    className={`w-full p-2 border rounded-lg outline-none ${errors[`timeMeasureType-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
+                                                    className={`md:w-full w-1/2 p-2 border rounded-lg outline-none ${errors[`timeMeasureType-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
                                                 />
                                             </div>
-                                            <div className="items-center flex justify-center w-[20%] gap-4">
-                                                <button onClick={() => handleToggleDetails(index)}>
-                                                    <IconMessage className={"w-8"} />
-                                                </button>
-                                                <button onClick={() => handleDeleteDrug(index)}>
-                                                    <IconDelete />
-                                                </button>
+                                            <div className=" flex items-center justify-between md:justify-center py-2 px-4 w-full md:w-[20%] gap-4 ">
+                                                <span className="md:hidden block">Acciones:</span>
+                                                <div className="justify-center flex gap-4 w-1/2">
+                                                    <button onClick={() => handleToggleDetails(index)}>
+                                                        <IconMessage className={"w-8"} />
+                                                    </button>
+                                                    <button onClick={() => handleDeleteDrug(index)}>
+                                                        <IconDelete />
+                                                    </button>
+                                                </div>
+
                                             </div>
                                         </div>
                                         {drug.showDetails && (
-                                            <div className="w-full flex border-b">
+                                            <div className="flex flex-col md:flex-row border-b border-t">
                                                 <InputInfoText
                                                     text={true}
                                                     title="Indicaciones"
                                                     placeholder="Ingrese aquí cualquier otra aclaración"
                                                     onChange={(e) => handleInputChange(index, "indications", e.target.value)}
-                                                    className="md:px-6 py-2 px-3 w-1/2"
+                                                    className="md:px-6 py-2 px-3 w-full md:w-1/2"
                                                     error={errors[index]?.indications} />
                                                 <InputInfoText
                                                     text={true}
                                                     title="Observaciones"
                                                     placeholder="Ingrese aquí cualquier otra aclaración"
                                                     onChange={(e) => handleInputChange(index, "observations", e.target.value)}
-                                                    className="md:px-6 py-2 px-3 w-1/2"
+                                                    className="md:px-6 py-2 px-3 w-full md:w-1/2"
                                                     error={errors[index]?.observations}
                                                 />
                                             </div>
                                         )}
-                                    </>
+                                    </div>
                                 ))}
                             </div>
                         </div>
