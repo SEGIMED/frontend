@@ -468,7 +468,7 @@ export default function HomeDoc() {
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
                 progessBar={"hidden"}
-                size={"h-fit md:h-fit md:w-[35rem]"}
+                size={"h-[39rem] md:h-fit md:w-[35rem]"}
                 buttonText={{ end: `Guardar` }}
                 funcion={submitDrug}
             />

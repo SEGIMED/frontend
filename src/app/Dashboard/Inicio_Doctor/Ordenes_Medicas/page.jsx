@@ -282,6 +282,7 @@ export default function HomeDoc() {
                     key="orden-type"
 
                 />]}
+                disabledButton={orden.orderTypes ? false : true}
                 ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true&type=${orden.orderTypes}`}
                 title={"Generar nueva órden médica"}
                 button1={"hidden"}
