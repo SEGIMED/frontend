@@ -3,6 +3,7 @@
   "rules": {
     "react/no-unescaped-entities": "off",
     "@next/next/no-page-custom-font": "off",
-    "react-hooks/rules-of-hooks": "error" // Asegura que los hooks se sigan correctamente
+    "react-hooks/rules-of-hooks": "error", // Asegura que los hooks se sigan correctamente
+    "@next/next/no-img-element":"off"
   }
 }

@@ -43,6 +43,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -208,13 +209,17 @@ export const SidePte = ({ search, toggleSidebar }) => {
     }
   }, [rol]);
 
-  // useEffect(() => {
-  //   if (user.name)
-  //     if (!paciente.sociodemographicDetails?.address) {
-  //       router.push(rutas.PacienteDash)
-  //       setIsModalOpen(true);
-  //     }
-  // }, [user]);
+  useEffect(() => {
+    if (user.name)
+      if (!user.sociodemographicDetails?.genre) {
+        router.push(rutas.PacienteDash)
+        setIsModalOpen(true);
+      }
+  }, [user]);
+
+  useEffect(() => {
+    getUser({ headers: { token: token } }).catch(console.error);
+  }, [onboarding]);
 
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
@@ -345,7 +350,7 @@ export const SidePte = ({ search, toggleSidebar }) => {
         )}
       </div>
 
-      {/* <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} /> */}
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Paciente"} setOnboarding={setOnboarding} />
     </div>
   );
 };

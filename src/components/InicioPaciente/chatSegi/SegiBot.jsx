@@ -4,16 +4,20 @@ import Segi from "@/components/InicioPaciente/chatSegi/segi.png";
 import { useRef, useState } from "react";
 import { ChatSegi } from "./ChatSegi";
 import Draggable from "react-draggable";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { toogleChat } from "@/redux/slices/chat/chatBot";
 
 export const SegiBot = () => {
-  const [showChat, setShowChat] = useState(false);
+  // const [showChat, setShowChat] = useState(false);
+  const showChat = useAppSelector((state) => state.chatBot.showChat);
+  const dispatch = useAppDispatch();
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const positionRef = useRef({ x: 0, y: 0 });
 
-  const toggleChat = () => {
+  const toggleChatDrag = () => {
     if (!isDragging) {
-      setShowChat(!showChat);
+      dispatch(toogleChat(!showChat));
     }
   };
 
@@ -31,7 +35,7 @@ export const SegiBot = () => {
   };
   const handleStop = (e, data) => {
     if (position.x - data.x < 2 || position.y - data.y < 2) {
-      toggleChat();
+      toggleChatDrag();
     }
     setPosition({ x: data.x, y: data.y });
   };
@@ -39,7 +43,7 @@ export const SegiBot = () => {
   return (
     <>
       {showChat ? (
-        <ChatSegi toggleChat={toggleChat} />
+        <ChatSegi toggleChat={toggleChatDrag} />
       ) : (
         <Draggable
           bounds="parent"
@@ -48,7 +52,7 @@ export const SegiBot = () => {
           onStop={handleStop}
           onDrag={handleDrag}>
           <div
-            onClick={toggleChat}
+            onClick={toggleChatDrag}
             //Quitar margin y padding cuando se use el segi
             className="fixed z-50 h-[5rem] flex items-center justify-center w-[5rem] md:h-auto md:w-[7%] p-2 bottom-[4%] right-[2%] rounded-full bg-[#487FFA] cursor-pointer shadow-[0_4px_26px_7px_rgba(0,0,0,0.25)]">
             {/* <Image src={Segi} alt="SegiBot" /> */}

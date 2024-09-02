@@ -1,25 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Bienvenida from "../boarding/Bienvenida";
-import Hipertension from "../boarding/Hipertension";
-import ViveSolo from "../boarding/ViveSolo";
-import UsoCelular from "../boarding/UsoCelular";
-import Nacimiento from "../boarding/Nacimiento";
-import Genero from "../boarding/Genero";
-import DispElectronicos from "../boarding/DispositivosElectronicos";
-import Final from "../boarding/Final";
-import Domicilio from "../boarding/Domicilio";
-import CentroDetAtención from "../boarding/CentroDeAtencion";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
-import Doctor from "../boarding/Doctor";
-import { useAppSelector } from "@/redux/hooks";
-import { mapBoolean } from "@/utils/MapeoCuerpo";
 import { useRouter } from "next/navigation";
-import rutas from "@/utils/rutas";
 import IconArrowRight from "@/components/icons/iconArrowRight";
 import LoadingFallback from "@/components/loading/loading";
-
 
 const ProgressBar = ({ steps, currentIndex, progessBar }) => {
     return (
@@ -27,7 +12,8 @@ const ProgressBar = ({ steps, currentIndex, progessBar }) => {
             {steps.map((step, index) => (
                 <div
                     key={index}
-                    className={`h-1 w-5 md:w-8 ${index <= currentIndex ? "bg-bluePrimary" : "bg-gray-300"}`}
+                    className={`h-1 w-5 md:w-8 ${index <= currentIndex ? "bg-bluePrimary" : "bg-gray-300"
+                        }`}
                 />
             ))}
         </div>
@@ -38,7 +24,7 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
     const [index, setIndex] = useState(0);
     const [disabled, setDisabled] = useState(false);
 
-    const router = useRouter()
+    const router = useRouter();
 
     function handleClickOutside(event) {
         if (event.target === event.currentTarget) {
@@ -56,15 +42,14 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
         }
     }, [index]);
 
-
-
     const handleNext = () => {
         if (index < Modals.length - 1) {
             setIndex(index + 1);
-            if (verification) { setDisabled(true); }
+            if (verification) {
+                setDisabled(true);
+            }
         } else {
-            if (ruta)
-                router.push(`${ruta}`)
+            if (ruta) router.push(`${ruta}`);
             onClose();
         }
     };
