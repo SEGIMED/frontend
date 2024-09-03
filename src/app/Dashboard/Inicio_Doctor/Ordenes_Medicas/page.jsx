@@ -255,7 +255,7 @@ export default function HomeDoc() {
                     )}
                 </div>
             </div>
-            <div className="flex justify-center items-center gap-5   font-bold h-[15%]">
+            {/* <div className="flex justify-center items-center gap-5   font-bold h-[15%]">
                 <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
@@ -272,7 +272,7 @@ export default function HomeDoc() {
                     Siguiente
                     <IconNext />
                 </button>
-            </div>
+            </div> */}
             {/* {showModal && selectedPatient && ( */}
 
             <ModalModularizado

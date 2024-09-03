@@ -193,7 +193,7 @@ export default function HomeDoc() {
     const validateFields = () => {
         let tempErrors = {};
 
-        if (!orden.diagnostic || orden.diagnostic.trim() === "") {
+        if (!orden.diagnostic) {
             tempErrors.diagnostic = "El diagnóstico es obligatorio.";
         }
 
@@ -235,16 +235,15 @@ export default function HomeDoc() {
 
             // Abrir el PDF en una nueva pestaña
             window.open(pdfUrl, '_blank');
-            console.log(base64);
+
 
             const payload = { ...orden, bodyMedicam: drugsToSend, orderPdf: base64 };
             // const payload = { ...orden, bodyMedicam: drugsToSend };
-            console.log(payload);
+
 
             const response = await ApiSegimed.post(`/physician-order`, payload);
 
             if (response.data) {
-                console.log(response.data);
 
                 dispatch(resetFormState());
                 Swal.fire({
