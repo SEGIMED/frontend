@@ -16,6 +16,8 @@ import Swal from "sweetalert2";
 import IconOptions from "../icons/IconOptions";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import IconAlarmBlue from "../icons/iconAlarmBlue";
+import { addAlarmsChatbot } from "@/redux/slices/chat/chatBot";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority) {
@@ -31,6 +33,8 @@ const PriorityIcon = ({ priority }) => {
 };
 
 export default function TableAlarm({ alarms }) {
+  const dispatch = useAppDispatch();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
   const handleStatus = async ({ id }) => {
     Swal.fire({
       icon: "question",
@@ -47,6 +51,9 @@ export default function TableAlarm({ alarms }) {
             body
           );
           if (response.data) {
+            dispatch(
+              addAlarmsChatbot(alarmsData.filter((alarm) => alarm.id != id))
+            );
             await Swal.fire({
               title: "Alarma resuelta",
               icon: "success",
