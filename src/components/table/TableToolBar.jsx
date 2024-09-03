@@ -10,7 +10,7 @@ const TableToolBar = ({ title, showBackButton, button, button2 }) => {
       {showBackButton && (
         <button
           type="button"
-          className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+          className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
           onClick={() => {
             router.back();
           }}>

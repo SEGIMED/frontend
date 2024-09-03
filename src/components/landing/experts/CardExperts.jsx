@@ -1,10 +1,10 @@
 const CardExperts = (props) => {
 
     return (
-        <div className="relative bg-white p-10 flex flex-col items-center gap-5 rounded-xl shadow-lg w-64">
-            
+        <div className="relative bg-white p-10 flex flex-col items-center gap-5 rounded-lg shadow-lg w-64">
+
             <div className="absolute -top-10">
-                <img className="rounded-xl object-cover w-44 h-56" src={props.image} alt="" />
+                <img className="rounded-lg object-cover w-44 h-56" src={props.image} alt="" />
             </div>
             <div className="flex flex-col items-center gap-3 pt-40">
                 <p className="text-2xl">{props.name}</p>

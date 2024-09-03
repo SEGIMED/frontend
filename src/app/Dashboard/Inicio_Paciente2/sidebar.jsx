@@ -310,7 +310,7 @@ export const SidePte = ({ search }) => {
         {lastSegment !== "Inicio_Paciente2" ? (
           <div>
             <Link href={`${rutas.PacienteDash}2`}>
-              <button className="flex rounded-xl items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
+              <button className="flex rounded-lg items-center px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1">
                 <IconRegresar />
                 {!isMobile ? "Regresar" : null}
               </button>
@@ -397,12 +397,12 @@ export const SidePte = ({ search }) => {
           </DropdownMenu>
         </Dropdown>
         <div className="flex gap-2">
-          <button className="w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center">
+          <button className="w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center">
             <IconChat className="w-6 h-6" />
           </button>
           <button
             onClick={handleNotificationClick}
-            className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+            className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
               "bg-[#E73F3F]"
               }`}>
             <IconNotificaciones

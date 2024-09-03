@@ -259,20 +259,18 @@ const AlarmSelector = (id) => {
             {selectedAlarm?.chat_history.map((chat, index) => (
               <div
                 key={index}
-                className={`p-1 animate-fade-in font-poppins flex flex-col ${
-                  chat.role != "bot"
+                className={`p-1 animate-fade-in font-poppins flex flex-col ${chat.role != "bot"
                     ? "justify-end items-end"
                     : "justify-start items-start"
-                }`}>
+                  }`}>
                 <span className={`font-medium text-bluePrimary`}>
                   {chat.role == "bot" ? "Segibot" : selectedAlarm.patient.name}
                 </span>
                 <span
-                  className={`p-2 relative w-fit max-w-[85%] rounded-xl font-medium shadow-sm ${
-                    chat.role != "bot"
+                  className={`p-2 relative w-fit max-w-[85%] rounded-xl font-medium shadow-sm ${chat.role != "bot"
                       ? "rounded-tr-none bg-[#487FFA] text-white right-5 md:right-0"
                       : "rounded-tl-none bg-white border text-bluePrimary border-bluePrimary left-5 md:left-0"
-                  }`}>
+                    }`}>
                   {chat.message}
                 </span>
               </div>

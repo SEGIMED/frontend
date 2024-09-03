@@ -69,7 +69,7 @@ export default function HomeDocAll() {
     <div className="text-[#686868] h-full w-full flex flex-col">
       <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
         {/* <button 
-                    className="flex px-6 py-2 rounded-xl gap-1 items-center bg-[#487FFA]" 
+                    className="flex px-6 py-2 rounded-lg gap-1 items-center bg-[#487FFA]" 
                     onClick={handleSortClick}>
                     <p className="text-start text-white font-bold text-base leading-5">Ordenar</p>
                     <IconOrder />

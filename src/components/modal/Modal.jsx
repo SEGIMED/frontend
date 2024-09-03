@@ -46,7 +46,7 @@ const Modal = ({ isOpen, onClose }) => {
                 onClick={handleDoctorClick}
                 onMouseEnter={() => setHoverDoctor(true)}
                 onMouseLeave={() => setHoverDoctor(false)}
-                className="w-full md:w-[25rem] h-40 p-5 rounded-xl  flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
+                className="w-full md:w-[25rem] h-40 p-5 rounded-lg  flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
                 <IconDoctor color={hoverDoctor ? "#FFFFFF" : "#5F5F5F"} />{" "}
                 Médico
               </button>
@@ -54,7 +54,7 @@ const Modal = ({ isOpen, onClose }) => {
                 onClick={handlePatientClick}
                 onMouseEnter={() => setHoverPatient(true)}
                 onMouseLeave={() => setHoverPatient(false)}
-                className="w-full md:w-[25rem] h-40 p-5 rounded-xl flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
+                className="w-full md:w-[25rem] h-40 p-5 rounded-lg flex items-center justify-center gap-4 border-2 border-[#487FFA] hover:bg-[#487FFA] hover:text-white text-3xl">
                 <IconUser color={hoverPatient ? "#FFFFFF" : "#5F5F5F"} />{" "}
                 Paciente
               </button>

@@ -16,7 +16,7 @@ export default function OptDocCardHistorial({ id }) {
   return (
     <div className="relative">
       <details className="relative">
-        <summary className="flex px-1 py-2 text-white bg-[#487FFA] rounded-xl gap-1 items-center cursor-pointer">
+        <summary className="flex px-1 py-2 text-white bg-[#487FFA] rounded-lg gap-1 items-center cursor-pointer">
           <IconOptions color="#FFFFFF" />
           <p className="text-start text-white font-bold text-base leading-5">
             Más

@@ -5,7 +5,7 @@ import IconDownload from "../icons/IconDownload";
 const DownloadHistory = () => {
   return (
     <details className="relative">
-      <summary className="flex justify-center items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 cursor-pointer text-white font-bold">
+      <summary className="flex justify-center items-center px-6 py-2 bg-[#487FFA] rounded-lg gap-3 cursor-pointer text-white font-bold">
         <IconDownload />
         <p>Descargar</p>
       </summary>

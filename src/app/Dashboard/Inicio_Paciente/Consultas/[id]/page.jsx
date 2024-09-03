@@ -40,7 +40,7 @@ const DetallePaciente = (id) => {
         const fetchData = async () => {
             try {
                 const response = await ApiSegimed.get(`/patient-details/${userId}`, { headers: { 'token': token } });
-                
+
 
                 // Crear una promesa que se resuelve después de 1 segundo
                 const delay = new Promise(resolve => setTimeout(resolve, 100));
@@ -67,7 +67,7 @@ const DetallePaciente = (id) => {
 
     return (
         <FormProvider {...methods}>
-            
+
             <div className="h-full  flex flex-col">
                 <div className="flex justify-between items-center gap-2 px-4 py-3 border-b border-b-[#cecece]">
                     <div className='flex items-center '>
@@ -76,16 +76,16 @@ const DetallePaciente = (id) => {
                     </div>
                     <div>
                         <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-                            <button className="flex rounded-xl items-center  px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1 "><Image src={backChanges} alt='regresar' />Regresar</button>
+                            <button className="flex rounded-lg items-center  px-6 py-2 font-bold text-sm leading-5 bg-[#487FFA] text-white gap-1 "><Image src={backChanges} alt='regresar' />Regresar</button>
                         </Link>
                     </div>
                 </div>
                 <form onChange={methods.handleSubmit(onSubmit)}>
                     <Consulta title={"Datos del paciente"} paciente={patient} />
-                    <InputConsulta title={"Antecedentes"} risk={["Riesgo cardiovascular", "Riesgo quirúrgico", "Grupo HTP"]} 
-                    options={["Bajo", "Medio", "Alto", " Muy Alto"]} 
-                    subtitle={["Antecedentes quirúrgicos", "Antecedentes patologicos", "Antecedentes no patologicos", "Antecedentes familiares", "Antecedentes de infancia", "Alergias", "Medicamentos actuales", "Vacunas"]}
-                     />
+                    <InputConsulta title={"Antecedentes"} risk={["Riesgo cardiovascular", "Riesgo quirúrgico", "Grupo HTP"]}
+                        options={["Bajo", "Medio", "Alto", " Muy Alto"]}
+                        subtitle={["Antecedentes quirúrgicos", "Antecedentes patologicos", "Antecedentes no patologicos", "Antecedentes familiares", "Antecedentes de infancia", "Alergias", "Medicamentos actuales", "Vacunas"]}
+                    />
                     <InputConsulta title={"Anamnesis"} subtitle={["Motivo de consulta", "Evolucion de la enfermedad", "Sintomas"]} />
                     <Consulta title={"Signos vitales"} paciente={patient} />
                     <Component title={"Exploracion fisica"} />

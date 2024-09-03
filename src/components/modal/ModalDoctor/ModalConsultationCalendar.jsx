@@ -353,7 +353,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
             <button
               disabled={disabled}
               type="submit"
-              className="flex items-center gap-3 bg-greenPrimary py-3 px-6 rounded-xl text-white">
+              className="flex items-center gap-3 bg-greenPrimary py-3 px-6 rounded-lg text-white">
               Continuar <IconArrowNextConsult />
             </button>
           </div>

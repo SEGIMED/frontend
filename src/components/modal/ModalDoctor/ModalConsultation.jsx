@@ -359,9 +359,8 @@ const ModalConsultation = ({
             ) : (
               <select
                 id="healthCenter"
-                className={` py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${
-                  errors.healthCenter ? "border-red-500" : ""
-                }`}
+                className={` py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
+                  }`}
                 {...register("healthCenter")}>
                 <option value="">Seleccione el centro de atención</option>
                 <option value="1">Centro Gallego</option>

@@ -57,7 +57,7 @@ export default function HomePte() {
   };
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full h-full flex flex-col bg-[#FAFAFC]">
       <title>{lastSegmentTextToShow}</title>
       <div className="flex flex-col items-center justify-start md:m-auto w-full px-4 md:px-40">
         <div className="pt-4 md:pt-10">

@@ -248,42 +248,42 @@ export default function DoctoresPte() {
       <div className="items-start w-full md:overflow-y-auto">
         {flag
           ? medicos.map((medico) => (
-              <PatientCard
-                key={medico.id}
-                paciente={medico}
-                flag={true}
-                button={
-                  <Elboton
-                    href={`${rutas.Doctor}${rutas.Mensajes}/${medico.id}`}
-                    nombre={"Enviar Mensaje"}
-                    icon={<IconMensajeBoton />}
-                    size={"sm"}
-                    onPress={() => crearChat(medico.id)}
-                  />
-                }
-              />
-            ))
+            <PatientCard
+              key={medico.id}
+              paciente={medico}
+              flag={true}
+              button={
+                <Elboton
+                  href={`${rutas.Doctor}${rutas.Mensajes}/${medico.id}`}
+                  nombre={"Enviar Mensaje"}
+                  icon={<IconMensajeBoton />}
+                  size={"sm"}
+                  onPress={() => crearChat(medico.id)}
+                />
+              }
+            />
+          ))
           : sortedPatients.map((paciente) => (
-              <PatientCard
-                key={paciente.id}
-                paciente={paciente}
-                button={
-                  <Elboton
-                    href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}
-                    nombre={"Enviar Mensaje"}
-                    icon={<IconMensajeBoton />}
-                    size={"sm"}
-                    onPress={() => crearChat(paciente.id)}
-                  />
-                }
-              />
-            ))}
+            <PatientCard
+              key={paciente.id}
+              paciente={paciente}
+              button={
+                <Elboton
+                  href={`${rutas.Doctor}${rutas.Mensajes}/${paciente.id}`}
+                  nombre={"Enviar Mensaje"}
+                  icon={<IconMensajeBoton />}
+                  className={"h-11 "}
+                  onPress={() => crearChat(paciente.id)}
+                />
+              }
+            />
+          ))}
       </div>
       <div className="flex justify-center items-center gap-5 bg-[#FAFAFC] font-bold h-[15%]">
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100 disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
         <p>
@@ -292,7 +292,7 @@ export default function DoctoresPte() {
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform active:scale-100 disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in transform active:scale-100 disabled:opacity-60">
           Siguiente
           <IconNext />
         </button>

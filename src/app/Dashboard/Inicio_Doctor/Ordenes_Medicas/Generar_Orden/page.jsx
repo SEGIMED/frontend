@@ -347,7 +347,7 @@ export default function HomeDoc() {
             <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10">
                 <button
                     type="button"
-                    className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+                    className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
                     onClick={() => {
                         const targetRoute = pendientes
                             ? `${rutas.Doctor}${rutas.Pendientes}`
