@@ -14,6 +14,7 @@ import IconMedChat from "../icons/IconMedChat";
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconImportar from "../icons/IconImportar";
 import Interconsulta from "../icons/IconInterconsulta";
+import { IconAntecedentes } from "../InicioPaciente/IconAntecedentes";
 
 export const buttonsDoc = [
   {
@@ -89,6 +90,11 @@ export const buttonsPaciente = [
         name: "Mi perfil",
         path: `${rutas.PacienteDash}${rutas.Mi_Perfil}`,
         icon: IconDoctorNav,
+      },
+      {
+        name: "Antecendes",
+        path: `${rutas.PacienteDash}${rutas.Antecedentes}`,
+        icon: IconAntecedentes,
       },
       {
         name: "Preconsultas",

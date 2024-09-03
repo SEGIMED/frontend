@@ -9,17 +9,18 @@ import { IconAutoevaluacion } from "@/components/InicioPaciente/IconAutoevaluaci
 import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
+import IconImportarDash from "@/components/icons/IconImportarDash";
 
 const Buttons = [
   {
-    name: "Mis consultas",
-    path: rutas.Consultas,
-    icon: IconTurnos,
+    name: "Importar",
+    icon: IconImportarDash,
     backgroundColor: "bg-[#487FFA]",
+    function: () => setIsModalOpen(true),
   },
   {
-    name: "Preconsultas",
-    path: rutas.Preconsulta,
+    name: "Medicamentos",
+    path: rutas.Medicamentos,
     icon: IconMedicamentos,
     backgroundColor: "bg-[#FF7E7E]",
   },
@@ -36,8 +37,8 @@ const Buttons = [
     backgroundColor: "bg-[#875CF2]",
   },
   {
-    name: "Solicitar turno",
-    path: rutas.Doctores,
+    name: "Solicitudes",
+    path: rutas.Solicitudes,
     icon: IconSolicitudes,
     backgroundColor: "bg-[#64D594]",
   },
@@ -63,9 +64,8 @@ export default function HomePte() {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-[85%] h-[75%]  md:w-[60%] md:h-[70%]">
         {Buttons.map((route, index) => (
-
           <div
-            key={index} onClick={() => router.push(`${rutas.PacienteDash}${route.path}`)}
+            key={index} onClick={() => { route.function ? route.function() : router.push(`${rutas.PacienteDash}${route.path}`) }}
             className={`${route.backgroundColor} rounded-2xl flex flex-col items-center justify-center gap-4 cursor-pointer`}>
             <route.icon className="md:w-24 md:h-24 w-16 h-16" />
             <p className="text-lg md:text-3xl font-medium text-white">
