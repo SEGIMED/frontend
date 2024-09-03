@@ -110,19 +110,31 @@ export const ChatSegi = ({ toggleChat }) => {
   const PriorityIcon = ({ priority }) => {
     switch (priority) {
       case "Alta":
-        return <IconAlarmRed className="w-10" />;
+        return <IconAlarmRed className="w-8" />;
       case "Media":
-        return <IconAlarmYellow className="w-10" />;
+        return <IconAlarmYellow className="w-8" />;
       case "Baja":
-        return <IconAlarmGreen className="w-10" />;
+        return <IconAlarmGreen className="w-8" />;
       case "Indefinida":
-        return <IconAlarmBlue color={"gray"} className="w-10" />;
+        return <IconAlarmBlue color={"gray"} className="w-8" />;
+    }
+  };
+  const priorityColor = (priority) => {
+    switch (priority) {
+      case "Alta":
+        return "text-redPrimary";
+      case "Media":
+        return "text-[#FFC900]";
+      case "Baja":
+        return "text-greenPrimary";
+      case "Indefinida":
+        return "text-textPrimary";
     }
   };
   return (
-    <div className="fixed z-30 h-[75%] max-h-[700px] md:max-h-[600px] w-[90%] md:h-[85%] md:max-w-[600px] md:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
+    <div className="fixed z-30 h-[75%] max-h-[700px] lg:max-h-[600px] w-[90%] lg:h-[85%] lg:max-w-[600px] lg:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
       <div className="flex flex-col h-full">
-        <div className="h-[10%] md:h-16 py-2 flex items-center px-4 justify-between">
+        <div className="h-[10%] lg:h-16 py-2 flex items-center px-4 justify-between">
           <div className="flex items-center gap-4">
             <Image
               src={Segi}
@@ -150,43 +162,50 @@ export const ChatSegi = ({ toggleChat }) => {
             </svg>
           </button>
         </div>
-        <div className="bg-white h-[90%] md:max-h-[600px] xl:max-h-[800px] relative">
+        <div className="bg-white h-[90%] lg:max-h-[600px] xl:max-h-[800px] relative overflow-y-auto">
           {showAlarms ? (
             <>
-              <div className="border border-bluePrimary flex gap-1 my-6 p-2 items-center w-fit mx-auto rounded-xl">
+              <div className="border border-bluePrimary flex gap-1 my-6 p-2 items-center w-[80%] mx-auto rounded-xl">
                 <IconAlarmRed className={"w-8"} />
                 <p className="text-bluePrimary font-semibold">
                   Tienes {alarmsData.length} alarmas activas
                 </p>
               </div>
-              <div className="px-5 lg:px-8 flex flex-col gap-6 my-6">
+              <div className="px-2 lg:px-5 flex flex-col gap-2 xs:gap-6 w-full lg:w-[90%] mx-auto">
                 {alarmsData.slice(0, 4).map((alarma, index) => {
                   return (
                     <div
                       key={index}
                       className="flex gap-3 items-center mx-auto">
-                      <PriorityIcon priority={alarma.ia_priority} />
-                      <div className="flex flex-col gap-1">
-                        <div className="flex gap-2 lg:gap-6 items-center">
-                          <p className="w-[50%]">
+                      <div className="flex flex-col items-center justify-center">
+                        <PriorityIcon priority={alarma.ia_priority} />
+                        <span className={priorityColor(alarma.ia_priority)}>
+                          {alarma.ia_priority}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1 w-[95%]">
+                        <div className="flex gap-2 lg:gap-6 items-center font-medium w-full">
+                          <p className="w-[45%] text-center line-clamp-1">
                             {alarma.patient.name} {alarma.patient.lastname}
                           </p>
                           <IconCurrentRouteNav className={"w-4"} />
-                          <p className="w-[45%]">{alarma.ia_priority}</p>
+                          <p className="w-[45%] line-clamp-1">
+                            {alarma.alarm_description}
+                          </p>
                         </div>
                         <div className="flex gap-2 lg:gap-6">
-                          <p>
+                          <p className="w-[45%] text-center line-clamp-1">
                             {Fecha(alarma.createdAt)} - {Hora(alarma.createdAt)}
                           </p>
-                          <IconCurrentRouteNav className={"w-3"} />
-                          <p>Grupo HTP:</p>
+                          <IconCurrentRouteNav className={"w-4"} />
+                          <p className="w-[45%] line-clamp-1">Grupo HTP:</p>
                         </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div className="flex justify-center gap-4 mt-4">
+              <div className="flex justify-center gap-4 mt-4 xs:mt-8">
                 <Elboton
                   nombre={"Ir a Segi"}
                   className={"bg-white border-bluePrimary border"}

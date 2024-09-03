@@ -41,6 +41,7 @@ import IconRegresar from "@/components/icons/iconRegresar";
 import IconSelect from "@/components/icons/IconSelect";
 import { useRouter } from "next/navigation";
 import { setSearchBar } from "@/redux/slices/user/searchBar";
+import { socket } from "@/utils/socketio";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -204,6 +205,13 @@ export default function HomeDoc() {
 
   const handleRiskFilterClick = ({ risk }) => {
     setRiskFilter(risk);
+  };
+
+  const handleSeeMessages = (id) => {
+    socket.emit("createChat", { id });
+    setTimeout(() => {
+      router.push(`${rutas.Doctor}${rutas.Mensajes}/${id}`);
+    }, 250);
   };
 
   const handleFavoriteClick = () => {
@@ -476,7 +484,7 @@ export default function HomeDoc() {
                           },
                           {
                             label: "Ver Mensajes",
-                            href: `${rutas.Doctor}${rutas.Mensajes}`,
+                            onClick: () => handleSeeMessages(paciente.id),
                             icon: <IconMessages />,
                           },
                           {

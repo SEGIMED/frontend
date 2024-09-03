@@ -24,6 +24,7 @@ import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation"
 import Swal from "sweetalert2";
 import ModalShowPhoneAlarm from "@/components/alarm/ModalShowPhoneAlarm";
 import { isUserUsingMobile } from "@/utils/checkMobile";
+import { socket } from "@/utils/socketio";
 
 const AlarmSelector = (id) => {
   const alarmId = id.params.id;
@@ -34,7 +35,6 @@ const AlarmSelector = (id) => {
   const [isRevaluatedAlarm, setIsRevaluatedAlarm] = useState(false);
   const router = useRouter();
   const userId = Cookies.get("c");
-  console.log(isRevaluatedAlarm);
   const handlePreAction = (next) => {
     if (isRevaluatedAlarm) {
       next();
@@ -77,7 +77,12 @@ const AlarmSelector = (id) => {
     setIsModalOpen(true);
   };
   const handleMessage = () => {
-    router.push(`${rutas.Doctor}${rutas.Mensajes}/${selectedAlarm.patient.id}`);
+    socket.emit("createChat", { id: selectedAlarm.patient.id });
+    setTimeout(() => {
+      router.push(
+        `${rutas.Doctor}${rutas.Mensajes}/${selectedAlarm.patient.id}`
+      );
+    }, 250);
   };
   const handleCall = () => {
     if (!isMobile) {
@@ -153,7 +158,6 @@ const AlarmSelector = (id) => {
     };
     getAlarm();
   }, []);
-  console.log(isMobile);
   useEffect(() => {
     setIsMobile(isUserUsingMobile());
   }, []);
