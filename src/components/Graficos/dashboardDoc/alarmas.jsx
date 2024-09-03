@@ -2,14 +2,16 @@ import { Doughnut } from "react-chartjs-2";
 
 const Alarmas = ({ dataAlarms }) => {
   const data = {
-    labels: ['Respondidas', 'Sin Responder'],
-    datasets: [{
-      data: [dataAlarms.inactives, dataAlarms.actives],
-      backgroundColor: [
-        '#70C247', // Verde para respondidas
-        'rgb(231, 63, 63)' // Rojo para sin responder
-      ]
-    }]
+    labels: ["Respondidas", "Sin Responder"],
+    datasets: [
+      {
+        data: [dataAlarms.inactiveAlarms, dataAlarms.activeAlarms],
+        backgroundColor: [
+          "#70C247", // Verde para respondidas
+          "rgb(231, 63, 63)", // Rojo para sin responder
+        ],
+      },
+    ],
   };
 
   return (
@@ -20,21 +22,21 @@ const Alarmas = ({ dataAlarms }) => {
           plugins: {
             legend: {
               display: true,
-              position: 'bottom',
+              position: "bottom",
               labels: {
                 usePointStyle: true,
                 padding: 20,
-              }
-            }
+              },
+            },
           },
           layout: {
             padding: {
               left: 20,
               right: 20,
               top: 20,
-              bottom: 20
-            }
-          }
+              bottom: 20,
+            },
+          },
         }}
       />
     </div>

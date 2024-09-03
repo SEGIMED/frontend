@@ -112,7 +112,7 @@ import IconRegresar from "@/components/icons/iconRegresar";
 import IconRobotRegister from "@/components/icons/IconRobotRegister";
 import IconSend from "@/components/icons/IconSend";
 import IconSendArrow from "@/components/icons/IconSendArrow";
-import IconSendMensaje from "@/components/icons/iconSendMensaje";
+import IconSendMensaje from "@/components/icons/IconSendMensaje";
 import SoporteTecnico from "@/components/icons/IconSoporte";
 import IconStar from "@/components/icons/IconStar";
 import IconTStar2 from "@/components/icons/IconStar2";

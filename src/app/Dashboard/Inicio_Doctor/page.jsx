@@ -31,7 +31,6 @@ export default function HomeDoc() {
   const [currentTitle, setCurrentTitle] = useState(0);
   const [barChartData, setBarChartData] = useState(null);
   const [activeData, setActiveData] = useState(null);
-  const [alarmsData, setAlarmsData] = useState({ actives: 0, inactives: 0 });
   const dataAlarms = useAppSelector((state) => state.alarms);
   const dataPtesGrafic = useAppSelector((state) => state.activePtes);
   const getSchedulesByUserId = async () => {
@@ -59,16 +58,6 @@ export default function HomeDoc() {
           { headers: { token: token } }
         );
         setActiveData(responseActiveData.data);
-
-        // Fetch data for alarms
-        const responseAlarmsData = await ApiSegimed.get("/alarms-by-patient", {
-          headers: { token: token },
-        });
-        const data = {
-          actives: responseAlarmsData.data?.priorityCounts?.Activas,
-          inactives: responseAlarmsData.data?.priorityCounts?.Inactivas,
-        };
-        setAlarmsData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setBarChartData(null);
@@ -98,6 +87,7 @@ export default function HomeDoc() {
     <p key={1}>Actividad</p>,
     <p key={2}>Alarmas</p>,
   ];
+  console.log(dataAlarms);
 
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
@@ -107,7 +97,7 @@ export default function HomeDoc() {
       <PtesActivos dataActives={activeData} />
     </div>,
     <div key={2} className="flex-grow flex items-center justify-center h-100% ">
-      <Alarmas dataAlarms={alarmsData} />
+      <Alarmas dataAlarms={dataAlarms} />
     </div>,
   ]; // Agrega aquí todos los componentes de gráfico que desees mostrar
 
@@ -200,7 +190,7 @@ export default function HomeDoc() {
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
-                {dataAlarms?.inactiveAlarms}
+                {dataAlarms?.activeAlarms}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
@@ -213,7 +203,7 @@ export default function HomeDoc() {
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
-                {dataAlarms?.activeAlarms}
+                {dataAlarms?.inactiveAlarms}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>

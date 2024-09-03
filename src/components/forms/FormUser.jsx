@@ -82,7 +82,7 @@ export const FormUser = ({ formData, setFormData }) => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response.data.error,
+        text: error.response?.data?.error,
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
@@ -98,6 +98,8 @@ export const FormUser = ({ formData, setFormData }) => {
     hasNumber: /[0-9]/.test(passwordValue),
     hasMinLength: passwordValue?.length >= 6,
   };
+
+  const noEmptySpaces = (value) => value.trim() !== "";
 
   return (
     <div className="pb-36">
@@ -118,6 +120,11 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                   message:
                     "Introduce una dirección de correo electrónico válida",
+                },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 100,
+                  message: "El correo electrónico no debe exceder los 100 caracteres.",
                 },
               })}
             />
@@ -255,6 +262,11 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 20,
+                  message: "El número de identificación no debe exceder los 20 caracteres.",
+                },
               })}
             />
             {errors.idNumber && (
@@ -276,6 +288,11 @@ export const FormUser = ({ formData, setFormData }) => {
                   value: true,
                   message: "* Este dato es requerido *",
                 },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 50,
+                  message: "El nombre no debe exceder los 50 caracteres.",
+                },
               })}
             />
             {errors.name && (
@@ -296,6 +313,11 @@ export const FormUser = ({ formData, setFormData }) => {
                 required: {
                   value: true,
                   message: "* Este dato es requerido *",
+                },
+                validate: noEmptySpaces,
+                maxLength: {
+                  value: 50,
+                  message: "El apellido no debe exceder los 50 caracteres.",
                 },
               })}
             />
