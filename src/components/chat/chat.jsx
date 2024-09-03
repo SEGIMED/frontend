@@ -2,54 +2,59 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import IconSendMensaje from "../icons/iconSendMensaje";
+import IconSendMensaje from "../icons/IconSendMensaje";
 import { socket } from "@/utils/socketio";
 import Cookies from "js-cookie";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { addChat} from "@/redux/slices/chat/chat";
+import { addChat } from "@/redux/slices/chat/chat";
 import Avatars from "../avatar/avatarChat";
 import rutas from "@/utils/rutas";
 
 export default function Chat({ chat }) {
   const dispatch = useAppDispatch();
-  const sender = useAppSelector(state=> state.user) 
+  const sender = useAppSelector((state) => state.user);
   const userId = Number(Cookies.get("c"));
-  const role=Cookies.get("b")
+  const role = Cookies.get("b");
   const [messageInput, setMessageInput] = useState("");
   const [infoChat, setInfoChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const mensajesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const [markedChats, setMarkedChats] = useState({});
-  const router=useRouter()
+  const router = useRouter();
   useEffect(() => {
     if (chat) {
-        // Solo actualiza infoChat si ha cambiado realmente
-        const myId = Number(Cookies.get("c"));
-        if (infoChat !== chat) {
-            setInfoChat(chat);
-          }
-          const unseenMessages= chat.messages.filter(message => !message.state && !message._id.startsWith("Message-"))
-          if(unseenMessages.length ){
-            if(unseenMessages[unseenMessages.length - 1]?.target?.userId === myId  ) 
-            setMarkedChats(unseenMessages)
-          } else { setMarkedChats([])}
+      // Solo actualiza infoChat si ha cambiado realmente
+      const myId = Number(Cookies.get("c"));
+      if (infoChat !== chat) {
+        setInfoChat(chat);
+      }
+      const unseenMessages = chat.messages.filter(
+        (message) => !message.state && !message._id.startsWith("Message-")
+      );
+      if (unseenMessages.length) {
+        if (unseenMessages[unseenMessages.length - 1]?.target?.userId === myId)
+          setMarkedChats(unseenMessages);
+      } else {
+        setMarkedChats([]);
+      }
 
-        // Actualiza los mensajes
-        setMessages(chat.messages);
-
-        
+      // Actualiza los mensajes
+      setMessages(chat.messages);
     }
   }, [chat]);
 
   useEffect(() => {
-    if(markedChats.length){
-    socket._socket.emit("markedMessages", {unseenMessages: markedChats, chat} , (data)=>{
-      dispatch(addChat({chat:data}))
-    })
-  }
+    if (markedChats.length) {
+      socket._socket.emit(
+        "markedMessages",
+        { unseenMessages: markedChats, chat },
+        (data) => {
+          dispatch(addChat({ chat: data }));
+        }
+      );
+    }
   }, [markedChats]);
-  
 
   useEffect(() => {
     scrollToBottom();
@@ -80,8 +85,7 @@ export default function Chat({ chat }) {
   if (!chat) {
     return <div>Cargando...</div>;
   }
- 
- 
+
   return (
     <div className="text-[#686868] w-full flex h-full flex-col bg-[#FAFAFC]">
       {/* ACA INICIA EL CHAT */}
@@ -103,24 +107,32 @@ export default function Chat({ chat }) {
                     ? "self-end text-right flex-row-reverse gap-3"
                     : "self-start text-left"
                 }`}>
-              <span
-              onClick={() => {
-                if (message?.sender?.userId !== userId && message?.sender?.role !== role) {
-                  router.push(`${rutas.Doctor}${rutas.Pacientes}/${message?.sender?.userId}`);
-                }
-              }}
-              className={`${
-                message?.sender?.userId !== userId && message?.sender?.role !== role ? "cursor-pointer" : ""
-              }`}>
-              <Avatars
-                avatar1={
-                  message?.sender?.avatar === null ||
-                  message?.sender?.avatar === undefined
-                    ? null
-                    : message?.sender?.avatar
-                }
-              />
-            </span>
+                <span
+                  onClick={() => {
+                    if (
+                      message?.sender?.userId !== userId &&
+                      message?.sender?.role !== role
+                    ) {
+                      router.push(
+                        `${rutas.Doctor}${rutas.Pacientes}/${message?.sender?.userId}`
+                      );
+                    }
+                  }}
+                  className={`${
+                    message?.sender?.userId !== userId &&
+                    message?.sender?.role !== role
+                      ? "cursor-pointer"
+                      : ""
+                  }`}>
+                  <Avatars
+                    avatar1={
+                      message?.sender?.avatar === null ||
+                      message?.sender?.avatar === undefined
+                        ? null
+                        : message?.sender?.avatar
+                    }
+                  />
+                </span>
                 <span className="ml-4 text-lg">
                   {message?.sender?.fullName}
                 </span>

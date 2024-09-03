@@ -7,6 +7,8 @@ import IconArrowDetailUp from "../icons/IconArrowDetailUp";
 import IconConsulta from "../icons/IconConsulta";
 import NotFound from "../notFound/notFound";
 import SkeletonList from "../skeletons/HistorialSkeleton";
+import { specialitySwitch } from "@/utils/medicalSpecialitys";
+import { healthCenterSwitch } from "@/utils/healthCenters";
 
 //Ejemplo con consulta (data)
 // [{
@@ -76,6 +78,9 @@ const formatHour = (dateString) => {
   });
 };
 
+const formatTypeInterconsult = (isPriority) =>
+  isPriority ? "Prioritaria" : "Rutina";
+
 const getStatusScheduleTextAndColor = (status) => {
   switch (status) {
     case 1: // Agendada
@@ -100,7 +105,8 @@ function DynamicTable({
   renderCustomContent,
   showHistoryIcon,
   textError,
-  loading
+  loading,
+  firstRowComponent,
 }) {
   const [activeIndex, setActiveIndex] = useState(null); // Track which row's content is visible
 
@@ -110,31 +116,10 @@ function DynamicTable({
     }
   };
 
-  // Helper function to translate healthCenter values
-
-  function specialtySwitch(caseNumber) {
-    const switchCases = {
-      1: "Cardiología",
-      2: "Medicina Interna",
-      3: "Medicina Familiar",
-      4: "Neumología",
-      5: "Cirugía de Tórax",
-      6: "Cirugía Cardiovascular",
-    };
-
-    return switchCases[caseNumber] || "No hay especialización";
-  }
-  function healthCenterSwitch(caseNumber) {
-    const switchCases = {
-      1: "Centro Gallego",
-    };
-
-    return switchCases[caseNumber] || "Centro Desconocido";
-  }
-
   const formatPatientName = (row) => {
     return `${row.patientUser.name} ${row.patientUser.lastname}`;
   };
+  // Helper function to translate healthCenter values
 
   const renderPatientPulmonaryRisk = (row) => {
     return (
@@ -149,6 +134,11 @@ function DynamicTable({
       </div>
     );
   };
+
+  const formatIsApproved = (boolean) => {
+    return boolean === true ? "Aprobado" : "No Aprobado";
+  };
+
   const isRowEmpty = (row) => {
     // Verifica si todas las columnas relevantes están vacías
     return columns.every((column) => {
@@ -161,11 +151,9 @@ function DynamicTable({
 
   const filteredRows = rows?.filter((row) => !isRowEmpty(row));
 
-
   if (loading) {
     return <SkeletonList count={10} />;
   }
-
 
   return (
     <>
@@ -179,15 +167,15 @@ function DynamicTable({
           <tr>
             {/* Risk column */}
             {showRisks && (
-              <th className="lg:pl-6 py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
+              <th className="lg:pl-[3%] py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
             )}
             {showHistoryIcon && (
-              <th className="lg:pl-6 py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
+              <th className="lg:pl-[3%] py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
             )}
             {columns.map((column, index) => (
               <th
                 key={index}
-                className={`${index == 0 && !showRisks && !showHistoryIcon && "lg:pl-6"
+                className={`${index == 0 && !showRisks && !showHistoryIcon && "lg:pl-[3%]"
                   } lg:px-2 font-normal py-2 lg:text-left text-center ${column.showMobile ? "table-cell" : "hidden md:table-cell"
                   }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${column.width
                   }`}>
@@ -198,7 +186,14 @@ function DynamicTable({
             <th className="lg:pr-3 py-2 text-left  w-[30px] md:w-[80px]"></th>
           </tr>
         </thead>
-        <tbody className="bg-white lg:text-left text-center text-[#686868]">
+        <tbody className="bg-white  lg:text-left text-center text-[#686868]">
+          {firstRowComponent && !loading && (
+            <td
+              colSpan={7}
+              className="pr-[5%] pl-[2%] border-b-[1px] border-b-[#D7D7D7] py-2">
+              {firstRowComponent}
+            </td>
+          )}
           {filteredRows?.length > 0 ? (
             filteredRows?.map((row, rowIndex) => (
               <Fragment key={rowIndex}>
@@ -207,12 +202,12 @@ function DynamicTable({
                     } border-b-[1px] border-b-[#D7D7D7] `}
                   onClick={() => handleRowClick(rowIndex)}>
                   {showRisks && (
-                    <td className="py-2 lg:pl-3 w-[10px] max-w-[10px] hidden md:table-cell">
+                    <td className="py-2 lg:pl-[2%] w-[10px] max-w-[10px] hidden md:table-cell">
                       {renderPatientPulmonaryRisk(row)}
                     </td>
                   )}
                   {showHistoryIcon && (
-                    <td className="py-2 lg:pl-3 w-[10px] max-w-[10px] hidden md:table-cell">
+                    <td className="py-2 lg:pl-[2%] w-[10px] max-w-[10px] hidden md:table-cell">
                       <IconConsulta />
                     </td>
                   )}
@@ -222,8 +217,8 @@ function DynamicTable({
                       className={`${colIndex === 0 &&
                         !showRisks &&
                         !showHistoryIcon &&
-                        "lg:pl-6"
-                        }  lg:px-3 py-2 text-[#686868] whitespace-normal ${column.showMobile
+                        "lg:pl-[2%]"
+                        }  lg:px-[2%] py-2 text-[#686868] whitespace-normal ${column.showMobile
                           ? "table-cell"
                           : "hidden md:table-cell"
                         }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
@@ -231,19 +226,23 @@ function DynamicTable({
                         ? formatPatientName(row)
                         : column.key === "healthCenter"
                           ? healthCenterSwitch(row[column.key])
-                          : column.key === "medical_specialty"
-                            ? specialtySwitch(row[column.key])
+                          : column.label === "Especialidad"
+                            ? specialitySwitch(row[column.key])
                             : column.key === "patientPulmonaryHypertensionRisks"
                               ? renderPatientPulmonaryRisk(row)
-                              : column.label === "Fecha"
-                                ? formatDate(row[column.key])
-                                : column.label === "Hora"
-                                  ? formatHour(row[column.key])
-                                  : column.key?.includes(".")
-                                    ? column.key
-                                      .split(".")
-                                      .reduce((acc, part) => acc && acc[part], row)
-                                    : row[column.key]}
+                              : column.key == "isPriority"
+                                ? formatTypeInterconsult(row[column.key])
+                                : column.label === "Fecha"
+                                  ? formatDate(row[column.key])
+                                  : column.label === "Hora"
+                                    ? formatHour(row[column.key])
+                                    : column.key == "IsApproved"
+                                      ? formatIsApproved(row[column.key])
+                                      : column.key?.includes(".")
+                                        ? column.key
+                                          .split(".")
+                                          .reduce((acc, part) => acc && acc[part], row)
+                                        : row[column.key]}
                     </td>
                   ))}
                   {renderDropDown && (

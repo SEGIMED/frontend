@@ -20,6 +20,7 @@ import ButtonSolicitar from "@/components/Buttons/buttonSolicitar";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import { useRouter } from "next/navigation";
 
 export default function DetallePaciente({ params }) {
   const id = params.userId;
@@ -27,7 +28,7 @@ export default function DetallePaciente({ params }) {
   const user = useAppSelector((state) => state.allPatients.patient);
   const [showMapModal, setShowMapModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
-
+  const router = useRouter();
   const openModal = () => {
     setShowMapModal(true);
   };
@@ -73,9 +74,12 @@ export default function DetallePaciente({ params }) {
           </p>
         </div>
         <div>
-          <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
-            <Elboton nombre={"Regresar"} size={"lg"} icon={<IconRegresar />} />
-          </Link>
+          <Elboton
+            onPress={() => router.back()}
+            nombre={"Regresar"}
+            size={"lg"}
+            icon={<IconRegresar />}
+          />
         </div>
       </div>
       <div>
@@ -95,7 +99,11 @@ export default function DetallePaciente({ params }) {
         />
         <Detail
           title={"Edad:"}
-          data={user?.sociodemographicDetails?.birthDate ? CalcularEdad(user?.sociodemographicDetails?.birthDate) : ""}
+          data={
+            user?.sociodemographicDetails?.birthDate
+              ? CalcularEdad(user?.sociodemographicDetails?.birthDate)
+              : ""
+          }
         />
         <Detail title={"Sexo:"} data={user?.sociodemographicDetails?.genre} />
         <Detail
@@ -118,14 +126,8 @@ export default function DetallePaciente({ params }) {
           title={"Lugar de domicilio:"}
           data={<ButtonSolicitar nombre={"Solicitar permiso"} size={"sm"} />}
         />
-        <Detail
-          title={"Fecha del Diagnostico Principal:"}
-          data={"-"}
-        />
-        <Detail
-          title={"Lugar de atencion medica:"}
-          data={"-"}
-        />
+        <Detail title={"Fecha del Diagnostico Principal:"} data={"-"} />
+        <Detail title={"Lugar de atencion medica:"} data={"-"} />
         <Detail
           title={"Medico a cargo:"}
           data={`${user?.currentPhysician?.name} ${user?.currentPhysician?.lastname}`}
@@ -134,22 +136,10 @@ export default function DetallePaciente({ params }) {
           title={"Estado:"}
           data={user?.sociodemographicDetails?.civilStatus}
         />
-        <Detail
-          title={"Última Conexión:"}
-          data={LastLogin(user?.lastLogin)}
-        />
-        <Detail
-          title={"Actividad Última Semana:"}
-          data={"-"}
-        />
-        <Detail
-          title={"Actividad Último Mes:"}
-          data={"-"}
-        />
-        <Detail
-          title={"Fecha de Registro:"}
-          data={"-"}
-        />
+        <Detail title={"Última Conexión:"} data={LastLogin(user?.lastLogin)} />
+        <Detail title={"Actividad Última Semana:"} data={"-"} />
+        <Detail title={"Actividad Último Mes:"} data={"-"} />
+        <Detail title={"Fecha de Registro:"} data={"-"} />
       </div>
       {showMapModal && (
         <ModalModularizado
@@ -160,7 +150,7 @@ export default function DetallePaciente({ params }) {
               onClose={() => setShowMapModal(false)}
               patient={user}
               key={"map"}
-            />
+            />,
           ]}
           title={"Geolocalizacion del paciente"}
           button1={"hidden"}

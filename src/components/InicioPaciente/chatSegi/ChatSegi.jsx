@@ -131,7 +131,8 @@ export const ChatSegi = ({ toggleChat }) => {
             ref={chatContainerRef}>
             {messages?.map((msg, index) => (
               <MessageSegi
-                key={index || msg.time}
+                key={index}
+                index={index}
                 name={msg.sender}
                 message={msg.message}
                 sender={msg.sender}
