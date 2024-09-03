@@ -166,7 +166,7 @@ export default function HomePte() {
       // <ModalInputVitalSings key="modalInputVitalSings7" text={"Ingresa tu nivel de glicemia"} unit={"mg/dl"} handleChange={handleVitalSignChange} name={'Glicemia'} state={vitalSings} />,
       isVitalSingsEmpty
         ? <ModalVitalSings key="modalVitalSingsIncomplete" text={"Debes completar al menos 1 signo vital para finalizar"} setDisabledButton={setDisabledButton} />
-        : <ModalVitalSings key="modalVitalSingsComplete" text={"¡Perfecto! Ya completaste tu registro diario."} subtitle={"¡Seguí así para mantener tu salud bajo control!"} />,
+        : <ModalVitalSings key="modalVitalSingsComplete" text={"¡Perfecto! Ya completaste tu registro diario."} subtitle={"Apreta el boton de finalizar para guardar tu registro de signos vitales correctamente."} />,
     ]
     : [
       <ModalAutoEvaluacion key="modalAutoEvaluacion" setAutoevaluaciónType={setAutoevaluaciónType} autoEvaluacionType={autoEvaluacionType} />,
@@ -216,7 +216,7 @@ export default function HomePte() {
         button2={"bg-bluePrimary block"}
         progessBar={"hidden"}
         size={"h-[35rem] text-white md:h-[25rem] md:w-[35rem]"}
-        buttonText={{ start: `Siguiente`, end: `Siguiente` }}
+        buttonText={{ start: `Siguiente`, end: `Finalizar` }}
         handleSubmit={submitModalVitalData}
         disabledButton={disabledButton}
       />

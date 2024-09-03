@@ -19,7 +19,7 @@ export default function ModalVitalSings({ text, subtitle, setDisabledButton }) {
             <p className="font-medium text-3xl leading-10 text-center text-bluePrimary">
                 {text}
             </p>
-            <p className="font-medium text-xl leading-10 text-center text-[#686868]">
+            <p className="font-medium text-xl leading-7 text-center text-[#686868]">
                 {subtitle}
             </p>
         </div>
