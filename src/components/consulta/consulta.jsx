@@ -90,7 +90,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const [heartFailureRisk, setHeartFailureRisk] = useState();
 
   const [medicalEventPatch, setMedicalEventPatch] = useState();
-  const [tests, setTests] = useState({});
+  
   
 
   const [restOfPreconsult, setRestOfPreconsult] = useState([]);
@@ -100,24 +100,6 @@ export default function ConsultaDoc ({id, preconsult}) {
    
   console.log(medicalEventExist, "esto es medical event")
 
-  //FUNCIONES PARA PRECONSULTA
-  const handleQuestionActive = (question, label, active) => {
-    dispatch(updateActive({ question, label, active })); // activamos o desactivamos las subpreguntas
-  };
-
-  const handleSubquestionOption = (question, subquestion, selectedOption) => {
-    dispatch(
-      subquestionSelectedOption({ question, subquestion, selectedOption })
-    ); // guardamos la opción seleccionada de la subpregunta
-  };
-
-  const handleQuestionOption = (question, selectedOption) => {
-    dispatch(questionSelectedOption({ question, selectedOption })); // guardamos la opción seleccionada
-  };
-
-  const handleDescription = (question, description) => {
-    dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
-  };
 
 
 
@@ -215,114 +197,9 @@ export default function ConsultaDoc ({id, preconsult}) {
     });
   }, [formState]);
 
-  const handleUploadTestFile = (test, file) => {
-    // almacenamos los archivos subidos, en un estado local ya que en Redux no son compatible
-    const studies = tests;
-    setTests({ ...studies, [test]: { ...studies[test], file: file } });
-  };
 
-  const handleTestDescription = (test, testDescription) => {
-    // almacenamos la descripción del estudio
-    const studies = tests;
-    setTests({
-      ...studies,
-      [test]: { ...studies[test], description: testDescription },
-    });
-  };
-  const handleTestActive = (test, active) => {
-    // para los campos binarios
-    const studies = tests;
-    setTests({ ...studies, [test]: { ...studies[test], active: active } });
-  };
 
-  const handleTestSelectedOption = (test, value) => {
-    const studies = tests;
-    setTests({
-      ...studies,
-      [test]: { ...studies[test], selectedOption: value },
-    });
-  };
-
-  useEffect(() => {
-    setTests({
-      laboratoryResults: {
-        title: "Resultados de laboratorio",
-        file: preconsult?.laboratoryResults || null,
-        description: "",
-        active: false,
-      },
-      electrocardiogram: {
-        title: "Electrocardiograma",
-        file: preconsult?.electrocardiogram || null,
-        description: "",
-        active: false,
-      },
-      rxThorax: {
-        title: "RX de Torax",
-        file: preconsult?.rxThorax || null,
-        description: "",
-        active: false,
-      },
-      echocardiogram: {
-        title: "Ecocardiograma",
-        file: preconsult?.echocardiogram || null,
-        description: "",
-        active: false,
-      },
-      walkTest: {
-        title: "Test de caminata",
-        file: preconsult?.walkTest || null,
-        description: "",
-        active: false,
-      },
-      respiratoryFunctional: {
-        title: "Funcional respiratorio",
-        file: preconsult?.respiratoryFunctional || null,
-        description: "",
-        active: false,
-      },
-      tomographies: {
-        title: "Tomografías",
-        file: preconsult?.tomographies || null,
-        description: "",
-        active: false,
-      },
-      rightHeartCatheterization: {
-        title: "Cateterismo cardiaco derecho",
-        file: preconsult?.rightHeartCatheterization || null,
-        description: "",
-        active: false,
-      },
-      ccg: {
-        title: "CCG (Coronariografia)",
-        file: preconsult?.ccg || null,
-        description: "",
-        active: false,
-      },
-      resonance: {
-        title: "Resonancia",
-        file: preconsult?.resonance || null,
-        description: "",
-        active: false,
-      },
-      leftHeartCatheterization: {
-        title: "Cateterismo cardiaco izquierdo",
-        file: preconsult?.leftHeartCatheterization || null,
-        description: "",
-        active: false,
-      },
-      otherStudies: {
-        title: "Otros estudios",
-        file: preconsult?.otherStudies || null,
-        description: "",
-      },
-      pendingStudies: {
-        title: "Estudios pendientes",
-        description: preconsult?.pendingStudies || "",
-      },
-    });
-  }, [preconsult]);
-
+  
   const preconsultPhysical = {
     // ids
     preconsultationId: Number(preconsult?.id),
@@ -333,21 +210,21 @@ export default function ConsultaDoc ({id, preconsult}) {
     // exploracion fisica
     painRecordsToUpdate: [bodyOBJFormat],
     // estudios
-    laboratoryResults: tests.laboratoryResults?.file || null,
-    laboratoryResultsDescription: tests.laboratoryResults?.description || "",
-    electrocardiogram: tests.electrocardiogram?.file || null,
-    electrocardiogramDescription: tests.electrocardiogram?.description || "",
-    rxThorax: tests.rxThorax?.file || null,
-    echocardiogram: tests.echocardiogram?.file || null,
-    walkTest: tests.walkTest?.file || null,
-    respiratoryFunctional: tests.respiratoryFunctional?.file || null,
-    tomographies: tests.tomographies?.file || null,
-    rightHeartCatheterization: tests.rightHeartCatheterization?.file || null,
-    ccg: tests.ccg?.file || null,
-    resonance: tests.resonance?.file || null,
-    leftHeartCatheterization: tests.leftHeartCatheterization?.file || null,
-    otherStudies: tests.otherStudies?.file || null,
-    pendingStudies: tests.pendingStudies?.description || "",
+    // laboratoryResults: tests.laboratoryResults?.file || null,
+    // laboratoryResultsDescription: tests.laboratoryResults?.description || "",
+    // electrocardiogram: tests.electrocardiogram?.file || null,
+    // electrocardiogramDescription: tests.electrocardiogram?.description || "",
+    // rxThorax: tests.rxThorax?.file || null,
+    // echocardiogram: tests.echocardiogram?.file || null,
+    // walkTest: tests.walkTest?.file || null,
+    // respiratoryFunctional: tests.respiratoryFunctional?.file || null,
+    // tomographies: tests.tomographies?.file || null,
+    // rightHeartCatheterization: tests.rightHeartCatheterization?.file || null,
+    // ccg: tests.ccg?.file || null,
+    // resonance: tests.resonance?.file || null,
+    // leftHeartCatheterization: tests.leftHeartCatheterization?.file || null,
+    // otherStudies: tests.otherStudies?.file || null,
+    // pendingStudies: tests.pendingStudies?.description || "",
     // se tiene que aplicar una logica que cambia segun el patch o el post
     updateVitalSigns:
       vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
@@ -1012,9 +889,12 @@ export default function ConsultaDoc ({id, preconsult}) {
           };
         }
       }
-
-  const { columns, component, title, textError, renderDropDown } =
-  getColumnsAndComponent(handleNav);
+  
+  
+    const { columns, component, title, textError, renderDropDown } =
+    getColumnsAndComponent(handleNav);
+   
+ 
 
 
   
