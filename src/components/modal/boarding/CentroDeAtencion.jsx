@@ -60,7 +60,7 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
             </p>
 
             <Dropdown>
-                <DropdownTrigger className="w-auto">
+                <DropdownTrigger className="max-w-[25rem] md:max-w-[45rem]">
                     <Button
                         style={{
                             borderRadius: "0.5rem",
