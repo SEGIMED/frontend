@@ -14,6 +14,7 @@ import {
   minHour,
   weekdayFormat,
 } from "./utils";
+import ModalConsultation from "../modal/ModalDoctor/ModalConsultation";
 dayjs.locale("es");
 
 const localizer = dayjsLocalizer(dayjs); // Add this line to define the localizer
@@ -22,6 +23,8 @@ const Agenda = ({ schedules, title }) => {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState("month");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalConsultationOpen, setIsModalConsultationOpen] = useState(false);
+  const [selectedConsulta, setSelectedConsulta] = useState({});
   const [dateSelected, setDateSelected] = useState();
 
   const closeModal = () => {
@@ -34,6 +37,10 @@ const Agenda = ({ schedules, title }) => {
     }
     setDateSelected(start);
     setIsModalOpen(true);
+  };
+  const handleSelectedEvent = (event) => {
+    setSelectedConsulta(event);
+    setIsModalConsultationOpen(true);
   };
 
   const eventStyleGetter = (event, start, end, isSelected) => {
@@ -146,6 +153,7 @@ const Agenda = ({ schedules, title }) => {
           date={date}
           eventPropGetter={eventStyleGetter} // Aquí se añaden los estilos
           onSelectSlot={handleSelectSlot}
+          onSelectEvent={(e) => handleSelectedEvent(e)}
           selectable
           allDayAccessor=""
           className="h-full w-full"
@@ -184,6 +192,14 @@ const Agenda = ({ schedules, title }) => {
           isOpen={isModalOpen}
           onClose={closeModal}
           dateSelect={dateSelected}
+        />
+      )}
+      {isModalConsultationOpen && (
+        <ModalConsultation
+          consulta={selectedConsulta}
+          isOpen={isModalConsultationOpen}
+          readOnly={true}
+          onClose={() => setIsModalConsultationOpen(false)}
         />
       )}
     </div>

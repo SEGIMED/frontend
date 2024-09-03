@@ -44,8 +44,10 @@ const DataEntries = "/Data_Entries";
 const Errores = "/Errores";
 const Estudios = "/Estudios";
 const Importaciones = "/Importaciones";
+const Solicitudes = "/Solicitudes";
 const Agenda_General = "/Agenda_General";
 const rutas = {
+  Solicitudes,
   Estudios,
   Importaciones,
   Educacion,

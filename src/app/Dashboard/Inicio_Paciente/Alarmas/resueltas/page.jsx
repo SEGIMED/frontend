@@ -24,14 +24,14 @@ export default function AlarmPte() {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
 
-    setAlarms(response.data.alarms);
+    setAlarms(response.data);
   };
 
   const router = useRouter();
   const myID = Cookies.get("c");
 
   const UnsolvedAlarmas = alarms.filter(
-    (alarm) => alarm.patient === Number(myId) && alarm.solved === true
+    (alarm) => alarm.patient.id === Number(myId) && alarm.solved === true
   );
 
   useEffect(() => {

@@ -28,6 +28,7 @@ import { protectRoute } from "@/utils/protectRutes";
 import MensajesContainer from "../InicioPaciente/mensajes/MensajesContainer";
 import rutas from "@/utils/rutas";
 import IconMail from "../icons/iconMail";
+import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -45,6 +46,34 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   const token = Cookies.get("a");
 
   const refreshToken = Cookies.get("d");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+  useEffect(() => {
+    if (!user.name || !rol) return;
+
+
+
+    if (rol === "Médico") {
+      if (!user.medicalRegistries?.Nacional?.registryId) {
+        router.push(rutas.Doctor);
+        setIsModalOpen(true);
+      }
+    } else if (rol === "Paciente") {
+
+      if (!user.sociodemographicDetails?.genre) {
+        router.push(rutas.PacienteDash);
+        setIsModalOpen(true);
+      }
+    }
+
+    return;
+  }, [user, rol]);
 
   // reemplazar pathname por adjustedPathname
   const lastSegment = pathname.substring(pathname.lastIndexOf("/") + 1);
@@ -145,6 +174,16 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     } else return;
   }, [rol]);
 
+  useEffect(() => {
+    if (rol === "Médico") {
+      getUserDoctor().catch(console.error);
+
+    }
+    if (rol === "Paciente") {
+      getUser({ headers: { token: token } }).catch(console.error);
+    }
+  }, [onboarding]);
+
   const unreadNotifications = notifications?.filter(
     (notificacion) => !notificacion.state
   );
@@ -169,7 +208,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         chat.messages.forEach((mensaje) => {
           ultimoMensaje = mensaje;
           senderInfo = mensaje.sender;
-          if (mensaje.sender.userId == userId) {
+          if (mensaje.sender?.userId == userId) {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
@@ -299,17 +338,16 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             {rol === "Médico"
               ? "Médico"
               : rol === "Paciente"
-              ? "Paciente"
-              : rol === "Admin"
-              ? "Administrador"
-              : ""}
+                ? "Paciente"
+                : rol === "Admin"
+                  ? "Administrador"
+                  : ""}
           </span>
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
-          }`}>
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+            }`}>
           <IconMail
             className="w-6 h-6"
             color={(showChats || hasUnreadMessages) && "white"}
@@ -324,10 +362,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -343,6 +380,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
+      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={rol} setOnboarding={setOnboarding} />
     </div>
   );
 };

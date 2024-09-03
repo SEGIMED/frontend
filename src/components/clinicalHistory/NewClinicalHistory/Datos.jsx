@@ -18,6 +18,8 @@ import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import GeneratePDF from "@/components/pdf/pdfgenerator";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconEditar from "@/components/icons/iconEditar";
+import { ApiSegimed } from "@/Api/ApiSegimed";
+import Swal from "sweetalert2";
 
 const Datos = () => {
   const pathname = usePathname();
@@ -25,6 +27,7 @@ const Datos = () => {
   const pathArray = pathname.split("/");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [dataImportar, setDataImportar] = useState({});
   const [text, setText] = useState(false);
 
@@ -44,10 +47,43 @@ const Datos = () => {
     setDataImportar(data);
   };
 
-  const submitModalData = () => {
-    console.log(dataImportar);
-    setIsModalOpen(false);
+  const submitModalData = async () => {
+    const payload = { userId: user.userId, studies: [dataImportar] };
+    console.log(payload);
+
+
+    try {
+      // Realizar la petición POST
+      setLoading(true)
+      const response = await ApiSegimed.post('/patient-studies', payload);
+
+      // Manejar la respuesta según sea necesario
+      console.log('Respuesta del servidor:', response.data);
+      setLoading(false)
+      // Cerrar el modal después de la petición
+      setIsModalOpen(false);
+      setLoading(false)
+      Swal.fire({
+        icon: "success",
+        title: "Exito",
+        text: "La importacion se realizo correctamente",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+    } catch (error) {
+      console.error('Error al enviar los datos:', error.message);
+      setIsModalOpen(false);
+      Swal.fire({
+        title: "Error",
+        text: "No pudo realizarse la importacion, intente mas tarde",
+        icon: "error",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+      setLoading(false)
+    }
   };
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       {isLoading ? (
@@ -59,7 +95,7 @@ const Datos = () => {
             <MenuDropDown
               label="Importar archivo"
               icon={<IconExportar color="#487FFA" />}
-              classNameButton={"border-[#487FFA] border-2 bg-white text-start text-[#487FFA] font-bold text-base leading-5"}
+              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
               categories={[
                 {
                   items: [
@@ -262,6 +298,7 @@ const Datos = () => {
         size={"h-[35rem] md:h-fit md:w-[35rem]"}
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
+        loading={loading}
       />
       {/* <div>
             <h1>Vista Previa del PDF</h1>

@@ -80,7 +80,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
               variant="bordered"
               className="capitalize"
               disabled
-              style={{
+              style={style ? style : {
                 color: "#487FFA",
                 borderColor: "#487FFA",
                 border: "2px solid",

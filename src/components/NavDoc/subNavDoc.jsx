@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import rutas from "@/utils/rutas";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconSubNavbar from "../icons/IconSubNavbar";
 import IconRegresar from "../icons/iconRegresar";
@@ -16,6 +16,7 @@ import {
   clearClinicalHistory,
   addUserHistory,
   changeTabs,
+  addImportHistory,
 } from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
@@ -26,15 +27,19 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import { socket } from "@/utils/socketio";
+import { addMessage, toogleChat } from "@/redux/slices/chat/chatBot";
 
 export default function SubNavbar({ id }) {
   const [openDetails, setOpenDetails] = useState(false);
   const params = useParams();
   const selectedTab = useAppSelector((state) => state.clinicalHistory.tab);
+  const segiChat = useAppSelector((state) => state.chatBot.messages);
   const userId = params?.userId;
   const getSelectedClass = (name) =>
     selectedTab === name ? "bg-white" : "cursor-pointer ";
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const combineDetails = (details, defaultDetails) => {
     return details.length > 0 ? details : defaultDetails;
@@ -123,6 +128,26 @@ export default function SubNavbar({ id }) {
     }
   };
 
+  const getImportHistory = async () => {
+    const response = await ApiSegimed.get(`/patient-studies?userId=${userId}`);
+    dispatch(addImportHistory(response.data));
+  };
+  const handleClinicalHistorySegi = () => {
+    dispatch(toogleChat(true));
+    if (
+      segiChat[segiChat.length - 1].message !=
+      "Tienes alguna pregunta sobre la historia clínica de este paciente?"
+    ) {
+      dispatch(
+        addMessage({
+          sender: "bot",
+          message:
+            "Tienes alguna pregunta sobre la historia clínica de este paciente?",
+          time: new Date().toISOString(),
+        })
+      );
+    }
+  };
   const getUser = async (headers) => {
     const response = await ApiSegimed.get(
       `/patient-details?id=${userId}`,
@@ -132,15 +157,18 @@ export default function SubNavbar({ id }) {
   };
 
   useEffect(() => {
-    const token = Cookies.get("a");
     dispatch(setLoading(true));
-    if (token) {
-      getUser({ headers: { token: token } }).catch(console.error);
-      getConsultas({ headers: { token: token } }).catch(console.error);
+    getUser().catch(console.error);
+    getConsultas().catch(console.error);
+    getImportHistory().catch(console.error);
+    if (socket.isConnected()) {
+      socket.emit("sendPatientInfo", { message: userId });
+      handleClinicalHistorySegi();
     }
 
     return () => {
       dispatch(clearClinicalHistory());
+      dispatch(toogleChat(false));
     };
   }, [userId, dispatch]);
 
@@ -229,7 +257,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("Examen Físico")}
                   key="new"
                   textValue="Examen Fisico"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("Examen Físico"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -239,7 +267,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("Signos Vitales")}
                   key="copy"
                   textValue="Signos Vitales"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("Signos Vitales"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -249,7 +277,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("Diagnosticos y tratamientos")}
                   key="edit"
                   textValue="Diagnosticos y tratamientos"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("Diagnosticos y tratamientos"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -259,7 +287,7 @@ export default function SubNavbar({ id }) {
                   className={getSelectedClass("HC Importados")}
                   key="importaciones"
                   textValue="HC Importados"
-                  onClick={() => {
+                  onPress={() => {
                     dispatch(changeTabs("HC Importados"));
                     setOpenDetails(!openDetails);
                   }}>
@@ -270,12 +298,12 @@ export default function SubNavbar({ id }) {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      <Link href={`${rutas.Doctor}${rutas.Pacientes}`}>
-        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
-          <IconRegresar />
-          <p className="hidden md:block">Regresar</p>
-        </button>
-      </Link>
+      <button
+        onClick={() => router.back()}
+        className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+        <IconRegresar />
+        <p className="hidden md:block">Regresar</p>
+      </button>
     </div>
   );
 }
