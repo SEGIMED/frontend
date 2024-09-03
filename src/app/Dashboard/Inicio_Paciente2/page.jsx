@@ -24,6 +24,7 @@ export default function HomePte() {
   const user = useAppSelector((state) => state.user);
   const router = useRouter();
   const [dataImportar, setDataImportar] = useState({});
+  const [disabledButton, setDisabledButton] = useState(false);
   const [autoEvaluacionType, setAutoevaluaciónType] = useState("");
   const [vitalSings, setVitalSings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -150,7 +151,7 @@ export default function HomePte() {
     });
   };
 
-
+  const isVitalSingsEmpty = Object.values(vitalSings).every(value => !value);
 
   const Modals = autoEvaluacionType === 'SignosVitales'
     ? [
@@ -163,7 +164,9 @@ export default function HomePte() {
       <ModalInputVitalSings key="modalInputVitalSings5" text={"Ingresa tu temperatura corporal"} unit={"°C"} handleChange={handleVitalSignChange} name={'1'} state={vitalSings} />,
       <ModalInputVitalSings key="modalInputVitalSings6" text={"Ingresa tu peso actual"} unit={"Kg "} handleChange={handleVitalSignChange} name={'9'} state={vitalSings} />,
       // <ModalInputVitalSings key="modalInputVitalSings7" text={"Ingresa tu nivel de glicemia"} unit={"mg/dl"} handleChange={handleVitalSignChange} name={'Glicemia'} state={vitalSings} />,
-      <ModalVitalSings key="modalVitalSings" text={"¡Perfecto! Ya completaste tu registro diario."} subtitle={"¡Seguí así para mantener tu salud bajo control!"} />,
+      isVitalSingsEmpty
+        ? <ModalVitalSings key="modalVitalSingsIncomplete" text={"Debes completar al menos 1 signo vital para finalizar"} setDisabledButton={setDisabledButton} />
+        : <ModalVitalSings key="modalVitalSingsComplete" text={"¡Perfecto! Ya completaste tu registro diario."} subtitle={"¡Seguí así para mantener tu salud bajo control!"} />,
     ]
     : [
       <ModalAutoEvaluacion key="modalAutoEvaluacion" setAutoevaluaciónType={setAutoevaluaciónType} autoEvaluacionType={autoEvaluacionType} />,
@@ -215,6 +218,7 @@ export default function HomePte() {
         size={"h-[35rem] text-white md:h-[25rem] md:w-[35rem]"}
         buttonText={{ start: `Siguiente`, end: `Siguiente` }}
         handleSubmit={submitModalVitalData}
+        disabledButton={disabledButton}
       />
     </div>
   );
