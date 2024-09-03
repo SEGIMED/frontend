@@ -1,4 +1,4 @@
-export const IconChat = ({ className }) => {
+export const IconChat = ({ className, color }) => {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
       <desc>Created with Pixso.</desc>
@@ -39,7 +39,7 @@ export const IconChat = ({ className }) => {
         <path
           id="path"
           d="M8 9L16 9"
-          stroke="#B2B2B2"
+          stroke={color ? color : "#B2B2B2"}
           strokeOpacity="1.000000"
           strokeWidth="2.000000"
           strokeLinejoin="round"
@@ -55,7 +55,7 @@ export const IconChat = ({ className }) => {
         <path
           id="path"
           d="M8 13L14 13"
-          stroke="#B2B2B2"
+          stroke={color ? color : "#B2B2B2"}
           strokeOpacity="1.000000"
           strokeWidth="2.000000"
           strokeLinejoin="round"
@@ -71,7 +71,7 @@ export const IconChat = ({ className }) => {
         <path
           id="path"
           d="M20.12 4.87C20.7 5.46 21 6.17 21 7L21 15C21 15.82 20.7 16.53 20.12 17.12C19.53 17.7 18.82 18 18 18L13 18L8 21L8 18L6 18C5.17 18 4.46 17.7 3.87 17.12C3.29 16.53 3 15.82 3 15L3 7C3 6.17 3.29 5.46 3.87 4.87C4.46 4.29 5.17 4 6 4L18 4C18.82 4 19.53 4.29 20.12 4.87Z"
-          stroke="#B2B2B2"
+          stroke={color ? color : "#B2B2B2"}
           strokeOpacity="1.000000"
           strokeWidth="2.000000"
           strokeLinejoin="round"
