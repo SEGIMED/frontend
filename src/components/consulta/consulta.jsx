@@ -522,7 +522,7 @@ console.log(patient)
         
         const response= await patchPreconsultation(data)
         
-        
+        console.log(response)
       } catch (error) {
         console.error("No pudo cargarse la data en el servidor", error.message)
       }

@@ -433,20 +433,20 @@ export const draftFormat = (data) => {
                 description: "",
             },
         },
-        // bodySection: {
-        //     isTherePain: data?.provisionalPreConsultationPainMap?.isTherePain ? data.provisionalPreConsultationPainMap.isTherePain : null,
-        //     painDuration: data?.provisionalPreConsultationPainMap?.painDuration ? data.provisionalPreConsultationPainMap.painDuration : null,
-        //     painScale: data?.provisionalPreConsultationPainMap?.painScale ? data.provisionalPreConsultationPainMap.painScale : null,
-        //     painType: data?.provisionalPreConsultationPainMap?.painType ? data.provisionalPreConsultationPainMap.painType : null,
-        //     painAreas: null, // Reseteamos los músculos seleccionados
-        //     painFrequency: data?.provisionalPreConsultationPainMap?.painFrequency ? data.provisionalPreConsultationPainMap.painFrequency : null,
-        //     isTakingAnalgesic: data?.provisionalPreConsultationPainMap?.isTakingAnalgesic ? data.provisionalPreConsultationPainMap.isTakingAnalgesic : null,
-        //     doesAnalgesicWorks: data?.provisionalPreConsultationPainMap?.doesAnalgesicWorks || null,
-        //     isWorstPainEver: data?.provisionalPreConsultationPainMap?.isWorstPainEver || null,
-        //     painOwner: data?.provisionalPreConsultationPainMap?.painOwner || null,
-        //     scheduling: data?.provisionalPreConsultationPainMap?.scheduling || null,
-        //     medicalEvent: data?.provisionalPreConsultationPainMap?.medicalEvent || null,
-        // },
+        bodySection: {
+            isTherePain: data?.provisionalPreConsultationPainMap?.isTherePain ? data.provisionalPreConsultationPainMap.isTherePain : null,
+            painDuration: data?.provisionalPreConsultationPainMap?.painDuration ? data.provisionalPreConsultationPainMap.painDuration : null,
+            painScale: data?.provisionalPreConsultationPainMap?.painScale ? data.provisionalPreConsultationPainMap.painScale : null,
+            painType: data?.provisionalPreConsultationPainMap?.painType ? data.provisionalPreConsultationPainMap.painType : null,
+            painAreas: null, // Reseteamos los músculos seleccionados
+            painFrequency: data?.provisionalPreConsultationPainMap?.painFrequency ? data.provisionalPreConsultationPainMap.painFrequency : null,
+            isTakingAnalgesic: data?.provisionalPreConsultationPainMap?.isTakingAnalgesic ? data.provisionalPreConsultationPainMap.isTakingAnalgesic : null,
+            doesAnalgesicWorks: data?.provisionalPreConsultationPainMap?.doesAnalgesicWorks || null,
+            isWorstPainEver: data?.provisionalPreConsultationPainMap?.isWorstPainEver || null,
+            painOwner: data?.provisionalPreConsultationPainMap?.painOwner || null,
+            scheduling: data?.provisionalPreConsultationPainMap?.scheduling || null,
+            medicalEvent: data?.provisionalPreConsultationPainMap?.medicalEvent || null,
+        },
         anamnesis: {
             consultationReason: {
                 title: '¿Por qué solicitó la consulta?',

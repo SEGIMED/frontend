@@ -29,9 +29,7 @@ export default function InputCuerpoPre({
   const [musclesObject, setMusclesObject] = useState({});
   const [modelType, setModelType] = useState("anterior");
   const [painLevel, setPainLevel] = useState(1);
-  console.log(valuePreconsultation)
-
-  console.log(selectedMuscles)
+ 
   const { register } = useFormContext();
   const muscleTranslations = {
     /* Back */
@@ -320,7 +318,7 @@ export default function InputCuerpoPre({
                     {muscleTranslations[muscle]}
                   </label>
                   <textarea
-                    value={selectedMuscles[0].painNotes || " " }
+                    
                     {...register(muscleTranslations[muscle])}
                     onChange={(e) => handleDescription(e.target.value, muscle)}
                     className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
