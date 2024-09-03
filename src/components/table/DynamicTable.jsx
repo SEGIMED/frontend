@@ -106,6 +106,7 @@ function DynamicTable({
   showHistoryIcon,
   textError,
   loading,
+  firstRowComponent,
 }) {
   const [activeIndex, setActiveIndex] = useState(null); // Track which row's content is visible
 
@@ -166,16 +167,16 @@ function DynamicTable({
           <tr>
             {/* Risk column */}
             {showRisks && (
-              <th className="lg:pl-6 py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
+              <th className="lg:pl-[3%] py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
             )}
             {showHistoryIcon && (
-              <th className="lg:pl-6 py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
+              <th className="lg:pl-[3%] py-2 text-center w-[10px] md:w-[10px] hidden md:table-cell"></th>
             )}
             {columns.map((column, index) => (
               <th
                 key={index}
                 className={`${
-                  index == 0 && !showRisks && !showHistoryIcon && "lg:pl-6"
+                  index == 0 && !showRisks && !showHistoryIcon && "lg:pl-[3%]"
                 } lg:px-2 font-normal py-2 lg:text-left text-center ${
                   column.showMobile ? "table-cell" : "hidden md:table-cell"
                 }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${
@@ -189,6 +190,13 @@ function DynamicTable({
           </tr>
         </thead>
         <tbody className="bg-white  lg:text-left text-center text-[#686868]">
+          {firstRowComponent && !loading && (
+            <td
+              colSpan={7}
+              className="pr-[5%] pl-[2%] border-b-[1px] border-b-[#D7D7D7] py-2">
+              {firstRowComponent}
+            </td>
+          )}
           {filteredRows?.length > 0 ? (
             filteredRows?.map((row, rowIndex) => (
               <Fragment key={rowIndex}>
@@ -198,12 +206,12 @@ function DynamicTable({
                   } border-b-[1px] border-b-[#D7D7D7] `}
                   onClick={() => handleRowClick(rowIndex)}>
                   {showRisks && (
-                    <td className="py-2 lg:pl-3 w-[10px] max-w-[10px] hidden md:table-cell">
+                    <td className="py-2 lg:pl-[2%] w-[10px] max-w-[10px] hidden md:table-cell">
                       {renderPatientPulmonaryRisk(row)}
                     </td>
                   )}
                   {showHistoryIcon && (
-                    <td className="py-2 lg:pl-3 w-[10px] max-w-[10px] hidden md:table-cell">
+                    <td className="py-2 lg:pl-[2%] w-[10px] max-w-[10px] hidden md:table-cell">
                       <IconConsulta />
                     </td>
                   )}
@@ -214,8 +222,8 @@ function DynamicTable({
                         colIndex === 0 &&
                         !showRisks &&
                         !showHistoryIcon &&
-                        "lg:pl-6"
-                      }  lg:px-3 py-2 text-[#686868] whitespace-normal ${
+                        "lg:pl-[2%]"
+                      }  lg:px-[2%] py-2 text-[#686868] whitespace-normal ${
                         column.showMobile
                           ? "table-cell"
                           : "hidden md:table-cell"
