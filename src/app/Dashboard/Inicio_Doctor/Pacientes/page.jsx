@@ -44,6 +44,7 @@ import { setSearchBar } from "@/redux/slices/user/searchBar";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+  const orden = useAppSelector((state) => state.formSlice.selectedOptions);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(false);
@@ -55,6 +56,7 @@ export default function HomeDoc() {
   const [patientsFavorites, setPatientsFavorites] = useState([]);
   const [ordenMedica, setOrdenMedica] = useState(false);
   const [Pendientes, setPendientes] = useState(false);
+  const [ordenType, setOrdenType] = useState("");
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -65,6 +67,10 @@ export default function HomeDoc() {
     }
     if (searchParams.get("Pendientes")) {
       setPendientes(searchParams.get("Pendientes"));
+    }
+    if (searchParams.get("type")) {
+      setOrdenType(searchParams.get("type"));
+      console.log(searchParams.get("type"));
     }
     return;
   }, [searchParams]);
@@ -279,16 +285,14 @@ export default function HomeDoc() {
 
           <button
             onClick={handleFavoriteClick}
-            className={`${
-              showFavorites
-                ? "bg-bluePrimary text-white"
-                : "bg-white text-bluePrimary  border-bluePrimary"
-            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+            className={`${showFavorites
+              ? "bg-bluePrimary text-white"
+              : "bg-white text-bluePrimary  border-bluePrimary"
+              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
-              className={`hidden md:block ${
-                showFavorites ? "text-white" : "text-bluePrimary"
-              } font-bold`}>
+              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
+                } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -410,11 +414,6 @@ export default function HomeDoc() {
               /> */}
                 {ordenMedica ? (
                   <Elboton
-                    href={
-                      Pendientes
-                        ? `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`
-                        : `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}`
-                    }
                     icon={<IconSelect color={"#487ffa"} />}
                     nombre={"Seleccionar "}
                     size={"md"}
@@ -424,13 +423,17 @@ export default function HomeDoc() {
                     onPress={() => {
                       dispatch(
                         setSelectedOption({
-                          name: "patient",
+                          name: "patientId",
                           option: paciente.id,
                         })
                       );
+                      const url = Pendientes
+                        ? `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true&type=${ordenType}&id=${paciente.id}`
+                        : `${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?type=${ordenType}&id=${paciente.id}`;
+                      router.push(url);
                     }}
                     classNameText={"hidden md:block "}
-                    // icon={<IconMas />}
+                  // icon={<IconMas />}
                   />
                 ) : (
                   <MenuDropDown
