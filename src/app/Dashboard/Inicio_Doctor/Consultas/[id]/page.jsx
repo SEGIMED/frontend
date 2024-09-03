@@ -16,13 +16,15 @@ export default function consultaDoc({params}){
       try {
         const response = await getPreConsultation(scheduleId);
         setPreconsult(response.data);
-        console.log(response.data)
+        
        
         if (response.data) {
           const formatPreconsult = draftFormat(response.data);
          
           dispatch(setFormData(formatPreconsult));
-        } 
+        }else {
+          dispatch(FormDataUtil)
+        }
       } catch (error) {
         console.error("Este agendamiento no tiene preconsulta", error);
       }

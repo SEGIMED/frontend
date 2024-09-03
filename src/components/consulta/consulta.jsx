@@ -70,6 +70,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
    
+  console.log(medicalEventExist, "esto es medical event")
 
   //FUNCIONES PARA PRECONSULTA
   const handleQuestionActive = (question, label, active) => {
@@ -90,6 +91,9 @@ export default function ConsultaDoc ({id, preconsult}) {
     dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
   };
 
+
+
+  //UTIL NECESARIO PARA AUTOEVALUACION!!!
   const getValue = (formValue, preconsultValue) =>
     formValue !== undefined && formValue !== null ? formValue : preconsultValue;
 
@@ -152,7 +156,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   };
 
   console.log(preconsult, "esto es preconsulta para ver que patch se hizo")
-  console.log(bodyOBJFormat, "para ver el formato")
+  
   
   useEffect(() => {
     setCardiovascularRisk({
@@ -449,8 +453,9 @@ export default function ConsultaDoc ({id, preconsult}) {
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
       medicalEventId: Number(medicalEventId),
     });
+    
 
-    if (medicalEventExist?.patientPhysicalExaminations[0]?.id) {
+    if (medicalEventExist?.physicalExaminations[0]?.id) {
       setPhysicalExaminationPatch({
         physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
         description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
@@ -567,6 +572,8 @@ export default function ConsultaDoc ({id, preconsult}) {
     }
   };
 
+
+
   //-------------------------------------------------------------------------------
   //Handles que necesito para patch de data 
   const necesaryData= {
@@ -608,7 +615,7 @@ export default function ConsultaDoc ({id, preconsult}) {
     
 
   }
-
+ 
   useEffect(() => {
  
     fetchPatientDetail(userId);

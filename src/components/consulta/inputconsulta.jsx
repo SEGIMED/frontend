@@ -84,7 +84,7 @@ export default function InputConsulta({
   };
 
   const handleOption2 = (sub) => {
-    setRiskSurgicalButton(sub);
+    setRiskHTPButton(sub);
     if (onRiskChange2) onRiskChange2(IdRiskSurgical(sub));
   };
   /* //esto es la logica de elegir varios botones del grupo a la vez

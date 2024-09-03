@@ -21,7 +21,9 @@ export default function PrePte({ params }) {
         const formatPreconsult = draftFormat(response.data);
        
         dispatch(setFormData(formatPreconsult));
-      } 
+      } else {
+        dispatch(FormDataUtil)
+      }
     } catch (error) {
       console.error("Este agendamiento no tiene preconsulta", error);
     }
