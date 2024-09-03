@@ -39,6 +39,10 @@ import ImportarHC from "../modal/ModalDoctor/modalImportarHC";
 import DynamicTable from "../table/DynamicTable";
 import FileDisplay from "../modal/ModalDoctor/modalDisplayFile";
 import SkeletonList from "../skeletons/HistorialSkeleton";
+import patchPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBackgrounds";
+import patchHTPRisk from "@/utils/dataFetching/fetching/patchHTPRisk";
+import patchCardiovascularRisk from "@/utils/dataFetching/fetching/patchCardiovascularRisk";
+import postPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBackgrounds";
 
 
 
@@ -53,13 +57,20 @@ export default function ConsultaDoc ({id, preconsult}) {
   const [medicalEventExist, setMedicalEventExist] = useState();
   const [handleNav, setHandleNav] = useState("Anamnesis");
 
-  //risk y htp group
-  const [cardiovascularRisk, setCardiovascularRisk] = useState();
-  const [htpRisk, setHTPRisk] = useState();
-  const [hpGroup, setHpGroup] = useState();
+ 
   //vital signs y glicemia
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
+  //anamnesis y background
+  const [anamnesis, setAnamnesis] = useState([]);
+  const [background, setBackground] = useState();
+ 
+   //risk y htp group
+   const [cardiovascularRisk, setCardiovascularRisk] = useState();
+   const [htpRisk, setHTPRisk] = useState();
+   const [hpGroup, setHpGroup] = useState();
+   const [selectedRisk, setSelectedRisk] = useState();
+   const [selectedRisk2, setSelectedRisk2] = useState();
 
   //para importar archivos 
   const [dataImportar, setDataImportar] = useState({});
@@ -79,13 +90,12 @@ export default function ConsultaDoc ({id, preconsult}) {
   const [physicalExamination, setPhysicalExamination] = useState();
   const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
 
-
-  const [background, setBackground] = useState();
+console.log(patient)
+  
   const [backgroundPatch, setBackgroundPatch] = useState();
   const [diagnostic, setDiagnostic] = useState();
   const [diagnosticPatch, setDiagnosticPatch] = useState();
-  const [selectedRisk, setSelectedRisk] = useState();
-  const [selectedRisk2, setSelectedRisk2] = useState();
+
   const [selectedGroup, setSelectedGroup] = useState();
   const [heartFailureRisk, setHeartFailureRisk] = useState();
 
@@ -93,7 +103,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   
   
 
-  const [restOfPreconsult, setRestOfPreconsult] = useState([]);
+
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
@@ -171,10 +181,11 @@ export default function ConsultaDoc ({id, preconsult}) {
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
-      riskId: selectedRisk,
+      riskId: Number(selectedRisk),
     });
     
   }, [selectedRisk]);
+  console.log(selectedRisk2, "riskhtp")
   useEffect(() => {
     setHTPRisk({
       patientId: Number(userId),
@@ -228,7 +239,6 @@ export default function ConsultaDoc ({id, preconsult}) {
     // se tiene que aplicar una logica que cambia segun el patch o el post
     updateVitalSigns:
       vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
-    ...restOfPreconsult,
   };
 
   
@@ -237,6 +247,7 @@ export default function ConsultaDoc ({id, preconsult}) {
     setBackground({
       patientId: Number(userId),
       medicalEventId: Number(medicalEventId),
+      schedulingId: Number(scheduleId),
       allergicBackground: data["Alergias"] === "" ? "" : data["Alergias"],
       familyBackground:
         data["Antecedentes familiares"] === ""
@@ -261,7 +272,7 @@ export default function ConsultaDoc ({id, preconsult}) {
           ? ""
           : data["Antecedentes quirúrgicos"],
       vaccinationBackground: data["Vacunas"] === "" ? "" : data["Vacunas"],
-      schedulingId: Number(scheduleId),
+      
     });
     if (patient?.backgrounds) {
       const backgroundPatch = {
@@ -328,7 +339,7 @@ export default function ConsultaDoc ({id, preconsult}) {
     );
     console.log("aca se guardan los signos vitales", updateVitalSigns )
     setVitalSignsPreconsult(updateVitalSigns);
-    setRestOfPreconsult({
+    setAnamnesis({
       //anamnesis sin evolucion de la enfermedad
       consultationReason:
         data["Motivo de consulta"] === ""
@@ -338,12 +349,6 @@ export default function ConsultaDoc ({id, preconsult}) {
         data["Sintomas importantes"] === ""
           ? preconsult?.importantSymptoms
           : data["Sintomas importantes"],
-      //vital signs
-      abnormalGlycemia: data["abnormalGlycemia"],
-      lastAbnormalGlycemia:
-        data["lastAbnormalGlycemia"] === ""
-          ? preconsult?.lastAbnormalGlycemia
-          : data["lastAbnormalGlycemia"],
     });
 
     setGlicemiaPreconsult({
@@ -524,7 +529,55 @@ export default function ConsultaDoc ({id, preconsult}) {
     
 
   }
- 
+
+  const handleBackgroundSave = async () => {
+    try {
+        const response = await postPatientBackgrounds(background);
+        console.log(response);
+    } catch (error) {
+        console.error('Error saving background:', error);
+    }
+};
+
+const handleHtpRiskSave = async () => {
+    try {
+        const response = await patchHTPRisk(htpRisk);
+        console.log("esto es htprisk", response.data);
+    } catch (error) {
+        console.error('Error saving HTP risk:', error);
+    }
+};
+
+const handleCardioVascularSave = async () => {
+    try {
+        console.log(cardiovascularRisk);
+        const response = await patchCardiovascularRisk(cardiovascularRisk);
+        console.log("esto es cardiorisk", response);
+    } catch (error) {
+        console.error('Error saving cardiovascular risk:', error);
+    }
+};
+
+const handleAnamnesisSave = async () => {
+    try {
+        const data = {
+            ...necesaryData,
+            ...anamnesis
+        };
+        const response = await patchPreconsultation(data);
+        console.log("esto es anamnesis", response.data);
+    } catch (error) {
+        console.error('Error saving anamnesis:', error);
+    }
+};
+
+const anamnesisCompleto = async () => {
+    await handleBackgroundSave();
+    await handleAnamnesisSave();
+    await handleCardioVascularSave();
+    await handleHtpRiskSave();
+};
+
   useEffect(() => {
  
     fetchPatientDetail(userId);
@@ -757,6 +810,17 @@ export default function ConsultaDoc ({id, preconsult}) {
   const handleClic = (title) => {
    
       setHandleNav(title);
+  const hasReloaded = localStorage.getItem("hasReloaded");
+
+  if (title === "Anamnesis" && !hasReloaded) {
+    // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
+    localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
+    window.location.reload();
+  } else if (title !== "Anamnesis") {
+    // Si selecciona otra opción, eliminar la bandera de recarga
+    localStorage.removeItem("hasReloaded");
+    
+  }
     
   };
 
@@ -785,8 +849,8 @@ export default function ConsultaDoc ({id, preconsult}) {
     
       const response = await postPatientStudiesOrHc(payload)
 
-      // Manejar la respuesta según sea necesario
-      console.log('Respuesta del servidor:', response.data);
+      
+      
       
       // Cerrar el modal después de la petición
       setIsModalOpen(false);
@@ -840,59 +904,7 @@ export default function ConsultaDoc ({id, preconsult}) {
       width: "w-16",
     },
   ];
-  const getColumnsAndComponent = (tab) => {
-    switch (tab) {
-      case "Estudios":
-        return {
-          columns: ImportacionesColumns,
-          title: "Lista de Importaciones",
-          textError: "No se encontraron estudios o Historias Clinicas disponibles.",
-          renderDropDown: (row) => {
-            return (
-              <MenuDropDown
-                label="Opciones"
-                icon={<IconOptions color="white" />}
-                categories={[
-                  {
-                    items: [
-                      {
-                        label: "Ver Detalles",
-                        icon: <IconOptions color={"#B2B2B2"} />,
-                        onClick: () => {
-                          setSelectedImport(row);
-                          setFlagFile(false)
-                          setIsModalOpen(true);
-                          
-                        },
-                      },
-                      {
-                        label: "Ver archivo",
-                        icon: <IconImportar color={"#B2B2B2"} />,
-                        onClick: () => {
-                          setSelectedImport(row);
-                          setIsModalOpenFile(true);
-                        },
-                      },
-                    ].filter(Boolean),
-                  },
-                ]}
-                className={"w-[40px] md:w-full lg:w-fit mx-auto"}
-              />
-            );
-          },
-        }; 
-        default:
-          return {
-            columns: ImportacionesColumns,
-            title: "Default",
-            textError: "No se encontró información disponible.",
-          };
-        }
-      }
-  
-  
-    const { columns, component, title, textError, renderDropDown } =
-    getColumnsAndComponent(handleNav);
+ 
    
  
 
@@ -954,7 +966,6 @@ export default function ConsultaDoc ({id, preconsult}) {
             title={"Anamnesis"}
             subtitle={[
               "Motivo de consulta",
-              "Evolucion de la enfermedad",
               "Sintomas importantes",
             ]}
             preconsult={preconsult}
@@ -981,11 +992,21 @@ export default function ConsultaDoc ({id, preconsult}) {
             ]}
             defaultOpen
             paciente={patient}
-            onRiskChange={setSelectedRisk}
-            onRiskChange2={setSelectedRisk2}
+            onRiskChange={ setSelectedRisk} 
+            onRiskChange2={(newRisk2) => setSelectedRisk2(newRisk2)}
             onGroupChange={setSelectedGroup}
             />
+            <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={anamnesisCompleto}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
             </div> 
+            
             }
             
             
@@ -1063,18 +1084,47 @@ export default function ConsultaDoc ({id, preconsult}) {
               </div>}
           
             {/* ESTUDIOS */}
-            {handleNav === "Estudios" && isLoading ? (
-              <SkeletonList count={8} />
-            ) : (
+            {handleNav === "Estudios" &&
             <DynamicTable
-            title={title}
+            title={"Lista de Importaciones"}
             rows={ importaciones}
-            columns={columns}
+            columns={ImportacionesColumns}
             showHistoryIcon={true}
-            renderDropDown={renderDropDown}
-            renderCustomContent={component}
-            textError={textError}
-          />)
+            renderDropDown={(row) => {
+              return (
+                <MenuDropDown
+                  label="Opciones"
+                  icon={<IconOptions color="white" />}
+                  categories={[
+                    {
+                      items: [
+                        {
+                          label: "Ver Detalles",
+                          icon: <IconOptions color={"#B2B2B2"} />,
+                          onClick: () => {
+                            setSelectedImport(row);
+                            setFlagFile(false)
+                            setIsModalOpen(true);
+                            
+                          },
+                        },
+                        {
+                          label: "Ver archivo",
+                          icon: <IconImportar color={"#B2B2B2"} />,
+                          onClick: () => {
+                            setSelectedImport(row);
+                            setIsModalOpenFile(true);
+                          },
+                        },
+                      ].filter(Boolean),
+                    },
+                  ]}
+                  className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+                />
+              );
+            }}
+           
+          />
             }
             
 

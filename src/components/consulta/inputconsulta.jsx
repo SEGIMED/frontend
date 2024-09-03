@@ -39,6 +39,19 @@ export default function InputConsulta({
     setGroupPatientPulmonaryHypertensionButton,
   ] = useState();
   const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  const [reloadAmnesis, setReloadAmnesis] = useState(false);
+
+// Forzar re-renderizado de anamnesis cuando `preconsult` o `diagnostico` cambian
+  useEffect(() => {
+  setReloadAmnesis(true);
+  setTimeout(() => {
+    setReloadAmnesis(false); // Resetear el estado inmediatamente para asegurar el re-renderizado
+  }, 0); 
+  }, [preconsult, diagnostico]);
+
+
+
   useEffect(() => {
     if (paciente?.patientCardiovascularRisks?.risk) {
       setRiskCardiovascularButton(paciente?.patientCardiovascularRisks?.risk);
@@ -69,7 +82,7 @@ export default function InputConsulta({
   useEffect(() => {
     setValuesAmnesis([
       preconsult?.consultationReason,
-      diagnostico?.historyOfPresentIllness || "",
+      
       preconsult?.importantSymptoms,
     ]);
   }, [preconsult, diagnostico]);
@@ -272,10 +285,9 @@ export default function InputConsulta({
               {...register(sub)}
               defaultValue={
                 valuesAmnesis[index] ||
-                valuesBackground[index] ||
-                valueEvolution ||
-                ""
+                valuesBackground[index] 
               }
+             
             />
           </div>
         ))}
