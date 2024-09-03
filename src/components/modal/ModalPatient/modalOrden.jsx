@@ -46,7 +46,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state, di
         <div className="w-full flex flex-col gap-3">
             <div>
                 <label className="text-start text-[#686868] font-medium text-base leading-5 py-2 flex gap-2 items-center">
-                    <IconUser2 color={"#808080"} className="w-3" />
+                    <IconUser2 color={"#686868"} className="w-[1.5rem]" />
                     Médico al que solicita
                 </label>
                 <Dropdown>
@@ -107,8 +107,8 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state, di
                 {errors.physicianId && <p className="text-red-500">Por favor seleccione un médico.</p>}
             </div>
             <div>
-                <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2">
-                    <IconCurrentRouteNav className="w-4" />
+                <label className="text-start text-[#686868] font-medium text-base leading-5 flex gap-2 items-center">
+                    <IconCurrentRouteNav color={"#686868"} className="w-[1.5rem]" />
                     Seleccione el tipo de solicitud que desea
                 </label>
                 <DropNext
@@ -132,7 +132,7 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state, di
             </div>
             <div className="relative">
                 <InputInfoText
-                    icon={<IconClinicalHistory color={"#808080"} className="w-3" />}
+                    icon={<IconClinicalHistory color={"#686868"} className="w-[1.5rem]" />}
                     text={true}
                     title={"Motivo de solicitud"}
                     placeholder={"Escriba el motivo de su solicitud"}

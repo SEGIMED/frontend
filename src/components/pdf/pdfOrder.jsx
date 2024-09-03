@@ -68,7 +68,7 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                 </div>
                                 <div className='flex flex-col gap-3'>
                                     <p className='text-xl'><strong>Diagnóstico : </strong></p>
-                                    <p>{data?.diagnostic}</p>
+                                    <p>{data?.diagnostic2?.code} - {data?.diagnostic2?.description}</p>
                                 </div>
                             </div>
                             <div className='flex flex-col justify-center  w-[50%] font-semibold '>

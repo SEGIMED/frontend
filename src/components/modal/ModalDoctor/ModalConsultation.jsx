@@ -258,9 +258,9 @@ const ModalConsultation = ({
         onClick={handleClickOutside}
         className="fixed inset-0 bg-black opacity-50"></div>
       <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
-        <form onSubmit={onSubmit} className="flex flex-col h-full">
+        <form onSubmit={onSubmit} className="flex flex-col h-full gap-3">
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
               <IconCurrentRouteNav className="w-4" />
               {consulta ? <p>Detalles de consulta</p> : <p>Agendar consulta</p>}
             </div>

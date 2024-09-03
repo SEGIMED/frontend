@@ -391,7 +391,14 @@ export default function HomeDoc() {
                         placeholder="Ingrese aquí el diagnóstico"
                         className=" bg-white "
                         isInvalid={errors.diagnostic ? true : false}
-                        onSelectionChange={(value) => handleChange("diagnostic", value)}
+                        onSelectionChange={(value) => {
+                            const selectedItem = cie10.find(cie => cie.id === value);
+                            if (selectedItem) {
+                                handleChange("diagnostic2", selectedItem);
+
+                            }
+                            handleChange("diagnostic", Number(value)); // Llamar a la función original sin modificarla
+                        }}
                         value={searchTerm}
                     >
                         {(cie) => <AutocompleteItem key={cie.id}>{cie.description}</AutocompleteItem>}

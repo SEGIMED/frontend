@@ -29,6 +29,7 @@ import MensajesContainer from "../InicioPaciente/mensajes/MensajesContainer";
 import rutas from "@/utils/rutas";
 import IconMail from "../icons/iconMail";
 import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
+import { IconChat } from "../InicioPaciente/IconChat";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -350,10 +351,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           onClick={handleChatClick}
           className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
             }`}>
-          <IconMail
-            className="w-6 h-6"
-            color={(showChats || hasUnreadMessages) && "white"}
-          />
+          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#808080"} />
         </button>
         {showChats && (
           <MensajesContainer
