@@ -6,10 +6,13 @@ import IconMedicamento from "@/components/icons/IconMedicamento";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
+import PDFExportComponent from "@/components/pdf/pdfOrder";
 
 
 export default function MedicamentosTable({ medicamento }) {
     const router = useRouter();
+    console.log(medicamento);
+
     return (
         <div className="h-fit text-[#686868] w-[100%]">
             <div className="flex border-b border-b-[#cecece]  border-t border-t-[#cecece] px-2">
@@ -40,6 +43,9 @@ export default function MedicamentosTable({ medicamento }) {
                             </p>
                         </button>
                     </div>
+                    {/* <div>
+                        <PDFExportComponent data={medicamento} />
+                    </div> */}
                 </div>
             </div>
             <div className=" flex-col md:flex-row md:flex w-[100%] px-10 py-5 gap-5 space-y-4 md:space-y-0 bg-[#fafafc]">
@@ -69,7 +75,6 @@ export default function MedicamentosTable({ medicamento }) {
                         Suspender
                     </p>
                 </button>
-
             </div>
         </div >
     );

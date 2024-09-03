@@ -212,7 +212,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
-          if (mensaje.state === false && mensaje.sender.userId != userId) {
+          if (mensaje.state === false && mensaje.sender?.userId != userId) {
             cantidadMensajes++;
           }
         });

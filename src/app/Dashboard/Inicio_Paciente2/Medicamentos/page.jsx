@@ -6,15 +6,22 @@ import NotFound from "@/components/notFound/notFound";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useEffect, useState } from "react";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
+import PDFExportComponent from "@/components/pdf/pdfOrder";
+import Cookies from "js-cookie";
+
 
 export default function Medicamentos() {
     const lastSegmentTextToShow = PathnameShow();
     const [medicamentos, setMedicamentos] = useState([]);
     const [loading, setLoading] = useState(true);  // Estado para manejar la carga
 
+    const userId = Cookies.get("c")
+    console.log(userId);
+
+
     const getDrugs = async () => {
         try {
-            const response = await ApiSegimed.get("/drug-prescription?id=3");
+            const response = await ApiSegimed.get(`/drug-prescription?id=${userId}`);
             console.log(response.data);
             setMedicamentos(response.data);
         } catch (error) {
@@ -27,9 +34,10 @@ export default function Medicamentos() {
     useEffect(() => {
         getDrugs();
     }, []);
-
+    const data = { name: "hola", age: "hola" }
     return (
         <div className="h-[100%] text-[#686868] w-[100%]">
+            {/* <PDFExportComponent data={data} />  para visualizar pdf comentar todo y poner esto */}
             <title>{lastSegmentTextToShow}</title>
             <div className="h-[100%]">
                 <div className="flex border-b border-b-[#cecece]">

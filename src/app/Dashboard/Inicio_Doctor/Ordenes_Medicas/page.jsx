@@ -23,15 +23,15 @@ import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
+    const orden = useAppSelector((state) => state.formSlice.selectedOptions);
 
     const router = useRouter()
 
     const [showModal, setShowModal] = useState(false);
-    const [selectedPatient, setSelectedPatient] = useState(false);
     const [isLoading, setisLoading] = useState(true);
     const [isSorted, setIsSorted] = useState(false);
     const [riskFilter, setRiskFilter] = useState("");
-    const [showFavorites, setShowFavorites] = useState(false);
+    const [showFavorites, setShowFavrites] = useState(false);
     const [patients, setPatients] = useState([]);
     const [patientsFavorites, setPatientsFavorites] = useState([]);
     const [pagination, setPagination] = useState({
@@ -39,33 +39,25 @@ export default function HomeDoc() {
         totalPages: 0,
         currentPage: 1,
     });
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [openOptionsPatientId, setOpenOptionsPatientId] = useState(null);
-    const [selectedPatientId, setSelectedPatientId] = useState(null);
+
     const userId = config.c;
     const dispatch = useAppDispatch();
     const token = Cookies.get("a");
     const lastSegmentTextToShow = PathnameShow();
 
-    const getPatients = async (headers) => {
+    const getPatients = async () => {
         const response = await ApiSegimed.get(
-            `/patients?page=${pagination.currentPage}&&limit=9&&name=${searchTerm}&&risk=${riskFilter}&physicianId=${userId}`,
-            headers
+            `/physician-order`, null
         );
         if (response.data) {
-            const pacientesFormateados = response.data.user.map((paciente) => {
-                const fechaFormateada = new Date(paciente.lastLogin)
-                    .toLocaleString()
-                    .replace(/\,/g, " -");
-                return { ...paciente, lastLogin: fechaFormateada };
-            });
-            console.log(pacientesFormateados);
-            setPatients(response.data.user);
-            setPagination((prev) => ({
-                ...prev,
-                totalUsers: response.data.totalUsers,
-                totalPages: response.data.totalPages,
-            }));
+
+            console.log(response.data);
+            setPatients(response.data);
+            // setPagination((prev) => ({
+            //     ...prev,
+            //     totalUsers: response.data.totalUsers,
+            //     totalPages: response.data.totalPages,
+            // }));
             setisLoading(false);
         }
     };
@@ -105,7 +97,7 @@ export default function HomeDoc() {
             getPatients({ headers: { token: token } }).catch(console.error);
         } else {
             setisLoading(true);
-            getFavorites({ headers: { token: token } }).catch(console.error);
+            // getFavorites({ headers: { token: token } }).catch(console.error);
         }
     }, [showFavorites, pagination.currentPage, searchTerm, riskFilter]);
 
@@ -119,58 +111,47 @@ export default function HomeDoc() {
     const sortedPatients = isSorted
         ? [...filteredPatients].sort((a, b) => a.name.localeCompare(b.name))
         : filteredPatients;
-    // console.log(sortedPatients, `xd`);
 
-    const openModal = (patientId) => {
-        setIsModalOpen(true);
-        setSelectedPatientId(patientId);
-        setOpenOptionsPatientId(null);
-        setIsFilterOpen(false);
-    };
 
-    const changeFavorite = async (patient) => {
-        const url = patient.isFavorite
-            ? `/delete-physician-favorite-patient`
-            : `/create-physician-favorite-patient`;
-        const method = patient.isFavorite ? "DELETE" : "POST";
-        const data = { patientId: patient.id, physicianId: userId };
 
-        try {
-            const response = await ApiSegimed({
-                url,
-                method,
-                data,
-                headers: { token },
-            });
-            if (response.status === 201 || response.status === 200) {
-                getFavorites({ headers: { token: token } }).catch(console.error);
-                getPatients({ headers: { token: token } }).catch(console.error);
-                // console.log(
-                //     `Patient ${patient.isFavorite ? "removed from" : "added to"
-                //     } favorites successfully.`,
-                //     response
-                // );
-            } else {
-                console.log("Something went wrong:", response);
-            }
-        } catch (error) {
-            console.error("Error in changeFavorite function:", error);
-        }
-    };
+    // const changeFavorite = async (patient) => {
+    //     const url = patient.isFavorite
+    //         ? `/delete-physician-favorite-patient`
+    //         : `/create-physician-favorite-patient`;
+    //     const method = patient.isFavorite ? "DELETE" : "POST";
+    //     const data = { patientId: patient.id, physicianId: userId };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedPatientId(null);
-    };
+    //     try {
+    //         const response = await ApiSegimed({
+    //             url,
+    //             method,
+    //             data,
+    //             headers: { token },
+    //         });
+    //         if (response.status === 201 || response.status === 200) {
+    //             getFavorites({ headers: { token: token } }).catch(console.error);
+    //             getPatients({ headers: { token: token } }).catch(console.error);
+    //             // console.log(
+    //             //     `Patient ${patient.isFavorite ? "removed from" : "added to"
+    //             //     } favorites successfully.`,
+    //             //     response
+    //             // );
+    //         } else {
+    //             console.log("Something went wrong:", response);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error in changeFavorite function:", error);
+    //     }
+    // };
 
-    const handleFavoriteClick = () => {
-        setisLoading(true);
-        setShowFavorites(!showFavorites);
+    // const handleFavoriteClick = () => {
+    //     setisLoading(true);
+    //     setShowFavorites(!showFavorites);
 
-        handlePageChange(1);
-        dispatch(setSearchTerm(""));
-        setIsFilterOpen(false);
-    };
+    //     handlePageChange(1);
+    //     dispatch(setSearchTerm(""));
+    //     setIsFilterOpen(false);
+    // };
 
     const handlePageChange = (newPage) => {
         if (newPage > 0 && newPage <= pagination.totalPages) {
@@ -189,7 +170,7 @@ export default function HomeDoc() {
             <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
                 <div className="flex gap-2 md:gap-4">
 
-                    <button
+                    {/* <button
                         onClick={handleFavoriteClick}
                         className={`${showFavorites
                             ? "bg-bluePrimary text-white"
@@ -201,7 +182,7 @@ export default function HomeDoc() {
                                 } font-bold`}>
                             Favoritos
                         </p>
-                    </button>
+                    </button> */}
                     {/* <FiltrosPaciente
               isOpen={isFilterOpen}
               toggleMenu={toggleFilterMenu}
@@ -242,7 +223,7 @@ export default function HomeDoc() {
                     ) : sortedPatients.length === 0 ? (
                         <NotFound
                             text={
-                                "No tenes pacientes avtivos"
+                                "No hay ordenes medicas disponibles "
                             }
                             sizeText={"w-[100%]"}
                         />
@@ -256,14 +237,14 @@ export default function HomeDoc() {
                                 <div className="grid text-center grid-cols-3 w-[100%] justify-center md:w-[80%] md:text-left md:grid-cols-3 items-center  py-2 bg-white z-10">
 
                                     <div className="text-[#5F5F5F] ">
-                                        {paciente?.name} {paciente?.lastname}
+                                        {paciente?.patient?.name} {paciente?.patient?.lastname}
                                     </div>
                                     <div className="text-[#5F5F5F]">
-                                        {paciente?.name}
+                                        {paciente?.orderTypes}
                                     </div>
 
                                     <div className="text-[#5F5F5F] md:gap-3 block md:flex ">
-                                        {Fecha(paciente.lastLogin, 4)} <span className="hidden md:block"> {Hora(paciente.lastLogin)}</span>
+                                        {Fecha(paciente.date, 4)} <span className="hidden md:block"> {Hora(paciente.date)}</span>
                                     </div>
 
 
@@ -301,7 +282,8 @@ export default function HomeDoc() {
                     key="orden-type"
 
                 />]}
-                ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true`}
+                disabledButton={orden.orderTypes ? false : true}
+                ruta={`${rutas.Doctor}${rutas.Pacientes}?ordenMedica=true&type=${orden.orderTypes}`}
                 title={"Generar nueva órden médica"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary text-white block font-font-Roboto"}
