@@ -20,13 +20,27 @@ import { useRouter } from "next/navigation";
 import PreconsultaQuestion from "../preconsulta/PreconsultaQuestion";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
-import InputFilePreconsultation from "@/components/preconsulta/estudios";
+import { subquestionSelectedOption } from "@/redux/slices/user/preconsultaFormSlice";
+
 import IdSubSystem from "@/utils/idSubSystem";
 import IdHeartFailureRiskText from "@/utils/idHeartFailureRisk";
 import SubNavbarConsulta from "@/components/NavDoc/subNavConsulta";
 import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 import getMedicalEventDetail from "@/utils/dataFetching/fetching/getMedicalEventDetail";
+import IconExportar from "../icons/IconExportar";
+import IconEditar from "../icons/iconEditar";
+import IconOptions from "../icons/IconOptions";
+import IconImportar from "../icons/IconImportar";
+import MenuDropDown from "../dropDown/MenuDropDown";
+import postPatientStudiesOrHc from "@/utils/dataFetching/fetching/postPetientStudiesOrHc";
+import ModalModularizado from "../modal/ModalPatient/ModalModurizado";
+import ImportarHC from "../modal/ModalDoctor/modalImportarHC";
+import DynamicTable from "../table/DynamicTable";
+import FileDisplay from "../modal/ModalDoctor/modalDisplayFile";
+import SkeletonList from "../skeletons/HistorialSkeleton";
+
+
 
 export default function ConsultaDoc ({id, preconsult}) {
 
@@ -37,13 +51,27 @@ export default function ConsultaDoc ({id, preconsult}) {
   const userId =Number(Cookies.get("patientId"));
   const scheduleId = Number(id); // id de agendamiento
   const [medicalEventExist, setMedicalEventExist] = useState();
-  const [handleNav, setHandleNav] = useState("Preconsulta");
+  const [handleNav, setHandleNav] = useState("Anamnesis");
+
+  //risk y htp group
   const [cardiovascularRisk, setCardiovascularRisk] = useState();
   const [htpRisk, setHTPRisk] = useState();
   const [hpGroup, setHpGroup] = useState();
+  //vital signs y glicemia
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
 
+  //para importar archivos 
+  const [dataImportar, setDataImportar] = useState({});
+  const [text, setText] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [flagFile, setFlagFile]=useState(false)
+  const [importaciones, setImportaciones]=useState([])
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  const [selectedImport, setSelectedImport] = useState({});
+
+  //loading!!!
+  const [isLoading, setIsLoading] =useState(true)
 
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
@@ -459,7 +487,7 @@ export default function ConsultaDoc ({id, preconsult}) {
       setPhysicalExaminationPatch({
         physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
         description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-        id: Number(medicalEventExist.patientPhysicalExaminations[0].id),
+        id: Number(medicalEventExist.physicalExaminations[0].id),
       });
     }
     if (
@@ -492,12 +520,12 @@ export default function ConsultaDoc ({id, preconsult}) {
     setDiagnosticPatch(
       //diagnosticPatch
       {
-        id: Number(medicalEventExist?.patientDiagnostics[0]?.id), // id del diagnostico - obligatorio
+        id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
         diseaseId: 3,
         diagnosticNotes:
           data["Diagnostico"] !== ""
             ? data["Diagnostico"]
-            : medicalEventExist?.patientDiagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
+            : medicalEventExist?.diagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
         medicalEventId: Number(medicalEventId),
         drugId: null,
         drugName:
@@ -567,6 +595,10 @@ export default function ConsultaDoc ({id, preconsult}) {
       
       const response =await  getMedicalEventDetail(scheduleId)
       setMedicalEventExist(response.data);
+      if (response.data){
+        setImportaciones(response.data.patientStudies)
+        setIsLoading(false)
+      }
     } catch (error) {
       console.log("No se ah echo un diagnostico anteriormente:", error);
     }
@@ -844,42 +876,190 @@ export default function ConsultaDoc ({id, preconsult}) {
   };
 
 
-  //SELECT DE CONSULTA
+  //SELECT DE CONSULTA NAVBAR
   const handleClic = (title) => {
-    if (handleNav === title) {
-      setHandleNav("");
-    } else {
+   
       setHandleNav(title);
-    }
+    
   };
+
+  //IMPORTAR ARCHIVOS 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalData = (data) => {
+    setDataImportar(data);
+  };
+  const closeModalFile = () => {
+    setIsModalOpenFile(false);
+  };
+
+
+  const submitModalData = async () => {
+    const payload = { scheduleId: scheduleId, userId: userId, studies: [dataImportar] };
+    console.log(payload);
+    try {
+      // Realizar la petición POST
+    
+      const response = await postPatientStudiesOrHc(payload)
+
+      // Manejar la respuesta según sea necesario
+      console.log('Respuesta del servidor:', response.data);
+      
+      // Cerrar el modal después de la petición
+      setIsModalOpen(false);
+     
+      Swal.fire({
+        icon: "success",
+        title: "Exito",
+        text: "La importacion se realizo correctamente",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+    } catch (error) {
+      console.error('Error al enviar los datos:', error.message);
+      setIsModalOpen(false);
+      Swal.fire({
+        title: "Error",
+        text: "No pudo realizarse la importacion, intente mas tarde",
+        icon: "error",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+     
+    }
+
+  }
+  //LISTAR LAS IMPORTACIONES !!
+  const ImportacionesColumns = [
+    {
+      label: "Fecha",
+      key: "createdAt",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Hora",
+      key: "createdAt",
+      showMobile: true,
+      width: "w-8",
+    },
+
+    {
+      label: "Titulo",
+      key: "title",
+      showMobile: true,
+      width: "w-16",
+    },
+    {
+      label: "Descripcion",
+      key: "description",
+      showMobile: false,
+      width: "w-16",
+    },
+  ];
+  const getColumnsAndComponent = (tab) => {
+    switch (tab) {
+      case "Estudios":
+        return {
+          columns: ImportacionesColumns,
+          title: "Lista de Importaciones",
+          textError: "No se encontraron estudios o Historias Clinicas disponibles.",
+          renderDropDown: (row) => {
+            return (
+              <MenuDropDown
+                label="Opciones"
+                icon={<IconOptions color="white" />}
+                categories={[
+                  {
+                    items: [
+                      {
+                        label: "Ver Detalles",
+                        icon: <IconOptions color={"#B2B2B2"} />,
+                        onClick: () => {
+                          setSelectedImport(row);
+                          setFlagFile(false)
+                          setIsModalOpen(true);
+                          
+                        },
+                      },
+                      {
+                        label: "Ver archivo",
+                        icon: <IconImportar color={"#B2B2B2"} />,
+                        onClick: () => {
+                          setSelectedImport(row);
+                          setIsModalOpenFile(true);
+                        },
+                      },
+                    ].filter(Boolean),
+                  },
+                ]}
+                className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+              />
+            );
+          },
+        }; 
+        default:
+          return {
+            columns: ImportacionesColumns,
+            title: "Default",
+            textError: "No se encontró información disponible.",
+          };
+        }
+      }
+
+  const { columns, component, title, textError, renderDropDown } =
+  getColumnsAndComponent(handleNav);
+
+
   
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
         <SubNavbarConsulta handleClic={handleClic} />
 
-        
+         <MenuDropDown
+              label="Importar archivo"
+              icon={<IconExportar color="#487FFA" />}
+              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
+              categories={[
+                {
+                  items: [
+                    {
+                      label: "Importar texto libre",
+                      onClick: () => {
+                        setText(true);
+                        openModal()
+                      },
+                      icon: <IconEditar color={"#B2B2B2"} />,
+                    },
+                    {
+                      label: "Importar archivo",
+                      onClick: () => {
+                        setText(false);
+                        openModal()
+                        setFlagFile(true)
+
+
+                      },
+                      icon: <IconExportar color={"#B2B2B2"} />,
+                    },
+
+                  ],
+                }
+              ]
+              }
+            />
         
         {loading === false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
 
-          {/* PRECONSULTA */}
-
-           {(handleNav === "Preconsulta" || "") && formData && formData.questions && (
-            Object.keys(formData.questions).map((question, index) => (
-            <PreconsultaQuestion
-            key={index}
-            question={question}
-            section={formData.questions[question]}
-            sectionIndex={index}
-            onQuestionActive={handleQuestionActive}
-            onSubquestionChange={handleSubquestionOption}
-            onQuestionChange={handleQuestionOption}
-            onDescriptionChange={handleDescription}
-            preconsult={preconsult}
-            />
-             ))
-            )}
+          
            
            {/* ANAMNESIS Y ANTECEDENTES */}
 
@@ -1003,19 +1183,34 @@ export default function ConsultaDoc ({id, preconsult}) {
               </div>}
           
             {/* ESTUDIOS */}
-            {handleNav === "Estudios" &&
-            <InputFilePreconsultation
-            title={"Estudios"}
-            onUploadFile={handleUploadTestFile}
-            onDescriptionChange={handleTestDescription}
-            onTestActive={handleTestActive}
-            onTestSelectedOption={handleTestSelectedOption}
-            tests={tests}
-            defaultOpen
-          />
+            {handleNav === "Estudios" && isLoading ? (
+              <SkeletonList count={8} />
+            ) : (
+            <DynamicTable
+            title={title}
+            rows={ importaciones}
+            columns={columns}
+            showHistoryIcon={true}
+            renderDropDown={renderDropDown}
+            renderCustomContent={component}
+            textError={textError}
+          />)
             }
             
 
+            {/* PRECONSULTA */}
+
+           {(handleNav === "Preconsulta" || "") && formData && formData.questions && (
+            Object.keys(formData.questions).map((question, index) => (
+            <PreconsultaQuestion
+            key={index}
+            question={question}
+            section={formData.questions[question]}
+            sectionIndex={index}
+            preconsult={preconsult}
+            />
+             ))
+            )}
 
 
 
@@ -1035,6 +1230,58 @@ export default function ConsultaDoc ({id, preconsult}) {
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
         </div>
+        {handleNav === "Estudios" && !flagFile  ? (
+           <ModalModularizado
+           isOpen={isModalOpen}
+           onClose={closeModal}
+           Modals={[
+             <ImportarHC
+               key={"importar hc"}
+               state={selectedImport}
+               disabled={true}
+             />,
+           ]}
+           title={"Ver detalles de importacion"}
+           button1={"hidden"}
+           button2={"bg-greenPrimary text-white block"}
+           progessBar={"hidden"}
+           size={"md:min-h-[4rem] md:w-[35rem]"}
+           buttonText={{ end: `Cerrar` }}
+           buttonIcon={<></>}
+         />
+        )
+      :
+      (
+        <ModalModularizado
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
+        title={"Importar Historia Clínica"}
+        button1={"hidden"}
+        button2={"bg-greenPrimary text-white block"}
+        progessBar={"hidden"}
+        size={"h-[35rem] md:h-fit md:w-[35rem]"}
+        buttonText={{ end: `Importar` }}
+        funcion={submitModalData}
+       
+      />
+      )}
+        
+
+        <ModalModularizado
+            isOpen={isModalOpenFile}
+            onClose={closeModalFile}
+            Modals={[
+              <FileDisplay key={"displayFile"} state={selectedImport} />,
+            ]}
+            title={"Visualizacion de archivo"}
+            button1={"hidden"}
+            button2={"bg-greenPrimary text-white block"}
+            progessBar={"hidden"}
+            size={"md:min-h-[4rem] md:w-[35rem]"}
+            buttonText={{ end: `Cerrar` }}
+            buttonIcon={<></>}
+          />
       </div>
     </FormProvider>
   );

@@ -46,15 +46,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
           wrapper: ["px-0"],
         }}>
         <NavbarContent className="gap-0 px-0 overflow-x-auto md:flex hidden ">
-          <NavbarItem
-           
-            onClick={() =>
-              handleClic("Preconsulta")
-            }>
-            <div className="flex items-center gap-2 " aria-current="page">
-              <IconClinicalHistory /> Preconsulta
-            </div>
-          </NavbarItem>
+          
           <NavbarItem
             
             onClick={() =>
@@ -92,6 +84,17 @@ export default function SubNavbarConsulta({ id, handleClic }) {
               <IconSubNavbar /> Estudios
             </div>
           </NavbarItem>
+
+          <NavbarItem
+           
+            onClick={() =>
+              handleClic("Preconsulta")
+            }>
+            <div className="flex items-center gap-2 " aria-current="page">
+              <IconClinicalHistory /> Preconsulta
+            </div>
+          </NavbarItem>
+
           </NavbarContent>
           <NavbarContent className="gap-0 px-0 overflow-x-auto md:hidden flex">
           <NavbarItem className="flex items-center gap-2 cursor-pointer ">
@@ -115,18 +118,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-              <DropdownItem
-                
-                  key="new">
-                  <div
-                    className="w-full"
-                    onClick={() =>
-                      handleClic("Preconsulta")
-                    }
-                    >
-                    <p>Preconsulta</p>
-                  </div>
-                </DropdownItem>
+              
                 <DropdownItem
                  
                   key="new1">
@@ -171,6 +163,20 @@ export default function SubNavbarConsulta({ id, handleClic }) {
                     <p>Estudios</p>
                   </div>
                 </DropdownItem>
+
+                <DropdownItem
+                
+                  key="new">
+                  <div
+                    className="w-full"
+                    onClick={() =>
+                      handleClic("Preconsulta")
+                    }
+                    >
+                    <p>Preconsulta</p>
+                  </div>
+                </DropdownItem>
+                
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>

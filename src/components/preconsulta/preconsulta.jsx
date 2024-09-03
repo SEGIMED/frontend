@@ -1,12 +1,12 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 
 import Elboton from "@/components/Buttons/Elboton";
-import InputFilePreconsultation from "@/components/preconsulta/estudios";
+
 import IconRegresar from "@/components/icons/iconRegresar";
 import PreconsultaQuestion from "@/components/preconsulta/PreconsultaQuestion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
 import rutas from "@/utils/rutas";
 import {
   updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia, updateAllFormData, updateFileUploaded, updateTestDescription, updateTestActive, updateTestSelectedOption, resetFormData,
@@ -15,15 +15,11 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import Cookies from "js-cookie";
-import { ApiSegimed } from "@/Api/ApiSegimed";
-import AnamnesisPreconsulta from "@/components/preconsulta/Anamnesis";
-import TratamientoPreconsulta from "@/components/preconsulta/Tratamiento";
+
 import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
-import { draftFormat } from "@/utils/formatResponse";
-import { IMC } from "@/utils/normaliceVitalSigns";
-import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
+
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 import SignosVitalesInfo from "../consulta/signosvitales";
 
@@ -567,28 +563,7 @@ export default function PreconsultaPte({params, preconsult}) {
               valuePreconsultation={preconsult}
             />
 
-            
-        <InputFilePreconsultation
-          title={"Estudios"}
-          onUploadFile={handleUploadTestFile}
-          onDescriptionChange={handleTestDescription}
-          onTestActive={handleTestActive}
-          onTestSelectedOption={handleTestSelectedOption}
-          tests={formData.tests}
-          defaultOpen
-        />
-        {/* <AnamnesisPreconsulta
-          title={"Anamnesis"}
-          onAnamnesisChange={handleAnamnesis}
-          anamnesis={formData.anamnesis}
-          defaultOpen
-        />
-        <TratamientoPreconsulta
-          title={"Tratamiento"}
-          onTratamientoChange={handleTratamientoDescription}
-          tratamiento={formData.tratamiento}
-          defaultOpen
-        /> */}
+
         </form>
         <div className="flex justify-center p-6 bg-[#fafafc]">
           <Elboton
