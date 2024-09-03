@@ -25,6 +25,8 @@ import Swal from "sweetalert2";
 import ModalShowPhoneAlarm from "@/components/alarm/ModalShowPhoneAlarm";
 import { isUserUsingMobile } from "@/utils/checkMobile";
 import { socket } from "@/utils/socketio";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { addAlarmsChatbot } from "@/redux/slices/chat/chatBot";
 
 const AlarmSelector = (id) => {
   const alarmId = id.params.id;
@@ -33,6 +35,8 @@ const AlarmSelector = (id) => {
   const [showModalPhone, setIsShowModalPhone] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isRevaluatedAlarm, setIsRevaluatedAlarm] = useState(false);
+  const dispatch = useAppDispatch();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
   const router = useRouter();
   const userId = Cookies.get("c");
   const handlePreAction = (next) => {
@@ -60,6 +64,7 @@ const AlarmSelector = (id) => {
           const body = {
             physician_priority,
           };
+          setIsRevaluatedAlarm(true);
           await ApiSegimed.patch(`/edit-alarm-event/${selectedAlarm.id}`, body);
         } catch (error) {
           Swal.showValidationMessage(`
@@ -69,7 +74,6 @@ const AlarmSelector = (id) => {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     }).then(() => {
-      setIsRevaluatedAlarm(true);
       if (next) next();
     });
   };
@@ -85,11 +89,11 @@ const AlarmSelector = (id) => {
     }, 250);
   };
   const handleCall = () => {
-    if (!isMobile) {
-      setIsShowModalPhone(true);
+    if (isMobile) {
+      window.location.href = `tel:${selectedAlarm.patient.cellphone}`;
+      handleEndAction();
     }
-    window.location.href = `tel:${selectedAlarm.patient.cellphone}`;
-    handleEndAction();
+    setIsShowModalPhone(true);
   };
   const handleWhatsapp = () => {
     const whatsappUrl = `https://wa.me/${selectedAlarm.patient.cellphone}`;
@@ -128,6 +132,11 @@ const AlarmSelector = (id) => {
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
         });
+        dispatch(
+          addAlarmsChatbot(
+            alarmsData.filter((alarm) => alarm.id != selectedAlarm.id)
+          )
+        );
         router.push(`${rutas.Doctor}${rutas.Alarm}`);
       }
     } catch (error) {

@@ -62,7 +62,6 @@ export default function HomeDoc() {
         console.error("Error fetching data:", error);
         setBarChartData(null);
         setActiveData(null);
-        setAlarmsData({ actives: 0, inactives: 0 });
       }
     };
 

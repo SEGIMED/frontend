@@ -27,7 +27,6 @@ export const ChatSegi = ({ toggleChat }) => {
   const user = useAppSelector((state) => state.user);
   const chatContainerRef = useRef(null);
   const socketRef = useRef(socket.getSocket());
-  console.log(alarmsData);
   useEffect(() => {
     const currentSocket = socketRef.current;
 
@@ -63,6 +62,9 @@ export const ChatSegi = ({ toggleChat }) => {
     const currentSocket = socketRef.current;
 
     currentSocket.emit("createChatBot");
+    return () => {
+      dispatch(toogleAlarms(true));
+    };
   }, []);
 
   useEffect(() => {
@@ -132,7 +134,7 @@ export const ChatSegi = ({ toggleChat }) => {
     }
   };
   return (
-    <div className="fixed z-30 h-[75%] max-h-[700px] lg:max-h-[600px] w-[90%] lg:h-[85%] lg:max-w-[600px] lg:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
+    <div className="fixed z-50 h-[75%] max-h-[700px] lg:max-h-[600px] w-[90%] lg:h-[85%] lg:max-w-[600px] lg:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
       <div className="flex flex-col h-full">
         <div className="h-[10%] lg:h-16 py-2 flex items-center px-4 justify-between">
           <div className="flex items-center gap-4">
@@ -163,7 +165,7 @@ export const ChatSegi = ({ toggleChat }) => {
           </button>
         </div>
         <div className="bg-white h-[90%] lg:max-h-[600px] xl:max-h-[800px] relative overflow-y-auto">
-          {showAlarms ? (
+          {showAlarms && alarmsData.length > 0 ? (
             <>
               <div className="border border-bluePrimary flex gap-1 my-6 p-2 items-center w-[80%] mx-auto rounded-xl">
                 <IconAlarmRed className={"w-8"} />
@@ -210,7 +212,7 @@ export const ChatSegi = ({ toggleChat }) => {
                   nombre={"Ir a Segi"}
                   className={"bg-white border-bluePrimary border"}
                   classNameText={"text-bluePrimary"}
-                  onPress={() => dispatch(toogleAlarms())}
+                  onPress={() => dispatch(toogleAlarms(false))}
                 />
                 <Elboton
                   nombre={"Ir a Alarmas"}

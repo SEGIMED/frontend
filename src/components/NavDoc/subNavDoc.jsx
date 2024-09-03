@@ -28,7 +28,11 @@ import {
   Button,
 } from "@nextui-org/react";
 import { socket } from "@/utils/socketio";
-import { addMessage, toogleChat } from "@/redux/slices/chat/chatBot";
+import {
+  addMessage,
+  toogleAlarms,
+  toogleChat,
+} from "@/redux/slices/chat/chatBot";
 
 export default function SubNavbar({ id }) {
   const [openDetails, setOpenDetails] = useState(false);
@@ -134,6 +138,7 @@ export default function SubNavbar({ id }) {
   };
   const handleClinicalHistorySegi = () => {
     dispatch(toogleChat(true));
+    dispatch(toogleAlarms(false));
     if (
       segiChat[segiChat.length - 1].message !=
       "Tienes alguna pregunta sobre la historia clínica de este paciente?"
