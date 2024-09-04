@@ -171,11 +171,11 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
+    // setIsLoading(true);
    
-    try {
-
+   
       const response =await patchPreconsultation(bodyForm)
+      console.log(response)
       if (response) {
         Swal.fire({
           icon: "success",
@@ -190,29 +190,29 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
 
    
      
-      if (available) {
-        console.log({
-          toCreate: bodyForm,
-          preconsultationAlreadyExists: !!preconsultationAlreadyExists,
-        });
-        console.log(bodyForm, "justo antes del submit")
+    //   if (available) {
+    //     console.log({
+    //       toCreate: bodyForm,
+    //       preconsultationAlreadyExists: !!preconsultationAlreadyExists,
+    //     });
+    //     console.log(bodyForm, "justo antes del submit")
         
        
-        setIsLoading(false);
-        return;
-      } else {
-        Swal.fire({
-          icon: "success",
-          title: "La preconsulta no puede ser modificada",
-          text: "",
-        });
-        setAvailable(false);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error("Error fetching data", error);
-      setIsLoading(false);
-    }
+    //     setIsLoading(false);
+    //     return;
+    //   } else {
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "La preconsulta no puede ser modificada",
+    //       text: "",
+    //     });
+    //     setAvailable(false);
+    //     setIsLoading(false);
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching data", error);
+    //   setIsLoading(false);
+    // }
   };
 
   const handleQuestionActive = (question, label, active) => {
@@ -428,6 +428,32 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     await handleAnamnesisSave();
    
 };
+const handleBodySave = async ()=>{
+  try {
+      const data= {
+       ...necesaryData,
+       painRecordsToUpdate: [bodyOBJFormat],
+      }
+      
+      const response= await patchPreconsultation(data)
+      
+     
+    } catch (error) {
+      console.error("No pudo cargarse la data en el servidor", error.message)
+    }
+  
+
+}
+const handleQuestionary=async ()=>{
+  try {
+    console.log(bodyForm)
+    const response= await patchPreconsultation(bodyForm)
+    console.log(response)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const fetchPatientDetail = async (userId) => {
   try {
  
@@ -476,6 +502,15 @@ useEffect(() => {
             preconsult={preconsult}
           />
         ))}
+           <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={handleQuestionary}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
         <form onChange={methods.handleSubmit(onSubmit)}>
      
        <SignosVitalesInfo
@@ -501,6 +536,18 @@ useEffect(() => {
               defaultOpen
               valuePreconsultation={preconsult}
             />
+            <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={handleBodySave}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
+
+
+
               <InputConsulta
             title={"Anamnesis"}
             subtitle={[

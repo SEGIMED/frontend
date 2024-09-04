@@ -2,7 +2,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 
 
 export default async function postPatientStudiesOrHc(payload) {
-    console.log(payload)
+    
     try {
         const response = await ApiSegimed.post('/patient-studies', payload);
 

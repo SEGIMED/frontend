@@ -32,7 +32,7 @@ export default function PrePte({ params }) {
   const fetchSchedule= async (scheduleId)=>{
     try {
         const response= await getSchedule(scheduleId)
-        console.log(response.data, "schedule")
+        
         if (response.data) setSchedule(response.data[0])
     } catch (error) {
         console.error(error.message)
@@ -48,7 +48,7 @@ export default function PrePte({ params }) {
 
   
  
-  console.log(preconsult)
+
   return (
     <>
       <PreconsultaPte params={Number(params.id)} preconsult={preconsult} schedule={schedule} />
