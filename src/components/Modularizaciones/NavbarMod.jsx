@@ -54,11 +54,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
-
   useEffect(() => {
     if (!user.name || !rol) return;
-
-
 
     if (rol === "Médico") {
       if (!user.medicalRegistries?.Nacional?.registryId) {
@@ -66,7 +63,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         setIsModalOpen(true);
       }
     } else if (rol === "Paciente") {
-
       if (!user.sociodemographicDetails?.genre) {
         router.push(rutas.PacienteDash);
         setIsModalOpen(true);
@@ -99,6 +95,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     getDoctorNotifications,
     getPatientsDoctor,
     getUserDoctor,
+    getAlarms,
   } = useDataFetching(); // Use the useRouter hook
 
   const {
@@ -143,6 +140,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         getActivesAlarmsDoctor().catch(console.error);
         getActivesPacientesDoctor().catch(console.error);
         getDoctorNotifications().catch(console.error);
+        getAlarms().catch(console.error);
         if (!socket.isConnected()) {
           socket.setSocket(token, refreshToken, dispatch);
           socket.emit("onJoin", { id: id });
@@ -178,7 +176,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   useEffect(() => {
     if (rol === "Médico") {
       getUserDoctor().catch(console.error);
-
     }
     if (rol === "Paciente") {
       getUser({ headers: { token: token } }).catch(console.error);
@@ -341,17 +338,21 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             {rol === "Médico"
               ? "Médico"
               : rol === "Paciente"
-                ? "Paciente"
-                : rol === "Admin"
-                  ? "Administrador"
-                  : ""}
+              ? "Paciente"
+              : rol === "Admin"
+              ? "Administrador"
+              : ""}
           </span>
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
-            }`}>
-          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#808080"} />
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+          }`}>
+          <IconChat
+            className="w-6 h-6"
+            color={showChats || hasUnreadMessages ? "white" : "#808080"}
+          />
         </button>
         {showChats && (
           <MensajesContainer
@@ -362,9 +363,10 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-            }`}>
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -380,7 +382,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={rol} setOnboarding={setOnboarding} />
+      <ModalBoarding
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        rol={rol}
+        setOnboarding={setOnboarding}
+      />
     </div>
   );
 };

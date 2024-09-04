@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Estado inicial: un array vacío de mensajes
 const initialState = {
+  alarmsData: [],
+  showAlarms: true,
   showChat: false,
   messages: [
     {
@@ -22,6 +24,12 @@ const chatBotSlice = createSlice({
     toogleChat: (state, action) => {
       state.showChat = action.payload;
     },
+    toogleAlarms: (state, action) => {
+      state.showAlarms = action.payload;
+    },
+    addAlarmsChatbot: (state, action) => {
+      state.alarmsData = action.payload;
+    },
   },
 });
 
@@ -29,5 +37,6 @@ const chatBotSlice = createSlice({
 export const selectMessages = (state) => state.chatBot.messages;
 
 // Exportar las acciones y el reductor
-export const { addMessage, toogleChat } = chatBotSlice.actions;
+export const { addMessage, toogleChat, toogleAlarms, addAlarmsChatbot } =
+  chatBotSlice.actions;
 export default chatBotSlice.reducer;
