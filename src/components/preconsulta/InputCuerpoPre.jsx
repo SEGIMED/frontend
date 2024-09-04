@@ -247,7 +247,7 @@ export default function InputCuerpoPre({
       },
     });
   };
-
+  console.log(selectedMuscles)
   const handlePainSelection = (selection) => {
     // setea si hay dolor o no
     setIsPain(selection);
