@@ -18,13 +18,13 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info, err
     useEffect(() => {
         const selected = drugs.find((drug) => drug.id === id);
         setSelectedDrug(selected);
-    }, [drugs, id]);
+    }, []);
 
     useEffect(() => {
         if (info) {
             setPresentation(info.result);
         }
-    }, [info]);
+    }, []);
 
     useEffect(() => {
         // trae catalogos

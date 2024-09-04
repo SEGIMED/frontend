@@ -43,11 +43,14 @@ import patchPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBa
 import patchHTPRisk from "@/utils/dataFetching/fetching/patchHTPRisk";
 import patchCardiovascularRisk from "@/utils/dataFetching/fetching/patchCardiovascularRisk";
 import postPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBackgrounds";
+import postPatientDiagnostic from "@/utils/dataFetching/fetching/postPatientDiagnostic";
 
 
 
 export default function ConsultaDoc ({id, preconsult}) {
 
+  const orden = useAppSelector((state) => state.formSlice.selectedOptions);
+  console.log(orden)
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
@@ -55,7 +58,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const userId =Number(Cookies.get("patientId"));
   const scheduleId = Number(id); // id de agendamiento
   const [medicalEventExist, setMedicalEventExist] = useState();
-  const [handleNav, setHandleNav] = useState("Anamnesis");
+  const [handleNav, setHandleNav] = useState("DiagnosticoyTratamiento");
 
  
   //vital signs y glicemia
@@ -381,14 +384,14 @@ console.log(patient)
     ) {
       setDiagnostic({
         patientId: Number(userId),
-        diseaseId: 3,
-        diagnosticNotes: data["Diagnostico"],
+        diseaseId: orden?.diagnostic,
+        diagnosticNotes: data["Diagnóstico"],
         medicalEventId: Number(medicalEventId),
-        drugId: null,
-        drugName: data["medications"],
-        prescribedDose: null,
-        quantityDrug: null,
-        medicalProcedureId: null,
+        // drugId: null,
+        // drugName: data["medications"],
+        // prescribedDose: null,
+        // quantityDrug: null,
+        // medicalProcedureId: null,
         medicalProcedureName: data["Procedimientos"]
           ? data["Procedimientos"]
           : null,
@@ -577,6 +580,24 @@ const anamnesisCompleto = async () => {
     await handleCardioVascularSave();
     await handleHtpRiskSave();
 };
+
+const handleDiagnostic= async ()=>{
+  try {
+    const data={
+      ...necesaryData,
+      chiefOf
+    }
+
+    console.log(diagnostic)
+    const response=  postPatientDiagnostic(diagnostic)
+    console.log(response.data)
+    const response2= patchPreconsultation(data)
+  } catch (error) {
+    console.error(error.message)
+  }
+}
+
+
 
   useEffect(() => {
  
@@ -908,6 +929,7 @@ const anamnesisCompleto = async () => {
    
  
 
+  console.log(diagnostic)
 
   
   return (
@@ -1035,7 +1057,7 @@ const anamnesisCompleto = async () => {
 
 
             <InputCuerpoPre
-              title={"Exploracion fisica"}
+              title={"Autoevaluación del paciente"}
               onBodyChange={handleBodyChange}
               bodySection={formData?.bodySection}
               defaultOpen
@@ -1070,18 +1092,36 @@ const anamnesisCompleto = async () => {
               defaultOpen
             />
             <InputDiagnostico
+              orden={orden}
               diagnostico={medicalEventExist}
-              title={"Diagnósticos y tratamiento"}
+              title={"Descripción del Diagnóstico"}
               subtitle={[
                 "Conducta terapeutica",
                 "Tratamientos no farmacológicos",
-                "Pauta de alarma",
+                "Procedimientos"
               ]}
               defaultOpen
-              subtitle2={["Diagnostico", "Procedimientos"]}
+              subtitle2={["Diagnóstico"]}
               subtitle3={"Medicamentos"}
             />
-              </div>}
+
+
+          <div className="flex justify-center p-6 bg-[#fafafc]">
+          <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar />}
+            onPress={handleDiagnostic}
+            size={"sm"}
+            className={"bg-greenPrimary w-60 text-sm font-bold"}
+          />
+            </div>
+              </div>
+              
+              
+              }
+
+
+
           
             {/* ESTUDIOS */}
             {handleNav === "Estudios" &&

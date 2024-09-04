@@ -126,7 +126,7 @@ export default function SignosVitalesInfo({
         <Image src={circleData} alt="" className="w-5 h-5" />
         <p className="text-start text-[#5F5F5F] font-bold text-sm md:text-base leading-5">
           {title}
-        <b className="font-semibold text-red-500">*</b>
+        
         </p>
       </div>
       <div></div>

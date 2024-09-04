@@ -669,7 +669,7 @@ const fetchMedicalEvent = async (scheduleId) => {
 
 
             <InputCuerpoPre
-              title={"Exploracion fisica"}
+              title={"Autoevaluación"}
               onBodyChange={handleBodyChange}
               bodySection={formData?.bodySection}
               defaultOpen

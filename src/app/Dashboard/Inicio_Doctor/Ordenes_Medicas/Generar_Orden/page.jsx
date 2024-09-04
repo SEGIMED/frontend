@@ -76,7 +76,7 @@ export default function HomeDoc() {
         dispatch(setSelectedOption({ name, option: value }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
-    // autocomplete
+    // autocomplete durgs
     useEffect(() => {
         const fetchDrugs = async () => {
             if (searchTerm.length >= 3) {
