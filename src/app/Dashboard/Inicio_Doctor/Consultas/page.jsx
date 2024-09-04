@@ -88,8 +88,9 @@ export default function HomeDoc() {
     setSelectedPatientId(consulta?.patient);
   };
   const handleCokiePatient = (schedule, id, idEvent) => {
-    Cookies.set("patientId", id, { expires: 7 });
-    Cookies.set("medicalEventId", idEvent, { expires: 7 });
+    
+    Cookies.set("patientId", id);
+    Cookies.set("medicalEventId", idEvent);
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
   };
 

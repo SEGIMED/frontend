@@ -22,16 +22,14 @@ export default function InputCuerpoPre({
   defaultOpen = false,
   valuePreconsultation,
 }) {
-  const getSelectedOption = (formValue, preconsultValue) => 
-    formValue !== undefined ? formValue : preconsultValue;
-  const dispatch = useAppDispatch();
+  
   const [selectedMuscles, setSelectedMuscles] = useState([]);
-  const [isPain, setIsPain] = useState(false); // Estado para manejar si hay dolor
+  const [isPain, setIsPain] = useState(); // Estado para manejar si hay dolor
   const [selectedMuscleName, setSelectedMuscleName] = useState("");
   const [musclesObject, setMusclesObject] = useState({});
   const [modelType, setModelType] = useState("anterior");
   const [painLevel, setPainLevel] = useState(1);
-
+ 
   const { register } = useFormContext();
   const muscleTranslations = {
     /* Back */
@@ -136,11 +134,10 @@ export default function InputCuerpoPre({
       valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain
     );
     setPainLevel(
-      valuePreconsultation?.provisionalPreConsultationPainMap?.catPainScale
-        ?.name
+      valuePreconsultation?.provisionalPreConsultationPainMap?.painScale
     );
   }, [valuePreconsultation]);
-
+  
   useEffect(() => {
     const colors = {
       1: "text-green-500",
@@ -321,10 +318,12 @@ export default function InputCuerpoPre({
                     {muscleTranslations[muscle]}
                   </label>
                   <textarea
+                    
                     {...register(muscleTranslations[muscle])}
                     onChange={(e) => handleDescription(e.target.value, muscle)}
                     className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
                     placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`}
+                  
                   />
                 </div>
               ))}
@@ -336,9 +335,7 @@ export default function InputCuerpoPre({
                   onBodyChange={onBodyChange}
                   text={"¿Hay dolor?"}
                   selectedOptions={
-                    bodySection?.isTherePain ||
-                    valuePreconsultation?.provisionalPreConsultationPainMap
-                      ?.isTherePain
+                    isPain
                   }
                   options={[
                     { value: true, text: "Si" },
@@ -357,7 +354,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"¿Desde hace cuánto tiempo tiene el dolor?"}
                       selectedOptions={
-                        bodySection.painDuration ||
+                        bodySection?.painDuration ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
                           ?.painDuration
                       }
@@ -439,7 +436,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"Tipo de dolor"}
                       selectedOptions={
-                        bodySection.painType ||
+                        bodySection?.painType ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
                           ?.painType
                       }
@@ -465,7 +462,7 @@ export default function InputCuerpoPre({
                       onBodyChange={onBodyChange}
                       text={"¿Tomó analgésicos?"}
                       selectedOptions={
-                        bodySection.isTakingAnalgesic ||
+                        bodySection?.isTakingAnalgesic ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
                           ?.isTakingAnalgesic
                       }
@@ -480,9 +477,9 @@ export default function InputCuerpoPre({
                     <ButtonNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"¿Calma con analgésicos?"}
-                      selectedOptions={getSelectedOption(
-                        bodySection.doesAnalgesicWorks,
-                        valuePreconsultation?.provisionalPreConsultationPainMap?.doesAnalgesicWorks)
+                      selectedOptions={
+                        bodySection?.doesAnalgesicWorks ||
+                        valuePreconsultation?.provisionalPreConsultationPainMap?.doesAnalgesicWorks
                       }
                       options={[
                         { value: true, text: "Si" },
@@ -495,10 +492,10 @@ export default function InputCuerpoPre({
                     <DropNextPreconsultation
                       onBodyChange={onBodyChange}
                       text={"Frecuencia del dolor"}
-                      selectedOptions={getSelectedOption(
-                        bodySection?.painFrequency ,
+                      selectedOptions={
+                        bodySection?.painFrequency ||
                         valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.painFrequency)
+                          ?.painFrequency
                       }
                       options={[
                         { value: 1, text: "De vez en cuando" },
