@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Segi from "@/components/InicioPaciente/chatSegi/segi.png";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChatSegi } from "./ChatSegi";
 import Draggable from "react-draggable";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -10,6 +10,7 @@ import { toogleChat } from "@/redux/slices/chat/chatBot";
 export const SegiBot = () => {
   // const [showChat, setShowChat] = useState(false);
   const showChat = useAppSelector((state) => state.chatBot.showChat);
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
   const dispatch = useAppDispatch();
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -20,6 +21,12 @@ export const SegiBot = () => {
       dispatch(toogleChat(!showChat));
     }
   };
+
+  useEffect(() => {
+    if (alarmsData.length > 0) {
+      dispatch(toogleChat(true));
+    }
+  }, [dispatch]);
 
   const handleStart = (e, data) => {
     setIsDragging(false);

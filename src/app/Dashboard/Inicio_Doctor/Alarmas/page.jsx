@@ -9,11 +9,13 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import { PathnameShow } from "@/components/pathname/path";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import NotFound from "@/components/notFound/notFound";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function AlarmHome() {
   const [activeAlarms, setActiveAlarms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const lastSegmentTextToShow = PathnameShow();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
 
   const getAlarms = async (headers) => {
     try {
@@ -41,7 +43,7 @@ export default function AlarmHome() {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [alarmsData]);
 
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">

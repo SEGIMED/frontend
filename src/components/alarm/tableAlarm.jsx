@@ -32,9 +32,10 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-export default function TableAlarm({ alarms }) {
+export default function TableAlarm({ alarms, updateAlarms }) {
   const dispatch = useAppDispatch();
   const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
+
   const handleStatus = async ({ id }) => {
     Swal.fire({
       icon: "question",
@@ -54,6 +55,7 @@ export default function TableAlarm({ alarms }) {
             dispatch(
               addAlarmsChatbot(alarmsData.filter((alarm) => alarm.id != id))
             );
+
             await Swal.fire({
               title: "Alarma resuelta",
               icon: "success",
