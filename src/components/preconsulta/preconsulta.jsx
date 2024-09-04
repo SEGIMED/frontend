@@ -37,7 +37,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   const [anamnesis, setAnamnesis]= useState()
   const [patient, setPatient]=useState()
 
-  console.log(schedule)
+  
 
 
 
@@ -49,8 +49,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-  console.log(preconsult)
-  console.log(formData)
+  
   
 
   
@@ -67,7 +66,9 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   //   };
   // }, []);
 
-  //util que necesito
+
+
+  //util que necesito para el cuerpo
   const getValue = (formValue, preconsultValue) =>
     formValue !== undefined && formValue !== null ? formValue : preconsultValue;
 
@@ -160,44 +161,12 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     urineStatus: formData?.questions?.urineStatus?.selectedOption,
     exerciseStatus: formData?.questions?.exerciseStatus?.selectedOption,
     bodyPain: formData?.questions?.bodyPain?.selectedOption,
-    // Estudios
-    // laboratoryResults: tests.laboratoryResults.file,
-    // laboratoryResultsDescription: tests.laboratoryResults.description,
-    // electrocardiogram: tests.electrocardiogram.file,
-    // electrocardiogramDescription: tests.electrocardiogram.description,
-    // rxThorax: tests.rxThorax.file,
-    // echocardiogram: tests.echocardiogram.file,
-    // walkTest: tests.walkTest.file,
-    // respiratoryFunctional: tests.respiratoryFunctional.file,
-    // tomographies: tests.tomographies.file,
-    // rightHeartCatheterization: tests.rightHeartCatheterization.file,
-    // ccg: tests.ccg.file,
-    // resonance: tests.resonance.file,
-    // leftHeartCatheterization: tests.leftHeartCatheterization.file,
-    // otherStudies: tests.otherStudies.file,
-    // pendingStudies: tests.pendingStudies.description,
-    // Anamnesis
-    // consultationReason: formData?.anamnesis?.consultationReason?.description,
-    // importantSymptoms: formData?.anamnesis?.importantSymptoms?.description,
-    // Tratamiento
-    // currentMedications: formData?.tratamiento?.currentMedications
-    //   ?.selectedOptions
-    //   ? Object.values(formData?.tratamiento?.currentMedications?.selectedOptions)
-    //   : null,
-    // Signos vitales
-    // abnormalGlycemia: formData?.vitalSigns?.abnormalGlycemia?.active,
-    // lastAbnormalGlycemia: Object.keys(
-    //   formData?.vitalSigns?.lastAbnormalGlycemia?.options
-    // ).length
-    //   ? Object.values(formData?.vitalSigns?.lastAbnormalGlycemia?.options)
-    //   : null,
-    // updateVitalSigns: vitalSignFormat,
-    // painRecordsToUpdate
-    painRecordsToUpdate: [bodyOBJFormat],
-    ...anamnesis,
-    updateVitalSigns:
-    vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
-  ...glicemiaPreconsult,
+  
+  //   painRecordsToUpdate: [bodyOBJFormat],
+  //   ...anamnesis,
+  //   updateVitalSigns:
+  //   vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+  // ...glicemiaPreconsult,
   };
 
   const handleSubmit = async (event) => {
@@ -219,29 +188,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
       }
 
 
-      // if (!bodyForm) {
-      //   console.error("No form data to submit");
-      //   setIsLoading(false);
-      //   return;
-      // }
-      // const isAnamnesisMissing = Object.values(formData.anamnesis).some(
-      //   (item) => item.description?.trim() === ''
-      // );
-      
-      // const isVitalSignMissing = vitalSignFormat.some(
-      //   (item) => item.measure === null
-      // );
-      // if (isAnamnesisMissing || isVitalSignMissing) {
-      //   Swal.fire({
-      //     icon: "error",
-      //     title: "Error",
-      //     text: "Debe completar la información de anamnesis y los signos vitales",
-      //     confirmButtonColor: "#487FFA",
-      //     confirmButtonText: "Aceptar",
-      //   });
-      //   setIsLoading(false);
-      //   return;
-      // }
+   
      
       if (available) {
         console.log({
@@ -446,7 +393,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
       }
       
       const response= await patchPreconsultation(data)
-      console.log(response.data)
+     
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
     }
@@ -454,9 +401,9 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
 
   const handleBackgroundSave = async () => {
     try {
-      console.log(background)
+
         const response = await postPatientBackgrounds(background);
-        console.log(response);
+      
     } catch (error) {
         console.error('Error saving background:', error);
     }
@@ -468,7 +415,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
             ...anamnesis
         };
         const response = await patchPreconsultation(data);
-        console.log("esto es anamnesis", response.data);
+ 
     } catch (error) {
         console.error('Error saving anamnesis:', error);
     }
@@ -483,7 +430,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
 };
 const fetchPatientDetail = async (userId) => {
   try {
-    console.log(userId)
+ 
     const response= await getPatientDetail(userId)
     setPatient(response);
   } catch (error) {
@@ -495,8 +442,7 @@ useEffect(() => {
   
   fetchPatientDetail(patientId)
 }, []);
-console.log(background)  
-console.log(patient)
+
 
   return (
     <FormProvider {...methods}>
