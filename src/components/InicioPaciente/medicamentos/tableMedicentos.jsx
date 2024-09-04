@@ -25,23 +25,23 @@ export default function MedicamentosTable({ medicamento }) {
                     <p className="hidden md:block">{medicamento.lastModification?.physicianModification?.name} {medicamento.lastModification?.physicianModification?.lastname}</p>
                     <p className="hidden md:block" >{Fecha(medicamento.startTimestamp)} {Hora(medicamento.startTimestamp)}</p>
                 </div>
-                <div className="w-[25%] bg-white hidden md:flex gap-5 items-center justify-around">
+                <div className="w-[20%] bg-white hidden md:flex gap-5 items-center justify-around">
                     <div>
-                        <button className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full">
+                        <button
+                            className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full"
+                            onClick={() => router.push(`${rutas.PacienteDash}${rutas.Solicitudes}`)}>
                             <IconSolicitar />
-                            <p className=" hidden md:block text-white font-bold">
-                                Solicitar
-                            </p>
+                            <p className="hidden md:block text-white font-bold">Solicitar</p>
                         </button>
                     </div>
                     <div>
 
-                        <button className="bg-[#E73F3F] py-2 px-4 items-center flex rounded-lg gap-2 w-full">
+                        {/* <button className="bg-[#E73F3F] py-2 px-4 items-center flex rounded-lg gap-2 w-full">
                             <IconSuspender />
                             <p className=" hidden md:block text-white font-bold">
                                 Suspender
                             </p>
-                        </button>
+                        </button> */}
                     </div>
                     {/* <div>
                         <PDFExportComponent data={medicamento} />

@@ -290,7 +290,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex items-center justify-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="hidden w-4 md:block" />
+        <IconCurrentRouteNav className="hidden w-[1.5rem] md:block" />
         {["Inicio_Doctor", "Inicio_Paciente", "Inicio_Admin"].includes(
           lastSegment
         ) ? (
@@ -351,7 +351,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           onClick={handleChatClick}
           className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
             }`}>
-          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#808080"} />
+          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#B2B2B2"} />
         </button>
         {showChats && (
           <MensajesContainer

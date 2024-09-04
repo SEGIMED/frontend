@@ -84,11 +84,11 @@ export default function CuerpoPatient() {
         const mappedData = mapBoolean(formStateGlobal);
         const mappedCuerpo = mapPainAreas({ formStateGlobal, data });
 
-        const dataSendFinal = { ...mappedData, painAreas: mappedCuerpo, painOwnerId: Number(userId) }
+        const dataSendFinal = { ...mappedData, painAreas: mappedCuerpo, painOwner: Number(userId) }
 
         console.log(dataSendFinal)
         try {
-            const response = await ApiSegimed.post(`/patient-new-pain-map`, dataSendFinal, {
+            const response = await ApiSegimed.post(`/self-evaluation-event/pain-map`, dataSendFinal, {
                 headers: { token: token },
             });
             let timerInterval;
@@ -113,7 +113,7 @@ export default function CuerpoPatient() {
                     console.log("I was closed by the timer");
                 }
             });
-            router.push(`${rutas.PacienteDash}2`);
+            router.push(`${rutas.PacienteDash}`);
 
         }
         catch (error) {
@@ -186,14 +186,14 @@ export default function CuerpoPatient() {
 
     const handleChange = (value) => {
         setPainLevel(value);
-        dispatch(setSelectedOption({ name: "painScaleId", option: value }));
+        dispatch(setSelectedOption({ name: "painScale", option: value }));
     };
 
     return (
-        <div className="flex flex-col ">
+        <div className="flex flex-col w-full h-full ">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex md:flex-row flex-col items-center md:items-start justify-center ">
-                    <div className="w-screen md:w-1/2  h-full items-center flex flex-col justify-center">
+                <div className="flex w-[100%] md:flex-row flex-col items-center md:items-start justify-center overflow-y-auto">
+                    <div className="w-full md:w-1/2  h-full items-center flex flex-col justify-center">
                         <div className=' items-center justify-center'>
                             <ButtonNext options={["Masculino", "Femenino"]} name={"genero"} />
                         </div>
@@ -217,7 +217,7 @@ export default function CuerpoPatient() {
                             selectedMuscles[0].muscles.map((muscle, index) => (
                                 <div
                                     key={index}
-                                    className="flex flex-col gap-2 w-full py-3 px-7 border-b border-b-[#cecece]">
+                                    className="flex flex-col gap-2 w-full py-3 px-7 ">
                                     <label
                                         className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
                                         htmlFor={`muscle-note-${index}`}>
@@ -226,13 +226,13 @@ export default function CuerpoPatient() {
                                     </label>
                                     <textarea
                                         {...register(muscleTranslations[muscle])}
-                                        className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
+                                        className=" h-20 w-full text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
                                         placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`}
                                     />
                                 </div>
                             ))}
                     </div>
-                    <div className="items-center w-full md:w-1/2 sticky top-0">
+                    <div className="items-center w-full md:w-1/2  ">
                         <div className="flex items-center flex-col gap-3 py-4 ">
                             <div>
                                 <ButtonNext
@@ -248,7 +248,7 @@ export default function CuerpoPatient() {
                                         <ButtonNext
                                             text={"¿Desde hace cuánto tiempo tiene el dolor?"}
                                             options={["Horas", "Dias", "Semanas"]}
-                                            name={"painDurationId"}
+                                            name={"painDuration"}
                                             type={true}
                                         />
                                     </div>
@@ -316,18 +316,7 @@ export default function CuerpoPatient() {
                                                 <IconDolor2 />
                                             </span>
                                         </div>
-                                        {/* <div className="flex px-1 pl-8">
-                      <span className="pl-2 pr-5 text-green-500">1</span>
-                      <span className="pl-5 pr-5 text-green-500">2</span>
-                      <span className="pl-4 pr-4 text-green-500">3</span>
-                      <span className="pl-5 pr-4 text-green-500">4</span>
-                      <span className="pl-5 pr-5 text-yellow-500">5</span>
-                      <span className="pl-4 pr-5 text-yellow-500">6</span>
-                      <span className="pl-5 pr-5 text-yellow-500">7</span>
-                      <span className="pl-4 pr-5 text-red-500">8</span>
-                      <span className="pl-5 pr-4 text-red-500">9</span>
-                      <span className="pl-4 pr-4 text-red-500">10</span>
-                    </div> */}
+
                                     </div>
                                     <div>
                                         <DropNext
@@ -346,7 +335,7 @@ export default function CuerpoPatient() {
                                                 "Taladreante",
                                             ]}
                                             text2={"Seleccione tipo de dolor"}
-                                            name={"painTypeId"}
+                                            name={"painType"}
                                             type={true}
                                         />
                                     </div>
@@ -359,6 +348,7 @@ export default function CuerpoPatient() {
                                     </div>
                                     <div>
                                         <ButtonNext
+                                            disabled={formStateGlobal.isTakingAnalgesic === "No"}
                                             text={"¿Calma con analgésicos?"}
                                             options={["Si", "No"]}
                                             name={"doesAnalgesicWorks"}
@@ -375,7 +365,7 @@ export default function CuerpoPatient() {
                                                 "Siempre",
                                             ]}
                                             text2={"Seleccione frecuencia"}
-                                            name={"painFrequencyId"}
+                                            name={"painFrequency"}
                                             type={true}
                                         />
                                     </div>

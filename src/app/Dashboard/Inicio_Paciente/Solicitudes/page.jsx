@@ -57,7 +57,7 @@ export default function HomeDoc() {
 
     const getPatientRequest = async (headers) => {
         try {
-            const response = await ApiSegimed.get(`/patient-medical-request?patientId=${id}`, { headers });
+            const response = await ApiSegimed.get(`/patient-medical-request?patientId=${id}&status=false`, { headers });
             if (response.data) {
                 console.log(response.data);
                 setPatients(response.data);

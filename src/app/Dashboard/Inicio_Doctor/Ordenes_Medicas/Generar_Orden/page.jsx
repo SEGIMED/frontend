@@ -193,7 +193,7 @@ export default function HomeDoc() {
     const validateFields = () => {
         let tempErrors = {};
 
-        if (!orden.diagnostic || orden.diagnostic.trim() === "") {
+        if (!orden.diagnostic) {
             tempErrors.diagnostic = "El diagnóstico es obligatorio.";
         }
 

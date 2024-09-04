@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-full w-full">
       {/* Barra de navegación */}
       {/* <NavPte isOpen={isOpen} toggleSidebar={toggleSidebar} /> */}
       <SideBarMod isOpen={isOpen} toggleSidebar={toggleSidebar} buttons={buttonsPaciente} />
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         {/* <SidePte search={true} toggleSidebar={toggleSidebar} /> */}
         <NavBarMod search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
-        <div className="h-[88%] w-full">{children}</div>
+        <div className="h-[100%] w-[100%]">{children}</div>
       </div>
       <SegiBot />
     </div>

@@ -72,7 +72,7 @@ export default function TableAlarmEntries({ pacientes, user }) {
                         <div className="text-center w-[70%] md:w-[75%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-6 items-center py-2 bg-white h-fit ">
                             <span className="hidden md:flex items-center justify-between pr-6 ">
                                 {paciente.highestPriority}
-                                <IconCurrentRouteNav className="w-3 hidden md:block " />
+                                <IconCurrentRouteNav className="w-[1.5rem] hidden md:block " />
                             </span>
                             <div className="text-[#5F5F5F]">
                                 {extractHourMinutes(paciente.hora)}

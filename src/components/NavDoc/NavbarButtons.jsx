@@ -92,7 +92,7 @@ export const buttonsPaciente = [
         icon: IconDoctorNav,
       },
       {
-        name: "Antecendes",
+        name: "Historia Clinica",
         path: `${rutas.PacienteDash}${rutas.Antecedentes}`,
         icon: IconAntecedentes,
       },

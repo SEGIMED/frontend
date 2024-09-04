@@ -36,7 +36,7 @@ export default function Medicamentos() {
     }, []);
 
     return (
-        <div className="h-full text-[#686868] w-full">
+        <div className="h-[100%] text-[#686868] w-[100%]">
             {/* <PDFExportComponent data={data} />  para visualizar pdf comentar todo y poner esto */}
             <title>{lastSegmentTextToShow}</title>
             <div className="h-full w-full">
@@ -50,7 +50,7 @@ export default function Medicamentos() {
                         <p className="hidden md:block">Modificado por</p>
                         <p className="hidden md:block">Fecha de Inicio</p>
                     </div>
-                    <div className="bg-white md:w-[25%]"></div>
+                    <div className="bg-white md:w-[20%]"></div>
                 </div>
 
                 {loading ? (

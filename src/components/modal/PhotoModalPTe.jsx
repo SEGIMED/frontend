@@ -101,7 +101,7 @@ const PhotoModalPte = ({ isOpen, onClose }) => {
         onClick={stopPropagation}>
         <div className="h-full w-full flex flex-col">
           <div className="h-16 flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
-            <IconCurrentRouteNav className="w-4" /> Editar foto de perfil
+            <IconCurrentRouteNav className="w-[1.5rem]" /> Editar foto de perfil
           </div>
           <div className="w-full h-fit flex flex-col items-center gap-8 md:justify-between p-5">
             <div className="flex justify-center items-center">

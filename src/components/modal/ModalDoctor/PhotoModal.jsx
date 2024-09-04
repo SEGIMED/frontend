@@ -99,7 +99,7 @@ const PhotoModal = ({ isOpen, onClose }) => {
         onClick={stopPropagation}>
         <div className="h-fit w-full flex flex-col">
           <div className="md:h-16 text-2xl md:text-base flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
-            <IconCurrentRouteNav className="w-4" /> Editar foto de perfil
+            <IconCurrentRouteNav className="w-[1.5rem]" /> Editar foto de perfil
           </div>
           <div className="w-full h-fit flex flex-col items-center gap-8 md:justify-between p-5">
             <div className="flex justify-center items-center">

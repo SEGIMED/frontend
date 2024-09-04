@@ -64,7 +64,7 @@ const FileUpload = ({
   return (
     <div className="px-6 py-4 bg-[#fafafc]">
       <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
-        <IconCurrentRouteNav className="w-4" />
+        <IconCurrentRouteNav className="w-[1.5rem]" />
         {label}
       </div>
       {data?.binaryOptions && !data.file && (

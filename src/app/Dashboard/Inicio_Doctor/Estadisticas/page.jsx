@@ -158,7 +158,7 @@ export default function Estadisticas() {
       <div className="w-full flex-col md:flex-row flex  justify-center gap-4 md:gap-10">
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
-            <IconCurrentRouteNav className="w-4" />
+            <IconCurrentRouteNav className="w-[1.5rem]" />
             Alarmas activas
           </p>
           <div className="flex items-center justify-center ">
@@ -197,7 +197,7 @@ export default function Estadisticas() {
         </div>
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
-            <IconCurrentRouteNav className="w-4" />
+            <IconCurrentRouteNav className="w-[1.5rem]" />
             Actividad de pacientes (última semana)
           </p>
           <div className="flex items-center  w-full min-h-56    md:h-[700px]  justify-center">
@@ -220,7 +220,7 @@ export default function Estadisticas() {
       <div className="w-full flex flex-col md:flex-row items-center justify-center gap-10">
         <div className="w-full bg-white p-5 rounded-lg ">
           <p className="flex items-center justify-start text-2xl gap-3">
-            <IconCurrentRouteNav className="w-4" />
+            <IconCurrentRouteNav className="w-[1.5rem]" />
             Alarmas en las últimas 24 horas
           </p>
           <div className="flex  items-center w-full  min-h-56  md:h-[700px] justify-center">
@@ -240,7 +240,7 @@ export default function Estadisticas() {
         </div>
         <div className="w-full h-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
-            <IconCurrentRouteNav className="w-4" />
+            <IconCurrentRouteNav className="w-[1.5rem]" />
             Distribución de géneros
           </p>
           <div className="flex items-center   min-h-56   md:h-[700px]  justify-center">
@@ -260,7 +260,7 @@ export default function Estadisticas() {
       <div className="w-full flex flex-col md:flex-row items-center justify-center gap-10">
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3 mb-8">
-            <IconCurrentRouteNav className="w-4" />
+            <IconCurrentRouteNav className="w-[1.5rem]" />
             Pacientes Fallecidos (último mes)
           </p>
           <div className="flex items-center   md:h-[700px]  justify-center">
@@ -280,7 +280,7 @@ export default function Estadisticas() {
         </div>
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
-            <IconCurrentRouteNav className="w-4" />
+            <IconCurrentRouteNav className="w-[1.5rem]" />
             Pacientes Fallecidos (último año)
           </p>
           <div className="flex items-center  w-full   md:h-[700px]  justify-center">
