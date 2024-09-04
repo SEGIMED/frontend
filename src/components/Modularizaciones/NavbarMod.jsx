@@ -38,6 +38,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
   const notifications = useAppSelector((state) => state.notifications);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUnreadNotifications, setShowUnreadNotifications] = useState(true);
   const chats = useAppSelector((state) => state.chat);
   const [showChats, setShowChats] = useState(false);
   const user = useAppSelector((state) => state.user);
@@ -111,6 +112,13 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     dispatch(setSearchTerm1(e.target.value));
   };
 
+  const pastNotifications = notifications?.filter(
+    (notificacion) => notificacion.state === true // Notificaciones leídas
+  );
+
+  const toggleNotificationView = () => {
+    setShowUnreadNotifications(!showUnreadNotifications); // Alterna entre no leídas y pasadas
+  };
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
   };
@@ -183,7 +191,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   }, [onboarding]);
 
   const unreadNotifications = notifications?.filter(
-    (notificacion) => !notificacion.state
+    (notificacion) =>
+      notificacion?.content.notificationType != "updatedAppointment" &&
+      notificacion.state != true
   );
   const Inicio =
     rol == "Paciente"
@@ -376,6 +386,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </button>
         {showNotifications && (
           <NotificacionesContainer
+            pastNotifications={pastNotifications}
+            showUnreadNotifications={showUnreadNotifications}
+            toggleNotificationView={toggleNotificationView}
             handleNotificationElementClick={handleNotificationElementClick}
             handleNotificationClick={handleNotificationClick}
             unreadNotifications={unreadNotifications}
