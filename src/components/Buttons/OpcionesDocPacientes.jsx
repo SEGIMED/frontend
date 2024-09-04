@@ -61,7 +61,7 @@ export default function OpcionesDocPacientes({
       <button
         ref={buttonRef}
         onClick={toggleOptions}
-        className="flex items-center justify-center md:px-6 p-2 text-white bg-[#487FFA] rounded-xl gap-1 md:gap-3 font-bold cursor-pointer">
+        className="flex items-center justify-center md:px-6 p-2 text-white bg-[#487FFA] rounded-lg gap-1 md:gap-3 font-bold cursor-pointer">
         <IconOptions color="#FFFFFF" />
         <p className="hidden md:block">Opciones</p>
       </button>

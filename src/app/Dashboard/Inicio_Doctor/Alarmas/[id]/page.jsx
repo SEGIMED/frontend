@@ -24,6 +24,9 @@ import ModalConsultation from "@/components/modal/ModalDoctor/ModalConsultation"
 import Swal from "sweetalert2";
 import ModalShowPhoneAlarm from "@/components/alarm/ModalShowPhoneAlarm";
 import { isUserUsingMobile } from "@/utils/checkMobile";
+import { socket } from "@/utils/socketio";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { addAlarmsChatbot } from "@/redux/slices/chat/chatBot";
 
 const AlarmSelector = (id) => {
   const alarmId = id.params.id;
@@ -32,9 +35,10 @@ const AlarmSelector = (id) => {
   const [showModalPhone, setIsShowModalPhone] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isRevaluatedAlarm, setIsRevaluatedAlarm] = useState(false);
+  const dispatch = useAppDispatch();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
   const router = useRouter();
   const userId = Cookies.get("c");
-  console.log(isRevaluatedAlarm);
   const handlePreAction = (next) => {
     if (isRevaluatedAlarm) {
       next();
@@ -60,6 +64,7 @@ const AlarmSelector = (id) => {
           const body = {
             physician_priority,
           };
+          setIsRevaluatedAlarm(true);
           await ApiSegimed.patch(`/edit-alarm-event/${selectedAlarm.id}`, body);
         } catch (error) {
           Swal.showValidationMessage(`
@@ -69,7 +74,6 @@ const AlarmSelector = (id) => {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     }).then(() => {
-      setIsRevaluatedAlarm(true);
       if (next) next();
     });
   };
@@ -77,14 +81,19 @@ const AlarmSelector = (id) => {
     setIsModalOpen(true);
   };
   const handleMessage = () => {
-    router.push(`${rutas.Doctor}${rutas.Mensajes}/${selectedAlarm.patient.id}`);
+    socket.emit("createChat", { id: selectedAlarm.patient.id });
+    setTimeout(() => {
+      router.push(
+        `${rutas.Doctor}${rutas.Mensajes}/${selectedAlarm.patient.id}`
+      );
+    }, 250);
   };
   const handleCall = () => {
-    if (!isMobile) {
-      setIsShowModalPhone(true);
+    if (isMobile) {
+      window.location.href = `tel:${selectedAlarm.patient.cellphone}`;
+      handleEndAction();
     }
-    window.location.href = `tel:${selectedAlarm.patient.cellphone}`;
-    handleEndAction();
+    setIsShowModalPhone(true);
   };
   const handleWhatsapp = () => {
     const whatsappUrl = `https://wa.me/${selectedAlarm.patient.cellphone}`;
@@ -123,6 +132,11 @@ const AlarmSelector = (id) => {
           confirmButtonColor: "#487FFA",
           confirmButtonText: "Aceptar",
         });
+        dispatch(
+          addAlarmsChatbot(
+            alarmsData.filter((alarm) => alarm.id != selectedAlarm.id)
+          )
+        );
         router.push(`${rutas.Doctor}${rutas.Alarm}`);
       }
     } catch (error) {
@@ -153,7 +167,6 @@ const AlarmSelector = (id) => {
     };
     getAlarm();
   }, []);
-  console.log(isMobile);
   useEffect(() => {
     setIsMobile(isUserUsingMobile());
   }, []);
@@ -259,20 +272,18 @@ const AlarmSelector = (id) => {
             {selectedAlarm?.chat_history.map((chat, index) => (
               <div
                 key={index}
-                className={`p-1 animate-fade-in font-poppins flex flex-col ${
-                  chat.role != "bot"
+                className={`p-1 animate-fade-in font-poppins flex flex-col ${chat.role != "bot"
                     ? "justify-end items-end"
                     : "justify-start items-start"
-                }`}>
+                  }`}>
                 <span className={`font-medium text-bluePrimary`}>
                   {chat.role == "bot" ? "Segibot" : selectedAlarm.patient.name}
                 </span>
                 <span
-                  className={`p-2 relative w-fit max-w-[85%] rounded-xl font-medium shadow-sm ${
-                    chat.role != "bot"
+                  className={`p-2 relative w-fit max-w-[85%] rounded-xl font-medium shadow-sm ${chat.role != "bot"
                       ? "rounded-tr-none bg-[#487FFA] text-white right-5 md:right-0"
                       : "rounded-tl-none bg-white border text-bluePrimary border-bluePrimary left-5 md:left-0"
-                  }`}>
+                    }`}>
                   {chat.message}
                 </span>
               </div>

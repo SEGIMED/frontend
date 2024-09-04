@@ -328,7 +328,7 @@ export default function HomeDoc() {
                 <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
                     <IconPrev /> Anterior
                 </button>
                 <p>
@@ -337,7 +337,7 @@ export default function HomeDoc() {
                 <button
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="  w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+                    className="  w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
                     Siguiente
                     <IconNext />
                 </button>
@@ -351,7 +351,7 @@ export default function HomeDoc() {
                 button1={"hidden"}
                 button2={"bg-greenPrimary block text-white font-font-Roboto"}
                 progessBar={"hidden"}
-                size={"h-fit md:h-[33rem] md:w-[35rem]"}
+                size={"h-fit md:h-[30rem] md:w-[35rem]"}
                 buttonText={{ end: `Generar` }}
                 funcion={handleSubmit}
             />

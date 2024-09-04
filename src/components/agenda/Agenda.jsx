@@ -132,9 +132,8 @@ const Agenda = ({ schedules, title }) => {
   };
   return (
     <div
-      className={` flex flex-col font-Montserrat items-center ${
-        title ? "bg-white" : "bg-[#FAFAFC]"
-      } rounded-2xl ${title ? "h-screen" : "h-full"} `}>
+      className={` flex flex-col font-Montserrat items-center ${title ? "bg-white" : "bg-[#FAFAFC]"
+        } rounded-2xl ${title ? "h-screen" : "h-full"} `}>
       {title && <p className="text-sm md:text-lg text-center">{title}</p>}
 
       <div className={`h-[90%] w-full rounded-2xl ${title && "bg-white"}`}>
@@ -179,7 +178,7 @@ const Agenda = ({ schedules, title }) => {
         <div className="w-full flex justify-center px-6 py-3 ">
           <button
             onClick={handleNewAppointment}
-            className=" w-fit text-white px-4 py-2 gap-2 bg-greenPrimary items-center  rounded-3xl justify-center flex">
+            className=" w-fit text-white font-Roboto font-bold text-xl leading-5 px-4 py-2 gap-2 bg-greenPrimary items-center rounded-3xl justify-center flex">
             {" "}
             <IconMas />
             Nueva consulta

@@ -18,7 +18,7 @@ export default function OptPteHistorial({ paciente, ruta, id }) {
   return (
     <div className="relative w-fit">
       <details className="relative">
-        <summary className="flex justify-center px-2 md:px-6 py-2 text-white rounded-xl gap-3 bg-[#487FFA] items-center cursor-pointer">
+        <summary className="flex justify-center px-2 md:px-6 py-2 text-white rounded-lg gap-3 bg-[#487FFA] items-center cursor-pointer">
           <Image src={opciones} alt="Opciones" />
           <p className="text-start text-white font-bold text-sm md:text-base leading-5">
             Más

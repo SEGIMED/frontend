@@ -80,7 +80,7 @@ export default function AuthSelect() {
                     },
                   })}
                   type="text"
-                  className="mb-2 text-[#808080] w-full bg-[#F2F2F2] px-6 py-2 border leading-3 rounded-sm border-[#DCDBDB] font-normal text-base  focus:outline-[#808080]"
+                  className="mb-2 text-[#808080] w-full bg-[#F2F2F2] px-6 py-2 border leading-3 rounded-lg border-[#DCDBDB] font-normal text-base  focus:outline-[#808080]"
                   placeholder="Ingrese su correo electronico"
                 />
                 {errors.email && (
@@ -91,13 +91,13 @@ export default function AuthSelect() {
               </label>
             </fieldset>
             <div className=" text-center  flex flex-col gap-2 w-1/2 mx-auto md:w-[60%] items-center justify-center">
-              <button className="text-white w-64 text-center bg-[#487FFA] px-6 py-3 rounded-md flex items-center gap-2 justify-center hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
+              <button className="text-white w-64 text-center bg-[#487FFA] px-6 py-3 rounded-lg flex items-center gap-2 justify-center hover:bg-[#70C247] transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
                 Enviar correo <IconSend />
               </button>
               <button
                 onClick={() => router.push("/")}
                 type="button"
-                className="text-[#487FFA]  w-64 border-1 border-gray-400 text-center px-6 py-3 rounded-md flex items-center gap-2 justify-center hover: transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
+                className="text-[#487FFA]  w-64 border-1 border-gray-400 text-center px-6 py-3 rounded-lg flex items-center gap-2 justify-center hover: transition duration-300 ease-in-out transform hover:scale-105 active:scale-100 active:translate-y-1">
                 Regresar
               </button>
             </div>

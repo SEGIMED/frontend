@@ -8,6 +8,7 @@ import { addSchedules } from "@/redux/slices/doctor/schedules";
 import { setAllPatients } from "@/redux/slices/doctor/allPatients";
 import { adduser } from "@/redux/slices/user/user";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import { addAlarmsChatbot } from "@/redux/slices/chat/chatBot";
 
 const useDataFetching = () => {
   const dispatch = useAppDispatch();
@@ -104,7 +105,17 @@ const useDataFetching = () => {
       dispatch(adduser(response.data));
     }
   };
-
+  const getAlarms = async () => {
+    try {
+      const response = await ApiSegimed.get(`/alarms-by-patient/`);
+      if (response.data) {
+        const activeAlarms = response?.data?.filter((alarma) => !alarma.solved);
+        dispatch(addAlarmsChatbot(activeAlarms));
+      }
+    } catch (error) {
+      console.error("Error fetching alarms:", error);
+    }
+  };
   return {
     getActivesPacientesDoctor,
     getActivesAlarmsDoctor,
@@ -112,6 +123,7 @@ const useDataFetching = () => {
     getDoctorNotifications,
     getPatientsDoctor,
     getUserDoctor,
+    getAlarms,
   };
 };
 

@@ -193,7 +193,7 @@ export default function HomeDoc() {
     const validateFields = () => {
         let tempErrors = {};
 
-        if (!orden.diagnostic || orden.diagnostic.trim() === "") {
+        if (!orden.diagnostic) {
             tempErrors.diagnostic = "El diagnóstico es obligatorio.";
         }
 
@@ -235,16 +235,15 @@ export default function HomeDoc() {
 
             // Abrir el PDF en una nueva pestaña
             window.open(pdfUrl, '_blank');
-            console.log(base64);
+
 
             const payload = { ...orden, bodyMedicam: drugsToSend, orderPdf: base64 };
             // const payload = { ...orden, bodyMedicam: drugsToSend };
-            console.log(payload);
+
 
             const response = await ApiSegimed.post(`/physician-order`, payload);
 
             if (response.data) {
-                console.log(response.data);
 
                 dispatch(resetFormState());
                 Swal.fire({
@@ -347,7 +346,7 @@ export default function HomeDoc() {
             <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10">
                 <button
                     type="button"
-                    className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+                    className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
                     onClick={() => {
                         const targetRoute = pendientes
                             ? `${rutas.Doctor}${rutas.Pendientes}`
@@ -391,7 +390,14 @@ export default function HomeDoc() {
                         placeholder="Ingrese aquí el diagnóstico"
                         className=" bg-white "
                         isInvalid={errors.diagnostic ? true : false}
-                        onSelectionChange={(value) => handleChange("diagnostic", value)}
+                        onSelectionChange={(value) => {
+                            const selectedItem = cie10.find(cie => cie.id === value);
+                            if (selectedItem) {
+                                handleChange("diagnostic2", selectedItem);
+
+                            }
+                            handleChange("diagnostic", Number(value)); // Llamar a la función original sin modificarla
+                        }}
                         value={searchTerm}
                     >
                         {(cie) => <AutocompleteItem key={cie.id}>{cie.description}</AutocompleteItem>}

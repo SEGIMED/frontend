@@ -126,7 +126,7 @@ const DrugModal = ({ isOpen, onClose, selectedOption }) => {
           <div className="flex items-center justify-center w-full p-3 border-t-2">
             <button
               onClick={handleSubmit(onSubmit)}
-              className="flex items-center justify-center gap-3 px-6 py-3 text-white bg-greenPrimary rounded-xl"
+              className="flex items-center justify-center gap-3 px-6 py-3 text-white bg-greenPrimary rounded-lg"
             >
               Guardar
               <IconArrowNextConsult />

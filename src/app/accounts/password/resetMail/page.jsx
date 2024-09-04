@@ -126,7 +126,7 @@ export default function AuthSelect() {
                                         },
                                     })}
                                     type={showPassword ? "text" : "password"}
-                                    className="text-[#808080] w-full bg-[#F2F2F2] px-6 py-2 border leading-3 rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
+                                    className="text-[#808080] w-full bg-[#F2F2F2] px-6 py-2 border leading-3 rounded-lg border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
                                     placeholder="Ingrese su nueva contraseña"
                                 />
                                 <div className="relative">
@@ -192,7 +192,7 @@ export default function AuthSelect() {
                                             value === newPassword || "*Las contraseñas no coinciden",
                                     })}
                                     type={showPassword ? "text" : "password"}
-                                    className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-sm border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
+                                    className="text-[#808080] w-full bg-[#F2F2F2] px-6 leading-3 py-2 border rounded-lg border-[#DCDBDB] font-normal text-base focus:outline-[#808080]"
                                     placeholder="Ingrese nuevamente su contraseña"
                                 />
                                 <div className="relative">

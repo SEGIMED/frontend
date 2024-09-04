@@ -233,7 +233,7 @@ export default function SignosVitalesInfo({
                 className="md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full"
                 defaultValue={value}
                 onChange={(event) => handleAnormalValueChange(index, event)}
-                {...register(`lastAbnormalGlycemia[${index}]` )}
+                {...register(`lastAbnormalGlycemia[${index}]`)}
               />
             ))}
           </div>

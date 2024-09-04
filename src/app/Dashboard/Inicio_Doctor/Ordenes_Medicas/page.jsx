@@ -203,7 +203,7 @@ export default function HomeDoc() {
                 </button>
                 {/* <div></div> */}
             </div>
-            <div className="flex flex-col overflow-y-auto">
+            <div className="flex flex-col h-full overflow-y-auto">
 
 
                 <div className="w-[100%] border-b border-b-[#cecece] flex">
@@ -217,7 +217,7 @@ export default function HomeDoc() {
 
                 </div>
 
-                <div className="items-start justify-center w-[100%] h-[80%] bg-[#FAFAFC] ">
+                <div className="items-start justify-center w-[100%] h-[100%] bg-[#FAFAFC] ">
                     {isLoading ? (
                         <SkeletonList count={10} />
                     ) : sortedPatients.length === 0 ? (
@@ -255,11 +255,11 @@ export default function HomeDoc() {
                     )}
                 </div>
             </div>
-            <div className="flex justify-center items-center gap-5   font-bold h-[15%]">
+            {/* <div className="flex justify-center items-center gap-5   font-bold h-[15%]">
                 <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
                     <IconPrev /> Anterior
                 </button>
                 <p>
@@ -268,11 +268,11 @@ export default function HomeDoc() {
                 <button
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
                     Siguiente
                     <IconNext />
                 </button>
-            </div>
+            </div> */}
             {/* {showModal && selectedPatient && ( */}
 
             <ModalModularizado

@@ -41,6 +41,7 @@ import IconRegresar from "@/components/icons/iconRegresar";
 import IconSelect from "@/components/icons/IconSelect";
 import { useRouter } from "next/navigation";
 import { setSearchBar } from "@/redux/slices/user/searchBar";
+import { socket } from "@/utils/socketio";
 
 export default function HomeDoc() {
   const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -212,6 +213,13 @@ export default function HomeDoc() {
     setRiskFilter(risk);
   };
 
+  const handleSeeMessages = (id) => {
+    socket.emit("createChat", { id });
+    setTimeout(() => {
+      router.push(`${rutas.Doctor}${rutas.Mensajes}/${id}`);
+    }, 250);
+  };
+
   const handleFavoriteClick = () => {
     setisLoading(true);
     setShowFavorites(!showFavorites);
@@ -271,7 +279,7 @@ export default function HomeDoc() {
           {ordenMedica ? (
             <button
               type="button"
-              className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+              className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
               onClick={() => {
                 router.push(`${rutas.Doctor}${rutas.Ordenes}`);
               }}>
@@ -479,7 +487,7 @@ export default function HomeDoc() {
                           },
                           {
                             label: "Ver Mensajes",
-                            href: `${rutas.Doctor}${rutas.Mensajes}`,
+                            onClick: () => handleSeeMessages(paciente.id),
                             icon: <IconMessages />,
                           },
                           {
@@ -501,7 +509,7 @@ export default function HomeDoc() {
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
           <IconPrev /> Anterior
         </button>
         <p>
@@ -510,7 +518,7 @@ export default function HomeDoc() {
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages}
-          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+          className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
           Siguiente
           <IconNext />
         </button>

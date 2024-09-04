@@ -17,7 +17,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-  
+
 } from "@nextui-org/react";
 
 export default function SubNavbarConsulta({ id, handleClic }) {
@@ -183,7 +183,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
         </NavbarContent>
       </Navbar>
       <Link href={`${rutas.Doctor}/${rutas.Consultas}`}>
-        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">
           <IconRegresar />
           <p className="hidden md:block">Regresar</p>
         </button>
