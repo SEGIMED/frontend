@@ -8,7 +8,7 @@ import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation
 import { DraftFormat } from "@/utils/formatResponse";
 
 
-export default function consultaDoc({params}){
+export default function ConsultaDocc({params}){
     const [preconsult, setPreconsult] = useState();
     const dispatch= useAppDispatch()
 
