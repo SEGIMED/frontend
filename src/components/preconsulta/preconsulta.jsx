@@ -66,7 +66,10 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   //   };
   // }, []);
 
-
+  useEffect(() => {
+  
+    fetchPatientDetail(patientId)
+  }, []);
 
   //util que necesito para el cuerpo
   const getValue = (formValue, preconsultValue) =>
@@ -464,10 +467,7 @@ const fetchPatientDetail = async (userId) => {
   }
 };
 
-useEffect(() => {
-  
-  fetchPatientDetail(patientId)
-}, []);
+
 
 
   return (
