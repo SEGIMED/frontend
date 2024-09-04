@@ -25,7 +25,7 @@ import SkeletonList from "@/components/skeletons/HistorialSkeleton"; // Asegúra
 export default function Estadisticas() {
   const lastSegmentTextToShow = PathnameShow();
   const dispatch = useAppDispatch();
-
+  const alarmsData = useAppSelector((state) => state.alarms);
   const [alarm, setAlarm] = useState({});
   const [dataGenre, setDataGenre] = useState({});
   const [activity, setActivity] = useState({});
@@ -35,17 +35,11 @@ export default function Estadisticas() {
 
   const getActivity = async (headers) => {
     try {
-      const response = await ApiSegimed.get(`/statistics-patient-activity`, headers);
+      const response = await ApiSegimed.get(
+        `/statistics-patient-activity`,
+        headers
+      );
       setActivity(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getAlarmsEstadistica = async (headers) => {
-    try {
-      const response = await ApiSegimed.get("alarms-by-patient", headers);
-      setAlarm(response.data.priorityCounts);
     } catch (error) {
       console.error(error);
     }
@@ -75,7 +69,6 @@ export default function Estadisticas() {
       const fetchData = async () => {
         await Promise.all([
           getActivity({ headers: { token } }),
-          getAlarmsEstadistica({ headers: { token } }),
           getGenreEstadistica({ headers: { token } }),
           generalEstadistica({ headers: { token } }),
         ]);
@@ -92,31 +85,63 @@ export default function Estadisticas() {
     }
 
     // Verifica si todos los valores en los datos son cero
-    return data.every(item => item.value === 0);
+    return data.every((item) => item.value === 0);
   };
   const dataGenres = [
-    { label: 'Femenino', value: dataGenre?.women, color: 'rgb(239, 43, 125)' },
-    { label: 'Masculino', value: dataGenre?.men, color: 'rgb(1, 167, 157)' },
+    { label: "Femenino", value: dataGenre?.women, color: "rgb(239, 43, 125)" },
+    { label: "Masculino", value: dataGenre?.men, color: "rgb(1, 167, 157)" },
   ];
 
   const dataActives = [
-    { label: 'Inactivos', value: activity?.inactivePatients, color: 'rgb(54, 162, 235)' },
-    { label: 'Activos', value: activity?.activePatients, color: 'rgb(112, 194, 71)' },
+    {
+      label: "Inactivos",
+      value: activity?.inactivePatients,
+      color: "rgb(54, 162, 235)",
+    },
+    {
+      label: "Activos",
+      value: activity?.activePatients,
+      color: "rgb(112, 194, 71)",
+    },
   ];
 
   const dataAlarmsLast24 = [
-    { label: "Sin responder", value: general?.last24hsAlarmStatistics?.activeAlarms, color: "rgb(231, 63, 63)" },
-    { label: "Respondidas", value: general?.last24hsAlarmStatistics?.solvedAlarms, color: "rgb(112, 194, 71)" }
+    {
+      label: "Sin responder",
+      value: general?.last24hsAlarmStatistics?.activeAlarms,
+      color: "rgb(231, 63, 63)",
+    },
+    {
+      label: "Respondidas",
+      value: general?.last24hsAlarmStatistics?.solvedAlarms,
+      color: "rgb(112, 194, 71)",
+    },
   ];
 
   const dataDeathLastYear = [
-    { label: "Fallecidos", value: general?.yearDeathRateStatistics?.dead, color: "rgb(231, 63, 63)" },
-    { label: "Pacientes totales", value: general?.yearDeathRateStatistics?.alive, color: "rgb(112, 194, 71)" }
+    {
+      label: "Fallecidos",
+      value: general?.yearDeathRateStatistics?.dead,
+      color: "rgb(231, 63, 63)",
+    },
+    {
+      label: "Pacientes totales",
+      value: general?.yearDeathRateStatistics?.alive,
+      color: "rgb(112, 194, 71)",
+    },
   ];
 
   const dataDeathLastMonth = [
-    { label: "Fallecidos", value: general?.monthDeathRateStatistics?.dead, color: "rgb(231, 63, 63)" },
-    { label: "Pacientes totales", value: general?.monthDeathRateStatistics?.alive, color: "rgb(112, 194, 71)" }
+    {
+      label: "Fallecidos",
+      value: general?.monthDeathRateStatistics?.dead,
+      color: "rgb(231, 63, 63)",
+    },
+    {
+      label: "Pacientes totales",
+      value: general?.monthDeathRateStatistics?.alive,
+      color: "rgb(112, 194, 71)",
+    },
   ];
 
   if (loading) {
@@ -131,7 +156,7 @@ export default function Estadisticas() {
     <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
       <div className="w-full flex-col md:flex-row flex  justify-center gap-4 md:gap-10">
-        <div className="w-full bg-white p-5 rounded-lg">
+        {/* <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
             <IconCurrentRouteNav className="w-4" />
             Alarmas activas
@@ -139,25 +164,37 @@ export default function Estadisticas() {
           <div className="flex items-center justify-center ">
             <div className="flex w-full mt-10 gap-2 md:gap-10">
               <div className="w-full text-small flex flex-col items-center">
-                <IconAlarmRed className={"w-20 md:w-40"}/>
-                <div className="text-xs md:text-lg whitespace-nowrap">prioridad alta</div>
-                <div className=" text-4xl  md:text-7xl">{alarm?.Alta}</div>
+                <IconAlarmRed className={"w-20 md:w-40"} />
+                <div className="text-xs md:text-lg whitespace-nowrap">
+                  Prioridad alta
+                </div>
+                <div className=" text-4xl  md:text-7xl">
+                  {alarmsData?.highAlarms}
+                </div>
               </div>
 
               <div className="w-full md:text-small flex flex-col items-center ">
                 <IconAlarmYellow className={"w-20 md:w-40"} />
-                <div className="text-xs md:text-lg whitespace-nowrap">prioridad media</div>
-                <div className=" text-4xl  md:text-7xl">{alarm?.Media}</div>
+                <div className="text-xs md:text-lg whitespace-nowrap">
+                  Prioridad media
+                </div>
+                <div className=" text-4xl  md:text-7xl">
+                  {alarmsData?.mediumAlarms}
+                </div>
               </div>
 
               <div className="w-full text-small flex flex-col items-center ">
-                <IconAlarmGreen className={"w-20 md:w-40"}/>
-                <div className="text-xs md:text-lg whitespace-nowrap">prioridad baja</div>
-                <div className="text-4xl  md:text-7xl">{alarm?.Baja}</div>
+                <IconAlarmGreen className={"w-20 md:w-40"} />
+                <div className="text-xs md:text-lg whitespace-nowrap">
+                  Prioridad baja
+                </div>
+                <div className="text-4xl  md:text-7xl">
+                  {alarmsData?.lowAlarms}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
             <IconCurrentRouteNav className="w-4" />
@@ -165,10 +202,15 @@ export default function Estadisticas() {
           </p>
           <div className="flex items-center  w-full min-h-56    md:h-[700px]  justify-center">
             {isEmptyData(dataActives) ? (
-              <div className="text-center text-gray-500">No hay información disponible</div>
+              <div className="text-center text-gray-500">
+                No hay información disponible
+              </div>
             ) : (
               <div className="md:w-full">
-                <GooglePieChart dataArray={dataActives} chartId="activity-chart" />
+                <GooglePieChart
+                  dataArray={dataActives}
+                  chartId="activity-chart"
+                />
               </div>
             )}
           </div>
@@ -183,10 +225,15 @@ export default function Estadisticas() {
           </p>
           <div className="flex  items-center w-full  min-h-56  md:h-[700px] justify-center">
             {isEmptyData(dataAlarmsLast24) ? (
-              <div className="text-center text-gray-500">No hay información disponible</div>
+              <div className="text-center text-gray-500">
+                No hay información disponible
+              </div>
             ) : (
               <div className="md:w-full h-full ">
-                <GooglePieChart dataArray={dataAlarmsLast24} chartId="alarm24-chart" />
+                <GooglePieChart
+                  dataArray={dataAlarmsLast24}
+                  chartId="alarm24-chart"
+                />
               </div>
             )}
           </div>
@@ -198,7 +245,9 @@ export default function Estadisticas() {
           </p>
           <div className="flex items-center   min-h-56   md:h-[700px]  justify-center">
             {isEmptyData(dataGenres) ? (
-              <div className="md:w-full text-center text-gray-500">No hay información disponible</div>
+              <div className="md:w-full text-center text-gray-500">
+                No hay información disponible
+              </div>
             ) : (
               <div className="md:w-full">
                 <GooglePieChart dataArray={dataGenres} chartId="genre-chart" />
@@ -216,10 +265,15 @@ export default function Estadisticas() {
           </p>
           <div className="flex items-center   md:h-[700px]  justify-center">
             {isEmptyData(dataDeathLastMonth) ? (
-              <div className="text-center text-gray-500">No hay información disponible</div>
+              <div className="text-center text-gray-500">
+                No hay información disponible
+              </div>
             ) : (
               <div className="md:w-full">
-                <GooglePieChart dataArray={dataDeathLastMonth} chartId="monthDeath-chart" />
+                <GooglePieChart
+                  dataArray={dataDeathLastMonth}
+                  chartId="monthDeath-chart"
+                />
               </div>
             )}
           </div>
@@ -231,10 +285,15 @@ export default function Estadisticas() {
           </p>
           <div className="flex items-center  w-full   md:h-[700px]  justify-center">
             {isEmptyData(dataDeathLastYear) ? (
-              <div className="text-center text-gray-500">No hay información disponible</div>
+              <div className="text-center text-gray-500">
+                No hay información disponible
+              </div>
             ) : (
               <div className="md:w-full">
-                <GooglePieChart dataArray={dataDeathLastYear} chartId="monthYear-chart" />
+                <GooglePieChart
+                  dataArray={dataDeathLastYear}
+                  chartId="monthYear-chart"
+                />
               </div>
             )}
           </div>

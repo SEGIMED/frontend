@@ -4,23 +4,13 @@ import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { setSearchTerm } from "@/redux/slices/doctor/allPatients";
 import rutas from "@/utils/rutas";
-import OptPteHistorial from "@/components/Buttons/optPteHistorial";
-
-import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
-import IconOrder from "@/components/icons/IconOrder";
-import IconFolder from "@/components/icons/iconFolder";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
-import PatientCardConsulta1 from "@/components/card/PatientCardNew";
 import { PathnameShow } from "@/components/pathname/path";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconCorazonMini from "@/components/icons/iconCorazon";
 import IconPersonalData from "@/components/icons/IconPersonalData";
 import ReviewModalApte from "@/components/modal/ReviewModalApte";
-import Ordenar from "@/components/Buttons/Ordenar";
-import NotFound from "@/components/notFound/notFound";
-import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import IconRegresar from "@/components/icons/iconRegresar";
 import IconOptions from "@/components/icons/IconOptions";
 import IconDelete from "@/components/icons/IconDelete";
@@ -93,7 +83,7 @@ export default function HomeDoc() {
       const diffB = Math.abs(new Date(b.scheduledStartTimestamp) - currentDate);
       return diffA - diffB;
     })
-    .filter((cita) => cita.schedulingStatus === 2);
+    .filter((cita) => cita.schedulingStatus === 2 && cita.IsApproved == true);
 
   const handleSortClick = () => {
     setIsSorted(!isSorted);
@@ -200,6 +190,7 @@ export default function HomeDoc() {
       <MenuDropDown
         label={"Mas"}
         icon={<IconOptions color="white" />}
+        className={"w-[40px] md:w-full lg:w-fit mx-auto"}
         categories={[
           {
             title: "Opciones",
@@ -237,14 +228,14 @@ export default function HomeDoc() {
           <h1 className="hidden font-bold md:text-xl md:block">Pasadas</h1>
           <div className="flex gap-3">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Teleconsultas
                 </p>
               </button>
             </Link> */}
             <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid bg-[#487FFA] border-2 ">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid bg-[#487FFA] border-2 ">
                 <IconRegresar />
                 <p className="text-sm font-bold leading-5 text-white text-start md:text-base">
                   Regresar

@@ -11,7 +11,7 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
 
 export default function InputExam({ title, subtitle , defaultOpen = false, diagnostico }) {
-
+    
     const { register } = useFormContext()
     const [isOpen, setIsOpen] = useState(defaultOpen);
     const [subsistemas, setSubsistemas] = useState(false); // Estado para manejar si hay dolor

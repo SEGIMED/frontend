@@ -22,7 +22,7 @@ export const CustomToolbar = ({ label, onNavigate, onView, view, title }) => {
   };
 
   return (
-    <div className={"flex flex-col rounded-xl gap-2 py-1 bg-white"}>
+    <div className={"flex flex-col rounded-lg gap-2 py-1 bg-white"}>
       <div className="flex justify-between items-center rounded-lg sm:px-10 py-1">
         <div className="space-x-1 md:space-x-4">
           <Elboton
@@ -35,7 +35,7 @@ export const CustomToolbar = ({ label, onNavigate, onView, view, title }) => {
         <div className="space-x-1 md:space-x-4">
           <button
             className={clsx(
-              "border border-[#DCDBDB] font-bold font-Roboto py-2 text-sm md:text-base px-2 md:px-4 rounded-xl transition duration-300",
+              "border border-[#DCDBDB] font-bold font-Roboto py-2 text-sm md:text-base px-2 md:px-4 rounded-lg transition duration-300",
               {
                 "bg-bluePrimary text-white": view === "day",
                 "bg-[#FAFAFC] text-[#5F5F5F]": view !== "day",
@@ -46,7 +46,7 @@ export const CustomToolbar = ({ label, onNavigate, onView, view, title }) => {
           </button>
           <button
             className={clsx(
-              "border border-[#DCDBDB] hidden lg:inline-block font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-xl transition duration-300",
+              "border border-[#DCDBDB] hidden lg:inline-block font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-lg transition duration-300",
               {
                 "bg-bluePrimary text-white": view === "week",
                 "bg-[#FAFAFC] text-[#5F5F5F]": view !== "week",
@@ -57,7 +57,7 @@ export const CustomToolbar = ({ label, onNavigate, onView, view, title }) => {
           </button>
           <button
             className={clsx(
-              "border  border-[#DCDBDB] font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-xl transition duration-300",
+              "border  border-[#DCDBDB] font-bold font-Roboto text-sm md:text-base py-2 px-2 md:px-4 rounded-lg transition duration-300",
               {
                 "bg-bluePrimary text-white": view === "month",
                 "bg-[#FAFAFC] text-[#5F5F5F]": view !== "month",

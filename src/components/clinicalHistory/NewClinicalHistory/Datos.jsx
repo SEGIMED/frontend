@@ -85,12 +85,12 @@ const Datos = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col">
+    <div className="min-h-screen w-full flex flex-col ">
       {isLoading ? (
         <SkeletonList count={13} />
       ) : (
         <>
-          <div className="w-full flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
+          <div className="w-full  flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
 
             <MenuDropDown
               label="Importar archivo"
@@ -175,7 +175,7 @@ const Datos = () => {
             </div>
           </div>
           <div className="flex flex-col overflow-y-auto">
-            <div className="flex flex-col md:flex-row md:gap-2 px-6 py-2 gap-2 border-b-[#cecece] bg-gray-100">
+            <div className="flex flex-col md:flex-row md:gap-2 px-6 py-2 gap-2 border-b-[#cecece] bg-[#FAFAFC]">
               <label className="text-start w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
                 <IconFatArrow /> Riesgo Cardiovascular
               </label>
@@ -199,7 +199,7 @@ const Datos = () => {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:gap-2 px-6 py-2 gap-2  border-b-[#cecece] bg-gray-100">
+            <div className="flex flex-col md:flex-row md:gap-2 px-6 py-2 gap-2  border-b-[#cecece] bg-[#FAFAFC]">
               <label className="text-start w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
                 <IconFatArrow /> Riesgo quirúrgico
               </label>

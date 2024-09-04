@@ -14,7 +14,7 @@ const FiltroDocPacientes = ({
     <div className="relative">
       <button
         onClick={toggleMenu}
-        className="flex items-center justify-center px-2 md:px-6 py-2 text-white bg-[#487FFA] rounded-xl gap-3 font-bold cursor-pointer">
+        className="flex items-center justify-center px-2 md:px-6 py-2 text-white bg-[#487FFA] rounded-lg gap-3 font-bold cursor-pointer">
         <IconFilter /> Filtrar
       </button>
       {isOpen && (

@@ -161,10 +161,10 @@ export default function HomeDoc() {
     };
 
     const handleSubmit = () => {
-        handleChange("patient", selectedOrden?.patientId);
-        handleChange("reqTypes", selectedOrden?.reqTypes);
-        handleChange("id", selectedOrden?.id);
-        router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`)
+        handleChange("patientId", selectedOrden?.patientId);
+        handleChange("orderTypes", selectedOrden?.reqTypes);
+        handleChange("requestPatientId", selectedOrden?.id);
+        router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true&type=${selectedOrden?.reqTypes}&&id=${selectedOrden?.patientId}`)
     };
 
 
@@ -182,6 +182,7 @@ export default function HomeDoc() {
                     nombre={"Regresar"}
                     size={"md"}
                     icon={<IconRegresar />}
+
                 />
 
 
@@ -265,10 +266,9 @@ export default function HomeDoc() {
                                                     {
                                                         label: "Responder solicitud",
                                                         onClick: () => {
-                                                            handleChange("patientId", paciente?.id);
+                                                            handleChange("requestPatientId", paciente?.id);
                                                             handleChange("reqTypes", paciente?.reqTypes);
-                                                            handleChange("id", paciente?.id);
-                                                            handleChange("message", paciente?.message); router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true`)
+                                                            router.push(`${rutas.Doctor}${rutas.Ordenes}${rutas.Generar}?Pendientes=true&type=${paciente?.reqTypes}&&id=${paciente?.patientId}`)
                                                         },
                                                         icon: <IconEditar color={"#B2B2B2"} />,
                                                     },
@@ -293,7 +293,7 @@ export default function HomeDoc() {
                 <button
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
+                    className="w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in-out transform active:scale-100  disabled:opacity-60">
                     <IconPrev /> Anterior
                 </button>
                 <p>
@@ -302,7 +302,7 @@ export default function HomeDoc() {
                 <button
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="  w-36 h-10 bg-white border border-[#D7D7D7] rounded-xl flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
+                    className="  w-36 h-10 bg-white border border-[#D7D7D7] rounded-lg flex items-center justify-center gap-4 transition duration-300 ease-in transform  active:scale-100  disabled:opacity-60">
                     Siguiente
                     <IconNext />
                 </button>

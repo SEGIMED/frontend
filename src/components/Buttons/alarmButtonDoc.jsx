@@ -19,7 +19,7 @@ const AlarmButtonDoc = ({ id, handleStatus }) => {
         trigger:
           "relative w-[60%] md:w-fit place-self-center md:place-self-end",
       }}>
-      <DropdownTrigger className="flex justify-center md:px-4 py-2 text-white rounded-xl md:gap-3 bg-[#487FFA] items-center cursor-pointer">
+      <DropdownTrigger className="flex justify-center md:px-4 py-2 text-white rounded-lg md:gap-3 bg-[#487FFA] items-center cursor-pointer">
         <div className="flex items-center md:gap-3">
           <IconOptions color="#FFFFFF" />
           <span className="hidden md:block font-semibold">Opciones</span>

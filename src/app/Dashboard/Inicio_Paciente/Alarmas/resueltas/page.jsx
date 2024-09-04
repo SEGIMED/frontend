@@ -24,14 +24,14 @@ export default function AlarmPte() {
     const headers = { headers: { token: token } };
     const response = await ApiSegimed.get(`/alarms-by-patient`, headers);
 
-    setAlarms(response.data.alarms);
+    setAlarms(response.data);
   };
 
   const router = useRouter();
   const myID = Cookies.get("c");
 
   const UnsolvedAlarmas = alarms.filter(
-    (alarm) => alarm.patient === Number(myId) && alarm.solved === true
+    (alarm) => alarm.patient.id === Number(myId) && alarm.solved === true
   );
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function AlarmPte() {
         {/* <Ordenar funcion={handleSortToggle} /> */}
         <div></div>
         {/* <button
-          className="flex items-center px-4 py-2 bg-white rounded-xl g text-[#487FFA] 
+          className="flex items-center px-4 py-2 bg-white rounded-lg g text-[#487FFA] 
                     font-bold border-solid border-[#487FFA] border-3"
           onClick={() => {
             router.push(`${rutas.PacienteDash}${rutas.Alarm}/resueltas`);
@@ -63,9 +63,9 @@ export default function AlarmPte() {
 
         <h1 className="font-bold gap-2 ml-2">Listado de Alarmas Resueltas</h1>
         <button
-          // className="flex items-center px-2 py-2 bg-white rounded-xl  text-[#487FFA]
+          // className="flex items-center px-2 py-2 bg-white rounded-lg  text-[#487FFA]
           //           font-bold border-solid border-[#487FFA] border-3"
-          className="flex items-center px-4 py-2 bg-blue-400 rounded-xl  text-white
+          className="flex items-center px-4 py-2 bg-blue-400 rounded-lg  text-white
           font-bold border-solid border-blue-4000 border-3"
           onClick={() => {
             router.push(`${rutas.PacienteDash}${rutas.Alarm}`);

@@ -1,35 +1,26 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { setSearchTerm } from "@/redux/slices/doctor/allPatients";
 import rutas from "@/utils/rutas";
-import OptPteHistorial from "@/components/Buttons/optPteHistorial";
-
-import FiltroDocPacientes from "@/components/Buttons/FiltrosDocPacientes";
-import IconOrder from "@/components/icons/IconOrder";
 import IconFolder from "@/components/icons/iconFolder";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import MensajeSkeleton from "@/components/skeletons/MensajeSkeleton";
-import PatientCardConsulta1 from "@/components/card/PatientCardNew";
 import { PathnameShow } from "@/components/pathname/path";
 import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconCorazonMini from "@/components/icons/iconCorazon";
 import IconPersonalData from "@/components/icons/IconPersonalData";
 import ReviewModalApte from "@/components/modal/ReviewModalApte";
-import Ordenar from "@/components/Buttons/Ordenar";
-import NotFound from "@/components/notFound/notFound";
-import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import IconOptions from "@/components/icons/IconOptions";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import IconDelete from "@/components/icons/IconDelete";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import DynamicTable from "@/components/table/DynamicTable";
-import IconConsulta from "@/components/icons/IconConsulta";
-import IconAccion from "@/components/icons/IconAccion";
 import { setSearchBar } from "@/redux/slices/user/searchBar";
+import IconCheckBoton from "@/components/icons/iconCheckBoton";
+import Elboton from "@/components/Buttons/Elboton";
+import IconSignoExclamacion from "@/components/icons/IconSignoExclamacion";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -76,6 +67,10 @@ export default function HomeDoc() {
     dispatch(setSearchTerm(""));
   }, [dispatch]);
 
+  const consultasToAprove = scheduledConsultas.filter(
+    (consulta) =>
+      consulta.IsApproved === false && consulta.schedulingStatus == 1
+  );
   //ordenamiento por fecha desde el front por ahora
   const sortedConsultas = [...scheduledConsultas]
     .sort((a, b) => {
@@ -93,10 +88,12 @@ export default function HomeDoc() {
     setSelectedPatientId(consulta?.patient);
   };
   const handleCokiePatient = (schedule, id, idEvent) => {
-    Cookies.set("patientId", id, { expires: 7 });
-    Cookies.set("medicalEventId", idEvent, { expires: 7 });
+    
+    Cookies.set("patientId", id);
+    Cookies.set("medicalEventId", idEvent);
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
   };
+
   const handleDeleteClick = (patient) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -108,42 +105,34 @@ export default function HomeDoc() {
     swalWithBootstrapButtons
       .fire({
         title:
-          "Eliminar consulta con el paciente: " +
+          "Cancelar consulta con el paciente: " +
           patient.patientUser.name +
           " " +
           patient.patientUser.lastname,
-        text: "Una vez eliminada no podrás recuperar esta informacion!",
+        text: "Una vez cancelada no podrás revertir esta acción",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Si, eliminar!",
-        cancelButtonText: "No, cancelar!",
+        confirmButtonText: "Si",
+        cancelButtonText: "No",
         reverseButtons: true,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
           // falta agregar el numero 5 de eliminado en el catalogo
-          const data = await ApiSegimed.patch(
+          await ApiSegimed.patch(
             `/schedule/${patient.id}`,
             { schedulingStatus: 5 },
             { headers: { token: token } }
           );
           swalWithBootstrapButtons.fire({
-            title: "Eliminado!",
+            title: "Cancelada!",
             text:
               "La consulta con el paciente: " +
               patient.patientUser.name +
               " " +
               patient.patientUser.lastname +
-              " ha sido eliminada.",
+              " ha sido cancelada.",
             icon: "success",
-          });
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelado",
-            icon: "error",
           });
         }
       });
@@ -189,23 +178,40 @@ export default function HomeDoc() {
                 onClick: () => handleReviewClick(row),
               },
               {
-                label: "Ver consultas",
+                label: "Ver consulta",
                 icon: <IconPersonalData />,
                 onClick: () =>
                   handleCokiePatient(row.id, row.patient, row.medicalEvent.id),
               },
               {
-                label: "Eliminar consulta",
+                label: "Cancelar consulta",
                 icon: <IconDelete color="#B2B2B2" />,
                 onClick: () => handleDeleteClick(row),
               },
-            ].filter(Boolean),
+            ],
           },
         ]}
         className={"w-[40px] md:w-full lg:w-fit mx-auto"}
       />
     );
   };
+
+  const PendientComponent = () => (
+    <div className="flex flex-row justify-between items-center">
+      <div className="flex items-center gap-4 px-1 lg:px-0">
+        <IconSignoExclamacion className={"w-8 lg:w-6"} />
+        <p className="text-redPrimary text-md lg:text-lg">
+          Tienes {consultasToAprove.length} consultas pendientes de aprobación
+        </p>
+      </div>
+      <Elboton
+        nombre={"Ver pendientes"}
+        href={`${rutas.Doctor}${rutas.Consultas}/Pendientes`}
+        className={"border-redPrimary border-1 bg-white"}
+        classNameText={"text-redPrimary px-1"}
+      />
+    </div>
+  );
 
   return (
     <div className="h-full text-[#686868] w-full flex flex-col overflow-y-auto md:overflow-y-hidden">
@@ -216,16 +222,16 @@ export default function HomeDoc() {
           <div></div>
 
           <h1 className="hidden font-bold md:text-xl md:block">Proximas</h1>
-          <div className="flex gap-3">
+          <div className="flex gap-3 pr-14">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Teleconsultas
                 </p>
               </button>
             </Link> */}
             <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <IconFolder className="hidden h-6 md:block" />
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Pasadas
@@ -239,6 +245,11 @@ export default function HomeDoc() {
           rows={sortedConsultas}
           renderDropDown={renderDropDown}
           showRisks={true}
+          textError={"No tiene consultas próximas"}
+          firstRowComponent={
+            consultasToAprove?.length > 0 && <PendientComponent />
+          }
+          loading={loading}
         />
         {isReviewModalOpen && (
           <ReviewModalApte

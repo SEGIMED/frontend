@@ -9,19 +9,19 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import { PathnameShow } from "@/components/pathname/path";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import NotFound from "@/components/notFound/notFound";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function AlarmHome() {
   const [activeAlarms, setActiveAlarms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const lastSegmentTextToShow = PathnameShow();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
 
   const getAlarms = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const activeAlarms = response?.data?.alarms?.filter(
-          (alarma) => !alarma.solved
-        );
+        const activeAlarms = response?.data?.filter((alarma) => !alarma.solved);
         setActiveAlarms(activeAlarms);
       }
     } catch (error) {
@@ -34,16 +34,16 @@ export default function AlarmHome() {
   useEffect(() => {
     const token = Cookies.get("a");
     if (token) {
-      getAlarms({ headers: { token: token } }).catch(console.error);
+      getAlarms().catch(console.error);
       const intervalId = setInterval(() => {
-        getAlarms({ headers: { token: token } }).catch(console.error);
-      }, 30000); // Polling every 30 seconds
+        getAlarms().catch(console.error);
+      }, 20000); // Polling every 30 seconds
 
       return () => clearInterval(intervalId); // Clean up interval on component unmount
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [alarmsData]);
 
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">
@@ -57,7 +57,7 @@ export default function AlarmHome() {
           </h1>
           <div className="flex gap-3">
             <Link href={`${rutas.Doctor}${rutas.Alarm}${rutas.resueltas}`}>
-              <button className="flex items-center px-6 py-2 bg-[#70C247] rounded-xl gap-3 text-white font-bold">
+              <button className="flex items-center px-6 py-2 bg-[#70C247] rounded-lg gap-3 text-white font-bold">
                 Ver resueltas
               </button>
             </Link>
@@ -66,25 +66,22 @@ export default function AlarmHome() {
         <div className="md:overflow-y-auto h-full">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
             <div className="w-[12%] md:w-[5%] md:block"></div>
-            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-6 py-2 z-10">
+            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-5 py-2 z-10">
               <p className="text-[#5F5F5F] hidden md:block">Prioridad</p>
-              <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Fecha</p>
+              <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Paciente</p>
-              <p className="text-[#5F5F5F] hidden md:block">HTP</p>
+              {/* <p className="text-[#5F5F5F] hidden md:block">HTP</p> */}
               <p className="text-[#5F5F5F] hidden md:block">Motivo de alarma</p>
             </div>
           </div>
           {isLoading ? (
             <SkeletonList count={10} />
-          ) : activeAlarms.length === 0 ? (
-            <NotFound
-              text="No tenes alarmas pendientes."
-              sizeText="w-[100%]"
-            />
+          ) : activeAlarms?.length === 0 ? (
+            <NotFound text="No tenes alarmas pendientes." sizeText="w-[100%]" />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
-              <TableAlarm pacientes={activeAlarms} />
+              <TableAlarm alarms={activeAlarms} />
             </div>
           )}
         </div>

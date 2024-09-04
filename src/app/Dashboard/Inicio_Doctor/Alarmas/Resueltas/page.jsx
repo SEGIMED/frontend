@@ -19,16 +19,7 @@ export default function HomeDoc() {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        const inactiveAlarms = response.data?.alarms
-          ?.filter((alarma) => alarma.solved === true)
-          .sort((a, b) => {
-            const priorityOrder = { Alta: 1, Media: 2, Baja: 3 };
-            return (
-              priorityOrder[a.highestPriority] -
-              priorityOrder[b.highestPriority]
-            );
-          });
-
+        const inactiveAlarms = response.data;
         setInactiveAlarms(inactiveAlarms);
       }
     } catch (error) {
@@ -39,10 +30,7 @@ export default function HomeDoc() {
   };
 
   useEffect(() => {
-    const token = Cookies.get("a");
-    if (token) {
-      getAlarms({ headers: { token: token } }).catch(console.error);
-    }
+    getAlarms().catch(console.error);
   }, []);
 
   return (
@@ -57,36 +45,32 @@ export default function HomeDoc() {
           </h1>
           <div className="flex gap-3">
             <Link href={`${rutas.Doctor}${rutas.Alarm}`}>
-              <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+              <button className="flex items-center px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">
                 <IconArrowLeft iconColor="white" />
                 Regresar
               </button>
             </Link>
           </div>
         </div>
-        <div className="md:overflow-y-auto h-full w-[100%]">
+        <div className="md:overflow-y-auto h-full">
           <div className="w-[100%] bg-white border-b border-b-[#cecece] flex">
-            <div className="w-[10%] md:w-[5%] md:block"></div>
-            <div className="grid w-[80%] md:w-[80%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-4 md:text-start md:grid-cols-6 py-2 z-10">
+            <div className="w-[12%] md:w-[5%] md:block"></div>
+            <div className="grid w-[70%] md:w-[75%] text-center items-center leading-6 text-base font-normal gap-3 grid-cols-3 md:text-start md:grid-cols-5 py-2 z-10">
               <p className="text-[#5F5F5F] hidden md:block">Prioridad</p>
-              <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Fecha</p>
+              <p className="text-[#5F5F5F]">Hora</p>
               <p className="text-[#5F5F5F]">Paciente</p>
-              <p className="text-[#5F5F5F] hidden md:block">HTP</p>
+              {/* <p className="text-[#5F5F5F] hidden md:block">HTP</p> */}
               <p className="text-[#5F5F5F] hidden md:block">Motivo de alarma</p>
-              {/* <p className="text-[#5F5F5F] justify-center ">Tiempo de respuesta</p> */}
             </div>
           </div>
           {isLoading ? (
             <SkeletonList count={10} />
-          ) : inactiveAlarms.length === 0 ? (
-            <NotFound
-              text="No tenes alarmas resueltas."
-              sizeText="w-[100%]"
-            />
+          ) : inactiveAlarms?.length === 0 ? (
+            <NotFound text="No tenes alarmas pendientes." sizeText="w-[100%]" />
           ) : (
             <div className="items-start justify-center w-full md:overflow-y-auto">
-              <TableAlarmResueltas pacientes={inactiveAlarms} />
+              <TableAlarmResueltas alarms={inactiveAlarms} />
             </div>
           )}
         </div>

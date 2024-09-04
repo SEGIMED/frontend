@@ -26,6 +26,7 @@ export function mapSchedules(appointments) {
       start: dayjs(appointment.scheduledStartTimestamp).toDate(),
       end: dayjs(appointment.scheduledEndTimestamp).toDate(),
       title: `${appointment.patientUser.name} ${appointment.patientUser.lastname}`,
+      ...appointment,
     }));
 
   return citas;

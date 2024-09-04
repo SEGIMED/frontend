@@ -20,23 +20,23 @@ export default function HistorialDeCitas(userId) {
         return <div>Cargando...</div>;
     }
 
-    
-   
+
+
     const getPacienteById = (userId) => {
         return pacientes.find((paciente) => paciente.id === parseInt(userId));
     };
 
     const paciente = getPacienteById(id);
-    
+
 
     return (
         <div className="h-full w-full flex flex-col">
             <div className="flex justify-between border-b border-b-[#cecece] px-6 py-2">
-                <button className="flex px-6 py-2 text-white bg-[#487FFA]  rounded-xl gap-1 items-center  ">
+                <button className="flex px-6 py-2 text-white bg-[#487FFA]  rounded-lg gap-1 items-center  ">
                     <Image src={filtrar} alt="" />
                     <p className="text-start font-bold text-base leading-5">Filtrar</p>
                 </button>
-                <button className="flex px-6 py-2 text-white bg-[#487FFA]  rounded-xl gap-1 items-center ">
+                <button className="flex px-6 py-2 text-white bg-[#487FFA]  rounded-lg gap-1 items-center ">
                     <p className="text-start  font-bold text-base leading-5">Ordenar</p>
                     <Image src={ordenar} alt="" />
                 </button>
@@ -52,7 +52,7 @@ export default function HistorialDeCitas(userId) {
                         <p className="text-start text-[#686868] font-normal text-base leading-6">{paciente.last_login}</p>
                     </div>
                     <details className="dropdown ">
-                        <summary className="flex px-6 py-2  text-white bg-[#487FFA]  rounded-xl gap-1 items-center cursor-pointer ">
+                        <summary className="flex px-6 py-2  text-white bg-[#487FFA]  rounded-lg gap-1 items-center cursor-pointer ">
                             <Image src={opciones} alt="" />
                             <p className="text-start font-bold text-base leading-5 ">Opciones</p>
                         </summary>

@@ -190,7 +190,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
     } else {
       const infoSend = mapBoolean(formStateGlobal);
       try {
-        const response = await ApiSegimed.patch(
+        await ApiSegimed.patch(
           `/onboarding?tipo=${rol === "Médico" ? 2 : 3}&id=${user.userId}`,
           // `/onboarding?tipo=2&id=15`,
           infoSend
