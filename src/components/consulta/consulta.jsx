@@ -368,13 +368,13 @@ console.log(patient)
     });
     
 
-    if (medicalEventExist?.physicalExaminations[0]?.id) {
-      setPhysicalExaminationPatch({
-        physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
-        description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-        id: Number(medicalEventExist.physicalExaminations[0].id),
-      });
-    }
+    // if (medicalEventExist?.physicalExaminations[0]?.id) {
+    //   setPhysicalExaminationPatch({
+    //     physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
+    //     description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
+    //     id: Number(medicalEventExist.physicalExaminations[0].id),
+    //   });
+    // }
     if (
       data["Diagnostico"] !== "" &&
       data["medications"] !== "" &&
@@ -402,37 +402,37 @@ console.log(patient)
       });
     }
 
-    setDiagnosticPatch(
-      //diagnosticPatch
-      {
-        id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
-        diseaseId: 3,
-        diagnosticNotes:
-          data["Diagnostico"] !== ""
-            ? data["Diagnostico"]
-            : medicalEventExist?.diagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
-        medicalEventId: Number(medicalEventId),
-        drugId: null,
-        drugName:
-          data["medications"] !== ""
-            ? data["medications"]
-            : medicalEventExist?.drugPrescriptions || "", // Si está vacío, usa el valor de la receta existente
-        quantityDrug: null,
-        medicalProcedureId: null,
-        medicalProcedureName:
-          data["Procedimientos"] !== ""
-            ? data["Procedimientos"]
-            : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
-              null, // Usa el valor del procedimiento existente si está vacío
-        therapyId: null,
-        therapyDescription:
-          data["Conducta terapeutica"] !== ""
-            ? data["Conducta terapeutica"]
-            : medicalEventExist?.TherapyPrescription || null, // Usa la terapia existente si está vacío
-        quantityTherapy: null,
-        descriptionIndication: "Tratamientos no farmacológicos",
-      }
-    );
+    // setDiagnosticPatch(
+    //   //diagnosticPatch
+    //   {
+    //     id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
+    //     diseaseId: 3,
+    //     diagnosticNotes:
+    //       data["Diagnostico"] !== ""
+    //         ? data["Diagnostico"]
+    //         : medicalEventExist?.diagnostics[0]?.diagnosticNotes || "", // Si está vacío, usa el valor del diagnóstico existente
+    //     medicalEventId: Number(medicalEventId),
+    //     drugId: null,
+    //     drugName:
+    //       data["medications"] !== ""
+    //         ? data["medications"]
+    //         : medicalEventExist?.drugPrescriptions || "", // Si está vacío, usa el valor de la receta existente
+    //     quantityDrug: null,
+    //     medicalProcedureId: null,
+    //     medicalProcedureName:
+    //       data["Procedimientos"] !== ""
+    //         ? data["Procedimientos"]
+    //         : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
+    //           null, // Usa el valor del procedimiento existente si está vacío
+    //     therapyId: null,
+    //     therapyDescription:
+    //       data["Conducta terapeutica"] !== ""
+    //         ? data["Conducta terapeutica"]
+    //         : medicalEventExist?.TherapyPrescription || null, // Usa la terapia existente si está vacío
+    //     quantityTherapy: null,
+    //     descriptionIndication: "Tratamientos no farmacológicos",
+    //   }
+    // );
 
 
     // patch medical event
@@ -583,15 +583,15 @@ const anamnesisCompleto = async () => {
 
 const handleDiagnostic= async ()=>{
   try {
-    const data={
-      ...necesaryData,
-      chiefOf
-    }
+    // const data={
+    //   ...necesaryData,
+    //   chiefOf
+    // }
 
     console.log(diagnostic)
     const response=  postPatientDiagnostic(diagnostic)
     console.log(response.data)
-    const response2= patchPreconsultation(data)
+    // const response2= patchPreconsultation(data)
   } catch (error) {
     console.error(error.message)
   }

@@ -5,9 +5,9 @@ export default async function postPatientDiagnostic(data) {
     try {
         console.log(data)
         const response = await ApiSegimed.post(`/patient-diagnostic`, data)
-        console.log(response)
+        console.log(response.data)
     } catch (error) {
         console.error(error.message)
-        
+
     }
 }
