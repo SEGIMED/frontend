@@ -12,24 +12,32 @@ import {
   updateActive, subquestionSelectedOption, questionSelectedOption, updateDescription, updateVitalSign, updateAnamnesis, updateTratamiento, updateBodyPainLevel, updateGlycemia, updateLastGlycemia, updateAllFormData, updateFileUploaded, updateTestDescription, updateTestActive, updateTestSelectedOption, resetFormData,
 } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-
+import InputConsulta from "../consulta/inputconsulta";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import Cookies from "js-cookie";
 
 import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
-
+import postPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBackgrounds";
+import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 import SignosVitalesInfo from "../consulta/signosvitales";
 
-export default function PreconsultaPte({params, preconsult}) {
+
+export default function PreconsultaPte({params, preconsult, schedule}) {
   const dispatch = useAppDispatch();
   const scheduleId =Number(params)
   const token = Cookies.get("a");
-  const patientId = Cookies.get("c");
+  const patientId = Number(Cookies.get("c"));
+  const medicalEventId= schedule?.medicalEvent?.id
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
+  const [background, setBackground]= useState()
+  const [anamnesis, setAnamnesis]= useState()
+  const [patient, setPatient]=useState()
+
+  console.log(schedule)
 
 
 
@@ -43,83 +51,7 @@ export default function PreconsultaPte({params, preconsult}) {
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
   console.log(preconsult)
   console.log(formData)
-  const [tests, setTests] = useState({
-    laboratoryResults: {
-      title: "Resultados de laboratorio",
-      file: null,
-      description: "",
-      active: null,
-    },
-    electrocardiogram: {
-      title: "Electrocardiograma",
-      file: null,
-      description: "",
-      active: null,
-    },
-    rxThorax: {
-      title: "RX de Torax",
-      file: null,
-      description: "",
-      active: null,
-    },
-    echocardiogram: {
-      title: "Ecocardiograma",
-      file: null,
-      description: "",
-      active: null,
-    },
-    walkTest: {
-      title: "Test de caminata",
-      file: null,
-      description: "",
-      active: null,
-    },
-    respiratoryFunctional: {
-      title: "Funcional respiratorio",
-      file: null,
-      description: "",
-      active: null,
-    },
-    tomographies: {
-      title: "Tomografías",
-      file: null,
-      description: "",
-      active: null,
-    },
-    rightHeartCatheterization: {
-      title: "Cateterismo cardiaco derecho",
-      file: null,
-      description: "",
-      active: null,
-    },
-    ccg: {
-      title: "CCG (Coronariografia)",
-      file: null,
-      description: "",
-      active: null,
-    },
-    resonance: {
-      title: "Resonancia",
-      file: null,
-      description: "",
-      active: null,
-    },
-    leftHeartCatheterization: {
-      title: "Cateterismo cardiaco izquierdo",
-      file: null,
-      description: "",
-      active: null,
-    },
-    otherStudies: {
-      title: "Otros estudios",
-      file: null,
-      description: "",
-    },
-    pendingStudies: {
-      title: "Estudios pendientes",
-      description: "",
-    },
-  });
+  
 
   
 
@@ -261,7 +193,11 @@ export default function PreconsultaPte({params, preconsult}) {
     //   : null,
     // updateVitalSigns: vitalSignFormat,
     // painRecordsToUpdate
-    // painRecordsToUpdate: [bodyOBJFormat],
+    painRecordsToUpdate: [bodyOBJFormat],
+    ...anamnesis,
+    updateVitalSigns:
+    vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+  ...glicemiaPreconsult,
   };
 
   const handleSubmit = async (event) => {
@@ -281,6 +217,7 @@ export default function PreconsultaPte({params, preconsult}) {
         });
         console.log({ resupuestaCreate: response.data });
       }
+
 
       // if (!bodyForm) {
       //   console.error("No form data to submit");
@@ -351,46 +288,7 @@ export default function PreconsultaPte({params, preconsult}) {
 
  
 
-  const handleAnamnesis = (field, description) => {
-    dispatch(updateAnamnesis({ field, description })); // actualizamos la descripción de la anamnesis en el estado global
-  };
-
-  const handleUploadTestFile = (test, file) => {
-    const studies = tests;
-    // dispatch(updateFileUploaded({ test, file }));
-    setTests({ ...studies, [test]: { ...studies[test], file: file } });
-  };
-
-  const handleTestDescription = (test, testDescription) => {
-    // almacenamos la descripción del estudio
-    dispatch(updateTestDescription({ test, testDescription }));
-    const studies = tests;
-    setTests({
-      ...studies,
-      [test]: { ...studies[test], description: testDescription },
-    });
-  };
-
-  const handleTestActive = (test, active) => {
-    // para los campos binarios
-    dispatch(updateTestActive({ test, active }));
-    const studies = tests;
-    setTests({ ...studies, [test]: { ...studies[test], active: active } });
-  };
-
-  const handleTestSelectedOption = (test, value) => {
-    dispatch(updateTestSelectedOption({ test, value }));
-    const studies = tests;
-    setTests({
-      ...studies,
-      [test]: { ...studies[test], selectedOption: value },
-    });
-  };
-
-  const handleTratamientoDescription = (field, item, description) => {
-    dispatch(updateTratamiento({ field, item, description })); // almacenamos los distintos tratamientos en el estado global
-  };
-
+  
   const handleBodyChange = (name, value) => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
@@ -472,7 +370,7 @@ export default function PreconsultaPte({params, preconsult}) {
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
-    console.log("aca se guardan los signos vitales", updateVitalSigns )
+    
     setVitalSignsPreconsult(updateVitalSigns);
     setGlicemiaPreconsult({
       lastAbnormalGlycemia:
@@ -480,7 +378,58 @@ export default function PreconsultaPte({params, preconsult}) {
           ? preconsult?.lastAbnormalGlycemia
           : data["lastAbnormalGlycemia"],
     })
+
+    setBackground({
+      patientId: Number(patientId),
+      medicalEventId: Number(medicalEventId),
+      schedulingId: Number(scheduleId),
+      allergicBackground: data["Alergias"] === "" ? "" : data["Alergias"],
+      familyBackground:
+        data["Antecedentes familiares"] === ""
+          ? ""
+          : data["Antecedentes familiares"],
+      nonPathologicBackground:
+        data["Antecedentes no patologicos"] === ""
+          ? ""
+          : data["Antecedentes no patologicos"],
+      pathologicBackground:
+        data["Antecedentes patologicos"] === ""
+          ? ""
+          : data["Antecedentes patologicos"],
+      pediatricBackground:
+        data["Antecedentes de infancia"] === ""
+          ? ""
+          : data["Antecedentes de infancia"],
+      pharmacologicalBackground:
+        data["Medicación actual"] === "" ? "" : data["Medicación actual"],
+      surgicalBackground:
+        data["Antecedentes quirúrgicos"] === ""
+          ? ""
+          : data["Antecedentes quirúrgicos"],
+      vaccinationBackground: data["Vacunas"] === "" ? "" : data["Vacunas"],
+      
+    });
+    setAnamnesis({
+      //anamnesis sin evolucion de la enfermedad
+      consultationReason:
+        data["Motivo de consulta"] === ""
+          ? preconsult?.consultationReason
+          : data["Motivo de consulta"],
+      importantSymptoms:
+        data["Sintomas importantes"] === ""
+          ? preconsult?.importantSymptoms
+          : data["Sintomas importantes"],
+    });
+
   }
+  const necesaryData= {
+    // ids
+   preconsultationId: Number(preconsult?.id),
+   patient: Number(patientId),
+   appointmentSchedule: Number(scheduleId),
+   // status
+   status: "sent"
+    }
 
   const handleSaveVitalSigns = async ()=>{
     try {
@@ -503,7 +452,51 @@ export default function PreconsultaPte({params, preconsult}) {
     }
   }
 
+  const handleBackgroundSave = async () => {
+    try {
+      console.log(background)
+        const response = await postPatientBackgrounds(background);
+        console.log(response);
+    } catch (error) {
+        console.error('Error saving background:', error);
+    }
+};
+  const handleAnamnesisSave = async () => {
+    try {
+        const data = {
+            ...necesaryData,
+            ...anamnesis
+        };
+        const response = await patchPreconsultation(data);
+        console.log("esto es anamnesis", response.data);
+    } catch (error) {
+        console.error('Error saving anamnesis:', error);
+    }
+};
+
+
+
+  const anamnesisCompleto = async () => {
+    await handleBackgroundSave();
+    await handleAnamnesisSave();
+   
+};
+const fetchPatientDetail = async (userId) => {
+  try {
+    console.log(userId)
+    const response= await getPatientDetail(userId)
+    setPatient(response);
+  } catch (error) {
+    console.log("No existe este paciente", error);
+  }
+};
+
+useEffect(() => {
   
+  fetchPatientDetail(patientId)
+}, []);
+console.log(background)  
+console.log(patient)
 
   return (
     <FormProvider {...methods}>
@@ -562,7 +555,41 @@ export default function PreconsultaPte({params, preconsult}) {
               defaultOpen
               valuePreconsultation={preconsult}
             />
-
+              <InputConsulta
+            title={"Anamnesis"}
+            subtitle={[
+              "Motivo de consulta",
+              "Sintomas importantes",
+            ]}
+            preconsult={preconsult}
+           
+            defaultOpen
+            />
+             <InputConsulta
+            title={"Antecedentes"}
+           
+            subtitle={[
+              "Antecedentes quirúrgicos",
+              "Antecedentes patologicos",
+              "Antecedentes no patologicos",
+              "Antecedentes familiares",
+              "Antecedentes de infancia",
+              "Medicación actual",
+              "Alergias",
+              "Vacunas",
+            ]}
+            defaultOpen
+            paciente={patient}
+            />
+             <div className="flex justify-center p-6 bg-[#fafafc]">
+            <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar/>}
+            onPress={anamnesisCompleto}
+            size={"sm"}
+            className={"bg-greenPrimary w-40 text-sm font-bold"}
+            />
+            </div>
 
         </form>
         <div className="flex justify-center p-6 bg-[#fafafc]">

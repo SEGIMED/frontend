@@ -6,11 +6,12 @@ import { FormDataUtil } from "@/utils/preconsultaFormato";
 import { setFormData } from "@/redux/slices/user/preconsultaFormSlice";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
 import { draftFormat } from "@/utils/formatResponse";
+import getSchedule from "@/utils/dataFetching/fetching/getSchedule";
 
 export default function PrePte({ params }) {
   const dispatch = useAppDispatch();
   const [preconsult, setPreconsult] = useState(null);
-
+  const [schedule, setSchedule]=useState()
   // Función para obtener la preconsulta desde el servidor
   const fetchPreconsultation = async (scheduleId) => {
     try {
@@ -28,18 +29,29 @@ export default function PrePte({ params }) {
       console.error("Este agendamiento no tiene preconsulta", error);
     }
   };
+  const fetchSchedule= async (scheduleId)=>{
+    try {
+        const response= await getSchedule(scheduleId)
+        console.log(response.data, "schedule")
+        if (response.data) setSchedule(response.data[0])
+    } catch (error) {
+        console.error(error.message)
+    }
+  }
+
 
   // Se ejecuta solo al cargar el componente
   useEffect(() => {
     fetchPreconsultation(Number(params.id));
+    fetchSchedule(Number(params.id));
   }, []);
 
   
  
-
+  console.log(preconsult)
   return (
     <>
-      <PreconsultaPte params={Number(params.id)} preconsult={preconsult} />
+      <PreconsultaPte params={Number(params.id)} preconsult={preconsult} schedule={schedule} />
     </>
   );
 }
