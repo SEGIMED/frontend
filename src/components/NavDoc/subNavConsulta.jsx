@@ -17,7 +17,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-  
+
 } from "@nextui-org/react";
 
 export default function SubNavbarConsulta({ id, handleClic }) {
@@ -71,7 +71,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
               <IconSubNavbar /> Antecedentes
             </div>
           </NavbarItem>
-          
+
           <NavbarItem
             className={getLinkClass(rutas.Anamnesis)}
             onClick={() =>
@@ -111,7 +111,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-              <DropdownItem
+                <DropdownItem
                   className={getLinkClass(rutas.ExamenFisico)}
                   key="new">
                   <div
@@ -119,7 +119,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
                     onClick={() =>
                       handleClic("exploracion fisica")
                     }
-                    >
+                  >
                     <p>Exploración fisica</p>
                   </div>
                 </DropdownItem>
@@ -131,7 +131,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
                     onClick={() =>
                       handleClic("examen fisico")
                     }>
-                    
+
                     <p>Examen Fisico</p>
                   </div>
                 </DropdownItem>
@@ -173,7 +173,7 @@ export default function SubNavbarConsulta({ id, handleClic }) {
         </NavbarContent>
       </Navbar>
       <Link href={`${rutas.Doctor}/${rutas.Consultas}`}>
-        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-xl gap-3 text-white font-bold">
+        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">
           <IconRegresar />
           <p className="hidden md:block">Regresar</p>
         </button>

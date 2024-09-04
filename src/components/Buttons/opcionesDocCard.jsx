@@ -13,7 +13,7 @@ export default function OpcionesDocCard({
 }) {
   return (
     <details className="relative">
-      <summary className="flex justify-center px-6 py-2 text-white bg-[#487FFA] rounded-xl gap-3 items-center cursor-pointer">
+      <summary className="flex justify-center px-6 py-2 text-white bg-[#487FFA] rounded-lg gap-3 items-center cursor-pointer">
         <IconOptions color="#FFFFFF" />
         <p className="text-white font-bold">Opciones</p>
       </summary>

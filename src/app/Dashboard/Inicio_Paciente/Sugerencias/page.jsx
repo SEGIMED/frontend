@@ -54,7 +54,7 @@ export default function HomePte() {
   };
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col h-full bg-[#FAFAFC] ">
       <div className="flex flex-col items-center justify-start md:m-auto w-full px-4 md:px-40">
         <div className="pt-4 md:pt-10">
           <p className="text-center text-[#333333] font-semibold text-2xl leading-7 mb-7">

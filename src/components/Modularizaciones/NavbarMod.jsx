@@ -29,6 +29,7 @@ import MensajesContainer from "../InicioPaciente/mensajes/MensajesContainer";
 import rutas from "@/utils/rutas";
 import IconMail from "../icons/iconMail";
 import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
+import { IconChat } from "../InicioPaciente/IconChat";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -209,7 +210,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
-          if (mensaje.state === false && mensaje.sender.userId != userId) {
+          if (mensaje.state === false && mensaje.sender?.userId != userId) {
             cantidadMensajes++;
           }
         });
@@ -295,6 +296,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           <p>Mi Agenda</p>
         ) : lastSegment === "Doctores" ? (
           <p>Médicos</p>
+        ) : lastSegment === "crearMensaje" ? (
+          <p>Crear Mensaje</p>
         ) : IsEvent ? (
           <p>Evento</p>
         ) : IsMessage ? (
@@ -307,12 +310,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       </div>
       {showSearch && (
         <div
-          className={`hidden md:flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
+          className={`hidden md:flex justify-between w-[20rem] items-center gap-2 border bg-white border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar "
-            className="text-start text-[#808080] bg-[#FAFAFC] font-normal text-normal leading-6 outline-none"
+            className="text-start text-[#808080]  font-normal text-normal leading-6 outline-none"
             value={searchTerm}
           />
           <button>
@@ -343,12 +346,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
             (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
           }`}>
-          <IconMail
+          <IconChat
             className="w-6 h-6"
-            color={(showChats || hasUnreadMessages) && "white"}
+            color={showChats || hasUnreadMessages ? "white" : "#808080"}
           />
         </button>
         {showChats && (
@@ -360,7 +363,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
             (showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
           }`}>

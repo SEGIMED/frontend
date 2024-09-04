@@ -102,7 +102,7 @@ const AlarmSelector = () => {
       <div className=" flex justify-between border-b border-b-[#cecece] px-4 py-2 bg-white sticky top-0 z-10 lg:z-50">
         <button
           type="button"
-          className="flex md:px-6 px-4 py-2 rounded-xl gap-1 items-center bg-[#487FFA]"
+          className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
           onClick={() => {
             router.push(`${rutas.PacienteDash}${rutas.Alarm}`);
           }}>
@@ -117,7 +117,7 @@ const AlarmSelector = () => {
         </p>
         <button
           type="submit"
-          className="flex items-center px-4 md:px-6 py-2 bg-[#70C247] rounded-xl gap-3 text-white font-bold">
+          className="flex items-center px-4 md:px-6 py-2 bg-[#70C247] rounded-lg gap-3 text-white font-bold">
           Enviar <IconArrowRight />
         </button>
       </div>

@@ -89,9 +89,8 @@ export default function MensajesDoc() {
       <img
         src={img || avatar}
         alt=""
-        className={`w-12 h-12 object-cover rounded-3xl ${
-          role === "Paciente" ? "cursor-pointer" : ""
-        }`}
+        className={`w-12 h-12 object-cover rounded-3xl ${role === "Paciente" ? "cursor-pointer" : ""
+          }`}
         onClick={role === "Paciente" ? handleClick : undefined}
       />
     );
@@ -154,11 +153,10 @@ export default function MensajesDoc() {
           <Elboton
             onPress={() => handleViewMessages(chat)}
             nombre={"Mensajes"}
-            size={"sm"}
+
             icon={<IconMensajeBoton />}
-            className={`text-[#FFFFFF] font-Roboto font-bold rounded-lg ${
-              counterM(chat.messages) > 0 ? "bg-bluePrimary" : "bg-gray-400"
-            }`}
+            className={`text-[#FFFFFF] h-11 font-Roboto font-bold rounded-lg ${counterM(chat.messages) > 0 ? "bg-bluePrimary" : "bg-gray-400"
+              }`}
           />
         </div>
       </div>

@@ -64,8 +64,8 @@ export default function HomeDoc() {
   // Ordenar pacientes si es necesario
   const sortedPatients = isSorted
     ? [...filteredPatients].sort((a, b) =>
-        a.patientUser.name.localeCompare(b.patientUser.name)
-      )
+      a.patientUser.name.localeCompare(b.patientUser.name)
+    )
     : filteredPatients;
 
   const handleSortClick = () => {
@@ -98,14 +98,14 @@ export default function HomeDoc() {
           <div className="flex gap-3">
             <Link
               href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Teleconsultas
                 </p>
               </button>
             </Link>
             <Link href={`${rutas.Doctor}${rutas.Historial}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <IconFolder className="h-6 hidden md:block" />
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Regresar

@@ -175,13 +175,10 @@ function DynamicTable({
             {columns.map((column, index) => (
               <th
                 key={index}
-                className={`${
-                  index == 0 && !showRisks && !showHistoryIcon && "lg:pl-[3%]"
-                } lg:px-2 font-normal py-2 lg:text-left text-center ${
-                  column.showMobile ? "table-cell" : "hidden md:table-cell"
-                }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${
-                  column.width
-                }`}>
+                className={`${index == 0 && !showRisks && !showHistoryIcon && "lg:pl-[3%]"
+                  } lg:px-2 font-normal py-2 lg:text-left text-center ${column.showMobile ? "table-cell" : "hidden md:table-cell"
+                  }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${column.width
+                  }`}>
                 {column.label}
               </th>
             ))}
@@ -201,9 +198,8 @@ function DynamicTable({
             filteredRows?.map((row, rowIndex) => (
               <Fragment key={rowIndex}>
                 <tr
-                  className={`hover:bg-gray-100 ${
-                    clickable ? "cursor-pointer" : "cursor-default"
-                  } border-b-[1px] border-b-[#D7D7D7] `}
+                  className={`hover:bg-gray-100 ${clickable ? "cursor-pointer" : "cursor-default"
+                    } border-b-[1px] border-b-[#D7D7D7] `}
                   onClick={() => handleRowClick(rowIndex)}>
                   {showRisks && (
                     <td className="py-2 lg:pl-[2%] w-[10px] max-w-[10px] hidden md:table-cell">
@@ -218,37 +214,35 @@ function DynamicTable({
                   {columns.map((column, colIndex) => (
                     <td
                       key={colIndex}
-                      className={`${
-                        colIndex === 0 &&
+                      className={`${colIndex === 0 &&
                         !showRisks &&
                         !showHistoryIcon &&
                         "lg:pl-[2%]"
-                      }  lg:px-[2%] py-2 text-[#686868] whitespace-normal ${
-                        column.showMobile
+                        }  lg:px-[2%] py-2 text-[#686868] whitespace-normal ${column.showMobile
                           ? "table-cell"
                           : "hidden md:table-cell"
-                      }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
+                        }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
                       {column.key === "patientUser.name"
                         ? formatPatientName(row)
                         : column.key === "healthCenter"
-                        ? healthCenterSwitch(row[column.key])
-                        : column.label === "Especialidad"
-                        ? specialitySwitch(row[column.key])
-                        : column.key === "patientPulmonaryHypertensionRisks"
-                        ? renderPatientPulmonaryRisk(row)
-                        : column.key == "isPriority"
-                        ? formatTypeInterconsult(row[column.key])
-                        : column.label === "Fecha"
-                        ? formatDate(row[column.key])
-                        : column.label === "Hora"
-                        ? formatHour(row[column.key])
-                        : column.key == "IsApproved"
-                        ? formatIsApproved(row[column.key])
-                        : column.key?.includes(".")
-                        ? column.key
-                            .split(".")
-                            .reduce((acc, part) => acc && acc[part], row)
-                        : row[column.key]}
+                          ? healthCenterSwitch(row[column.key])
+                          : column.label === "Especialidad"
+                            ? specialitySwitch(row[column.key])
+                            : column.key === "patientPulmonaryHypertensionRisks"
+                              ? renderPatientPulmonaryRisk(row)
+                              : column.key == "isPriority"
+                                ? formatTypeInterconsult(row[column.key])
+                                : column.label === "Fecha"
+                                  ? formatDate(row[column.key])
+                                  : column.label === "Hora"
+                                    ? formatHour(row[column.key])
+                                    : column.key == "IsApproved"
+                                      ? formatIsApproved(row[column.key])
+                                      : column.key?.includes(".")
+                                        ? column.key
+                                          .split(".")
+                                          .reduce((acc, part) => acc && acc[part], row)
+                                        : row[column.key]}
                     </td>
                   ))}
                   {renderDropDown && (

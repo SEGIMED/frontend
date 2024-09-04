@@ -23,6 +23,7 @@ import IconNext from "@/components/icons/IconNext";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Agenda from "@/components/agenda/Agenda";
+import IconPendientes from "@/components/icons/IconPendientes";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -31,6 +32,7 @@ export default function HomeDoc() {
   const [currentTitle, setCurrentTitle] = useState(0);
   const [barChartData, setBarChartData] = useState(null);
   const [activeData, setActiveData] = useState(null);
+  const [alarmsData, setAlarmsData] = useState(null);
   const dataAlarms = useAppSelector((state) => state.alarms);
   const dataPtesGrafic = useAppSelector((state) => state.activePtes);
   const getSchedulesByUserId = async () => {
@@ -129,23 +131,24 @@ export default function HomeDoc() {
         </Link>
 
         <Link
-          href={`${rutas.Doctor}${rutas.Historial}`}
+          href={`${rutas.Doctor}${rutas.Ordenes}`}
           className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
-            <IconDashAgenda className="w-[25%] md:w-14" />
+            <IconHomeCitas className="w-[20%] md:w-12" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
-              <span>Consultas</span>
+              <span>Ordenes </span>
+              <span>médicas </span>
             </div>
           </div>
         </Link>
 
         <Link
-          href={`${rutas.Doctor}${rutas.Estadisticas}`}
+          href={`${rutas.Doctor}${rutas.Pendientes}`}
           className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
-            <IconHomeCitas className="w-[20%] md:w-12" />
+            <IconPendientes className="w-[20%] md:w-12" />
             <span className="text-[16px] lg:text-2xl font-semibold">
-              Estadisticas
+              Pendientes
             </span>
           </div>
         </Link>

@@ -16,7 +16,7 @@ import { socket } from "@/utils/socketio";
 export default function OpcionesPteCard(paciente) {
   return (
     <details className="relative">
-      <summary className="flex px-6 py-2  text-white bg-[#487FFA] rounded-xl gap-1 items-center cursor-pointer">
+      <summary className="flex px-6 py-2  text-white bg-[#487FFA] rounded-lg gap-1 items-center cursor-pointer">
         <Image src={opciones} alt="Opciones" />
         <p className="text-start text-white font-bold text-base leading-5">
           Opciones

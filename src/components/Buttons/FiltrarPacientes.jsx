@@ -6,7 +6,7 @@ import IconTypeRisk from "../icons/IconTypeRisk";
 const FiltrarPacientes = ({ onClickSort, onClickFilter }) => {
   return (
     <details className="relative">
-      <summary className="flex items-center justify-center md:px-6 px-2 py-2 text-white bg-[#487FFA] rounded-xl gap-3 font-bold cursor-pointer">
+      <summary className="flex items-center justify-center md:px-6 px-2 py-2 text-white bg-[#487FFA] rounded-lg gap-3 font-bold cursor-pointer">
         <IconFilter /> Filtrar
       </summary>
 
