@@ -1,4 +1,4 @@
-export const draftFormat = (data) => {
+export const DraftFormat = (data) => {
     console.log(data, "antes de formatear la data y que se vea el borrador ");
     let medications = {
         item0: '',

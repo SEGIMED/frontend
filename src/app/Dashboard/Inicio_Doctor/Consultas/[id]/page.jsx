@@ -2,15 +2,15 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import ConsultaDoc from "@/components/consulta/consulta";
-import { BodySection, FormDataUtil } from "@/utils/preconsultaFormato";
+import { FormDataUtil } from "@/utils/preconsultaFormato";
 import { setFormData } from "@/redux/slices/user/preconsultaFormSlice";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
-import { draftFormat } from "@/utils/formatResponse";
+import { DraftFormat } from "@/utils/formatResponse";
 
 
 export default function consultaDoc({params}){
     const [preconsult, setPreconsult] = useState();
-    const dispatch=useAppDispatch()
+    const dispatch= useAppDispatch()
 
     const fetchPreconsultation = async (scheduleId) => {
       try {
@@ -19,7 +19,7 @@ export default function consultaDoc({params}){
         
        
         if (response.data) {
-          const formatPreconsult = draftFormat(response.data);
+          const formatPreconsult = DraftFormat(response.data);
          
           dispatch(setFormData(formatPreconsult));
         }else {

@@ -5,7 +5,7 @@ import PreconsultaPte from "../../../../../components/preconsulta/preconsulta";
 import { FormDataUtil } from "@/utils/preconsultaFormato";
 import { setFormData } from "@/redux/slices/user/preconsultaFormSlice";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
-import { draftFormat } from "@/utils/formatResponse";
+import { DraftFormat } from "@/utils/formatResponse";
 import getSchedule from "@/utils/dataFetching/fetching/getSchedule";
 
 export default function PrePte({ params }) {
@@ -19,7 +19,7 @@ export default function PrePte({ params }) {
       setPreconsult(response.data);
     
       if (response.data) {
-        const formatPreconsult = draftFormat(response.data);
+        const formatPreconsult = DraftFormat(response.data);
        
         dispatch(setFormData(formatPreconsult));
       } else {
