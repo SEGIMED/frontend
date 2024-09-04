@@ -9,17 +9,18 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import { PathnameShow } from "@/components/pathname/path";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import NotFound from "@/components/notFound/notFound";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function AlarmHome() {
   const [activeAlarms, setActiveAlarms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const lastSegmentTextToShow = PathnameShow();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
 
   const getAlarms = async (headers) => {
     try {
       const response = await ApiSegimed.get(`/alarms-by-patient/`, headers);
       if (response.data) {
-        console.log(response.data);
         const activeAlarms = response?.data?.filter((alarma) => !alarma.solved);
         setActiveAlarms(activeAlarms);
       }
@@ -33,16 +34,16 @@ export default function AlarmHome() {
   useEffect(() => {
     const token = Cookies.get("a");
     if (token) {
-      getAlarms({ headers: { token: token } }).catch(console.error);
+      getAlarms().catch(console.error);
       const intervalId = setInterval(() => {
-        getAlarms({ headers: { token: token } }).catch(console.error);
-      }, 30000); // Polling every 30 seconds
+        getAlarms().catch(console.error);
+      }, 20000); // Polling every 30 seconds
 
       return () => clearInterval(intervalId); // Clean up interval on component unmount
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [alarmsData]);
 
   return (
     <div className="h-full flex flex-col overflow-y-auto md:overflow-y-hidden">

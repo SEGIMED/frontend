@@ -22,6 +22,7 @@ import Elboton from "@/components/Buttons/Elboton";
 import rutas from "@/utils/rutas";
 import FileUploadButton from "@/components/Buttons/FileUploadButton";
 import Swal from "sweetalert2";
+import IconDelete from "@/components/icons/IconDelete";
 
 export default function HomeDoc() {
   const lastSegmentTextToShow = PathnameShow();
@@ -172,9 +173,17 @@ export default function HomeDoc() {
   useEffect(() => {
     // Limpiar links creados
     return () => {
-      selectedFiles.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+      if (selectedFiles.length > 0)
+        selectedFiles?.forEach((item) => URL.revokeObjectURL(item.previewUrl));
     };
   }, [selectedFiles]);
+
+  const handleDeleteItem = (item) => {
+    let filteredItems = selectedFiles.filter(
+      (file) => file.file.name !== item.file.name
+    );
+    setSelectedFiles(filteredItems);
+  };
 
   const onSubmit = async () => {
     const payload = {
@@ -410,12 +419,11 @@ export default function HomeDoc() {
           )}
         </Autocomplete>
       </div>
-
       <InputInterconsulta
-        title={"Problema"}
-        value={questions.problemResume}
+        title={"Motivo de interconsulta"}
+        value={questions.reasonForConsultation}
         onChange={(e) =>
-          handleQuestionFieldChange("problemResume", e.target.value)
+          handleQuestionFieldChange("reasonForConsultation", e.target.value)
         }
       />
 
@@ -442,6 +450,13 @@ export default function HomeDoc() {
                       className="max-w-full max-h-24 rounded-md"
                     />
                   )}
+                  <Elboton
+                    icon={<IconDelete color={"red"} />}
+                    className={"bg-white border-1 border-borderGray"}
+                    nombre={"Eliminar"}
+                    classNameText={"text-redPrimary"}
+                    onPress={() => handleDeleteItem(item)}
+                  />
                 </div>
               ))}
             </div>
@@ -488,10 +503,10 @@ export default function HomeDoc() {
         </div>
       </div> */}
       <InputInterconsulta
-        title={"Motivo de interconsulta"}
-        value={questions.reasonForConsultation}
+        title={"Problema"}
+        value={questions.problemResume}
         onChange={(e) =>
-          handleQuestionFieldChange("reasonForConsultation", e.target.value)
+          handleQuestionFieldChange("problemResume", e.target.value)
         }
       />
       <div className="w-full justify-center flex py-4">

@@ -156,7 +156,7 @@ export default function Estadisticas() {
     <div className="flex flex-col h-full bg-[#FAFAFC] px-4 md:pl-10 md:pr-8 pt-5 md:pb-40 gap-4 md:gap-10 text-lg overflow-y-auto">
       <title>{lastSegmentTextToShow}</title>
       <div className="w-full flex-col md:flex-row flex  justify-center gap-4 md:gap-10">
-        <div className="w-full bg-white p-5 rounded-lg">
+        {/* <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
             <IconCurrentRouteNav className="w-[1.5rem]" />
             Alarmas activas
@@ -194,7 +194,7 @@ export default function Estadisticas() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="w-full bg-white p-5 rounded-lg">
           <p className="flex items-center justify-start text-2xl gap-3">
             <IconCurrentRouteNav className="w-[1.5rem]" />

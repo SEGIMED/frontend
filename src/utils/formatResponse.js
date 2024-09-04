@@ -1,5 +1,5 @@
-export const draftFormat = (data) => {
-    console.log(data);
+export const DraftFormat = (data) => {
+    console.log(data, "antes de formatear la data y que se vea el borrador ");
     let medications = {
         item0: '',
     };
@@ -8,6 +8,27 @@ export const draftFormat = (data) => {
         medications = { ...medications, [key]: item };
         return;
     });
+    const transformKey= (key)=>{
+        return key.replace(/ /g, '_')
+        .replace(/[^\w\s]/g, '');    
+    }
+    
+    const vitalSigns=  data?.ProvisionalPreConsultationSchedule?.vitalSignDetailsScheduling && 
+    data?.ProvisionalPreConsultationSchedule?.vitalSignDetailsScheduling.reduce((acc, item) => {
+        // Verifica si el signo vital ya está en el objeto acumulador
+       if (item.measureType) {
+        const key = transformKey(item.measureType);
+            acc[key] = {
+                measure: item.measure,
+                measUnit: item.measUnit,
+                measureTimestamp: item.measureTimestamp
+            };
+        }
+        return acc;
+    }, {});
+    
+    // Ejemplo de cómo puedes acceder a los signos vitales
+    
 
     return {
         questions: {
@@ -21,7 +42,7 @@ export const draftFormat = (data) => {
                     lackOfAirIncremented: {
                         title: "Se ha incrementado en las últimas:",
                         display: 'row',
-                        selectedOption: data?.lackOfAirIncremented || null,
+                        selectedOption: data?.lackOfAirIncremented,
                         options: [
                             { label: "Horas" },
                             { label: "Días" },
@@ -30,7 +51,7 @@ export const draftFormat = (data) => {
                     },
                     lackOfAirClasification: {
                         title: "Califique su falta de aire",
-                        selectedOption: data?.lackOfAirClasification || null,
+                        selectedOption: data?.lackOfAirClasification,
                         orientation: "column",
                         options: [
                             {
@@ -51,20 +72,20 @@ export const draftFormat = (data) => {
             },
             chestPainAtRest: {
                 title: "¿Tiene dolor de pecho en reposo?",
-                active: data?.chestPainAtRest || null,
+                active: data?.chestPainAtRest ,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
             },
             chestPainOnExertion: {
                 title: "¿Tiene dolor de pecho al hacer esfuerzos físicos?",
-                active: data?.chestPainOnExertion || null,
+                active: data?.chestPainOnExertion ,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
                 subquestions: {
                     chestPainOnExertionAmount: {
-                        selectedOption: data?.chestPainOnExertionAmount || null,
+                        selectedOption: data?.chestPainOnExertionAmount ,
                         options: [
                             { label: "Con poco esfuerzo físico" },
                             { label: "Con esfuerzo físico moderado" },
@@ -75,13 +96,13 @@ export const draftFormat = (data) => {
             },
             edemaPresence: {
                 title: "¿Ha notado edemas (hinchazón) o aumento del edema previo?",
-                active: data?.edemaPresence || null,
+                active: data?.edemaPresence ,
                 binaryOptions: true,
                 selectedOption: null,
                 description: '',
                 subquestions: {
                     edemaPresenceDescription: {
-                        selectedOption: data?.edemaPresenceDescription || null,
+                        selectedOption: data?.edemaPresenceDescription ,
                         options: [
                             { label: "Hinchazón en los pies" },
                             { label: "Hinchazón por debajo de las rodillas" },
@@ -95,7 +116,7 @@ export const draftFormat = (data) => {
                 title: "¿Cómo se encuentra el día de hoy?",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data?.feelings || null,
+                selectedOption: data?.feelings ,
                 showRowOptions: true,
                 description: '',
                 options: [
@@ -107,18 +128,18 @@ export const draftFormat = (data) => {
             },
             healthChanges: {
                 title: "¿Ha notado algún cambio en su salud?",
-                active: data?.healthChanges || null,
+                active: data?.healthChanges ,
                 binaryOptions: true,
                 selectedOption: null,
                 showTextInput: true,
-                description: data?.healthChangesDescription || null,
+                description: data?.healthChangesDescription ,
                 // healthChangesDescription: ''
             },
             healthWorsened: {
                 title: "Siente que su salud se ha empeorado en las últimas:",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data?.healthWorsened || null,
+                selectedOption: data?.healthWorsened ,
                 showRowOptions: true,
                 description: '',
                 options: [
@@ -132,12 +153,12 @@ export const draftFormat = (data) => {
                 title: "¿Tiene alguna dolencia en su cuerpo?",
                 active: null,
                 binaryOptions: true,
-                selectedOption: null,
+                selectedOption: data?.bodyPain ,
                 description: '',
             },
             mentalHealthAffected: {
                 title: "¿Su salud mental está afectada?",
-                active: data?.mentalHealthAffected || null,
+                active: data?.mentalHealthAffected ,
                 binaryOptions: true,
                 selectedOption: null,
                 showTextInput: true,
@@ -148,7 +169,7 @@ export const draftFormat = (data) => {
                 title: "Califique su estado de energía - Fatiga",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data?.energyStatus || null,
+                selectedOption: data?.energyStatus ,
                 showSlider: true,
                 description: '',
             },
@@ -156,7 +177,7 @@ export const draftFormat = (data) => {
                 title: "Califique su alimentación",
                 active: null,
                 binaryOptions: false,
-                selectedOption: data?.feed || null,
+                selectedOption: data?.feed ,
                 showRowOptions: true,
                 description: '',
                 options: [
@@ -170,7 +191,7 @@ export const draftFormat = (data) => {
                 title: "Califique su hidratación diaria (todos los líquidos ingeridos)",
                 active: true,
                 binaryOptions: false,
-                selectedOption: data?.hydrationStatus || null,
+                selectedOption: data?.hydrationStatus ,
                 description: '',
                 options: [
                     { label: "Poca ingesta < de 1.5 litros (menos de 5 vasos aprox.) " },
@@ -182,7 +203,7 @@ export const draftFormat = (data) => {
                 title: "Califique su estado de orina (diuresis)",
                 active: true,
                 binaryOptions: false,
-                selectedOption: data?.urineStatus || null,
+                selectedOption: data?.urineStatus ,
                 description: '',
                 options: [
                     { label: "Orino normal (entre 500 ml y 1 litro al día)" },
@@ -196,7 +217,7 @@ export const draftFormat = (data) => {
                 title: "Califique su estado de ejercicio físico",
                 active: true,
                 binaryOptions: false,
-                selectedOption: data?.exerciseStatus || null,
+                selectedOption: data?.exerciseStatus ,
                 description: '',
                 options: [
                     { label: "Ninguno: no puedo, no quiero, no recomendado por el médico, contraindicado." },
@@ -206,47 +227,47 @@ export const draftFormat = (data) => {
                 ],
             },
         },
-        vitalSigns: {
-            height: {
-                cat: "antrophometric",
-                medicalEventId: null,
-                measureType: 4,
-                measure: null,
-                key: "Talla",
-                label: "Estatura",
-                unit: "cm",
-                referenceValue: 180,
-            },
-            weight: {
-                cat: "antrophometric",
-                medicalEventId: null,
-                measureType: 5,
-                measure: null,
-                key: "Peso",
-                label: "Peso",
-                unit: "kg",
-                referenceValue: 76,
-            },
-            IMC: {
-                cat: "antrophometric",
-                key: "IMC",
-                medicalEventId: null,
-                measureType: 7,
-                measure: null,
-                label: "Índice de masa corporal",
-                unit: "kg/m2",
-                referenceValue: 24.69,
-            },
-            temperature: {
-                cat: "vitalSigns",
-                medicalEventId: null,
-                measureType: 1,
-                measure: null,
-                key: "Temperatura",
-                label: "Temperatura",
-                unit: "°C",
-                referenceValue: 37,
-            },
+        // vitalSigns: {
+        //     height: {
+        //         cat: "antrophometric",
+        //         medicalEventId: null,
+        //         measureType: 4,
+        //         measure: vitalSigns?.Estatura?.measure || null,
+        //         key: "Talla",
+        //         label: "Estatura",
+        //         unit: "cm",
+        //         referenceValue: 180,
+        //     },
+        //     weight: {
+        //         cat: "antrophometric",
+        //         medicalEventId: null,
+        //         measureType: 5,
+        //         measure: vitalSigns?.Peso?.measure || null,
+        //         key: "Peso",
+        //         label: "Peso",
+        //         unit: "kg",
+        //         referenceValue: 76,
+        //     },
+        //     IMC: {
+        //         cat: "antrophometric",
+        //         key: "IMC",
+        //         medicalEventId: null,
+        //         measureType: 7,
+        //         measure: vitalSigns?.IMC?.measure || null,
+        //         label: "Índice de masa corporal",
+        //         unit: "kg/m2",
+        //         referenceValue: 24.69,
+        //     },
+        //     temperature: {
+        //         cat: "vitalSigns",
+        //         medicalEventId: null,
+        //         measureType: 1,
+        //         measure: vitalSigns?.Temperatura?.measure || null,
+        //         key: "Temperatura",
+        //         label: "Temperatura",
+        //         unit: "°C",
+        //         referenceValue: 37,
+        //     },
             /* Abdominal_perimeter: {
               cat: "antrophometric",
               key: "Perimetro Abdominal",
@@ -254,36 +275,36 @@ export const draftFormat = (data) => {
               unit: "cm",
               referenceValue: "",
             }, */
-            Heart_Rate: {
-                cat: "vitalSigns",
-                medicalEventId: null,
-                measureType: 7,
-                measure: null,
-                key: "Frecuencia Cardiaca",
-                label: "Frecuencia cardíaca",
-                unit: "lpm",
-                referenceValue: 80,
-            },
-            Systolic_Blood_Pressure: {
-                cat: "vitalSigns",
-                medicalEventId: null,
-                measureType: 2,
-                measure: null,
-                key: "Presion Arterial Sistolica",
-                label: "Presión arterial sistólica",
-                unit: "mmHg",
-                referenceValue: 120,
-            },
-            Diastolic_Blood_Pressure: {
-                cat: "vitalSigns",
-                medicalEventId: null,
-                measureType: 3,
-                measure: null,
-                key: "Presion Arterial Diastolica",
-                label: "Presión arterial diastólica",
-                unit: "mmHg",
-                referenceValue: 80,
-            },
+            // Heart_Rate: {
+            //     cat: "vitalSigns",
+            //     medicalEventId: null,
+            //     measureType: 7,
+            //     measure: vitalSigns?.Frecuencia_Cardiaca?.measure || null,
+            //     key: "Frecuencia Cardiaca",
+            //     label: "Frecuencia cardíaca",
+            //     unit: "lpm",
+            //     referenceValue: 80,
+            // },
+            // Systolic_Blood_Pressure: {
+            //     cat: "vitalSigns",
+            //     medicalEventId: null,
+            //     measureType: 2,
+            //     measure: vitalSigns?.Presin_Arterial_Sistlica?.measure || null,
+            //     key: "Presion Arterial Sistolica",
+            //     label: "Presión arterial sistólica",
+            //     unit: "mmHg",
+            //     referenceValue: 120,
+            // },
+            // Diastolic_Blood_Pressure: {
+            //     cat: "vitalSigns",
+            //     medicalEventId: null,
+            //     measureType: 3,
+            //     measure: vitalSigns?.Presin_Arterial_Diastlica?.measure || null,
+            //     key: "Presion Arterial Diastolica",
+            //     label: "Presión arterial diastólica",
+            //     unit: "mmHg",
+            //     referenceValue: 80,
+            // },
             // Mean_arterial_pressure: {
             //   cat: "vitalSigns",
             //   key: "Presion Arterial Media",
@@ -291,50 +312,50 @@ export const draftFormat = (data) => {
             //   unit: "mmHg",
             //   referenceValue: "",
             // },
-            Breathing_frequency: {
-                cat: "vitalSigns",
-                medicalEventId: null,
-                measureType: 5,
-                measure: null,
-                key: "Frecuencia Respiratoria",
-                label: "Frecuencia respiratoria",
-                unit: "rpm",
-                referenceValue: 17,
-            },
-            Oxygen_saturation: {
-                cat: "vitalSigns",
-                medicalEventId: null,
-                measureType: 6,
-                measure: null,
-                key: "Saturacion de Oxigeno",
-                label: "Saturación de oxígeno",
-                unit: "%",
-                referenceValue: 80,
-            },
-            abnormalGlycemia: {
-                label: "  Glicemia:  ¿Tuvo valores fuera del rango normal en el último tiempo? (+ 140 mg/dl y - 80 mg/dl)",
-                binaryOptions: true,
-                active: null,
-                measure: 0,
-                description: '',
-                active: null,
-            },
-            lastAbnormalGlycemia: {
-                label: "Escriba los últimos 4 valores mas anormales que tuvo.",
-                selectedOption: null,
-                active: null,
-                measure: 0,
-                description: '',
-                referenceValue: 100,
-                unit: 'mg/dl',
-                options: {
-                    option0: '',
-                    option1: '',
-                    option2: '',
-                    option3: '',
-                },
-            },
-        },
+        //     Breathing_frequency: {
+        //         cat: "vitalSigns",
+        //         medicalEventId: null,
+        //         measureType: 5,
+        //         measure: vitalSigns?.Frecuencia_Respiratoria?.measure || null,
+        //         key: "Frecuencia Respiratoria",
+        //         label: "Frecuencia respiratoria",
+        //         unit: "rpm",
+        //         referenceValue: 17,
+        //     },
+        //     Oxygen_saturation: {
+        //         cat: "vitalSigns",
+        //         medicalEventId: null,
+        //         measureType: 6,
+        //         measure: vitalSigns?.Saturacin_de_Oxgeno?.measure || null,
+        //         key: "Saturacion de Oxigeno",
+        //         label: "Saturación de oxígeno",
+        //         unit: "%",
+        //         referenceValue: 80,
+        //     },
+        //     abnormalGlycemia: {
+        //         label: "  Glicemia:  ¿Tuvo valores fuera del rango normal en el último tiempo? (+ 140 mg/dl y - 80 mg/dl)",
+        //         binaryOptions: true,
+        //         active: null,
+        //         measure: data?.abnormalGlycemia || 0,
+        //         description: '',
+        //         active: null,
+        //     },
+        //     lastAbnormalGlycemia: {
+        //         label: "Escriba los últimos 4 valores mas anormales que tuvo.",
+        //         selectedOption: null,
+        //         active: null,
+        //         measure: 0,
+        //         description: '',
+        //         referenceValue: 100,
+        //         unit: 'mg/dl',
+        //         options: {
+        //             option0: data?.lastAbnormalGlycemia[0] || " ",
+        //             option1: data?.lastAbnormalGlycemia[1] || " ",
+        //             option2: data?.lastAbnormalGlycemia[2] || " ",
+        //             option3: data?.lastAbnormalGlycemia[3] || " ",
+        //         },
+        //     },
+        // },
         tests: {
             laboratoryResults: {
                 title: "Resultados de laboratorio",

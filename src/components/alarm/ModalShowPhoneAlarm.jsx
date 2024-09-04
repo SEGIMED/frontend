@@ -6,24 +6,11 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import IconCurrentRouteNav from "../icons/IconCurrentRouteNav";
-import Swal from "sweetalert2";
 
 const ModalShowPhoneAlarm = ({ isOpen, onClose, cellphone }) => {
   const copyToClipboard = () => {
-    navigator.clipboard
-      .writeText(cellphone)
-      .then(() => {
-        // This part is optional, alert or a toast can be used to show success message
-        Swal.fire({
-          icon: "success",
-          title: "Se copió el número con éxito",
-        });
-      })
-      .catch((err) => {
-        // Handle possible errors
-        console.error("Error al copiar el número:", err);
-        alert("Error al copiar el número");
-      });
+    navigator.clipboard.writeText(cellphone);
+    alert("Se copió el número con éxito");
   };
 
   return (

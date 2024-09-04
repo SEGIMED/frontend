@@ -27,9 +27,6 @@ const Page = () => {
   const [isModalOpenFile, setIsModalOpenFile] = useState(false);
   const [selectedImport, setSelectedImport] = useState({});
 
-  // console.log(importaciones);
-  console.log(selectedImport);
-
   const ConsultasColumns = [
     {
       label: "Fecha",

@@ -64,7 +64,6 @@ export default function HomeDoc() {
         console.error("Error fetching data:", error);
         setBarChartData(null);
         setActiveData(null);
-        setAlarmsData({ actives: 0, inactives: 0 });
       }
     };
 
@@ -89,7 +88,6 @@ export default function HomeDoc() {
     <p key={1}>Actividad</p>,
     <p key={2}>Alarmas</p>,
   ];
-  console.log(dataAlarms);
 
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
@@ -189,20 +187,20 @@ export default function HomeDoc() {
             </p>
           </div>
 
-          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
+          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
-              <IconInactiveUsers className="w-[40%] md:w-12" color="white" />
+              <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
                 {dataAlarms?.activeAlarms}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-start md:text-center lg:text-start">
-              Alarmas Inactivos
+              Alarmas Activas
             </p>
           </div>
 
-          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
+          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
@@ -211,7 +209,7 @@ export default function HomeDoc() {
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-start md:text-center lg:text-start">
-              Alarmas Activas
+              Alarmas Resueltas
             </p>
           </div>
         </div>

@@ -54,11 +54,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
-
   useEffect(() => {
     if (!user.name || !rol) return;
-
-
 
     if (rol === "Médico") {
       if (!user.medicalRegistries?.Nacional?.registryId) {
@@ -66,7 +63,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         setIsModalOpen(true);
       }
     } else if (rol === "Paciente") {
-
       if (!user.sociodemographicDetails?.genre) {
         router.push(rutas.PacienteDash);
         setIsModalOpen(true);
@@ -99,6 +95,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     getDoctorNotifications,
     getPatientsDoctor,
     getUserDoctor,
+    getAlarms,
   } = useDataFetching(); // Use the useRouter hook
 
   const {
@@ -143,6 +140,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         getActivesAlarmsDoctor().catch(console.error);
         getActivesPacientesDoctor().catch(console.error);
         getDoctorNotifications().catch(console.error);
+        getAlarms().catch(console.error);
         if (!socket.isConnected()) {
           socket.setSocket(token, refreshToken, dispatch);
           socket.emit("onJoin", { id: id });
@@ -178,7 +176,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   useEffect(() => {
     if (rol === "Médico") {
       getUserDoctor().catch(console.error);
-
     }
     if (rol === "Paciente") {
       getUser({ headers: { token: token } }).catch(console.error);
@@ -209,11 +206,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         chat.messages.forEach((mensaje) => {
           ultimoMensaje = mensaje;
           senderInfo = mensaje.sender;
-          if (mensaje.sender?.userId == userId) {
+          if (mensaje?.sender?.userId == userId) {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
-          if (mensaje.state === false && mensaje.sender?.userId != userId) {
+          if (mensaje.state === false && mensaje?.sender?.userId != userId) {
             cantidadMensajes++;
           }
         });
@@ -380,7 +377,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={rol} setOnboarding={setOnboarding} />
+      <ModalBoarding
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        rol={rol}
+        setOnboarding={setOnboarding}
+      />
     </div>
   );
 };
