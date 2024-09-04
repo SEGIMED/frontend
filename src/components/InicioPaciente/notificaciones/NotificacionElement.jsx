@@ -33,7 +33,9 @@ export const NotificacionElement = ({ notificacion, onClick }) => {
       </div>
       <div className="w-[80%] px-1 flex flex-col">
         <p className="text-lg w-full">{message}</p>
-        <span>{calculateTimeAgo(notificacion?.date)}</span>
+        <span className="text-bluePrimary font-Poppins text-sm">
+          {calculateTimeAgo(notificacion?.date)}
+        </span>
       </div>
       <div className="w-[5%]">
         <IconPoint className="w-2 h-2 md:w-3 md:h-3" color="#487ffa" />
