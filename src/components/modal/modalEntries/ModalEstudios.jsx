@@ -13,7 +13,7 @@ export default function ModalEstudios({ state, disabled }) {
         <div className="w-full flex flex-col gap-3">
             <div >
                 <InputInfoText
-                    icon={<IconCurrentRouteNav color={"#808080"} className="w-3" />}
+                    icon={<IconCurrentRouteNav color={"#808080"} className="w-[1.5rem]" />}
                     text={true}
                     defaultValue={state?.reasonForConsultation}
                     disabled={disabled}

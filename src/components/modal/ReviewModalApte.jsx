@@ -97,7 +97,7 @@ export default function ReviewModalApte({ onClose, id }) {
       <div className="bg-white p-3 rounded-lg shadow-lg w-[85%] min-h-fit max-h-[95%] md:w-[40%] relative font-poppins overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-2 h-fit">
           <span className="flex gap-4">
-            <IconCurrentRouteNav className={"w-4"} />
+            <IconCurrentRouteNav className={"w-[1.5rem]"} />
             <h2 className="text-lg font-normal leading-6">
               Califique a su paciente
             </h2>

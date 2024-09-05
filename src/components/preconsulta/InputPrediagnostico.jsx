@@ -36,7 +36,7 @@ export default function InputPrediagnostico({
             key={index}
             className="flex flex-col gap-2 px-6 py-4 md:py-2 border-b border-b-[#cecece]">
             <label className="text-start  py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <input

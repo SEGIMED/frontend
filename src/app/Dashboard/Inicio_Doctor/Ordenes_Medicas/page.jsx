@@ -20,6 +20,11 @@ import OrdenType from "@/components/modal/ModalDoctor/modalOrden";
 import IconMas from "@/components/icons/iconMas";
 import IconConsulta from "@/components/icons/IconConsulta";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
+import MenuDropDown from "@/components/dropDown/MenuDropDown";
+import IconOptions from "@/components/icons/IconOptions";
+import IconImportar from "@/components/icons/IconImportar";
+import FileDisplay from "@/components/modal/ModalDoctor/modalDisplayFile";
+
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -33,6 +38,8 @@ export default function HomeDoc() {
     const [riskFilter, setRiskFilter] = useState("");
     const [showFavorites, setShowFavrites] = useState(false);
     const [patients, setPatients] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(false);
     const [patientsFavorites, setPatientsFavorites] = useState([]);
     const [pagination, setPagination] = useState({
         totalUsers: 0,
@@ -208,7 +215,7 @@ export default function HomeDoc() {
 
                 <div className="w-[100%] border-b border-b-[#cecece] flex">
                     <div className="w-[5%] md:block hidden h-8"></div>
-                    <div className="grid grid-cols-3 w-[100%] md:w-[80%] items-center  text-center md:text-start  bg-white static md:sticky top-14 z-10 md:z-4 ">
+                    <div className="grid grid-cols-4 w-[100%] md:w-[100%] items-center  text-center md:text-start  bg-white static md:sticky top-14 z-10 md:z-4 ">
                         <p className=" text-[#5F5F5F]">Paciente</p>
                         <p className=" text-[#5F5F5F]">Tipo</p>
                         <p className=" text-[#5F5F5F]">Fecha</p>
@@ -234,7 +241,7 @@ export default function HomeDoc() {
                                 <div className="justify-center w-[5%] hidden md:flex items-center ">
                                     <IconConsulta />
                                 </div>
-                                <div className="grid text-center grid-cols-3 w-[100%] justify-center md:w-[80%] md:text-left md:grid-cols-3 items-center  py-2 bg-white z-10">
+                                <div className="grid text-center grid-cols-4 w-[100%] justify-center md:w-[100%] md:text-left md:grid-cols-4 items-center  py-2 bg-white z-10">
 
                                     <div className="text-[#5F5F5F] ">
                                         {paciente?.patient?.name} {paciente?.patient?.lastname}
@@ -246,7 +253,25 @@ export default function HomeDoc() {
                                     <div className="text-[#5F5F5F] md:gap-3 block md:flex ">
                                         {Fecha(paciente.date, 4)} <span className="hidden md:block"> {Hora(paciente.date)}</span>
                                     </div>
-
+                                    <MenuDropDown
+                                        label="Opciones"
+                                        icon={<IconOptions color="white" />}
+                                        categories={[
+                                            {
+                                                items: [
+                                                    {
+                                                        label: "Ver orden medica",
+                                                        icon: <IconImportar color={"#B2B2B2"} />,
+                                                        onClick: () => {
+                                                            setSelectedOrder(paciente.orderPdf);
+                                                            setIsModalOpen(true);
+                                                        },
+                                                    },
+                                                ].filter(Boolean),
+                                            },
+                                        ]}
+                                        className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+                                    />
 
                                 </div>
 
@@ -274,7 +299,20 @@ export default function HomeDoc() {
                 </button>
             </div> */}
             {/* {showModal && selectedPatient && ( */}
-
+            <ModalModularizado
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                Modals={[
+                    <FileDisplay key={"displayFile"} state={{ study: selectedOrder }} />,
+                ]}
+                title={"Visualizacion de archivo"}
+                button1={"hidden"}
+                button2={"bg-greenPrimary text-white block"}
+                progessBar={"hidden"}
+                size={"md:min-h-[4rem] md:w-[35rem]"}
+                buttonText={{ end: `Cerrar` }}
+                buttonIcon={<></>}
+            />
             <ModalModularizado
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}

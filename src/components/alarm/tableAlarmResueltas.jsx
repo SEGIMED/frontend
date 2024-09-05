@@ -36,7 +36,7 @@ export default function TableAlarmResueltas({ alarms }) {
             <div className="text-center w-[80%] lg:w-[75%] lg:text-start gap-3  grid grid-cols-4 lg:grid-cols-5 items-center py-2 bg-white h-fit ">
               <span className="hidden lg:flex items-center justify-between pr-20 ">
                 {alarm?.ia_priority}
-                <IconCurrentRouteNav className="w-3 hidden lg:block " />
+                <IconCurrentRouteNav className="w-[1.5rem] hidden lg:block " />
               </span>
               <div className="text-[#5F5F5F]">{Hora(alarm?.createdAt)}</div>
               <div className="text-[#5F5F5F]">{Fecha(alarm?.createdAt)}</div>

@@ -12,7 +12,7 @@ export default function ModalErrores({ state, disabled }) {
         <div className="w-full flex flex-col gap-3">
             <div >
                 <InputInfoText
-                    icon={<IconCurrentRouteNav color={"#808080"} className="w-3" />}
+                    icon={<IconCurrentRouteNav color={"#808080"} className="w-[1.5rem]" />}
                     title={"Mensaje de error"}
                     classNameInput={'md:w-full'}
                     defaultValue={state?.reasonForConsultation}
@@ -21,7 +21,7 @@ export default function ModalErrores({ state, disabled }) {
             </div>
             <div >
                 <InputInfoText
-                    icon={<IconCurrentRouteNav color={"#808080"} className="w-3" />}
+                    icon={<IconCurrentRouteNav color={"#808080"} className="w-[1.5rem]" />}
                     classNameInput={'md:w-full'}
                     title={"Área del error"}
                     defaultValue={state?.reasonForConsultation}
@@ -30,7 +30,7 @@ export default function ModalErrores({ state, disabled }) {
             </div>
             <div >
                 <InputInfoText
-                    icon={<IconCurrentRouteNav color={"#808080"} className="w-3" />}
+                    icon={<IconCurrentRouteNav color={"#808080"} className="w-[1.5rem]" />}
                     text={true}
                     title={"Mensaje del usuario"}
                     defaultValue={state?.reasonForConsultation}

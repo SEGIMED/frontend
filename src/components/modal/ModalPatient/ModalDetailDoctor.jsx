@@ -65,7 +65,7 @@ const ModalDetailDoctor = ({ doctorId, onClose }) => {
       <div className="relative z-50 bg-white rounded-lg w-[35rem] h-[30rem] flex flex-col items-center gap-5">
         <div className="w-full h-full flex flex-col justify-between">
           <div className="h-16 flex items-center justify-start gap-3 p-5 border-b-2 font-semibold">
-            <IconCurrentRouteNav className="w-4" /> Informacion del doctor
+            <IconCurrentRouteNav className="w-[1.5rem]" /> Informacion del doctor
           </div>
           <div className="flex flex-col justify-around p-5 w-full h-full font-medium">
             <div className="flex items-center justify-between w-full px-5">

@@ -97,7 +97,7 @@ export default function ImportarHC({ onData, text, disabled, state }) {
             <div className='gap-2 flex flex-col'>
                 <div className='flex flex-col gap-2'>
                     <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
-                        <IconCurrentRouteNav className={'w-4'} />
+                        <IconCurrentRouteNav className={'w-[1.5rem]'} />
                         <div>Tipo de archivo</div>
                     </div>
                     <DropNext
@@ -122,7 +122,7 @@ export default function ImportarHC({ onData, text, disabled, state }) {
                 {!text && !disabled ?
                     <div className='flex flex-col gap-2'>
                         <div className='flex gap-3 text-[#686868] font-medium text-base leading-5 items-center'>
-                            <IconCurrentRouteNav className={'w-4'} />
+                            <IconCurrentRouteNav className={'w-[1.5rem]'} />
                             <div>Selecciona el archivo</div>
                         </div>
                         <div className="flex flex-row gap-3">
@@ -145,7 +145,7 @@ export default function ImportarHC({ onData, text, disabled, state }) {
                         <div>
                             {study && (
                                 <div className="flex items-center gap-4">
-                                    <span>{study.name}</span>
+                                    <span className='text-[#686868]'>{study.name}</span>
                                     <button onClick={handleDeleteFile}>
                                         <IconDelete />
                                     </button>
@@ -159,7 +159,7 @@ export default function ImportarHC({ onData, text, disabled, state }) {
                         classNameInput={'md:w-full'}
                         title={"Titulo"}
                         placeholder={"Añadí un título"}
-                        icon={<IconCurrentRouteNav className={'w-4'} />}
+                        icon={<IconCurrentRouteNav className={'w-[1.5rem]'} />}
                         className={'md:px-0'}
                         disabled={disabled}
                         defaultValue={state?.title}
@@ -169,7 +169,7 @@ export default function ImportarHC({ onData, text, disabled, state }) {
                         text={true}
                         title={"Descripción"}
                         placeholder={"Añadí una descripción"}
-                        icon={<IconCurrentRouteNav className={'w-4'} />}
+                        icon={<IconCurrentRouteNav className={'w-[1.5rem]'} />}
                         disabled={disabled}
                         defaultValue={state?.description}
                     />

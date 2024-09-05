@@ -143,7 +143,7 @@ export default function HomeDoc() {
                 ))}
             </div>
             <h2 className="text-xl leading-6 font-normal flex gap-2">
-                <IconCurrentRouteNav className={"w-3"} />
+                <IconCurrentRouteNav className={"w-[1.5rem]"} />
                 Resumen semanal
             </h2>
             <div className="grid-cols-2 gap-4 grid lg:py-5 lg:flex">

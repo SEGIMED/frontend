@@ -38,6 +38,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
   const notifications = useAppSelector((state) => state.notifications);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUnreadNotifications, setShowUnreadNotifications] = useState(true);
   const chats = useAppSelector((state) => state.chat);
   const [showChats, setShowChats] = useState(false);
   const user = useAppSelector((state) => state.user);
@@ -111,6 +112,13 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     dispatch(setSearchTerm1(e.target.value));
   };
 
+  const pastNotifications = notifications?.filter(
+    (notificacion) => notificacion.state === true // Notificaciones leídas
+  );
+
+  const toggleNotificationView = () => {
+    setShowUnreadNotifications(!showUnreadNotifications); // Alterna entre no leídas y pasadas
+  };
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
   };
@@ -183,7 +191,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   }, [onboarding]);
 
   const unreadNotifications = notifications?.filter(
-    (notificacion) => !notificacion.state
+    (notificacion) =>
+      notificacion?.content.notificationType != "updatedAppointment" &&
+      notificacion.state != true
   );
   const Inicio =
     rol == "Paciente"
@@ -287,7 +297,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex items-center justify-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="hidden w-4 md:block" />
+        <IconCurrentRouteNav className="hidden w-[1.5rem] md:block" />
         {["Inicio_Doctor", "Inicio_Paciente", "Inicio_Admin"].includes(
           lastSegment
         ) ? (
@@ -338,21 +348,17 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             {rol === "Médico"
               ? "Médico"
               : rol === "Paciente"
-              ? "Paciente"
-              : rol === "Admin"
-              ? "Administrador"
-              : ""}
+                ? "Paciente"
+                : rol === "Admin"
+                  ? "Administrador"
+                  : ""}
           </span>
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
-          }`}>
-          <IconChat
-            className="w-6 h-6"
-            color={showChats || hasUnreadMessages ? "white" : "#808080"}
-          />
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+            }`}>
+          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#B2B2B2"} />
         </button>
         {showChats && (
           <MensajesContainer
@@ -363,10 +369,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
-            (showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-          }`}>
+            }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -376,6 +381,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </button>
         {showNotifications && (
           <NotificacionesContainer
+            pastNotifications={pastNotifications}
+            showUnreadNotifications={showUnreadNotifications}
+            toggleNotificationView={toggleNotificationView}
             handleNotificationElementClick={handleNotificationElementClick}
             handleNotificationClick={handleNotificationClick}
             unreadNotifications={unreadNotifications}

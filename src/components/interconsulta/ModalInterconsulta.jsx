@@ -33,7 +33,7 @@ const ModalInterconsulta = ({
           <>
             <ModalHeader className="flex flex-col py-3">
               <div className="w-full bg-white  border-b rounded-t-lg  border-b-[#DCDBDB] p-2 flex gap-3">
-                <IconCurrentRouteNav className={"w-4"} />
+                <IconCurrentRouteNav className={"w-[1.5rem]"} />
                 <p className={`font-medium text-base leading-6`}>
                   Resolver Interconsulta
                 </p>

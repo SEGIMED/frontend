@@ -15,6 +15,7 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const handleLogout = () => {
     Cookies.remove("a");
     Cookies.remove("b");
@@ -38,8 +39,8 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
   return (
     <div
       className={`flex ${isOpen ? "lg:relative block fixed inset-0 z-50" : "hidden"
-        } lg:flex`}>
-      <div className="h-screen overflow-y-auto gap-2 w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white flex flex-col justify-between shadow-lg md:shadow-none">
+        } lg:flex  min-h-screen `}>
+      <div className="h-full relative overflow-y-auto gap-2 w-[60%] px-4 md:w-72 md:px-6 md:border-r-[1px] md:border-[#D7D7D7] py-8 bg-white flex flex-col justify-between shadow-lg md:shadow-none">
         <div className="flex flex-col justify-center gap-4 sm:gap-10">
           <LogoSegimed className="w-40 md:w-[80%]" />
           <ul className="flex flex-col gap-3 md:gap-4">
@@ -65,7 +66,7 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
             ))}
             <Elboton
               icon={<IconOut />}
-              className={"font-bold h-[52px] flex sm:hidden text-[15px]"}
+              className={"font-bold h-[52px] sm:hidden text-[15px]"}
               nombre={"Cerrar sesión"}
               onPress={handleLogout}
             />
@@ -74,7 +75,7 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
         <Elboton
           icon={<IconOut />}
           className={
-            "font-bold min-h-[45px] h-[52px] hidden sm:flex text-[15px]"
+            "font-bold min-h-[45px] h-[52px] hidden sm:flex relative text-[15px]"
           }
           nombre={"Cerrar sesión"}
           onPress={handleLogout}

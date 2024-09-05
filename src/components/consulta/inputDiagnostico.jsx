@@ -272,7 +272,7 @@ export default function InputDiagnostico({
             className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]"
           >
             <label className="text-start py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <Autocomplete
@@ -310,7 +310,7 @@ export default function InputDiagnostico({
         {/* {subtitle3 && (
           <div className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]">
             <label className="text-start py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {subtitle3}
             </label>
             <Autocomplete
