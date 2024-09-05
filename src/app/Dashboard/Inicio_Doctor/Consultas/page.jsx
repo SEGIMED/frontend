@@ -21,6 +21,8 @@ import { setSearchBar } from "@/redux/slices/user/searchBar";
 import IconCheckBoton from "@/components/icons/iconCheckBoton";
 import Elboton from "@/components/Buttons/Elboton";
 import IconSignoExclamacion from "@/components/icons/IconSignoExclamacion";
+import IconMas from "@/components/icons/iconMas";
+import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -28,6 +30,7 @@ export default function HomeDoc() {
   const [scheduledConsultas, setScheduledConsultas] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [showModalConsultation, setShowModalConsultation] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function HomeDoc() {
     setSelectedPatientId(consulta?.patient);
   };
   const handleCokiePatient = (schedule, id, idEvent) => {
-    
+
     Cookies.set("patientId", id);
     Cookies.set("medicalEventId", idEvent);
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
@@ -230,6 +233,16 @@ export default function HomeDoc() {
                 </p>
               </button>
             </Link> */}
+            <button
+              onClick={() => setShowModalConsultation(true)}
+              className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+              <IconMas color={"#487ffa"} />
+              <p
+                className={` text-bluePrimary
+                         font-bold `}>
+                Nueva consulta
+              </p>
+            </button>
             <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <IconFolder className="hidden h-6 md:block" />
@@ -255,6 +268,13 @@ export default function HomeDoc() {
           <ReviewModalApte
             onClose={() => setIsReviewModalOpen(false)}
             id={selectedPatientId}
+          />
+        )}
+        {showModalConsultation && (
+          <ModalConsultationCalendar
+            isOpen={showModalConsultation}
+            onClose={() => setShowModalConsultation(false)}
+
           />
         )}
       </div>
