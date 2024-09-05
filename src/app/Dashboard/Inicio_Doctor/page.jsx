@@ -156,7 +156,7 @@ export default function HomeDoc() {
 
       <div className="text-[16px] lg:text-lg flex flex-col">
         <div className="flex items-center text-xl gap-3">
-          <IconCurrentRouteNav className="w-4" />
+          <IconCurrentRouteNav className="w-[1.5rem]" />
           Pacientes
         </div>
 

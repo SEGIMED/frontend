@@ -53,8 +53,8 @@ export default function InputDiagnostico({
       diagnostico?.treatmentPlan,
       diagnostico?.alarmPattern
     ])
-  },[diagnostico])
-  
+  }, [diagnostico])
+
   useEffect(() => {
     if (diagnostico?.drugPrescriptions && diagnostico.drugPrescriptions.length > 0) {
       diagnostico.drugPrescriptions.forEach((drug, index) => {
@@ -91,7 +91,7 @@ export default function InputDiagnostico({
             className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]"
           >
             <label className="text-start py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <input
@@ -105,7 +105,7 @@ export default function InputDiagnostico({
         {subtitle3 && (
           <div className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]">
             <label className="text-start py-1 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {subtitle3}
             </label>
             {inputs.map((input, index) => (
@@ -137,7 +137,7 @@ export default function InputDiagnostico({
               placeholder="Ingrese aquí sus anotaciones"
               {...register(sub)}
               defaultValue={
-                valueDiagnosticoSubtitle[index] || "" }
+                valueDiagnosticoSubtitle[index] || ""}
             />
           </div>
         ))}

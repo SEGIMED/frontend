@@ -23,7 +23,7 @@ const TratamientoItem = ({ title, placeholder, field, selectedOptions, onTratami
     return (
         <div className="p-6 mb-4">
             <div className="mb-2 font-semibold text-ms color-[#5F5F5F] flex gap-3 ">
-                <IconCurrentRouteNav className="w-4" />
+                <IconCurrentRouteNav className="w-[1.5rem]" />
                 {title}
             </div>
             {Object.keys(selectedOptions)?.map((item, index) => (

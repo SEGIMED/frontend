@@ -185,7 +185,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
           className="flex flex-col h-full">
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-3">
-              <IconCurrentRouteNav className="w-4" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               <p>Agendar consulta</p>
             </div>
             <button

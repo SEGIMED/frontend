@@ -83,7 +83,7 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
       <div
         className={`relative z-50 bg-[#fafafc] rounded-lg w-[90%] ${size} flex flex-col  gap-5 `}>
         <div className="w-full bg-white  border-b rounded-t-lg  border-b-[#DCDBDB] p-4 flex gap-3">
-          {icon ? icon : <IconCurrentRouteNav className={"w-4"} />}
+          {icon ? icon : <IconCurrentRouteNav className={"w-[1.5rem]"} />}
           <p className={`font-medium text-base leading-6 ${titleClassName} `}>
             {title}
           </p>

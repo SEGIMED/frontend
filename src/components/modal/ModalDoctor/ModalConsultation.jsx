@@ -261,7 +261,7 @@ const ModalConsultation = ({
         <form onSubmit={onSubmit} className="flex flex-col h-full gap-3">
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-1">
-              <IconCurrentRouteNav className="w-4" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {consulta ? <p>Detalles de consulta</p> : <p>Agendar consulta</p>}
             </div>
             <button

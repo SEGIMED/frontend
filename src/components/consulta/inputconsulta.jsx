@@ -42,12 +42,12 @@ export default function InputConsulta({
 
   const [reloadAmnesis, setReloadAmnesis] = useState(false);
 
-// Forzar re-renderizado de anamnesis cuando `preconsult` o `diagnostico` cambian
+  // Forzar re-renderizado de anamnesis cuando `preconsult` o `diagnostico` cambian
   useEffect(() => {
-  setReloadAmnesis(true);
-  setTimeout(() => {
-    setReloadAmnesis(false); // Resetear el estado inmediatamente para asegurar el re-renderizado
-  }, 0); 
+    setReloadAmnesis(true);
+    setTimeout(() => {
+      setReloadAmnesis(false); // Resetear el estado inmediatamente para asegurar el re-renderizado
+    }, 0);
   }, [preconsult, diagnostico]);
 
 
@@ -82,7 +82,7 @@ export default function InputConsulta({
   useEffect(() => {
     setValuesAmnesis([
       preconsult?.consultationReason,
-      
+
       preconsult?.importantSymptoms,
     ]);
   }, [preconsult, diagnostico]);
@@ -142,26 +142,25 @@ export default function InputConsulta({
             key={index}
             className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]">
             <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3 h-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <div className="flex">
               {options?.map((option, optionIndex) => (
                 <button
                   key={optionIndex}
-                  className={`p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2  ${
-                    riskCardiovascularButton === option
-                      ? riskCardiovascularButton === "Bajo"
-                        ? "bg-greenPrimary text-white"
-                        : riskCardiovascularButton === "Moderado"
+                  className={`p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2  ${riskCardiovascularButton === option
+                    ? riskCardiovascularButton === "Bajo"
+                      ? "bg-greenPrimary text-white"
+                      : riskCardiovascularButton === "Moderado"
                         ? "bg-[#f5e400] text-white"
                         : riskCardiovascularButton === "Alto"
-                        ? "bg-[#e73f3f] text-white"
-                        : riskCardiovascularButton === "Muy alto"
-                        ? "bg-[#9e193b] text-white"
-                        : "bg-white"
-                      : "bg-white"
-                  }`}
+                          ? "bg-[#e73f3f] text-white"
+                          : riskCardiovascularButton === "Muy alto"
+                            ? "bg-[#9e193b] text-white"
+                            : "bg-white"
+                    : "bg-white"
+                    }`}
                   onClick={(event) => {
                     event.preventDefault(); // Prevent the default form submission
                     handleOption(option);
@@ -171,14 +170,14 @@ export default function InputConsulta({
                       riskCardiovascularButton === option
                         ? "white"
                         : option === "Bajo"
-                        ? "#70c247"
-                        : option === "Moderado"
-                        ? "#f5e400"
-                        : option === "Alto"
-                        ? "#e73f3f"
-                        : option === "Muy alto"
-                        ? "#9e193b"
-                        : null
+                          ? "#70c247"
+                          : option === "Moderado"
+                            ? "#f5e400"
+                            : option === "Alto"
+                              ? "#e73f3f"
+                              : option === "Muy alto"
+                                ? "#9e193b"
+                                : null
                     }
                   />
                   {option}
@@ -192,24 +191,23 @@ export default function InputConsulta({
             key={index}
             className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]">
             <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3 h-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <div className="flex">
               {options2?.map((option, optionIndex) => (
                 <button
                   key={optionIndex}
-                  className={`p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2  ${
-                    riskHTPButton === option
+                  className={`p-2 md:px-3 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2  ${riskHTPButton === option
                       ? riskHTPButton === "Bajo"
                         ? "bg-greenPrimary text-white"
                         : riskHTPButton === "Moderado"
-                        ? "bg-[#f5e400] text-white"
-                        : riskHTPButton === "Alto"
-                        ? "bg-[#e73f3f] text-white"
-                        : "bg-white "
+                          ? "bg-[#f5e400] text-white"
+                          : riskHTPButton === "Alto"
+                            ? "bg-[#e73f3f] text-white"
+                            : "bg-white "
                       : "bg-white"
-                  }`}
+                    }`}
                   onClick={(event) => {
                     event.preventDefault();
                     handleOption2(option);
@@ -219,14 +217,14 @@ export default function InputConsulta({
                       riskHTPButton === option
                         ? "white"
                         : option === "Bajo"
-                        ? "#70c247"
-                        : option === "Moderado"
-                        ? "#f5e400"
-                        : option === "Alto"
-                        ? "#e73f3f"
-                        : option === "Muy Alto"
-                        ? "#9e193b"
-                        : null
+                          ? "#70c247"
+                          : option === "Moderado"
+                            ? "#f5e400"
+                            : option === "Alto"
+                              ? "#e73f3f"
+                              : option === "Muy Alto"
+                                ? "#9e193b"
+                                : null
                     }
                   />
                   {option}
@@ -240,7 +238,7 @@ export default function InputConsulta({
             key={index}
             className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]">
             <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-3 h-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <div className="flex">
@@ -252,7 +250,7 @@ export default function InputConsulta({
                     groupPatientPulmonaryHypertensionRisksButton === sub
                       ? "bg-primary text-white"
                       : "bg-white"
-                  }`}
+                    }`}
                   onClick={(event) => {
                     event.preventDefault();
                     handleGroupChange(sub);
@@ -276,7 +274,7 @@ export default function InputConsulta({
             key={index}
             className="flex flex-col gap-2 px-6 py-4 md:py-2 bg-[#fafafc]">
             <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center ">
-              <IconCurrentRouteNav className="w-3 h-3" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {sub}
             </label>
             <textarea
@@ -285,9 +283,9 @@ export default function InputConsulta({
               {...register(sub)}
               defaultValue={
                 valuesAmnesis[index] ||
-                valuesBackground[index] 
+                valuesBackground[index]
               }
-             
+
             />
           </div>
         ))}
