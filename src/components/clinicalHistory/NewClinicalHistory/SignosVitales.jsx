@@ -5,11 +5,11 @@ import circleData from "@/components/images/circleData.png";
 const SignosVitales = ({ info }) => {
   return (
     <div className="bg-[#FBFBFB]">
-      {info.anthropometricDetails?.map((detail, detailIndex) => (
+      {info.vitalSignDetailsMedicalEvent?.map((detail, detailIndex) => (
         <div key={detailIndex}>
           <DataPatient
-            title={detail.measureType}
-            info={`${detail.measure} ${detail.measureUnit}`}
+            title={detail.vitalSignMeasureType.name}
+            info={`${detail.measure} ${detail.vitalSignMeasureType.measUnit.name}`}
           />
         </div>
       ))}

@@ -3,7 +3,10 @@ import InputInfo from "./components/InputInfo";
 const AnamnesisComponent = ({ info }) => {
   return (
     <div className="md:p-5 flex flex-col gap-2 bg-[#fafafc] ">
-      <InputInfo title={"Motivo de consulta"} info={info?.chiefComplaint} />
+      <InputInfo
+        title={"Motivo de consulta"}
+        info={info?.chiefComplaint || info?.appSch?.reasonForConsultation}
+      />
       <InputInfo title={"Síntomas importantes"} info={info?.reviewOfSystems} />
     </div>
   );

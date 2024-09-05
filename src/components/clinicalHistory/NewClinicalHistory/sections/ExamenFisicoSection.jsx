@@ -3,6 +3,7 @@ import DynamicTable from "@/components/table/DynamicTable";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ExamenFisico from "@/components/clinicalHistory/NewClinicalHistory/ExamenFisico";
 import { useAppSelector } from "@/redux/hooks";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const ExamenFisicoSection = () => {
   const [examenFisicoData, setExamenFisicoData] = useState([]);
@@ -10,56 +11,54 @@ const ExamenFisicoSection = () => {
   const user = useAppSelector((state) => state.clinicalHistory.user);
 
   useEffect(() => {
-    const fetchAnamnesisData = async () => {
+    const fetchExamenFisicoData = async () => {
       try {
-        const response = await fetch("/api/anamnesis", {
-          params: { userId: user.id },
+        const response = await ApiSegimed("/patient-physical-examination", {
+          params: { patientId: user.userId },
         });
-        const data = await response.json();
-        setAnamnesisData(data);
+        setExamenFisicoData(response.data);
       } catch (error) {
-        console.error("Error fetching anamnesis data:", error);
+        console.error("Error fetching evoluciones data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAnamnesisData();
-  }, [user.id]);
+    fetchExamenFisicoData();
+  }, [user.userId]);
 
   const CommonColumns = [
     {
       label: "Fecha",
-      key: "timestamp",
+      key: "appSch.scheduledStartTimestamp",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Hora",
-      key: "timestamp",
+      key: "appSch.scheduledStartTimestamp",
       showMobile: true,
       width: "w-8",
     },
     {
-      label: "Médico",
-      key: "physician.name",
+      label: "Grupo HTP",
+      key: "htp",
       showMobile: true,
       width: "w-16",
     },
     {
-      label: "Centro de atencion",
-      key: "attendancePlace.alias",
+      label: "Centro de atencion ",
+      key: "appSch.attendancePlace.alias",
       showMobile: true,
       width: "w-16",
     },
     {
       label: "Motivo de consulta",
-      key: "chiefComplaint",
+      key: "appSch.reasonForConsultation",
       showMobile: false,
       width: "w-16",
     },
   ];
-
   const ExamenFisicoContent = (row) => <ExamenFisico info={row} />;
   ExamenFisicoContent.displayName = "ExamenFisicoContent";
 
@@ -74,6 +73,7 @@ const ExamenFisicoSection = () => {
           columns={CommonColumns}
           renderCustomContent={ExamenFisicoContent}
           textError="No se encontró examen físico disponible."
+          clickable={true}
         />
       )}
     </>

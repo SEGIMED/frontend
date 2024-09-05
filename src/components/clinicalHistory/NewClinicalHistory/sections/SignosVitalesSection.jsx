@@ -14,7 +14,7 @@ const SignosVitalesSection = () => {
     const fetchSignosVitalesData = async () => {
       try {
         const response = await ApiSegimed("/medical-history/vital-signs", {
-          params: { userId: user.userId },
+          params: { patientId: user.userId },
         });
         setSignosVitalesData(response.data);
       } catch (error) {
@@ -30,31 +30,31 @@ const SignosVitalesSection = () => {
   const CommonColumns = [
     {
       label: "Fecha",
-      key: "timestamp",
+      key: "date",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Hora",
-      key: "timestamp",
+      key: "date",
       showMobile: true,
       width: "w-8",
     },
+    // {
+    //   label: "Grupo HTP",
+    //   key: "htp",
+    //   showMobile: true,
+    //   width: "w-16",
+    // },
     {
-      label: "Médico",
-      key: "physician.name",
-      showMobile: true,
-      width: "w-16",
-    },
-    {
-      label: "Centro de atencion",
-      key: "attendancePlace.alias",
+      label: "Centro de atencion ",
+      key: "appSch.attendancePlace.alias",
       showMobile: true,
       width: "w-16",
     },
     {
       label: "Motivo de consulta",
-      key: "chiefComplaint",
+      key: "appSch.reasonForConsultation",
       showMobile: false,
       width: "w-16",
     },
@@ -74,6 +74,7 @@ const SignosVitalesSection = () => {
           columns={CommonColumns}
           renderCustomContent={SignosVitalesContent}
           textError="No se encontraron signos vitales disponibles."
+          clickable={true}
         />
       )}
     </>

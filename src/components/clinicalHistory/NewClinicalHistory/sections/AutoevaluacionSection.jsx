@@ -3,6 +3,7 @@ import DynamicTable from "@/components/table/DynamicTable";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ClincalCuerpo from "@/components/clinicalHistory/NewClinicalHistory/cuerpo";
 import { useAppSelector } from "@/redux/hooks";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const AutoevaluacionSection = () => {
   const [autoevaluacionData, setAutoevaluacionData] = useState([]);
@@ -10,51 +11,50 @@ const AutoevaluacionSection = () => {
   const user = useAppSelector((state) => state.clinicalHistory.user);
 
   useEffect(() => {
-    const fetchAnamnesisData = async () => {
+    const fetchAutoevaluacionData = async () => {
       try {
-        const response = await fetch("/api/anamnesis", {
-          params: { userId: user.id },
+        const response = await ApiSegimed("/self-evaluation-event/pain-map", {
+          params: { patientId: user.userId },
         });
-        const data = await response.json();
-        setAnamnesisData(data);
+        setAutoevaluacionData(response.data);
       } catch (error) {
-        console.error("Error fetching anamnesis data:", error);
+        console.error("Error fetching evoluciones data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAnamnesisData();
-  }, [user.id]);
+    fetchAutoevaluacionData();
+  }, [user.userId]);
 
   const CommonColumns = [
     {
       label: "Fecha",
-      key: "timestamp",
+      key: "date",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Hora",
-      key: "timestamp",
+      key: "date",
       showMobile: true,
       width: "w-8",
     },
+    // {
+    //   label: "Grupo HTP",
+    //   key: "htp",
+    //   showMobile: true,
+    //   width: "w-16",
+    // },
     {
-      label: "Médico",
-      key: "physician.name",
-      showMobile: true,
-      width: "w-16",
-    },
-    {
-      label: "Centro de atencion",
-      key: "attendancePlace.alias",
+      label: "Centro de atencion ",
+      key: "attendancePlace",
       showMobile: true,
       width: "w-16",
     },
     {
       label: "Motivo de consulta",
-      key: "chiefComplaint",
+      key: "reasonForConsultation",
       showMobile: false,
       width: "w-16",
     },
@@ -74,6 +74,7 @@ const AutoevaluacionSection = () => {
           columns={CommonColumns}
           renderCustomContent={AutoevaluacionContent}
           textError="No se encontró autoevaluación disponible."
+          clickable={true}
         />
       )}
     </>

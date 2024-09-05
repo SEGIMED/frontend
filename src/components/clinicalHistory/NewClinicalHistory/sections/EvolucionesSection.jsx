@@ -42,12 +42,12 @@ const EvolucionesSection = () => {
     },
     {
       label: "Médico",
-      key: "physician.name",
+      key: "physician",
       showMobile: true,
       width: "w-16",
     },
     {
-      label: "Centro de atencion",
+      label: "Centro de atencion ",
       key: "attendancePlace.alias",
       showMobile: true,
       width: "w-16",

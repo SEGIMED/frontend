@@ -8,6 +8,7 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import ImportarHC from "@/components/modal/ModalDoctor/modalImportarHC";
 import FileDisplay from "@/components/modal/ModalDoctor/modalDisplayFile";
 import { useAppSelector } from "@/redux/hooks";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const ImportacionesSection = () => {
   const [importacionesData, setImportacionesData] = useState([]);
@@ -20,8 +21,8 @@ const ImportacionesSection = () => {
   useEffect(() => {
     const fetchImportationsData = async () => {
       try {
-        const response = await ApiSegimed("/medical-history/importations", {
-          params: { patientId: user.userId },
+        const response = await ApiSegimed("/patient-studies", {
+          params: { userId: user.userId },
         });
         setImportacionesData(response.data);
       } catch (error) {

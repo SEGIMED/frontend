@@ -29,31 +29,31 @@ const ConsultasSection = () => {
   const ConsultasColumns = [
     {
       label: "Fecha",
-      key: "timestamp",
+      key: "appSch.scheduledStartTimestamp",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Hora",
-      key: "timestamp",
+      key: "appSch.scheduledStartTimestamp",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Grupo HTP",
-      key: "htpGroups",
+      key: "appSch.patientUser.userHpGroups",
       showMobile: true,
       width: "w-16",
     },
     {
-      label: "Centro de atencion",
-      key: "attendancePlace.alias",
+      label: "Centro de atencion ",
+      key: "appSch.attendancePlace.alias",
       showMobile: true,
       width: "w-16",
     },
     {
       label: "Motivo de consulta",
-      key: "chiefComplaint",
+      key: "appSch.reasonForConsultation",
       showMobile: false,
       width: "w-16",
     },

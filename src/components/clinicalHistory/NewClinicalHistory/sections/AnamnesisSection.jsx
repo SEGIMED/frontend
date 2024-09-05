@@ -26,35 +26,34 @@ const AnamnesisSection = () => {
 
     fetchAnamnesisData();
   }, [user.userId]);
-  console.log(anamnesisData);
   const CommonColumns = [
     {
       label: "Fecha",
-      key: "timestamp",
+      key: "appSch.scheduledStartTimestamp",
       showMobile: true,
       width: "w-8",
     },
     {
       label: "Hora",
-      key: "timestamp",
+      key: "appSch.scheduledStartTimestamp",
       showMobile: true,
       width: "w-8",
     },
     {
-      label: "Médico",
-      key: "physician.name",
+      label: "Grupo HTP",
+      key: "htp",
       showMobile: true,
       width: "w-16",
     },
     {
-      label: "Centro de atencion",
-      key: "attendancePlace.alias",
+      label: "Centro de atencion ",
+      key: "appSch.attendancePlace.alias",
       showMobile: true,
       width: "w-16",
     },
     {
       label: "Motivo de consulta",
-      key: "chiefComplaint",
+      key: "appSch.reasonForConsultation",
       showMobile: false,
       width: "w-16",
     },

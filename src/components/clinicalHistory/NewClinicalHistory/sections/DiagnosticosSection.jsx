@@ -3,6 +3,7 @@ import DynamicTable from "@/components/table/DynamicTable";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import Diagnosticos from "@/components/clinicalHistory/NewClinicalHistory/Diagnosticos";
 import { useAppSelector } from "@/redux/hooks";
+import { ApiSegimed } from "@/Api/ApiSegimed";
 
 const DiagnosticosSection = () => {
   const [diagnosticosData, setDiagnosticosData] = useState([]);
