@@ -29,8 +29,8 @@ export default function InputExam({ title, subtitle , defaultOpen = false, diagn
     };
 
     useEffect(() => {
-        if (diagnostico?.physicalExaminations[0]?.physicalSubsystem) {
-            setSelectedOption(diagnostico?.physicalExaminations[0]?.physicalSubsystem);
+        if (diagnostico?.physicalExaminations[diagnostico?.physicalExaminations?.length -1]?.physicalSubsystem) {
+            setSelectedOption(diagnostico?.physicalExaminations[diagnostico?.physicalExaminations?.length -1]?.physicalSubsystem);
             setSubsistemas(true);
         }
     }, [diagnostico]);
@@ -41,7 +41,7 @@ export default function InputExam({ title, subtitle , defaultOpen = false, diagn
                     <div/>
                     <div className="flex items-center">
                         <Image src={circleData} alt="" />
-                        <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">{title}<b className="font-semibold text-red-500">*</b></p>
+                        <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">{title}</p>
                     </div>
                     <div className={isOpen || defaultOpen===true ? "rotate-180" : ""}>
                         <IconArrowDetailDown/>
@@ -63,7 +63,7 @@ export default function InputExam({ title, subtitle , defaultOpen = false, diagn
                                         colorBackground={"#487FFA"} 
                                         colorText={"white"}
                                         handleOptionChange={handleOptionChange}
-                                        selectedOptions={diagnostico?.physicalExaminations[0]?.physicalSubsystem || null}
+                                        selectedOptions={diagnostico?.physicalExaminations[diagnostico?.physicalExaminations?.length -1]?.physicalSubsystem || null}
                                         />
                                 </div>
                                 

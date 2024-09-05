@@ -8,11 +8,13 @@ import { IMC } from "@/utils/normaliceVitalSigns";
 import Cookies from "js-cookie";
 import Elboton from "../Buttons/Elboton";
 import IconOptions from "../icons/IconOptions";
+import LoadingFallback from "../loading/loading";
 
 export default function SignosVitalesInfo({
   paciente,
   title,
   preconsult,
+  flag=false
 }) {
   const role=Cookies.get("b")
  
@@ -119,126 +121,137 @@ export default function SignosVitalesInfo({
  
   return (
     <div className="flex flex-col">
-      <details open={true}>
-      <summary className="flex items-center justify-between gap-1 px-4 py-3 bg-white border-b border-t cursor-pointer">
-      <div />
-      <div className="flex items-center gap-2">
-        <Image src={circleData} alt="" className="w-5 h-5" />
-        <p className="text-start text-[#5F5F5F] font-bold text-sm md:text-base leading-5">
-          {title}
-        
-        </p>
+         {flag ? (
+        <div className="flex items-center justify-center h-20">
+        <LoadingFallback />
       </div>
-      <div></div>
-      </summary>
-
-        {vitalSigns.map((vital, vitalIndex) => (
-          <div
-            key={vitalIndex}
-            className="flex flex-col md:flex-row justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10 py-2"
-            >
-            <label className="flex w-full md:w-2/3 text-start text-[#5F5F5F] font-medium text-sm md:text-base leading-6 px-2 py-2">
-              <Image
-                src={circleData}
-                alt="circulo informacion"
-                className="w-5 h-5"
-              />
-              <div className="w-full flex md:justify-between">
-              <span className="ml-2">{vital.measureType}</span>
-              <span className="ml-2">{vital.mesureExample}</span>
-              </div>
-            </label>
-            <div className="flex w-full ">
+      ) :
+      (
+        <details open={true}>
+        <summary className="flex items-center justify-between gap-1 px-4 py-3 bg-white border-b border-t cursor-pointer">
+        <div />
+        <div className="flex items-center gap-2">
+          <Image src={circleData} alt="" className="w-5 h-5" />
+          <p className="text-start text-[#5F5F5F] font-bold text-sm md:text-base leading-5">
+            {title}
           
-            <input
-              type="number"
-              className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
-              defaultValue={vital.measure}
-              onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
-              {...register(vital.measureType)}
-            />
-              {vital.measureType === "IMC" && (
-                <Elboton
-                className={"ml-4"}
-                icon={<IconOptions color="white"/>}
-                size={"sm"}
-                onPress={handleCalculateIMC}/>
-             )}
+          </p>
+        </div>
+        <div></div>
+        </summary>
+     
+       
+  
+          {vitalSigns.map((vital, vitalIndex) => (
+            <div
+              key={vitalIndex}
+              className="flex flex-col md:flex-row justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10 py-2"
+              >
+              <label className="flex w-full md:w-2/3 text-start text-[#5F5F5F] font-medium text-sm md:text-base leading-6 px-2 py-2">
+                <Image
+                  src={circleData}
+                  alt="circulo informacion"
+                  className="w-5 h-5"
+                />
+                <div className="w-full flex md:justify-between">
+                <span className="ml-2">{vital.measureType}</span>
+                <span className="ml-2">{vital.mesureExample}</span>
+                </div>
+              </label>
+              <div className="flex w-full ">
+            
+              <input
+                type="number"
+                className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
+                defaultValue={vital.measure}
+                onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
+                {...register(vital.measureType)}
+              />
+                {vital.measureType === "IMC" && (
+                  <Elboton
+                  className={"ml-4"}
+                  icon={<IconOptions color="white"/>}
+                  size={"sm"}
+                  onPress={handleCalculateIMC}/>
+               )}
+              </div>
+              
+             
+             
+              {/* {vital.measureType === "IMC" ? 
+              (
+                <input
+                type="number"
+                className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
+                defaultValue={vital.measure}
+                onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
+                {...register(vital.measureType)}
+              />
+              ):
+              (
+                <input
+                type="number"
+                className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
+                defaultValue={vital.measure}
+                onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
+                {...register(vital.measureType)}
+              />
+              )} */}
+              
             </div>
-            
-           
-           
-            {/* {vital.measureType === "IMC" ? 
-            (
-              <input
-              type="number"
-              className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
-              defaultValue={vital.measure}
-              onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
-              {...register(vital.measureType)}
-            />
-            ):
-            (
-              <input
-              type="number"
-              className="w-1/2 text-start text-[#5F5F5F] font-normal text-base leading-6 bg-white border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg px-6 py-1"
-              defaultValue={vital.measure}
-              onChange={(e) => handleVitalChange(vitalIndex, e.target.value)}
-              {...register(vital.measureType)}
-            />
-            )} */}
-            
+          ))}
+          {role=== "Médico" ? 
+          (
+            <div className="flex flex-col md:flex-row justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10 py-2">
+            <label className="flex w-full md:w-2/3 text-start text-[#5F5F5F] font-medium text-sm md:text-base leading-6 px-2 py-2">
+                <Image
+                  src={circleData}
+                  alt="circulo informacion"
+                  className="w-6 h-6"
+                />{" "}
+                Clase funcional
+              </label>
+              <div className="flex justify-start w-1/2 gap-4">
+                <DropClaseFuncional options={['Clase funcional I', 'Clase funcional II', 'Clase funcional III', 'Clase funcional IV']} 
+                text2={"Seleccione clase funcional"} 
+                name={"HeartFailureRisk"} 
+                selectedOptions={paciente?.patientPulmonaryHypertensionRisks?.risk}/>
+              </div>
           </div>
-        ))}
-        {role=== "Médico" ? 
-        (
+          )
+          :
+          (
+            <div></div>
+          )}
+          
+          
+  
           <div className="flex flex-col md:flex-row justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10 py-2">
-          <label className="flex w-full md:w-2/3 text-start text-[#5F5F5F] font-medium text-sm md:text-base leading-6 px-2 py-2">
+            <label className="flex w-full md:w-2/3 text-start text-[#5F5F5F] font-medium text-sm md:text-base leading-6 px-2 py-2">
               <Image
                 src={circleData}
                 alt="circulo informacion"
                 className="w-6 h-6"
               />{" "}
-              Clase funcional
+              Escriba los últimos 4 valores de glicemia que tuvo.
             </label>
-            <div className="flex justify-start w-1/2 gap-4">
-              <DropClaseFuncional options={['Clase funcional I', 'Clase funcional II', 'Clase funcional III', 'Clase funcional IV']} 
-              text2={"Seleccione clase funcional"} 
-              name={"HeartFailureRisk"} 
-              selectedOptions={paciente?.patientPulmonaryHypertensionRisks?.risk}/>
+            <div className="flex w-1/2 grid-cols-2 gap-1 md:flex md:gap-4 ">
+              {ultimosValoresAnormales.map((value, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  className="md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full"
+                  defaultValue={value}
+                  onChange={(event) => handleAnormalValueChange(index, event)}
+                  {...register(`lastAbnormalGlycemia[${index}]`)}
+                />
+              ))}
             </div>
-        </div>
-        )
-        :
-        (
-          <div></div>
-        )}
-        
-        
-
-        <div className="flex flex-col md:flex-row justify-start items-center gap-2 px-3 bg-[#fafafc] md:pr-10 py-2">
-          <label className="flex w-full md:w-2/3 text-start text-[#5F5F5F] font-medium text-sm md:text-base leading-6 px-2 py-2">
-            <Image
-              src={circleData}
-              alt="circulo informacion"
-              className="w-6 h-6"
-            />{" "}
-            Escriba los últimos 4 valores de glicemia que tuvo.
-          </label>
-          <div className="flex w-1/2 grid-cols-2 gap-1 md:flex md:gap-4 ">
-            {ultimosValoresAnormales.map((value, index) => (
-              <input
-                key={index}
-                type="text"
-                className="md:px-4 text-center py-1 border-2 rounded-xl border-[#DCDBDB] w-full"
-                defaultValue={value}
-                onChange={(event) => handleAnormalValueChange(index, event)}
-                {...register(`lastAbnormalGlycemia[${index}]`)}
-              />
-            ))}
           </div>
-        </div>
-      </details>
+        </details>
+      )
+    }
+     
     </div>
   );
 }

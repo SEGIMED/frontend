@@ -55,7 +55,7 @@ export default function InputDiagnostico({
 
   console.log(orden)
   console.log(drugsToSend)
-  const [valueDiagnosticoSubtitle3, setValueDiagnosticoSubtitle3] = useState([])
+  const [valueDiagnosticoSubtitlee, setValueDiagnosticoSubtitlee] = useState([])
   const handleAddNewItem = (e) => {
     e.preventDefault(); // Evita el comportamiento predeterminado del botón
     setInputs((prevInputs) => [...prevInputs, ""]); // Agrega un nuevo input vacío al array
@@ -69,24 +69,36 @@ export default function InputDiagnostico({
   //   });
   //   setValue(`medications[${index}]`, value); // Guarda el valor en react-hook-form
   // };
-  // useEffect(() => {
-  //   setValueDiagnosticoSubtitle2([
-  //     diagnostico?.diagnostics[0]?.diagnosticNotes,
-  //     diagnostico?.medicalProcedures[0]?.medicalProcedureName,
-  //   ])
-  //   setValueDiagnosticoSubtitle3(
-  //     diagnostico?.drugPrescriptions && diagnostico.drugPrescriptions.length > 0
-  //       ? diagnostico.drugPrescriptions
-  //       : ["", ""]
+  useEffect(() => {
+    // setValueDiagnosticoSubtitle2([
+    //   diagnostico?.diagnostics[0]?.diagnosticNotes,
+    //   diagnostico?.medicalProcedures[0]?.medicalProcedureName,
+    // ])
+    // setValueDiagnosticoSubtitle3(
+    //   diagnostico?.drugPrescriptions && diagnostico.drugPrescriptions.length > 0
+    //     ? diagnostico.drugPrescriptions
+    //     : ["", ""]
 
-  //   )
-  //   setValueDiagnosticoSubtitle([
-  //     diagnostico?.TherapyPrescription,
-  //     diagnostico?.treatmentPlan,
-  //     diagnostico?.alarmPattern
-  //   ])
-  // },[diagnostico])
+    // )
+  
+    setValueDiagnosticoSubtitle([
+      
+      diagnostico?.physicianComments,
+      diagnostico?.TherapyPrescription,
+      diagnostico?.medicalIndications,
+      diagnostico?.medicalProcedures[diagnostico?.medicalProcedures?.length-1]?.medicalProcedureName,
+      diagnostico?.alarmPattern,
+    ])
 
+   
+      setValueDiagnosticoSubtitlee([
+        diagnostico?.chiefComplaint
+      ])
+    
+
+  },[diagnostico])
+  console.log(valueDiagnosticoSubtitlee)
+  console.log(valueDiagnosticoSubtitle)
   // autocomplete durgs
   useEffect(() => {
     const fetchDrugs = async () => {
@@ -283,7 +295,7 @@ export default function InputDiagnostico({
                     >
                         {(cie) => <AutocompleteItem key={cie.id}>{cie.description}</AutocompleteItem>}
                     </Autocomplete>
-              <span className="flex m-2">
+              {/* <span className="flex m-2">
               <IconCurrentRouteNav className="w-3" /> Descripción del Diagnóstico 
                 </span>   
               
@@ -292,7 +304,7 @@ export default function InputDiagnostico({
               placeholder="Ingrese aquí sus anotaciones"
               {...register(sub)}
               defaultValue={valueDiagnosticoSubtitle2[index] || ""}
-            />
+            /> */}
           </div>
         ))}
         {/* {subtitle3 && (
@@ -433,10 +445,11 @@ export default function InputDiagnostico({
               placeholder="Ingrese aquí sus anotaciones"
               {...register(sub)}
               defaultValue={
-                valueDiagnosticoSubtitle[index] || "" }
+             valueDiagnosticoSubtitle[index]}
             />
           </div>
         ))}
+            
       </details>
 
       <ModalModularizado

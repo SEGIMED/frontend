@@ -14,6 +14,7 @@ import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import ButtonNextPreconsultationWorst from "./ButtonWorstPaintOfYourLife";
+import LoadingFallback from "../loading/loading";
 
 export default function InputCuerpoPre({
   title,
@@ -21,6 +22,7 @@ export default function InputCuerpoPre({
   bodySection,
   defaultOpen = false,
   valuePreconsultation,
+  flag= false
 }) {
   
   const [selectedMuscles, setSelectedMuscles] = useState([]);
@@ -268,7 +270,13 @@ export default function InputCuerpoPre({
 
   return (
     <div className="flex flex-col">
-      <details open={defaultOpen}>
+         {flag ? (
+        <div className="flex items-center justify-center h-20">
+        <LoadingFallback />
+      </div>
+      ) :
+      (
+        <details open={defaultOpen}>
         <summary
           className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}>
@@ -531,6 +539,9 @@ export default function InputCuerpoPre({
           </div>
         </div>
       </details>
+      )
+      }
+     
     </div>
   );
 }

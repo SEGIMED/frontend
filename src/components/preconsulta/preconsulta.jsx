@@ -75,17 +75,27 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
 
   
 
-  // useEffect(() => {
+  useEffect(() => {
     
-  //   const intervalId = setInterval(() => {
-  //     saveDraftToDatabase();
-  //   }, 60000); // Guarda cada 60 segundos
+    const intervalId = setInterval(() => {
+    handleAnamnesisSave()
+    handleBackgroundSave()
+    handleBodySave()
+    handleSaveVitalSigns()
+    handleQuestionary()
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //     saveDraftToDatabase(); // Guarda borrador al desmontar el componente
-  //   };
-  // }, []);
+    }, 60000); // Guarda cada 60 segundos
+
+    return () => {
+      handleAnamnesisSave()
+      handleBackgroundSave()
+      handleBodySave()
+      handleSaveVitalSigns()
+      handleQuestionary()
+      clearInterval(intervalId);
+     
+    };
+  }, []);
 
   useEffect(() => {
   
@@ -200,6 +210,11 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
    
    
       const response =await patchPreconsultation(bodyForm)
+      handleBackgroundSave()
+      handleAnamnesisSave()
+      handleBodySave()
+      handleSaveVitalSigns()
+
       console.log(response)
       if (response) {
         Swal.fire({
@@ -279,33 +294,33 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   }
 
   // Si el paciente ya tuvo la consulta, entonces no puede volver a editar la preconsulta.
-  if (!available) {
-    return (
-      <FormProvider {...methods}>
-        <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
-          <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
-            <div className="md:w-1/2">
-              <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
-                <Elboton
-                  size={"lg"}
-                  nombre={"Regresar"}
-                  icon={<IconRegresar />}
-                />
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
-                Crear preconsulta
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center my-2">
-            Su preconsulta no está disponible
-          </div>
-        </div>
-      </FormProvider>
-    );
-  }
+  // if (!available) {
+  //   return (
+  //     <FormProvider {...methods}>
+  //       <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
+  //         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
+  //           <div className="md:w-1/2">
+  //             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
+  //               <Elboton
+  //                 size={"lg"}
+  //                 nombre={"Regresar"}
+  //                 icon={<IconRegresar />}
+  //               />
+  //             </Link>
+  //           </div>
+  //           <div className="flex items-center">
+  //             <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
+  //               Crear preconsulta
+  //             </p>
+  //           </div>
+  //         </div>
+  //         <div className="flex items-center justify-center my-2">
+  //           Su preconsulta no está disponible
+  //         </div>
+  //       </div>
+  //     </FormProvider>
+  //   );
+  // }
 
   const onSubmit= (data)=>{
     const vitalSigns = [
@@ -418,7 +433,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
       }
       
       const response= await patchPreconsultation(data)
-     
+      console.log(response)
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
     }
@@ -428,7 +443,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     try {
 
         const response = await postPatientBackgrounds(background);
-      
+        console.log(response)
     } catch (error) {
         console.error('Error saving background:', error);
     }
@@ -439,8 +454,9 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
             ...necesaryData,
             ...anamnesis
         };
+
         const response = await patchPreconsultation(data);
- 
+      console.log(response)
     } catch (error) {
         console.error('Error saving anamnesis:', error);
     }
@@ -461,7 +477,7 @@ const handleBodySave = async ()=>{
       }
       
       const response= await patchPreconsultation(data)
-      
+      console.log(response)
      
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
@@ -471,7 +487,7 @@ const handleBodySave = async ()=>{
 }
 const handleQuestionary=async ()=>{
   try {
-    console.log(bodyForm)
+    
     const response= await patchPreconsultation(bodyForm)
     console.log(response)
   } catch (error) {
@@ -645,7 +661,15 @@ const fetchMedicalEvent = async (scheduleId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={handleQuestionary}
+            onPress={()=>{handleQuestionary
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
             size={"sm"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
@@ -661,8 +685,16 @@ const fetchMedicalEvent = async (scheduleId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={handleSaveVitalSigns}
-            size={"sm"}
+            onPress={()=>{handleSaveVitalSigns
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"md"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
@@ -679,8 +711,16 @@ const fetchMedicalEvent = async (scheduleId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={handleBodySave}
-            size={"sm"}
+            onPress={()=>{handleBodySave
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"md"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
@@ -717,8 +757,16 @@ const fetchMedicalEvent = async (scheduleId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={anamnesisCompleto}
-            size={"sm"}
+            onPress={()=>{anamnesisCompleto
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"md"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
@@ -765,7 +813,7 @@ const fetchMedicalEvent = async (scheduleId) => {
           />
 
         </form>
-        <div className="flex justify-center p-6 bg-[#fafafc]">
+        {/* <div className="flex justify-center p-6 bg-[#fafafc]">
           <Elboton
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
@@ -774,7 +822,7 @@ const fetchMedicalEvent = async (scheduleId) => {
             size={"lg"}
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
-        </div>
+        </div> */}
         {!flagFile  ? (
            <ModalModularizado
            isOpen={isModalOpen}
