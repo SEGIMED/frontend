@@ -7,6 +7,7 @@ import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
 import PDFExportComponent from "@/components/pdf/pdfOrder";
+import IconDownload from "@/components/icons/IconDownload";
 
 
 export default function MedicamentosTable({ medicamento }) {
@@ -25,14 +26,25 @@ export default function MedicamentosTable({ medicamento }) {
                     <p className="hidden md:block">{medicamento.lastModification?.physicianModification?.name} {medicamento.lastModification?.physicianModification?.lastname}</p>
                     <p className="hidden md:block" >{Fecha(medicamento.startTimestamp)} {Hora(medicamento.startTimestamp)}</p>
                 </div>
-                <div className="w-[20%] bg-white hidden md:flex gap-5 items-center justify-around">
-                    <div>
+                <div className="w-[25%] bg-white hidden md:flex gap-5 items-center justify-end">
+                    <div className="flex gap-3">
                         <button
                             className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full"
                             onClick={() => router.push(`${rutas.PacienteDash}${rutas.Solicitudes}`)}>
                             <IconSolicitar />
                             <p className="hidden md:block text-white font-bold">Solicitar</p>
                         </button>
+                        <a
+                            href={medicamento?.lastModification?.medicalOrder?.orderPdf}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <button className="bg-bluePrimary text-white py-2 px-4 items-center flex rounded-lg gap-2">
+                                <IconDownload />
+
+                            </button>
+                        </a>
                     </div>
                     <div>
 
@@ -52,8 +64,20 @@ export default function MedicamentosTable({ medicamento }) {
                 <TextoMedicament className={"md:hidden block"} size={"min-h-12"} description={medicamento.doctor} label={"Médico:"} />
                 <TextoMedicament className={"md:hidden block"} size={"min-h-12"} description={medicamento.startDate} label={"Fecha de Inicio:"} />
                 <TextoMedicament className={"md:hidden block"} size={"min-h-12"} description={medicamento.modifiedBy} label={"Modificado por poraciones:"} />
-                <TextoMedicament description={medicamento.lastModification?.indications} size={"min-h-24"} label={"Indicaciones:"} />
-                <TextoMedicament description={medicamento.lastModification?.observations} size={"min-h-24"} label={"Observaciones:"} />
+                {medicamento.lastModification?.indications && medicamento.lastModification?.observations ? (
+                    <>
+                        <TextoMedicament
+                            description={medicamento.lastModification?.indications}
+                            size={"min-h-24"}
+                            label={"Indicaciones:"}
+                        />
+                        <TextoMedicament
+                            description={medicamento.lastModification?.observations}
+                            size={"min-h-24"}
+                            label={"Observaciones:"}
+                        />
+                    </>
+                ) : null}
             </div>
             <div className="flex gap-5 bg-[#fafafc] md:hidden justify-center py-5">
 

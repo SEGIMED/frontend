@@ -26,6 +26,7 @@ import IconOptions from "@/components/icons/IconOptions";
 import IconEditar from "@/components/icons/iconEditar";
 import IconClose2 from "@/components/icons/IconClose2";
 import DeleteOrden from "@/components/modal/ModalPatient/ModalDeteleOrden";
+import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -37,6 +38,7 @@ export default function HomeDoc() {
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [showModalModify, setShowModalModify] = useState(false);
+    const [showModalConsultation, setShowModalConsultation] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState({});
     const [isLoading, setisLoading] = useState(true);
     const [isSorted, setIsSorted] = useState(false);
@@ -233,16 +235,29 @@ export default function HomeDoc() {
 
 
                 <h1 className="font-bold ml-4 hidden md:block ">Listado de Solicitudes </h1>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
-                    <IconMas color={"#487ffa"} />
-                    <p
-                        className={` text-bluePrimary
+
+                <div className=" flex justify-end gap-3">
+                    <button
+                        onClick={() => setShowModalConsultation(true)}
+                        className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+                        <IconMas color={"#487ffa"} />
+                        <p
+                            className={` text-bluePrimary
                          font-bold `}>
-                        Nueva solicitud
-                    </p>
-                </button>
+                            Nueva consulta
+                        </p>
+                    </button>
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+                        <IconMas color={"#487ffa"} />
+                        <p
+                            className={` text-bluePrimary
+                         font-bold `}>
+                            Nueva solicitud
+                        </p>
+                    </button>
+                </div>
                 {/* <div></div> */}
             </div>
             <div className="flex flex-col  w-full h-full overflow-y-auto">
@@ -382,6 +397,14 @@ export default function HomeDoc() {
                 buttonText={{ end: `Modificar` }}
                 funcion={handleSubmitModify}
             />
+
+            {showModalConsultation && (
+                <ModalConsultationCalendar
+                    isOpen={showModalConsultation}
+                    onClose={() => setShowModalConsultation(false)}
+
+                />
+            )}
             {/* )} */}
 
         </div>

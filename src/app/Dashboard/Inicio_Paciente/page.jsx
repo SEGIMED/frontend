@@ -213,7 +213,7 @@ export default function HomePte() {
 
 
   return (
-    <div className="h-full flex flex-col items-center gap-8 pt-8">
+    <div className="h-[100%] flex flex-col items-center gap-8 pt-8">
       <div className="flex justify-center items-center gap-2 px-4 md:py-3">
         <h2 className="text-3xl text-[#808080] font-medium">
           ¡Bienvenido{" "}
