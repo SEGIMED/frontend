@@ -11,12 +11,13 @@ import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import Elboton from "@/components/Buttons/Elboton";
 import IconRegresar from "@/components/icons/iconRegresar";
+import { useRouter } from "next/navigation";
 
 export default function Ver_MensajesDoc() {
   const params = useParams();
   const targetId = params.id;
   const [buttonSize, setButtonSize] = useState("lg");
-
+  const router = useRouter();
   useEffect(() => {
     // Este código se ejecutará solo en el cliente, después de que el componente se haya montado
     if (typeof window !== "undefined") {
@@ -49,7 +50,7 @@ export default function Ver_MensajesDoc() {
         </div>
         <div>
           <Elboton
-            href={`${rutas.Doctor}${rutas.Mensajes}`}
+            onPress={() => router.back()}
             size={buttonSize}
             nombre={"Regresar"}
             icon={<IconRegresar />}

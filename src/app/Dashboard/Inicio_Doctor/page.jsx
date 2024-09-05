@@ -23,6 +23,7 @@ import IconNext from "@/components/icons/IconNext";
 import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Agenda from "@/components/agenda/Agenda";
+import IconPendientes from "@/components/icons/IconPendientes";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -31,6 +32,7 @@ export default function HomeDoc() {
   const [currentTitle, setCurrentTitle] = useState(0);
   const [barChartData, setBarChartData] = useState(null);
   const [activeData, setActiveData] = useState(null);
+  const [alarmsData, setAlarmsData] = useState(null);
   const dataAlarms = useAppSelector((state) => state.alarms);
   const dataPtesGrafic = useAppSelector((state) => state.activePtes);
   const getSchedulesByUserId = async () => {
@@ -62,7 +64,6 @@ export default function HomeDoc() {
         console.error("Error fetching data:", error);
         setBarChartData(null);
         setActiveData(null);
-        setAlarmsData({ actives: 0, inactives: 0 });
       }
     };
 
@@ -87,7 +88,6 @@ export default function HomeDoc() {
     <p key={1}>Actividad</p>,
     <p key={2}>Alarmas</p>,
   ];
-  console.log(dataAlarms);
 
   const charts = [
     <div key={0} className=" flex-grow flex items-center justify-center h-100%">
@@ -131,23 +131,24 @@ export default function HomeDoc() {
         </Link>
 
         <Link
-          href={`${rutas.Doctor}${rutas.Historial}`}
+          href={`${rutas.Doctor}${rutas.Ordenes}`}
           className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
-            <IconDashAgenda className="w-[25%] md:w-14" />
+            <IconHomeCitas className="w-[20%] md:w-12" />
             <div className="text-[16px] lg:text-2xl font-semibold flex flex-col items-center">
-              <span>Consultas</span>
+              <span>Ordenes </span>
+              <span>médicas </span>
             </div>
           </div>
         </Link>
 
         <Link
-          href={`${rutas.Doctor}${rutas.Estadisticas}`}
+          href={`${rutas.Doctor}${rutas.Pendientes}`}
           className="w-full lg:w-1/4">
           <div className=" bg-gradient-to-br w-[100%] bg-bluePrimary flex justify-center items-center gap-1 xs:gap-3 text-white text-xl rounded-3xl  h-24">
-            <IconHomeCitas className="w-[20%] md:w-12" />
+            <IconPendientes className="w-[20%] md:w-12" />
             <span className="text-[16px] lg:text-2xl font-semibold">
-              Estadisticas
+              Pendientes
             </span>
           </div>
         </Link>
@@ -155,7 +156,7 @@ export default function HomeDoc() {
 
       <div className="text-[16px] lg:text-lg flex flex-col">
         <div className="flex items-center text-xl gap-3">
-          <IconCurrentRouteNav className="w-4" />
+          <IconCurrentRouteNav className="w-[1.5rem]" />
           Pacientes
         </div>
 
@@ -186,20 +187,20 @@ export default function HomeDoc() {
             </p>
           </div>
 
-          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
+          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
-              <IconInactiveUsers className="w-[40%] md:w-12" color="white" />
+              <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
                 {dataAlarms?.activeAlarms}
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-start md:text-center lg:text-start">
-              Alarmas Inactivos
+              Alarmas Activas
             </p>
           </div>
 
-          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
+          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
@@ -208,7 +209,7 @@ export default function HomeDoc() {
               <IconArrowUp className="hidden md:block" />
             </div>
             <p className="font-semibold text-start md:text-center lg:text-start">
-              Alarmas Activas
+              Alarmas Resueltas
             </p>
           </div>
         </div>

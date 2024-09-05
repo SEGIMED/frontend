@@ -26,6 +26,7 @@ const resueltas = "/Resueltas";
 const Preconsulta = "/Preconsulta";
 const Anamnesis = "/Anamnesis";
 const Evaluacion = "/Evaluacion";
+const AutoEvaluacion = "/Autoevaluacion";
 const Evoluciones = "/Evoluciones";
 const Datos = "/Datos";
 const Citas = "/Citas";
@@ -46,7 +47,10 @@ const Estudios = "/Estudios";
 const Importaciones = "/Importaciones";
 const Solicitudes = "/Solicitudes";
 const Agenda_General = "/Agenda_General";
+const Medicamentos = "/Medicamentos";
 const rutas = {
+  Medicamentos,
+  AutoEvaluacion,
   Solicitudes,
   Estudios,
   Importaciones,

@@ -88,8 +88,9 @@ export default function HomeDoc() {
     setSelectedPatientId(consulta?.patient);
   };
   const handleCokiePatient = (schedule, id, idEvent) => {
-    Cookies.set("patientId", id, { expires: 7 });
-    Cookies.set("medicalEventId", idEvent, { expires: 7 });
+    
+    Cookies.set("patientId", id);
+    Cookies.set("medicalEventId", idEvent);
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
   };
 
@@ -221,16 +222,16 @@ export default function HomeDoc() {
           <div></div>
 
           <h1 className="hidden font-bold md:text-xl md:block">Proximas</h1>
-          <div className="flex gap-3">
+          <div className="flex gap-3 pr-14">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Teleconsultas
                 </p>
               </button>
             </Link> */}
             <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-xl gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <IconFolder className="hidden h-6 md:block" />
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Pasadas

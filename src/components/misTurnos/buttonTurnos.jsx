@@ -45,7 +45,7 @@ const TurnosButton = ({ idDoc }) => {
   return (
     <div className="relative">
       <details className="relative w-[60%] md:w-full">
-        <summary className="flex justify-center ml-6 md:px-6 py-2 px-6 text-white rounded-xl md:gap-3 bg-[#487FFA] items-center cursor-pointer">
+        <summary className="flex justify-center ml-6 md:px-6 py-2 px-6 text-white rounded-lg md:gap-3 bg-[#487FFA] items-center cursor-pointer">
           <div className="flex items-center md:gap-1">
             <IconOptions color="#FFFFFF" />
             <span className="hidden md:block">Opciones</span>

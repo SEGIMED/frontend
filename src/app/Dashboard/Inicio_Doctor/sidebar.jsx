@@ -288,7 +288,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex items-center justify-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="hidden w-4 md:block" />
+        <IconCurrentRouteNav className="hidden w-[1.5rem] md:block" />
         {lastSegment === "Inicio_Doctor" ? (
           <p>Tablero</p>
         ) : lastSegment === "Mi_perfil" ? (
@@ -340,7 +340,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
             }`}>
           <IconNotificaciones

@@ -1,13 +1,19 @@
-const IconCurrentRouteNav = ({className}) => {
-    return (
-        <svg className={className} viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-	        <desc>
-			Created with Pixso.
-	        </desc>
-	        <defs/>
-	        <path id="path" d="M1 0L5 5L1 10L7 10L11 5L7 0L1 0Z" stroke="#686868" strokeOpacity="1.000000" strokeWidth="2.000000" strokeLinejoin="round"/>
-        </svg>
-    );
+const IconCurrentRouteNav = ({ className, color = "#686868" }) => {
+	return (
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+			<desc>
+				Created with Pixso.
+			</desc>
+			<defs>
+				<clipPath id="clip3337_4491">
+					<rect id="svg" width="24" height="24" fill="white" fillOpacity="0" />
+				</clipPath>
+			</defs>
+			<g clipPath="url(#clip3337_4491)">
+				<path id="path" d="M7 7L11 12L7 17L13 17L17 12L13 7L7 7Z" stroke={color} strokeOpacity="1" strokeWidth="2" strokeLinejoin="round" />
+			</g>
+		</svg>
+	);
 };
 
 export default IconCurrentRouteNav;

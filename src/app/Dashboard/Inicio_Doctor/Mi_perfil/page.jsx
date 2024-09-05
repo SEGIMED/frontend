@@ -186,7 +186,7 @@ export default function HomeDoc() {
           className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"
             }`}
         >
-          <IconCurrentRouteNav className="w-4" />
+          <IconCurrentRouteNav className="w-[1.5rem]" />
           <p className="text-lg ">Sus datos personales</p>
         </div>
 

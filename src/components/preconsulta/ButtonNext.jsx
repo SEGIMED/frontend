@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@nextui-org/react';
 
 export default function ButtonNextPreconsultation({ text, options, onBodyChange, handleSelection, name, disabled, selectedOptions }) {
-    const opcionRecibida = selectedOptions !== null ? selectedOptions : "";
-    const [selectedOption, setSelectedOptionState] = useState(opcionRecibida);
+    // const opcionRecibida = selectedOptions !== null ? selectedOptions : "";
+    const [selectedOption, setSelectedOptionState] = useState(selectedOptions);
 
     const handleClick = (option) => {
         setSelectedOptionState(option);
@@ -12,6 +12,11 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
             handleSelection(option);
         }
     };
+
+    useEffect(() => {
+        // Actualiza el estado local si selectedOptions cambia
+        setSelectedOptionState(selectedOptions);
+      }, [selectedOptions]);
 
     return (
         <div>
@@ -22,6 +27,7 @@ export default function ButtonNextPreconsultation({ text, options, onBodyChange,
                         <Button
                             variant="bordered"
                             key={index}
+                            
                             style={{
                                 backgroundColor: selectedOption === opcion.value ? '#487FFA' : 'white',
                                 color: selectedOption === opcion.value ? 'white' : '#487FFA',

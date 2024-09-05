@@ -22,10 +22,12 @@ import Elboton from "@/components/Buttons/Elboton";
 import rutas from "@/utils/rutas";
 import FileUploadButton from "@/components/Buttons/FileUploadButton";
 import Swal from "sweetalert2";
+import IconDelete from "@/components/icons/IconDelete";
 
 export default function HomeDoc() {
   const lastSegmentTextToShow = PathnameShow();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [catalog, setCatalog] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
   const [allPatients, setAllPatients] = useState([]);
@@ -35,7 +37,6 @@ export default function HomeDoc() {
     problemResume: "",
     reasonForConsultation: "",
   });
-
   const [selectedSpecialties, setSelectedSpecialties] = useState(new Set());
   const [selectedSpecialtyNames, setSelectedSpecialtyNames] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -88,12 +89,6 @@ export default function HomeDoc() {
       console.error(error);
     }
   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
   const handleSpecialtiesChange = (keys) => {
     setSelectedSpecialties(keys);
@@ -164,6 +159,75 @@ export default function HomeDoc() {
       })
       .catch((error) => console.error("Error reading files: ", error));
   };
+  const validateForm = () => {
+    if (!selectedPatient || selectedPatient.size == 0) {
+      Swal.fire({
+        title: "Error",
+        text: "Selecciona un paciente",
+        icon: "error",
+      });
+      return false;
+    }
+    if (!selectedSpecialties.size) {
+      Swal.fire({
+        title: "Error",
+        text: "Selecciona una especialidad",
+        icon: "error",
+      });
+      return false;
+    }
+
+    if (!selectedDoctor || selectedDoctor.size == 0) {
+      Swal.fire({
+        title: "Error",
+        text: "Selecciona un doctor",
+        icon: "error",
+      });
+      return false;
+    }
+
+    if (!questions.reasonForConsultation.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "Motivo de interconsulta es obligatorio",
+        icon: "error",
+      });
+      return false;
+    }
+
+    if (!questions.problemResume.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "Problema es obligatorio",
+        icon: "error",
+      });
+      return false;
+    }
+    if (questions.isPriority == null) {
+      Swal.fire({
+        title: "Error",
+        text: "Tipo de interconsulta es obligatorio",
+        icon: "error",
+      });
+      return false;
+    }
+
+    // Validación del tamaño de archivos
+    const oversizedFiles = selectedFiles.filter(
+      (file) => file.file.size > 10440000
+    );
+    if (oversizedFiles.length > 0) {
+      Swal.fire({
+        title: "Error",
+        text: "Uno o más archivos superan el tamaño máximo de 10MB",
+        icon: "error",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   useEffect(() => {
     getCatalog();
     getAllDoc();
@@ -172,15 +236,53 @@ export default function HomeDoc() {
   useEffect(() => {
     // Limpiar links creados
     return () => {
-      selectedFiles.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+      if (selectedFiles.length > 0)
+        selectedFiles?.forEach((item) => URL.revokeObjectURL(item.previewUrl));
     };
   }, [selectedFiles]);
 
+  const handleDeleteItem = (item) => {
+    let filteredItems = selectedFiles.filter(
+      (file) => file.file.name !== item.file.name
+    );
+    setSelectedFiles(filteredItems);
+  };
+
+  useEffect(() => {
+    if (loading) {
+      Swal.fire({
+        title: "Cargando",
+        text: "Espere un momento",
+        icon: "info",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willClose: () => {
+          // Permite que se cierre automáticamente sin problemas cuando el loading cambia
+        },
+      });
+    }
+    // Verifica si hay un modal activo que sea el de carga antes de cerrarlo
+    return () => {
+      if (
+        !loading &&
+        Swal.isVisible() &&
+        Swal.getTitle().textContent === "Cargando"
+      ) {
+        Swal.close();
+      }
+    };
+  }, [loading]);
   const onSubmit = async () => {
+    //Validaciones
+    const isValid = validateForm();
+    if (!isValid) {
+      return; // Si la validación falla, detener el proceso
+    }
+    setLoading(true);
     const payload = {
-      patient: Number(Array.from(selectedPatient)[0]),
+      patient: Number(selectedPatient),
       medicalSpecialty: Number(Array.from(selectedSpecialties)[0]),
-      physicianQueried: Number(Array.from(selectedDoctor)[0]),
+      physicianQueried: Number(selectedDoctor),
       isPriority: questions.isPriority,
       problemResume: questions.problemResume,
       reasonForConsultation: questions.reasonForConsultation,
@@ -195,15 +297,24 @@ export default function HomeDoc() {
     try {
       const response = await ApiSegimed.patch("/interconsultations", payload);
       if (response.status == 200) {
+        setLoading(false);
         Swal.fire({
           title: "Se solicitó la interconsulta con exito",
           text: "Se le informará al médico para que responda lo mas pronto posible",
           icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed)
+            router.push(`${rutas.Doctor}${rutas.Interconsultas}`);
         });
-        router.push(`${rutas.Doctor}${rutas.Interconsultas}`);
       }
     } catch (error) {
+      setLoading(false); // En caso de error, también detén la carga
       console.error(error);
+      Swal.fire({
+        title: "Error",
+        text: "Ocurrió un error al solicitar la interconsulta",
+        icon: "error",
+      });
     }
   };
   return (
@@ -410,12 +521,11 @@ export default function HomeDoc() {
           )}
         </Autocomplete>
       </div>
-
       <InputInterconsulta
-        title={"Problema"}
-        value={questions.problemResume}
+        title={"Motivo de interconsulta"}
+        value={questions.reasonForConsultation}
         onChange={(e) =>
-          handleQuestionFieldChange("problemResume", e.target.value)
+          handleQuestionFieldChange("reasonForConsultation", e.target.value)
         }
       />
 
@@ -429,20 +539,34 @@ export default function HomeDoc() {
           {selectedFiles.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mt-2">
               {selectedFiles.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center justify-center p-4 border border-borderGray rounded-lg bg-gray-50 ">
-                  <p className="mb-2 text-sm font-semibold text-center max-w-full truncate">
-                    {item?.file?.name}
-                  </p>
-                  {item.file.type.startsWith("image/") && (
-                    <img
-                      src={item?.previewUrl}
-                      alt={item?.file.name}
-                      className="max-w-full max-h-24 rounded-md"
+                <>
+                  <div
+                    key={index}
+                    className="flex flex-col items-center justify-center p-4 border border-borderGray rounded-lg bg-gray-50 ">
+                    <p className="mb-2 text-sm font-semibold text-center max-w-full truncate">
+                      {item?.file?.name}
+                    </p>
+                    {item.file.type.startsWith("image/") && (
+                      <img
+                        src={item?.previewUrl}
+                        alt={item?.file.name}
+                        className="max-w-full max-h-24 rounded-md"
+                      />
+                    )}
+                    <Elboton
+                      icon={<IconDelete color={"red"} />}
+                      className={"bg-white border-1 border-borderGray"}
+                      nombre={"Eliminar"}
+                      classNameText={"text-redPrimary"}
+                      onPress={() => handleDeleteItem(item)}
                     />
-                  )}
-                </div>
+                    {item.file.size > 10440000 && (
+                      <span className="text-redPrimary text-sm lg:text-center">
+                        Error: El archivo es muy grande(Max. 10mb)
+                      </span>
+                    )}
+                  </div>
+                </>
               ))}
             </div>
           )}
@@ -488,10 +612,10 @@ export default function HomeDoc() {
         </div>
       </div> */}
       <InputInterconsulta
-        title={"Motivo de interconsulta"}
-        value={questions.reasonForConsultation}
+        title={"Problema"}
+        value={questions.problemResume}
         onChange={(e) =>
-          handleQuestionFieldChange("reasonForConsultation", e.target.value)
+          handleQuestionFieldChange("problemResume", e.target.value)
         }
       />
       <div className="w-full justify-center flex py-4">

@@ -180,7 +180,7 @@ export default function HomePte() {
         <Link href={`${rutas.PacienteDash}${rutas.Doctores}`}>
           <button
             style={{ width: "280px", height: "128px" }}
-            className="m-5 bg-gradient-to-r from-blue-300 to-blue-600 text-white font-bold rounded-xl flex justify-center items-center sm:w-3/5 md:w-full hover:scale-105 transition-transform"
+            className="m-5 bg-gradient-to-r from-blue-300 to-blue-600 text-white font-bold rounded-lg flex justify-center items-center sm:w-3/5 md:w-full hover:scale-105 transition-transform"
           >
             <IconAdminButtons className="mr-2 h-6 w-6" />
             <div className="text-xl text-start ml-2">

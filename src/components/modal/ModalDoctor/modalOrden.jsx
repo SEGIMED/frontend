@@ -10,7 +10,7 @@ export default function OrdenType({ handleOptionChange }) {
 
     const options = [
         "Receta médica",
-        "Resumen de historia clínica ",
+        "Resumen de historia clínica",
         "Autorización de medicamentos",
         "Autorización de estudios",
         "Aptos físicos",
@@ -33,7 +33,7 @@ export default function OrdenType({ handleOptionChange }) {
                 options={options}
                 text2={"Seleccionar tipo"}
                 handleOptionChange={handleOptionChange}
-                name={"OrderType"}
+                name={"orderTypes"}
 
             // name={"AtencionCentro"}
 

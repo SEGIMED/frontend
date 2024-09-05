@@ -16,6 +16,8 @@ import Swal from "sweetalert2";
 import IconOptions from "../icons/IconOptions";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import IconAlarmBlue from "../icons/iconAlarmBlue";
+import { addAlarmsChatbot } from "@/redux/slices/chat/chatBot";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority) {
@@ -30,7 +32,10 @@ const PriorityIcon = ({ priority }) => {
   }
 };
 
-export default function TableAlarm({ alarms }) {
+export default function TableAlarm({ alarms, updateAlarms }) {
+  const dispatch = useAppDispatch();
+  const alarmsData = useAppSelector((state) => state.chatBot.alarmsData);
+
   const handleStatus = async ({ id }) => {
     Swal.fire({
       icon: "question",
@@ -47,6 +52,10 @@ export default function TableAlarm({ alarms }) {
             body
           );
           if (response.data) {
+            dispatch(
+              addAlarmsChatbot(alarmsData.filter((alarm) => alarm.id != id))
+            );
+
             await Swal.fire({
               title: "Alarma resuelta",
               icon: "success",
@@ -89,7 +98,7 @@ export default function TableAlarm({ alarms }) {
             <div className="text-center w-[70%] md:w-[75%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
               <span className="hidden md:flex items-center justify-between pr-6 ">
                 {alarm?.ia_priority}
-                <IconCurrentRouteNav className="w-3 hidden md:block " />
+                <IconCurrentRouteNav className="w-[1.5rem] hidden md:block " />
               </span>
               <div className="text-[#5F5F5F]">{Fecha(alarm?.createdAt)}</div>
               <div className="text-[#5F5F5F]">{Hora(alarm?.createdAt)}</div>

@@ -29,6 +29,7 @@ import MensajesContainer from "../InicioPaciente/mensajes/MensajesContainer";
 import rutas from "@/utils/rutas";
 import IconMail from "../icons/iconMail";
 import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
+import { IconChat } from "../InicioPaciente/IconChat";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -37,6 +38,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
   const notifications = useAppSelector((state) => state.notifications);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUnreadNotifications, setShowUnreadNotifications] = useState(true);
   const chats = useAppSelector((state) => state.chat);
   const [showChats, setShowChats] = useState(false);
   const user = useAppSelector((state) => state.user);
@@ -53,11 +55,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
-
   useEffect(() => {
     if (!user.name || !rol) return;
-
-
 
     if (rol === "Médico") {
       if (!user.medicalRegistries?.Nacional?.registryId) {
@@ -65,7 +64,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         setIsModalOpen(true);
       }
     } else if (rol === "Paciente") {
-
       if (!user.sociodemographicDetails?.genre) {
         router.push(rutas.PacienteDash);
         setIsModalOpen(true);
@@ -98,6 +96,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     getDoctorNotifications,
     getPatientsDoctor,
     getUserDoctor,
+    getAlarms,
   } = useDataFetching(); // Use the useRouter hook
 
   const {
@@ -113,6 +112,13 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     dispatch(setSearchTerm1(e.target.value));
   };
 
+  const pastNotifications = notifications?.filter(
+    (notificacion) => notificacion.state === true // Notificaciones leídas
+  );
+
+  const toggleNotificationView = () => {
+    setShowUnreadNotifications(!showUnreadNotifications); // Alterna entre no leídas y pasadas
+  };
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
   };
@@ -142,6 +148,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         getActivesAlarmsDoctor().catch(console.error);
         getActivesPacientesDoctor().catch(console.error);
         getDoctorNotifications().catch(console.error);
+        getAlarms().catch(console.error);
         if (!socket.isConnected()) {
           socket.setSocket(token, refreshToken, dispatch);
           socket.emit("onJoin", { id: id });
@@ -177,7 +184,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   useEffect(() => {
     if (rol === "Médico") {
       getUserDoctor().catch(console.error);
-
     }
     if (rol === "Paciente") {
       getUser({ headers: { token: token } }).catch(console.error);
@@ -185,7 +191,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   }, [onboarding]);
 
   const unreadNotifications = notifications?.filter(
-    (notificacion) => !notificacion.state
+    (notificacion) =>
+      notificacion?.content.notificationType != "updatedAppointment" &&
+      notificacion.state != true
   );
   const Inicio =
     rol == "Paciente"
@@ -208,11 +216,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         chat.messages.forEach((mensaje) => {
           ultimoMensaje = mensaje;
           senderInfo = mensaje.sender;
-          if (mensaje.sender?.userId == userId) {
+          if (mensaje?.sender?.userId == userId) {
             isMessageFromUser = true;
             senderInfo = mensaje.target;
           }
-          if (mensaje.state === false && mensaje.sender.userId != userId) {
+          if (mensaje.state === false && mensaje?.sender?.userId != userId) {
             cantidadMensajes++;
           }
         });
@@ -289,7 +297,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex items-center justify-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="hidden w-4 md:block" />
+        <IconCurrentRouteNav className="hidden w-[1.5rem] md:block" />
         {["Inicio_Doctor", "Inicio_Paciente", "Inicio_Admin"].includes(
           lastSegment
         ) ? (
@@ -298,6 +306,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           <p>Mi Agenda</p>
         ) : lastSegment === "Doctores" ? (
           <p>Médicos</p>
+        ) : lastSegment === "crearMensaje" ? (
+          <p>Crear Mensaje</p>
         ) : IsEvent ? (
           <p>Evento</p>
         ) : IsMessage ? (
@@ -310,12 +320,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       </div>
       {showSearch && (
         <div
-          className={`hidden md:flex justify-center items-center gap-2 border border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
+          className={`hidden md:flex justify-between w-[20rem] items-center gap-2 border bg-white border-[#cecece] py-2 px-6 rounded-lg ${search}`}>
           <input
             onChange={handleSearchChange}
             type="text"
             placeholder="Buscar "
-            className="text-start text-[#808080] bg-[#FAFAFC] font-normal text-normal leading-6 outline-none"
+            className="text-start text-[#808080]  font-normal text-normal leading-6 outline-none"
             value={searchTerm}
           />
           <button>
@@ -346,12 +356,9 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
             }`}>
-          <IconMail
-            className="w-6 h-6"
-            color={(showChats || hasUnreadMessages) && "white"}
-          />
+          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#B2B2B2"} />
         </button>
         {showChats && (
           <MensajesContainer
@@ -362,7 +369,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-xl border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
             }`}>
           <IconNotificaciones
@@ -374,13 +381,21 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </button>
         {showNotifications && (
           <NotificacionesContainer
+            pastNotifications={pastNotifications}
+            showUnreadNotifications={showUnreadNotifications}
+            toggleNotificationView={toggleNotificationView}
             handleNotificationElementClick={handleNotificationElementClick}
             handleNotificationClick={handleNotificationClick}
             unreadNotifications={unreadNotifications}
           />
         )}
       </div>
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={rol} setOnboarding={setOnboarding} />
+      <ModalBoarding
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        rol={rol}
+        setOnboarding={setOnboarding}
+      />
     </div>
   );
 };

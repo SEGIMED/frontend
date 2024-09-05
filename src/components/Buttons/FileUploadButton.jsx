@@ -4,7 +4,7 @@ import IconUpload from "../icons/IconUpload";
 
 export default function FileUploadButton({
   onFileSelect,
-  accept = ".mp4,.doc,.docx,.xls,.xlsx,.pdf,image/*",
+  accept = ".doc,.docx,.xls,.xlsx,.pdf,image/*",
 }) {
   const fileInputRef = useRef(null);
 

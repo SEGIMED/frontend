@@ -52,7 +52,7 @@ const DrugModal = ({ isOpen, onClose, selectedOption }) => {
       <div className="relative z-50 bg-white rounded-lg w-[95%] h-[70%] md:w-[40rem] md:h-[32rem] flex flex-col items-center gap-5">
         <div className="flex flex-col justify-between w-full h-full">
           <div className="flex items-center justify-start h-16 gap-3 p-5 font-semibold border-b-2">
-            <IconCurrentRouteNav className="w-4" /> Nuevo medicamento HTP
+            <IconCurrentRouteNav className="w-[1.5rem]" /> Nuevo medicamento HTP
           </div>
           <div className="bg-[#fafafc] h-full flex flex-col gap-4 py-3">
             <div className="flex flex-col justify-around gap-2 px-5">
@@ -126,7 +126,7 @@ const DrugModal = ({ isOpen, onClose, selectedOption }) => {
           <div className="flex items-center justify-center w-full p-3 border-t-2">
             <button
               onClick={handleSubmit(onSubmit)}
-              className="flex items-center justify-center gap-3 px-6 py-3 text-white bg-greenPrimary rounded-xl"
+              className="flex items-center justify-center gap-3 px-6 py-3 text-white bg-greenPrimary rounded-lg"
             >
               Guardar
               <IconArrowNextConsult />

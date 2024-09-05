@@ -38,7 +38,7 @@ export default function ProximasConsultasInfo({ info }) {
             {info.patientUser.name} {info.patientUser.lastname}
           </p>
           <div>
-            <IconCurrentRouteNav className={"w-4 hidden md:block mr-10"} /></div>
+            <IconCurrentRouteNav className={"w-[1.5rem] hidden md:block mr-10"} /></div>
         </div>
 
         {/* <p className="h-10 w-[100%] flex text-start items-center  text-[rgb(104,104,104)] font-normal text-base leading-6  ">
