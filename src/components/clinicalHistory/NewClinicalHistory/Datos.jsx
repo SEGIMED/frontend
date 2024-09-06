@@ -50,7 +50,7 @@ const Datos = () => {
   };
 
   const submitModalData = async () => {
-    const payload = { userId: user.userId, studies: [dataImportar] };
+    const payload = { userId: user.id, studies: [dataImportar] };
     console.log(payload);
 
     try {
