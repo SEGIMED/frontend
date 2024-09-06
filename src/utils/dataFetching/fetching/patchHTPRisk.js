@@ -7,6 +7,7 @@ export default async function patchHTPRisk(data) {
             `/patient-update-hp-risk`,
             data
           );
+          console.log(response)
           return response
         
     } catch (error) {
