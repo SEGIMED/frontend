@@ -30,6 +30,7 @@ export default function HomeDoc() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [catalog, setCatalog] = useState([]);
+  const [catalogCenter, setCatalogCenter] = useState([]);
   const doctor = useAppSelector((state) => state.user);
   const [buttonSize, setButtonSize] = useState("lg");
 
@@ -84,7 +85,11 @@ export default function HomeDoc() {
   };
 
   const [selectedKeys, setSelectedKeys] = useState(new Set());
+  const [selectedKeysCenter, setSelectedKeysCenter] = useState(new Set());
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [selectedCenters, setSelectedCenters] = useState([]);
+  const [selectedCentersId, setSelectedCentersId] = useState([]);
+  const [centerName, setCenterName] = useState("");
 
   const selectedValue = useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
@@ -105,20 +110,49 @@ export default function HomeDoc() {
     }
   };
 
+  const get = async (headers) => {
+    try {
+      const response = await ApiSegimed.get(
+        "onboardingDetails?physicianId=11"
+      );
+      if (response.data) {
+        console.log(response.data);
+        const matchingCenters = catalogCenter.filter(center =>
+          response.data.some(att => att.idCenterAttention === center.id)
+        );
 
-  // const get = async () => {
-  //   try {
-  //     const response = await ApiSegimed.get(
-  //       "/onboardingDetails?physicianId=11",
-  //     );
-  //     if (response.data) {
-  //       console.log(response.data, "acaa");
+        // Si encuentra centros, extraemos los nombres y los unimos con comas
+        if (matchingCenters.length > 0) {
+          const names = matchingCenters.map(center => center.name).join(', ');
+          console.log(names);
 
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+          setCenterName(names); // Guardamos los nombres en el estado
+        }
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getCatalogCenter = async () => {
+    try {
+      const response = await ApiSegimed.get("/catalog/get-catalog?catalogName=center_att");
+      if (response.data) {
+        setCatalogCenter(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleSelectionChangeCenter = (keys) => {
+    setSelectedKeysCenter(keys);
+    const centers = catalogCenter.filter((item) => keys.has(item.name));
+    const ids = centers.map((item) => item.id); // Obtenemos los IDs de los centros seleccionados
+    const numericIds = ids.map(id => Number(id));
+    setSelectedCenters(centers);
+    setSelectedCentersId(numericIds);  // Actualizamos el estado con los centros seleccionados
+  };
 
   const onSubmit = async (data) => {
     const headers = { headers: { token: token } };
@@ -129,11 +163,7 @@ export default function HomeDoc() {
       specialties: selectedSpecialties,
       currentLocationCity: data.city,
       currentLocationCountry: data.country,
-      attendancePlace: {
-        addressDetails: data.addressDetails,
-        alias: data.alias,
-        googleMapsLink: data.googleMapsLink,
-      },
+      AttendentPlaceId: selectedCentersId,
       cellphone: data.cellphonePrefix + data.cellphone,
       medicalRegistries: {
         Provincial: { registryId: data.registryIdProvincial },
@@ -146,6 +176,7 @@ export default function HomeDoc() {
       ...data,
       medicalSpecialtyIds: selectedSpecialties.map((spec) => spec.id),
       specialties: selectedSpecialties,
+      AttendentPlaceId: selectedCentersId,
     };
     dispatch(adduser({ ...doctor, ...updatedData }));
 
@@ -174,15 +205,32 @@ export default function HomeDoc() {
     const headers = { headers: { token: token } };
     if (token) {
       getCatalog(headers);
+      getCatalogCenter()
+
     }
   }, []);
+
+  useEffect(() => {
+    get()
+    if (doctor?.specialties?.length > 0) {
+      setSelectedKeys(new Set(doctor?.specialties?.map((item) => item.name)));
+      setSelectedSpecialties(doctor?.specialties);
+    }
+  }, [catalogCenter]);
+
 
   useEffect(() => {
     if (doctor?.specialties?.length > 0) {
       setSelectedKeys(new Set(doctor?.specialties?.map((item) => item.name)));
       setSelectedSpecialties(doctor?.specialties);
     }
+
   }, [doctor]);
+
+
+
+
+
 
   const handleSelectionChange = (keys) => {
     setSelectedKeys(keys);
@@ -562,41 +610,53 @@ export default function HomeDoc() {
             </span>
           )}
         </div>
-        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
+        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
-            Direccion de Atención:
+            Centro de atencion
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.attendancePlace?.addressDetails}
-                {...register("addressDetails", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 5,
-                    message: "Debe tener al menos 5 caracteres",
-                  },
-                  maxLength: {
-                    value: 50,
-                    message: "No puede tener más de 50 caracteres",
-                  },
-                })}
-              />
-              {errors.addressDetails && (
-                <p className="text-red-500 text-sm">
-                  {errors.addressDetails.message}
-                </p>
-              )}
+            <div className="w-1/2 pr-5 flex flex-col ">
+              <Dropdown>
+                <DropdownTrigger className="w-full">
+                  <Button
+                    style={{
+                      borderRadius: "0.5rem",
+                      textAlign: "start",
+                      borderWidth: "1px",
+                      justifyContent: "flex-start",
+                      opacity: "1",
+                      color: "#686868",
+                    }}
+                    variant="bordered"
+                  >
+                    {selectedCenters.length > 0
+                      ? Array.from(selectedKeysCenter).join(", ")
+                      : "Seleccione su centro de atención"}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Seleccionar centro de atención"
+                  variant="flat"
+
+                  selectionMode={"multiple"} // Modo de selección basado en el rol
+                  selectedKeys={selectedKeysCenter}  // Aseguramos que se mantengan seleccionadas las opciones
+                  onSelectionChange={handleSelectionChangeCenter}
+                >
+                  {catalogCenter?.map((item) => (
+                    <DropdownItem key={item.name} value={item.name}>
+                      {item.name}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.attendancePlace?.addressDetails}
-            </span>
+            <div className="w-1/2 text-start px-2 py-2">
+              {centerName}
+            </div>
           )}
-        </div> */}
+        </div>
         {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
