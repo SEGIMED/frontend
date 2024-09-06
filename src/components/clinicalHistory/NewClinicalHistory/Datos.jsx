@@ -8,7 +8,7 @@ import AvatarDashPte from "@/components/avatar/avatarDashPte";
 import CalcularEdad from "@/utils/calcularEdad";
 import { usePathname } from "next/navigation";
 import LastLogin from "@/utils/lastLogin";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import IconExportar from "@/components/icons/IconExportar";
@@ -20,9 +20,12 @@ import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconEditar from "@/components/icons/iconEditar";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
+import { Fecha } from "@/utils/NormaliceFechayHora";
+import { setReload } from "@/redux/slices/doctor/HistorialClinico";
 
 const Datos = () => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
 
   const pathArray = pathname.split("/");
 
@@ -30,7 +33,6 @@ const Datos = () => {
   const [loading, setLoading] = useState(false);
   const [dataImportar, setDataImportar] = useState({});
   const [text, setText] = useState(false);
-
   const user = useAppSelector((state) => state.clinicalHistory.user);
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
@@ -42,27 +44,26 @@ const Datos = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  console.log(user);
   const handleModalData = (data) => {
     setDataImportar(data);
   };
 
   const submitModalData = async () => {
-    const payload = { userId: user.userId, studies: [dataImportar] };
+    const payload = { userId: user.id, studies: [dataImportar] };
     console.log(payload);
-
 
     try {
       // Realizar la petición POST
-      setLoading(true)
-      const response = await ApiSegimed.post('/patient-studies', payload);
+      setLoading(true);
+      const response = await ApiSegimed.post("/patient-studies", payload);
 
       // Manejar la respuesta según sea necesario
-      console.log('Respuesta del servidor:', response.data);
-      setLoading(false)
+      console.log("Respuesta del servidor:", response.data);
+      setLoading(false);
       // Cerrar el modal después de la petición
       setIsModalOpen(false);
-      setLoading(false)
+      setLoading(false);
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -71,7 +72,7 @@ const Datos = () => {
         confirmButtonText: "Aceptar",
       });
     } catch (error) {
-      console.error('Error al enviar los datos:', error.message);
+      console.error("Error al enviar los datos:", error.message);
       setIsModalOpen(false);
       Swal.fire({
         title: "Error",
@@ -80,7 +81,7 @@ const Datos = () => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -91,11 +92,12 @@ const Datos = () => {
       ) : (
         <>
           <div className="w-full  flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
-
             <MenuDropDown
               label="Importar archivo"
               icon={<IconExportar color="#487FFA" />}
-              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
+              classNameButton={
+                "border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"
+              }
               categories={[
                 {
                   items: [
@@ -103,7 +105,7 @@ const Datos = () => {
                       label: "Importar texto libre",
                       onClick: () => {
                         setText(true);
-                        openModal()
+                        openModal();
                       },
                       icon: <IconEditar color={"#B2B2B2"} />,
                     },
@@ -111,17 +113,13 @@ const Datos = () => {
                       label: "Importar archivo",
                       onClick: () => {
                         setText(false);
-                        openModal()
-
-
+                        openModal();
                       },
                       icon: <IconExportar color={"#B2B2B2"} />,
                     },
-
                   ],
-                }
-              ]
-              }
+                },
+              ]}
             />
 
             <ButtonBlancoBorde
@@ -140,18 +138,16 @@ const Datos = () => {
                   {user?.name} {user?.lastname}
                 </span>
                 <span>
-                  {user?.sociodemographicDetails?.birthDate
-                    ? `${CalcularEdad(
-                      user.sociodemographicDetails.birthDate
-                    )} años`
+                  {user?.socDemDet?.birthDate
+                    ? `${CalcularEdad(user.socDemDet.birthDate)} años`
                     : "Sin especificar nacimiento"}
                 </span>
                 <span>
-                  {user?.sociodemographicDetails?.isAlive ? "Vivo" : null}
+                  {user?.socDemDet?.dateOfDeathReport ? "Muerto" : null}
                 </span>
                 <span>
                   <b>Ultima consulta:</b>{" "}
-                  {LastLogin(user?.lastMedicalEventDate)}
+                  {Fecha(user?.patientAppScheds?.scheduledStartTimestamp)}
                 </span>
                 <span>
                   <b>Medico tratante: </b>{" "}
@@ -163,7 +159,10 @@ const Datos = () => {
             </div>
             <div className="rounded-full border-4 border-blue-400 h-14 w-14 md:w-24 md:h-24 flex items-center justify-center md:mr-20">
               <h1 className="text-2xl text-center text-blue-400  text-">
-                <b>{user?.patientPulmonaryHypertensionGroups?.group}</b>
+                <b>
+                  {user?.userHpGroups?.length > 0 &&
+                    user?.userHpGroups[0]?.catHpGroup?.name}
+                </b>
               </h1>
             </div>
           </div>
@@ -181,19 +180,19 @@ const Datos = () => {
               </label>
               <div className="  grid grid-cols-2 md:flex gap-4">
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Moderado"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Alto"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Muy Alto"}
                 />
               </div>
@@ -205,15 +204,15 @@ const Datos = () => {
               </label>
               <div className="flex gap-3">
                 <BotonDashPte
-                  riesgo={user?.patientSurgicalRisks?.risk}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientSurgicalRisks?.risk}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Moderado"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientSurgicalRisks?.risk}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Alto"}
                 />
               </div>
@@ -290,7 +289,13 @@ const Datos = () => {
       <ModalModularizado
         isOpen={isModalOpen}
         onClose={closeModal}
-        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
+        Modals={[
+          <ImportarHC
+            key={"importar hc"}
+            onData={handleModalData}
+            text={text}
+          />,
+        ]}
         title={"Importar Historia Clínica"}
         button1={"hidden"}
         button2={"bg-greenPrimary text-white block"}
