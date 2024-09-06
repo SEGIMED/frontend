@@ -47,7 +47,9 @@ const Estudios = "/Estudios";
 const Importaciones = "/Importaciones";
 const Solicitudes = "/Solicitudes";
 const Agenda_General = "/Agenda_General";
+const Medicamentos = "/Medicamentos";
 const rutas = {
+  Medicamentos,
   AutoEvaluacion,
   Solicitudes,
   Estudios,

@@ -45,6 +45,8 @@ export default function HomeDoc() {
     { iso: 'UY', prefix: '+598', name: 'Uruguay' },
   ];
 
+  console.log(doctor);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -102,6 +104,21 @@ export default function HomeDoc() {
       console.error(error);
     }
   };
+
+
+  // const get = async () => {
+  //   try {
+  //     const response = await ApiSegimed.get(
+  //       "/onboardingDetails?physicianId=11",
+  //     );
+  //     if (response.data) {
+  //       console.log(response.data, "acaa");
+
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const onSubmit = async (data) => {
     const headers = { headers: { token: token } };
@@ -186,7 +203,7 @@ export default function HomeDoc() {
           className={`items-center gap-4  ${edit ? "hidden md:flex" : "flex"
             }`}
         >
-          <IconCurrentRouteNav className="w-4" />
+          <IconCurrentRouteNav className="w-[1.5rem]" />
           <p className="text-lg ">Sus datos personales</p>
         </div>
 
@@ -545,7 +562,7 @@ export default function HomeDoc() {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
             Direccion de Atención:
@@ -579,8 +596,8 @@ export default function HomeDoc() {
               {doctor?.attendancePlace?.addressDetails}
             </span>
           )}
-        </div>
-        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+        </div> */}
+        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
             Lugar de Atención (Nombre):
@@ -612,9 +629,9 @@ export default function HomeDoc() {
               {doctor?.attendancePlace?.alias}
             </span>
           )}
-        </div>
+        </div> */}
 
-        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
             Lugar de Atención (Link de Maps):
@@ -644,7 +661,7 @@ export default function HomeDoc() {
               {doctor?.attendancePlace?.googleMapsLink}
             </span>
           )}
-        </div>
+        </div> */}
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
@@ -664,7 +681,7 @@ export default function HomeDoc() {
             {doctor?.reviewsScore}
           </span>
         </div>
-        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
             Nivel de Experto:
@@ -672,7 +689,7 @@ export default function HomeDoc() {
           <span className="w-full text-start px-6 py-2">
             {doctor?.expertiseLevel?.name}
           </span>
-        </div>
+        </div> */}
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
@@ -713,12 +730,14 @@ export default function HomeDoc() {
                 <select
                   id="cellphone-prefix"
                   className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
-                  {...register("cellphonePrefix", {
-                    required: {
-                      value: true,
-                      message: "* Prefijo requerido *",
-                    },
-                  })}
+                  {...register("cellphonePrefix"
+                    //   , {
+                    //   required: {
+                    //     value: true,
+                    //     message: "* Prefijo requerido *",
+                    //   },
+                    // }
+                  )}
                 >
                   <option value="" disabled selected>Prefijo</option>
                   {countries.map((country) => (

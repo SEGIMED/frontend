@@ -70,6 +70,23 @@ const ModalConsultation = ({
     return new Date(date.getTime() + minutes * 60000);
   };
 
+  const [catalog, setCatalog] = useState([]);
+
+  const getCatalog = async () => {
+    try {
+      const response = await ApiSegimed.get("/catalog/get-catalog?catalogName=center_att");
+      if (response.data) {
+        setCatalog(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getCatalog();
+  }, []);
+
   useEffect(() => {
     function onClose2(event) {
       if (event.key === "Escape") {
@@ -261,7 +278,7 @@ const ModalConsultation = ({
         <form onSubmit={onSubmit} className="flex flex-col h-full gap-3">
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-1">
-              <IconCurrentRouteNav className="w-4" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               {consulta ? <p>Detalles de consulta</p> : <p>Agendar consulta</p>}
             </div>
             <button
@@ -282,7 +299,7 @@ const ModalConsultation = ({
               </span>
             </div>
           )}
-          <div className="flex flex-col justify-around px-5 pb-2">
+          <div className="flex  flex-col justify-around px-5 pb-2">
             <div className="flex items-center justify-start gap-2 text-sm font-semibold">
               <IconTypeQueries /> Tipo de consultas
             </div>
@@ -359,11 +376,15 @@ const ModalConsultation = ({
             ) : (
               <select
                 id="healthCenter"
-                className={` py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                  }`}
+                className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""}`}
                 {...register("healthCenter")}>
                 <option value="">Seleccione el centro de atención</option>
-                <option value="1">Centro Gallego</option>
+                {/* Mapeo del catálogo */}
+                {catalog.map((center) => (
+                  <option key={center.id} value={center.id}>
+                    {center.name}
+                  </option>
+                ))}
               </select>
             )}
             <div className="relative">

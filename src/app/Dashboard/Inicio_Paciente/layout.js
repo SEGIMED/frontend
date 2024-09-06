@@ -14,16 +14,16 @@ export default function RootLayout({ children }) {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen ">
       {/* Barra de navegación */}
       {/* <NavPte isOpen={isOpen} toggleSidebar={toggleSidebar} /> */}
       <SideBarMod isOpen={isOpen} toggleSidebar={toggleSidebar} buttons={buttonsPaciente} />
 
-      <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col w-full h-[100%]">
         {/* <SidePte search={true} toggleSidebar={toggleSidebar} /> */}
         <NavBarMod search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
-        <div className="h-[88%] w-full">{children}</div>
+        <div className="h-[88%] w-[100%]">{children}</div>
       </div>
       <SegiBot />
     </div>

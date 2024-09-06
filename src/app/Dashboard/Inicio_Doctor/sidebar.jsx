@@ -288,7 +288,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
         </button>
       </div>{" "}
       <div className="flex items-center justify-center gap-4 text-lg font-semibold">
-        <IconCurrentRouteNav className="hidden w-4 md:block" />
+        <IconCurrentRouteNav className="hidden w-[1.5rem] md:block" />
         {lastSegment === "Inicio_Doctor" ? (
           <p>Tablero</p>
         ) : lastSegment === "Mi_perfil" ? (

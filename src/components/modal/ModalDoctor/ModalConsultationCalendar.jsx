@@ -105,6 +105,23 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
     ).padStart(2, "0")}`;
   };
 
+  const [catalog, setCatalog] = useState([]);
+
+  const getCatalog = async () => {
+    try {
+      const response = await ApiSegimed.get("/catalog/get-catalog?catalogName=center_att");
+      if (response.data) {
+        setCatalog(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getCatalog();
+  }, []);
+
   const onSubmit = async (data) => {
     try {
       const selectedTime = new Date(
@@ -179,13 +196,13 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
       <div
         onClick={handleClose}
         className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="relative z-50 bg-white rounded-lg w-[95%] md:w-[35rem] max-h-[93%] flex flex-col gap-5 overflow-auto">
+      <div className=" z-50 p-4 bg-white rounded-lg w-[95%] md:w-[38rem] max-h-[93%] flex flex-col gap-5 overflow-y-auto ">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col h-full">
           <div className="flex items-center justify-between p-3 border-b-2 font-semibold">
             <div className="flex items-center gap-3">
-              <IconCurrentRouteNav className="w-4" />
+              <IconCurrentRouteNav className="w-[1.5rem]" />
               <p>Agendar consulta</p>
             </div>
             <button
@@ -195,7 +212,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
             </button>
           </div>
           <div className="p-3 flex flex-col gap-3 justify-center items-center ">
-            <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col gap-2 w-full">
               <label className="flex items-center gap-3 text-sm font-semibold">
                 <IconCenterAtenttion /> {title}
               </label>
@@ -280,14 +297,15 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
                 </label>
                 <select
                   id="healthCenter"
-                  className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""
-                    }`}
-                  {...register("healthCenter", {
-                    required:
-                      "* ¿En cuál centro de atención quieres ser atendido? *",
-                  })}>
+                  className={`py-2 px-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${errors.healthCenter ? "border-red-500" : ""}`}
+                  {...register("healthCenter")}>
                   <option value="">Seleccione el centro de atención</option>
-                  <option value="1">Centro Gallego</option>
+                  {/* Mapeo del catálogo */}
+                  {catalog.map((center) => (
+                    <option key={center.id} value={center.id}>
+                      {center.name}
+                    </option>
+                  ))}
                 </select>
                 {errors.healthCenter && (
                   <span className="text-red-500 text-sm">

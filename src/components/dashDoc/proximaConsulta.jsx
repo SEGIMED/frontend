@@ -45,7 +45,7 @@ export default function ProximasConsultas() {
     <div className="h-full w-full bg-white rounded-2xl border pb-2 border-[#DCDBDB]  ">
       <div className="flex items-center justify-between px-6 py-2 border-b border-[#DCDBDB]">
         <label className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center ">
-          <IconCurrentRouteNav className={"w-4"} />
+          <IconCurrentRouteNav className={"w-[1.5rem]"} />
           Próximas consultas
         </label>
         <Elboton
