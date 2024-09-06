@@ -23,6 +23,7 @@ import Elboton from "@/components/Buttons/Elboton";
 import IconSignoExclamacion from "@/components/icons/IconSignoExclamacion";
 import IconMas from "@/components/icons/iconMas";
 import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
+import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
 
 export default function HomeDoc() {
   const token = Cookies.get("a");
@@ -91,7 +92,6 @@ export default function HomeDoc() {
     setSelectedPatientId(consulta?.patient);
   };
   const handleCokiePatient = (schedule, id, idEvent) => {
-
     Cookies.set("patientId", id);
     Cookies.set("medicalEventId", idEvent);
     router.push(`${rutas.Doctor}${rutas.Consultas}/${schedule}`);
@@ -176,15 +176,20 @@ export default function HomeDoc() {
             title: "Opciones",
             items: [
               {
-                label: "Dejar Review",
-                icon: <IconCorazonMini />,
-                onClick: () => handleReviewClick(row),
-              },
-              {
-                label: "Ver consulta",
+                label: "Atender consulta",
                 icon: <IconPersonalData />,
                 onClick: () =>
                   handleCokiePatient(row.id, row.patient, row.medicalEvent.id),
+              },
+              {
+                label: "Ver historia clínica",
+                icon: <IconClinicalHistory />,
+                href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${row.patient}`,
+              },
+              {
+                label: "Dejar Review",
+                icon: <IconCorazonMini />,
+                onClick: () => handleReviewClick(row),
               },
               {
                 label: "Cancelar consulta",
@@ -274,7 +279,6 @@ export default function HomeDoc() {
           <ModalConsultationCalendar
             isOpen={showModalConsultation}
             onClose={() => setShowModalConsultation(false)}
-
           />
         )}
       </div>

@@ -70,7 +70,6 @@ const AlarmSelector = () => {
       // Realizar la solicitud POST al servidor
       const response = await ApiSegimed.post("/alarm", body, headers);
 
-
       if (response.status === 200 || 201) {
         Swal.fire({
           icon: "success",
@@ -99,7 +98,7 @@ const AlarmSelector = () => {
     <form
       onSubmit={handleSubmit}
       className="overflow-y-auto h-full w-full md:px-4">
-      <div className=" flex justify-between border-b border-b-[#cecece] px-4 py-2 bg-white sticky top-0 z-10 lg:z-50">
+      <div className=" flex justify-between border-b border-b-[#cecece] px-4 py-2 bg-white sticky top-0 z-10 lg:z-40">
         <button
           type="button"
           className="flex md:px-6 px-4 py-2 rounded-lg gap-1 items-center bg-[#487FFA]"
