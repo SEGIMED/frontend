@@ -157,7 +157,10 @@ const Datos = () => {
             </div>
             <div className="rounded-full border-4 border-blue-400 h-14 w-14 md:w-24 md:h-24 flex items-center justify-center md:mr-20">
               <h1 className="text-2xl text-center text-blue-400  text-">
-                <b>{user?.userHpGroups[0]?.catHpGroup?.name}</b>
+                <b>
+                  {user?.userHpGroups?.length > 0 &&
+                    user?.userHpGroups[0]?.catHpGroup?.name}
+                </b>
               </h1>
             </div>
           </div>
@@ -175,19 +178,19 @@ const Datos = () => {
               </label>
               <div className="  grid grid-cols-2 md:flex gap-4">
                 <BotonDashPte
-                  riesgo={user?.ptCvRsks.catCvRisk?.name}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
-                  riesgo={user?.ptCvRsks.catCvRisk?.name}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Moderado"}
                 />
                 <BotonDashPte
-                  riesgo={user?.ptCvRsks.catCvRisk?.name}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Alto"}
                 />
                 <BotonDashPte
-                  riesgo={user?.ptCvRsks.catCvRisk?.name}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Muy Alto"}
                 />
               </div>
@@ -199,15 +202,15 @@ const Datos = () => {
               </label>
               <div className="flex gap-3">
                 <BotonDashPte
-                  riesgo={user?.patSgRisks?.catSurgicalRisk.name}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patSgRisks?.catSurgicalRisk.name}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Moderado"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patSgRisks?.catSurgicalRisk.name}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Alto"}
                 />
               </div>
