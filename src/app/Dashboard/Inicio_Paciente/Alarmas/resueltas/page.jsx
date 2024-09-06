@@ -48,7 +48,7 @@ export default function AlarmPte() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 lg:z-50">
+      <div className="flex items-center justify-between border-b border-b-[#cecece] pl-5 pr-6 py-2 bg-white sticky top-0 z-20 lg:z-40">
         {/* <Ordenar funcion={handleSortToggle} /> */}
         <div></div>
         {/* <button

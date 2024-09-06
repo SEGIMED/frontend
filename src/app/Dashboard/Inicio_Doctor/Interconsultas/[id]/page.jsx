@@ -134,14 +134,14 @@ export default function Page() {
         </label>
         <div className="py-2 md:py-0 md:justify-start justify-evenly md:gap-3 w-full md:w-1/2">
           {interconsultation?.files?.length > 0 && (
-            <div className="grid grid-cols-4 gap-2 mt-2">
+            <div className="grid grid-cols-3 lg:grid-cols-4 gap-2 mt-2">
               {interconsultation?.files?.map((item, index) => (
                 <Elboton
                   key={item?.name}
                   onPress={(e) => handleShowModalFile(item?.fileURL)}
                   nombre={item?.fileName}
-                  classNameText={"text-bluePrimary"}
-                  className="w-fit px-3 py-1 border bg-white border-[#cecece] rounded-lg"
+                  classNameText={"text-bluePrimary truncate"}
+                  className="w-full px-3 py-1 border bg-white border-[#cecece] rounded-lg"
                 />
               ))}
             </div>

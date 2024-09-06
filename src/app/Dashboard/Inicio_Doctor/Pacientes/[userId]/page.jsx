@@ -21,6 +21,7 @@ import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
 import IconGeolocation from "@/components/icons/IconGeolocation.jsx";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function DetallePaciente({ params }) {
   const id = params.userId;
@@ -48,7 +49,6 @@ export default function DetallePaciente({ params }) {
           ...response1.data,
           ...response2.data,
         };
-        console.log(combinedData);
         dispatch(setPatient(combinedData));
       }
     } catch (error) {
@@ -112,19 +112,67 @@ export default function DetallePaciente({ params }) {
         />
         <Detail
           title={"Telefono de contacto:"}
-          data={<ButtonSolicitar nombre={"Solicitar permiso"} size={"sm"} />}
+          data={
+            <ButtonSolicitar
+              onPress={() =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Se solicito acceso a esta información",
+                  text: "Se te notificará cuando se tenga una respuesta.",
+                })
+              }
+              nombre={"Solicitar permiso"}
+              size={"sm"}
+            />
+          }
         />
         <Detail
           title={"Telefono de urgencia:"}
-          data={<ButtonSolicitar nombre={"Solicitar permiso"} size={"sm"} />}
+          data={
+            <ButtonSolicitar
+              onPress={() =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Se solicito acceso a esta información",
+                  text: "Se te notificará cuando se tenga una respuesta.",
+                })
+              }
+              nombre={"Solicitar permiso"}
+              size={"sm"}
+            />
+          }
         />
         <Detail
           title={"Correo electronico:"}
-          data={<ButtonSolicitar nombre={"Solicitar permiso"} size={"sm"} />}
+          data={
+            <ButtonSolicitar
+              onPress={() =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Se solicito acceso a esta información",
+                  text: "Se te notificará cuando se tenga una respuesta.",
+                })
+              }
+              nombre={"Solicitar permiso"}
+              size={"sm"}
+            />
+          }
         />
         <Detail
           title={"Lugar de domicilio:"}
-          data={<ButtonSolicitar nombre={"Solicitar permiso"} size={"sm"} />}
+          data={
+            <ButtonSolicitar
+              onPress={() =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Se solicito acceso a esta información",
+                  text: "Se te notificará cuando se tenga una respuesta.",
+                })
+              }
+              nombre={"Solicitar permiso"}
+              size={"sm"}
+            />
+          }
         />
         <Detail title={"Fecha del Diagnostico Principal:"} data={"-"} />
         <Detail title={"Lugar de atencion medica:"} data={"-"} />

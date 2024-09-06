@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -15,14 +16,24 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import InputConsulta from "../consulta/inputconsulta";
 import InputCuerpoPre from "@/components/preconsulta/InputCuerpoPre";
 import Cookies from "js-cookie";
-
+import IconOptions from "../icons/IconOptions";
+import IconImportar from "../icons/IconImportar";
+import IconExportar from "../icons/IconExportar";
 import IconGuardar from "@/components/icons/iconGuardar";
 import LoadingFallback from "@/components/loading/loading";
 import Swal from "sweetalert2";
+import getMedicalEventDetail from "@/utils/dataFetching/fetching/getMedicalEventDetail";
+import postPatientStudiesOrHc from "@/utils/dataFetching/fetching/postPetientStudiesOrHc";
 import postPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBackgrounds";
 import getPatientDetail from "@/utils/dataFetching/fetching/getPatientDetail";
 import patchPreconsultation from "@/utils/dataFetching/fetching/patchPreconsultation";
 import SignosVitalesInfo from "../consulta/signosvitales";
+import MenuDropDown from "../dropDown/MenuDropDown";
+import DynamicTable from "../table/DynamicTable";
+import ModalModularizado from "../modal/ModalPatient/ModalModurizado";
+import ImportarHC from "../modal/ModalDoctor/modalImportarHC";
+import FileDisplay from "../modal/ModalDoctor/modalDisplayFile";
+
 
 
 export default function PreconsultaPte({params, preconsult, schedule}) {
@@ -36,7 +47,17 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   const [background, setBackground]= useState()
   const [anamnesis, setAnamnesis]= useState()
   const [patient, setPatient]=useState()
+  const [medicalEventExist, setMedicalEventExist] = useState();
 
+
+   //para importar archivos 
+   const [dataImportar, setDataImportar] = useState({});
+   const [text, setText] = useState(false);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [flagFile, setFlagFile]=useState(false)
+   const [importaciones, setImportaciones]=useState([])
+   const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+   const [selectedImport, setSelectedImport] = useState({});
   
 
 
@@ -54,21 +75,32 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
 
   
 
-  // useEffect(() => {
+  useEffect(() => {
     
-  //   const intervalId = setInterval(() => {
-  //     saveDraftToDatabase();
-  //   }, 60000); // Guarda cada 60 segundos
+    const intervalId = setInterval(() => {
+    handleAnamnesisSave()
+    handleBackgroundSave()
+    handleBodySave()
+    handleSaveVitalSigns()
+    handleQuestionary()
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //     saveDraftToDatabase(); // Guarda borrador al desmontar el componente
-  //   };
-  // }, []);
+    }, 60000); // Guarda cada 60 segundos
+
+    return () => {
+      handleAnamnesisSave()
+      handleBackgroundSave()
+      handleBodySave()
+      handleSaveVitalSigns()
+      handleQuestionary()
+      clearInterval(intervalId);
+     
+    };
+  }, []);
 
   useEffect(() => {
   
     fetchPatientDetail(patientId)
+    fetchMedicalEvent(scheduleId)
   }, []);
 
   //util que necesito para el cuerpo
@@ -178,6 +210,11 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
    
    
       const response =await patchPreconsultation(bodyForm)
+      handleBackgroundSave()
+      handleAnamnesisSave()
+      handleBodySave()
+      handleSaveVitalSigns()
+
       console.log(response)
       if (response) {
         Swal.fire({
@@ -257,33 +294,33 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   }
 
   // Si el paciente ya tuvo la consulta, entonces no puede volver a editar la preconsulta.
-  if (!available) {
-    return (
-      <FormProvider {...methods}>
-        <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
-          <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
-            <div className="md:w-1/2">
-              <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
-                <Elboton
-                  size={"lg"}
-                  nombre={"Regresar"}
-                  icon={<IconRegresar />}
-                />
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
-                Crear preconsulta
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center my-2">
-            Su preconsulta no está disponible
-          </div>
-        </div>
-      </FormProvider>
-    );
-  }
+  // if (!available) {
+  //   return (
+  //     <FormProvider {...methods}>
+  //       <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
+  //         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
+  //           <div className="md:w-1/2">
+  //             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
+  //               <Elboton
+  //                 size={"lg"}
+  //                 nombre={"Regresar"}
+  //                 icon={<IconRegresar />}
+  //               />
+  //             </Link>
+  //           </div>
+  //           <div className="flex items-center">
+  //             <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
+  //               Crear preconsulta
+  //             </p>
+  //           </div>
+  //         </div>
+  //         <div className="flex items-center justify-center my-2">
+  //           Su preconsulta no está disponible
+  //         </div>
+  //       </div>
+  //     </FormProvider>
+  //   );
+  // }
 
   const onSubmit= (data)=>{
     const vitalSigns = [
@@ -396,7 +433,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
       }
       
       const response= await patchPreconsultation(data)
-     
+      console.log(response)
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
     }
@@ -406,7 +443,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     try {
 
         const response = await postPatientBackgrounds(background);
-      
+        console.log(response)
     } catch (error) {
         console.error('Error saving background:', error);
     }
@@ -417,8 +454,9 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
             ...necesaryData,
             ...anamnesis
         };
+
         const response = await patchPreconsultation(data);
- 
+      console.log(response)
     } catch (error) {
         console.error('Error saving anamnesis:', error);
     }
@@ -439,7 +477,7 @@ const handleBodySave = async ()=>{
       }
       
       const response= await patchPreconsultation(data)
-      
+      console.log(response)
      
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
@@ -449,7 +487,7 @@ const handleBodySave = async ()=>{
 }
 const handleQuestionary=async ()=>{
   try {
-    console.log(bodyForm)
+    
     const response= await patchPreconsultation(bodyForm)
     console.log(response)
   } catch (error) {
@@ -466,15 +504,108 @@ const fetchPatientDetail = async (userId) => {
     console.log("No existe este paciente", error);
   }
 };
+const fetchMedicalEvent = async (scheduleId) => {
+  try {
+    
+    const response =await  getMedicalEventDetail(scheduleId)
+    setMedicalEventExist(response.data);
+    if (response.data){
+      setImportaciones(response.data.patientStudies)
+      setIsLoading(false)
+    }
+  } catch (error) {
+    console.log("No se ah echo un diagnostico anteriormente:", error);
+  }
+};
 
+  //IMPORTAR ARCHIVOS 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalData = (data) => {
+    setDataImportar(data);
+  };
+  const closeModalFile = () => {
+    setIsModalOpenFile(false);
+  };
+
+
+  const submitModalData = async () => {
+    const payload = { scheduleId: scheduleId, userId: patientId, studies: [dataImportar] };
+    console.log(payload);
+    try {
+      // Realizar la petición POST
+    
+      const response = await postPatientStudiesOrHc(payload)
+
+      
+      
+      
+      // Cerrar el modal después de la petición
+      setIsModalOpen(false);
+     
+      Swal.fire({
+        icon: "success",
+        title: "Exito",
+        text: "La importacion se realizo correctamente",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+    } catch (error) {
+      console.error('Error al enviar los datos:', error.message);
+      setIsModalOpen(false);
+      Swal.fire({
+        title: "Error",
+        text: "No pudo realizarse la importacion, intente mas tarde",
+        icon: "error",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+     
+    }
+
+  }
+  //LISTAR LAS IMPORTACIONES !!
+  const ImportacionesColumns = [
+    {
+      label: "Fecha",
+      key: "createdAt",
+      showMobile: true,
+      width: "w-8",
+    },
+    {
+      label: "Hora",
+      key: "createdAt",
+      showMobile: true,
+      width: "w-8",
+    },
+
+    {
+      label: "Titulo",
+      key: "title",
+      showMobile: true,
+      width: "w-16",
+    },
+    {
+      label: "Descripcion",
+      key: "description",
+      showMobile: false,
+      width: "w-16",
+    },
+  ];
 
 
 
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
-        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white">
-          <div className="md:w-1/2">
+        <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white  justify-between">
+          
             <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
               <Elboton
                 size={"lg"}
@@ -482,12 +613,36 @@ const fetchPatientDetail = async (userId) => {
                 icon={<IconRegresar />}
               />
             </Link>
-          </div>
-          <div className="flex items-center">
+    
+       
             <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
               Crear preconsulta
             </p>
-          </div>
+      
+          <MenuDropDown
+              label="Importar archivo"
+              icon={<IconExportar color="#487FFA" />}
+              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
+              categories={[
+                {
+                  items: [
+                    {
+                      label: "Importar archivo",
+                      onClick: () => {
+                        setText(false);
+                        openModal()
+                        setFlagFile(true)
+
+
+                      },
+                      icon: <IconExportar color={"#B2B2B2"} />,
+                    },
+
+                  ],
+                }
+              ]
+              }
+            />
         </div>
         {formData && formData?.questions && Object.keys(formData?.questions).map((question, index) => (
           <PreconsultaQuestion
@@ -506,7 +661,15 @@ const fetchPatientDetail = async (userId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={handleQuestionary}
+            onPress={()=>{handleQuestionary
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
             size={"sm"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
@@ -522,15 +685,23 @@ const fetchPatientDetail = async (userId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={handleSaveVitalSigns}
-            size={"sm"}
+            onPress={()=>{handleSaveVitalSigns
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"md"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
 
 
             <InputCuerpoPre
-              title={"Exploracion fisica"}
+              title={"Autoevaluación"}
               onBodyChange={handleBodyChange}
               bodySection={formData?.bodySection}
               defaultOpen
@@ -540,8 +711,16 @@ const fetchPatientDetail = async (userId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={handleBodySave}
-            size={"sm"}
+            onPress={()=>{handleBodySave
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"md"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
@@ -578,14 +757,64 @@ const fetchPatientDetail = async (userId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={anamnesisCompleto}
-            size={"sm"}
+            onPress={()=>{
+              anamnesisCompleto()
+              Swal.fire({
+                icon: "success",
+                title: "Datos guardados con exito",
+                text: "",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"md"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
             </div>
 
+            <DynamicTable
+            title={"Lista de Importaciones"}
+            rows={ importaciones}
+            columns={ImportacionesColumns}
+            showHistoryIcon={true}
+            renderDropDown={(row) => {
+              return (
+                <MenuDropDown
+                  label="Opciones"
+                  icon={<IconOptions color="white" />}
+                  categories={[
+                    {
+                      items: [
+                        {
+                          label: "Ver Detalles",
+                          icon: <IconOptions color={"#B2B2B2"} />,
+                          onClick: () => {
+                            setSelectedImport(row);
+                            setFlagFile(false)
+                            setIsModalOpen(true);
+                            
+                          },
+                        },
+                        {
+                          label: "Ver archivo",
+                          icon: <IconImportar color={"#B2B2B2"} />,
+                          onClick: () => {
+                            setSelectedImport(row);
+                            setIsModalOpenFile(true);
+                          },
+                        },
+                      ].filter(Boolean),
+                    },
+                  ]}
+                  className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+                />
+              );
+            }}
+           
+          />
+
         </form>
-        <div className="flex justify-center p-6 bg-[#fafafc]">
+        {/* <div className="flex justify-center p-6 bg-[#fafafc]">
           <Elboton
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
@@ -594,7 +823,60 @@ const fetchPatientDetail = async (userId) => {
             size={"lg"}
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
-        </div>
+        </div> */}
+        {!flagFile  ? (
+           <ModalModularizado
+           isOpen={isModalOpen}
+           onClose={closeModal}
+           Modals={[
+             <ImportarHC
+               key={"importar hc"}
+               state={selectedImport}
+               disabled={true}
+             />,
+           ]}
+           title={"Ver detalles de importacion"}
+           button1={"hidden"}
+           button2={"bg-greenPrimary text-white block"}
+           progessBar={"hidden"}
+           size={"md:min-h-[4rem] md:w-[35rem]"}
+           buttonText={{ end: `Cerrar` }}
+           buttonIcon={<></>}
+         />
+        )
+      :
+      (
+        <ModalModularizado
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
+        title={"Importar Historia Clínica"}
+        button1={"hidden"}
+        button2={"bg-greenPrimary text-white block"}
+        progessBar={"hidden"}
+        size={"h-[35rem] md:h-fit md:w-[35rem]"}
+        buttonText={{ end: `Importar` }}
+        funcion={submitModalData}
+       
+      />
+      )}
+        
+
+        <ModalModularizado
+            isOpen={isModalOpenFile}
+            onClose={closeModalFile}
+            Modals={[
+              <FileDisplay key={"displayFile"} state={selectedImport} />,
+            ]}
+            title={"Visualizacion de archivo"}
+            button1={"hidden"}
+            button2={"bg-greenPrimary text-white block"}
+            progessBar={"hidden"}
+            size={"md:min-h-[4rem] md:w-[35rem]"}
+            buttonText={{ end: `Cerrar` }}
+            buttonIcon={<></>}
+          />
+
       </div>
     </FormProvider>
   );
