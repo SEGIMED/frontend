@@ -18,7 +18,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import rutas from "@/utils/rutas";
 
-const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
+const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect, setReload }) => {
   const role = Cookies.get("b");
   const userId = Number(Cookies.get("c"));
   const router = useRouter();
@@ -157,6 +157,8 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
       const response = await ApiSegimed.post("/schedules", payload);
 
       if (response.data) {
+        setReload(true)
+        handleClose()
         if (role !== "Paciente") {
           Swal.fire({
             title: "Consulta agendada con éxito!",
@@ -174,7 +176,9 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
           });
         }
       }
+
     } catch (error) {
+      handleClose()
       console.error("Error al enviar los datos:", error);
       Swal.fire({
         title: "Error al agendar la consulta",
@@ -185,6 +189,7 @@ const ModalConsultationCalendar = ({ isOpen, onClose, dateSelect }) => {
         confirmButtonColor: "#d33",
         confirmButtonText: "Aceptar",
       });
+
     } finally {
       setDisabled(false);
     }

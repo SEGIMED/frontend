@@ -4,6 +4,7 @@ const initialState = {
   user: {},
   data: [],
   import: [],
+  reload: false,
   loading: true,
   tab: "Datos",
 };
@@ -14,6 +15,9 @@ const clinicalHistorySlice = createSlice({
   reducers: {
     setLoading: (state, action) => {
       state.loading = action.payload;
+    },
+    setReload: (state, action) => {
+      state.reload = action.payload;
     },
     addClinicalHistory: (state, action) => {
       state.data = action.payload;
@@ -39,6 +43,7 @@ const clinicalHistorySlice = createSlice({
 
 export const {
   setLoading,
+  setReload,
   addClinicalHistory,
   clearClinicalHistory,
   addUserHistory,

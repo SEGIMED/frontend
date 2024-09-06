@@ -29,6 +29,7 @@ export default function HomeDoc() {
   const token = Cookies.get("a");
   const dispatch = useAppDispatch();
   const [scheduledConsultas, setScheduledConsultas] = useState([]);
+  const [reload, setReload] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [showModalConsultation, setShowModalConsultation] = useState(false);
@@ -60,6 +61,16 @@ export default function HomeDoc() {
       console.log(error);
     }
   }, []);
+
+  useEffect(() => {
+    try {
+      if (reload)
+        getSchedulesByUserId();
+      setReload(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }, [reload]);
 
   // Obtener consultas del estado
   const router = useRouter();
@@ -277,6 +288,7 @@ export default function HomeDoc() {
         )}
         {showModalConsultation && (
           <ModalConsultationCalendar
+            setReload={setReload}
             isOpen={showModalConsultation}
             onClose={() => setShowModalConsultation(false)}
           />

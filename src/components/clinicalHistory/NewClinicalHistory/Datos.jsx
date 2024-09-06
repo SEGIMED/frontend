@@ -8,7 +8,7 @@ import AvatarDashPte from "@/components/avatar/avatarDashPte";
 import CalcularEdad from "@/utils/calcularEdad";
 import { usePathname } from "next/navigation";
 import LastLogin from "@/utils/lastLogin";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import IconExportar from "@/components/icons/IconExportar";
@@ -21,9 +21,11 @@ import IconEditar from "@/components/icons/iconEditar";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
 import { Fecha } from "@/utils/NormaliceFechayHora";
+import { setReload } from "@/redux/slices/doctor/HistorialClinico";
 
 const Datos = () => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
 
   const pathArray = pathname.split("/");
 
@@ -48,7 +50,7 @@ const Datos = () => {
   };
 
   const submitModalData = async () => {
-    const payload = { userId: user.userId, studies: [dataImportar] };
+    const payload = { userId: user.id, studies: [dataImportar] };
     console.log(payload);
 
     try {
