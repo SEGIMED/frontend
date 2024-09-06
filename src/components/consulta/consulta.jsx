@@ -46,52 +46,52 @@ import postPatientBackgrounds from "@/utils/dataFetching/fetching/postPatientBac
 
 
 
-export default function ConsultaDoc ({id, preconsult}) {
+export default function ConsultaDoc({ id, preconsult }) {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
-  const medicalEventId =Number(Cookies.get("medicalEventId")) ;
-  const userId =Number(Cookies.get("patientId"));
+  const medicalEventId = Number(Cookies.get("medicalEventId"));
+  const userId = Number(Cookies.get("patientId"));
   const scheduleId = Number(id); // id de agendamiento
   const [medicalEventExist, setMedicalEventExist] = useState();
   const [handleNav, setHandleNav] = useState("Anamnesis");
 
- 
+
   //vital signs y glicemia
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
   //anamnesis y background
   const [anamnesis, setAnamnesis] = useState([]);
   const [background, setBackground] = useState();
- 
-   //risk y htp group
-   const [cardiovascularRisk, setCardiovascularRisk] = useState();
-   const [htpRisk, setHTPRisk] = useState();
-   const [hpGroup, setHpGroup] = useState();
-   const [selectedRisk, setSelectedRisk] = useState();
-   const [selectedRisk2, setSelectedRisk2] = useState();
+
+  //risk y htp group
+  const [cardiovascularRisk, setCardiovascularRisk] = useState();
+  const [htpRisk, setHTPRisk] = useState();
+  const [hpGroup, setHpGroup] = useState();
+  const [selectedRisk, setSelectedRisk] = useState();
+  const [selectedRisk2, setSelectedRisk2] = useState();
 
   //para importar archivos 
   const [dataImportar, setDataImportar] = useState({});
   const [text, setText] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [flagFile, setFlagFile]=useState(false)
-  const [importaciones, setImportaciones]=useState([])
+  const [flagFile, setFlagFile] = useState(false)
+  const [importaciones, setImportaciones] = useState([])
   const [isModalOpenFile, setIsModalOpenFile] = useState(false);
   const [selectedImport, setSelectedImport] = useState({});
 
   //loading!!!
-  const [isLoading, setIsLoading] =useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   const [loading, setLoading] = useState(false);
   const [patient, setPatient] = useState();
-  
+
   const [physicalExamination, setPhysicalExamination] = useState();
   const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
 
-console.log(patient)
-  
+  console.log(patient)
+
   const [backgroundPatch, setBackgroundPatch] = useState();
   const [diagnostic, setDiagnostic] = useState();
   const [diagnosticPatch, setDiagnosticPatch] = useState();
@@ -100,14 +100,14 @@ console.log(patient)
   const [heartFailureRisk, setHeartFailureRisk] = useState();
 
   const [medicalEventPatch, setMedicalEventPatch] = useState();
-  
-  
+
+
 
 
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-   
+
   console.log(medicalEventExist, "esto es medical event")
 
 
@@ -126,7 +126,7 @@ console.log(patient)
       getValue(
         preconsult?.provisionalPreConsultationPainMap?.isTherePain,
         formData?.bodySection?.isTherePain
-       
+
       ) ?? null,
     painDurationId:
       getValue(
@@ -176,14 +176,14 @@ console.log(patient)
   };
 
   console.log(preconsult, "esto es preconsulta para ver que patch se hizo")
-  
-  
+
+
   useEffect(() => {
     setCardiovascularRisk({
       patientId: Number(userId),
       riskId: Number(selectedRisk),
     });
-    
+
   }, [selectedRisk]);
   console.log(selectedRisk2, "riskhtp")
   useEffect(() => {
@@ -210,7 +210,7 @@ console.log(patient)
 
 
 
-  
+
   const preconsultPhysical = {
     // ids
     preconsultationId: Number(preconsult?.id),
@@ -241,7 +241,7 @@ console.log(patient)
       vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
   };
 
-  
+
   const onSubmit = (data) => {
     //Antecedentes
     setBackground({
@@ -272,7 +272,7 @@ console.log(patient)
           ? ""
           : data["Antecedentes quirúrgicos"],
       vaccinationBackground: data["Vacunas"] === "" ? "" : data["Vacunas"],
-      
+
     });
     if (patient?.backgrounds) {
       const backgroundPatch = {
@@ -304,40 +304,40 @@ console.log(patient)
     }
     //preconsulta
     const vitalSigns = [
-      {  measureType: 1, measure: Number(data["Temperatura"]) },
+      { measureType: 1, measure: Number(data["Temperatura"]) },
       {
-        
+
         measureType: 2,
         measure: Number(data["Presión Arterial Sistólica"]),
       },
       {
-       
+
         measureType: 3,
         measure: Number(data["Presión Arterial Diastólica"]),
       },
       {
-        
+
         measureType: 5,
         measure: Number(data["Frecuencia Respiratoria"]),
       },
       {
-        
+
         measureType: 6,
         measure: Number(data["Saturación de Oxígeno"]),
       },
       {
-        
+
         measureType: 7,
         measure: Number(data["Frecuencia Cardiaca"]),
       },
-      {  measureType: 8, measure: Number(data["Estatura"]) },
-      {  measureType: 9, measure: Number(data["Peso"]) },
-      {  measureType: 10, measure: Number(data["IMC"]) },
+      { measureType: 8, measure: Number(data["Estatura"]) },
+      { measureType: 9, measure: Number(data["Peso"]) },
+      { measureType: 10, measure: Number(data["IMC"]) },
     ];
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
-    console.log("aca se guardan los signos vitales", updateVitalSigns )
+    console.log("aca se guardan los signos vitales", updateVitalSigns)
     setVitalSignsPreconsult(updateVitalSigns);
     setAnamnesis({
       //anamnesis sin evolucion de la enfermedad
@@ -363,7 +363,7 @@ console.log(patient)
       description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
       medicalEventId: Number(medicalEventId),
     });
-    
+
 
     if (medicalEventExist?.physicalExaminations[0]?.id) {
       setPhysicalExaminationPatch({
@@ -420,7 +420,7 @@ console.log(patient)
           data["Procedimientos"] !== ""
             ? data["Procedimientos"]
             : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
-              null, // Usa el valor del procedimiento existente si está vacío
+            null, // Usa el valor del procedimiento existente si está vacío
         therapyId: null,
         therapyDescription:
           data["Conducta terapeutica"] !== ""
@@ -460,24 +460,24 @@ console.log(patient)
     // Llamar a setMedicalEventPatch con el objeto construido dinámicamente
     setMedicalEventPatch(medicalEventPatch);
   };
-  
+
 
   //GETS de la data que necesito T_T
   const fetchPatientDetail = async (userId) => {
     try {
-      const response= await getPatientDetail(userId)
+      const response = await getPatientDetail(userId)
       setPatient(response);
     } catch (error) {
       console.log("No existe este paciente", error);
     }
   };
-  
+
   const fetchMedicalEvent = async (scheduleId) => {
     try {
-      
-      const response =await  getMedicalEventDetail(scheduleId)
+
+      const response = await getMedicalEventDetail(scheduleId)
       setMedicalEventExist(response.data);
-      if (response.data){
+      if (response.data) {
         setImportaciones(response.data.patientStudies)
         setIsLoading(false)
       }
@@ -490,96 +490,96 @@ console.log(patient)
 
   //-------------------------------------------------------------------------------
   //Handles que necesito para patch de data 
-  const necesaryData= {
+  const necesaryData = {
     // ids
-   preconsultationId: Number(preconsult?.id),
-   patient: Number(userId),
-   appointmentSchedule: Number(scheduleId),
-   // status
-   status: "sent"
-    }
-  const handleSaveVitalSigns = async ()=>{
+    preconsultationId: Number(preconsult?.id),
+    patient: Number(userId),
+    appointmentSchedule: Number(scheduleId),
+    // status
+    status: "sent"
+  }
+  const handleSaveVitalSigns = async () => {
     try {
-      const data= {
-       ...necesaryData,
+      const data = {
+        ...necesaryData,
         updateVitalSigns:
-      vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
-    ...glicemiaPreconsult,
+          vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+        ...glicemiaPreconsult,
       }
-      
-      const response= await patchPreconsultation(data)
-      
+
+      const response = await patchPreconsultation(data)
+
     } catch (error) {
       console.error("No pudo cargarse la data de signos vitales en el servidor", error.message)
     }
   }
-  const handleBodySave = async ()=>{
+  const handleBodySave = async () => {
     try {
-        const data= {
-         ...necesaryData,
-         painRecordsToUpdate: [bodyOBJFormat],
-        }
-        
-        const response= await patchPreconsultation(data)
-        
-        console.log(response)
-      } catch (error) {
-        console.error("No pudo cargarse la data en el servidor", error.message)
+      const data = {
+        ...necesaryData,
+        painRecordsToUpdate: [bodyOBJFormat],
       }
-    
+
+      const response = await patchPreconsultation(data)
+
+      console.log(response)
+    } catch (error) {
+      console.error("No pudo cargarse la data en el servidor", error.message)
+    }
+
 
   }
 
   const handleBackgroundSave = async () => {
     try {
-        const response = await postPatientBackgrounds(background);
-        console.log(response);
+      const response = await postPatientBackgrounds(background);
+      console.log(response);
     } catch (error) {
-        console.error('Error saving background:', error);
+      console.error('Error saving background:', error);
     }
-};
+  };
 
-const handleHtpRiskSave = async () => {
+  const handleHtpRiskSave = async () => {
     try {
-        const response = await patchHTPRisk(htpRisk);
-        console.log("esto es htprisk", response.data);
+      const response = await patchHTPRisk(htpRisk);
+      console.log("esto es htprisk", response.data);
     } catch (error) {
-        console.error('Error saving HTP risk:', error);
+      console.error('Error saving HTP risk:', error);
     }
-};
+  };
 
-const handleCardioVascularSave = async () => {
+  const handleCardioVascularSave = async () => {
     try {
-        console.log(cardiovascularRisk);
-        const response = await patchCardiovascularRisk(cardiovascularRisk);
-        console.log("esto es cardiorisk", response);
+      console.log(cardiovascularRisk);
+      const response = await patchCardiovascularRisk(cardiovascularRisk);
+      console.log("esto es cardiorisk", response);
     } catch (error) {
-        console.error('Error saving cardiovascular risk:', error);
+      console.error('Error saving cardiovascular risk:', error);
     }
-};
+  };
 
-const handleAnamnesisSave = async () => {
+  const handleAnamnesisSave = async () => {
     try {
-        const data = {
-            ...necesaryData,
-            ...anamnesis
-        };
-        const response = await patchPreconsultation(data);
-        console.log("esto es anamnesis", response.data);
+      const data = {
+        ...necesaryData,
+        ...anamnesis
+      };
+      const response = await patchPreconsultation(data);
+      console.log("esto es anamnesis", response.data);
     } catch (error) {
-        console.error('Error saving anamnesis:', error);
+      console.error('Error saving anamnesis:', error);
     }
-};
+  };
 
-const anamnesisCompleto = async () => {
+  const anamnesisCompleto = async () => {
     await handleBackgroundSave();
     await handleAnamnesisSave();
     await handleCardioVascularSave();
     await handleHtpRiskSave();
-};
+  };
 
   useEffect(() => {
- 
+
     fetchPatientDetail(userId);
     fetchMedicalEvent(scheduleId);
   }, []);
@@ -588,7 +588,7 @@ const anamnesisCompleto = async () => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
 
-  
+
 
   const handleSave = async () => {
     setLoading(true);
@@ -638,9 +638,9 @@ const anamnesisCompleto = async () => {
 
     // Riesgo quirúrgico - funciona patch y post
     let response3;
-    if(
+    if (
       htpRisk.pulmonaryHypertensionRiskId > 0
-    )  {
+    ) {
       response3 = await ApiSegimed.patch(
         `/patient-update-surgical-risk`,
         htpRisk
@@ -808,20 +808,20 @@ const anamnesisCompleto = async () => {
 
   //SELECT DE CONSULTA NAVBAR
   const handleClic = (title) => {
-   
-      setHandleNav(title);
-  const hasReloaded = localStorage.getItem("hasReloaded");
 
-  if (title === "Anamnesis" && !hasReloaded) {
-    // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
-    localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
-    window.location.reload();
-  } else if (title !== "Anamnesis") {
-    // Si selecciona otra opción, eliminar la bandera de recarga
-    localStorage.removeItem("hasReloaded");
-    
-  }
-    
+    setHandleNav(title);
+    const hasReloaded = localStorage.getItem("hasReloaded");
+
+    if (title === "Anamnesis" && !hasReloaded) {
+      // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
+      localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
+      window.location.reload();
+    } else if (title !== "Anamnesis") {
+      // Si selecciona otra opción, eliminar la bandera de recarga
+      localStorage.removeItem("hasReloaded");
+
+    }
+
   };
 
   //IMPORTAR ARCHIVOS 
@@ -846,15 +846,19 @@ const anamnesisCompleto = async () => {
     console.log(payload);
     try {
       // Realizar la petición POST
-    
-      const response = await postPatientStudiesOrHc(payload)
 
-      
-      
-      
+      const response = await postPatientStudiesOrHc(payload)
+      // Después de la petición POST, hacer un GET para obtener los estudios del paciente usando query parameters
+      const getResponse = await ApiSegimed.get(`/patient-studies?userId=${userId}&scheduleId=${scheduleId}`);
+
+      // Setear los datos obtenidos en setImportaciones
+      if (getResponse.data) {
+        setImportaciones(getResponse.data);
+      }
+
       // Cerrar el modal después de la petición
       setIsModalOpen(false);
-     
+
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -872,7 +876,7 @@ const anamnesisCompleto = async () => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-     
+
     }
 
   }
@@ -904,247 +908,247 @@ const anamnesisCompleto = async () => {
       width: "w-16",
     },
   ];
- 
-   
- 
 
 
-  
+
+
+
+
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
         <SubNavbarConsulta handleClic={handleClic} />
 
-         <MenuDropDown
-              label="Importar archivo"
-              icon={<IconExportar color="#487FFA" />}
-              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
-              categories={[
+        <MenuDropDown
+          label="Importar archivo"
+          icon={<IconExportar color="#487FFA" />}
+          classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
+          categories={[
+            {
+              items: [
                 {
-                  items: [
-                    {
-                      label: "Importar texto libre",
-                      onClick: () => {
-                        setText(true);
-                        openModal()
-                      },
-                      icon: <IconEditar color={"#B2B2B2"} />,
-                    },
-                    {
-                      label: "Importar archivo",
-                      onClick: () => {
-                        setText(false);
-                        openModal()
-                        setFlagFile(true)
+                  label: "Importar texto libre",
+                  onClick: () => {
+                    setText(true);
+                    openModal()
+                  },
+                  icon: <IconEditar color={"#B2B2B2"} />,
+                },
+                {
+                  label: "Importar archivo",
+                  onClick: () => {
+                    setText(false);
+                    openModal()
+                    setFlagFile(true)
 
 
-                      },
-                      icon: <IconExportar color={"#B2B2B2"} />,
-                    },
+                  },
+                  icon: <IconExportar color={"#B2B2B2"} />,
+                },
 
-                  ],
-                }
-              ]
-              }
-            />
-        
+              ],
+            }
+          ]
+          }
+        />
+
         {loading === false ? (
           <form onChange={methods.handleSubmit(onSubmit)}>
 
-          
-           
-           {/* ANAMNESIS Y ANTECEDENTES */}
 
-            {handleNav ==="Anamnesis" &&
-            <div>
-            <Consulta
-            title={"Datos del paciente"}
-            paciente={patient}
-            defaultOpen
-            />
-            <InputConsulta
-            title={"Anamnesis"}
-            subtitle={[
-              "Motivo de consulta",
-              "Sintomas importantes",
-            ]}
-            preconsult={preconsult}
-            diagnostico={medicalEventExist}
-            defaultOpen
-            />
-            <InputConsulta
-            title={"Antecedentes"}
-            risk={["Riesgo cardiovascular"]}
-            risk2={["Riesgo Hipertensión Pulmonar"]}
-            riskGroup={["Grupo HTP"]}
-            groupHTP={["I", "II", "III", "IV", "V"]}
-            options={["Bajo", "Moderado", "Alto", "Muy alto"]}
-            options2={["Bajo", "Moderado", "Alto"]}
-            subtitle={[
-              "Antecedentes quirúrgicos",
-              "Antecedentes patologicos",
-              "Antecedentes no patologicos",
-              "Antecedentes familiares",
-              "Antecedentes de infancia",
-              "Medicación actual",
-              "Alergias",
-              "Vacunas",
-            ]}
-            defaultOpen
-            paciente={patient}
-            onRiskChange={ setSelectedRisk} 
-            onRiskChange2={(newRisk2) => setSelectedRisk2(newRisk2)}
-            onGroupChange={setSelectedGroup}
-            />
-            <div className="flex justify-center p-6 bg-[#fafafc]">
-            <Elboton
-            nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={anamnesisCompleto}
-            size={"sm"}
-            className={"bg-greenPrimary w-40 text-sm font-bold"}
-            />
-            </div>
-            </div> 
-            
+
+            {/* ANAMNESIS Y ANTECEDENTES */}
+
+            {handleNav === "Anamnesis" &&
+              <div>
+                <Consulta
+                  title={"Datos del paciente"}
+                  paciente={patient}
+                  defaultOpen
+                />
+                <InputConsulta
+                  title={"Anamnesis"}
+                  subtitle={[
+                    "Motivo de consulta",
+                    "Sintomas importantes",
+                  ]}
+                  preconsult={preconsult}
+                  diagnostico={medicalEventExist}
+                  defaultOpen
+                />
+                <InputConsulta
+                  title={"Antecedentes"}
+                  risk={["Riesgo cardiovascular"]}
+                  risk2={["Riesgo Hipertensión Pulmonar"]}
+                  riskGroup={["Grupo HTP"]}
+                  groupHTP={["I", "II", "III", "IV", "V"]}
+                  options={["Bajo", "Moderado", "Alto", "Muy alto"]}
+                  options2={["Bajo", "Moderado", "Alto"]}
+                  subtitle={[
+                    "Antecedentes quirúrgicos",
+                    "Antecedentes patologicos",
+                    "Antecedentes no patologicos",
+                    "Antecedentes familiares",
+                    "Antecedentes de infancia",
+                    "Medicación actual",
+                    "Alergias",
+                    "Vacunas",
+                  ]}
+                  defaultOpen
+                  paciente={patient}
+                  onRiskChange={setSelectedRisk}
+                  onRiskChange2={(newRisk2) => setSelectedRisk2(newRisk2)}
+                  onGroupChange={setSelectedGroup}
+                />
+                <div className="flex justify-center p-6 bg-[#fafafc]">
+                  <Elboton
+                    nombre={"Guardar"}
+                    icon={<IconGuardar />}
+                    onPress={anamnesisCompleto}
+                    size={"sm"}
+                    className={"bg-greenPrimary w-40 text-sm font-bold"}
+                  />
+                </div>
+              </div>
+
             }
-            
-            
+
+
 
             {/* ACA ESTA SIGNOS VITALES , ANTROPOMETRICOS Y GLICEMIA TODO LO DE EXAMEN FISICO  */}
 
             {handleNav === "ExamenFisico" &&
-            <dvi>
-               <SignosVitalesInfo
-              title={"Signos vitales"}
-              preconsult={preconsult}
-              paciente={patient}
-              defaultOpen
-             
-            />
-            
-            <div className="flex justify-center p-6 bg-[#fafafc]">
-            <Elboton
-            nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={handleSaveVitalSigns}
-            size={"sm"}
-            className={"bg-greenPrimary w-40 text-sm font-bold"}
-            />
-            </div>
+              <dvi>
+                <SignosVitalesInfo
+                  title={"Signos vitales"}
+                  preconsult={preconsult}
+                  paciente={patient}
+                  defaultOpen
+
+                />
+
+                <div className="flex justify-center p-6 bg-[#fafafc]">
+                  <Elboton
+                    nombre={"Guardar"}
+                    icon={<IconGuardar />}
+                    onPress={handleSaveVitalSigns}
+                    size={"sm"}
+                    className={"bg-greenPrimary w-40 text-sm font-bold"}
+                  />
+                </div>
 
 
-            <InputCuerpoPre
-              title={"Exploracion fisica"}
-              onBodyChange={handleBodyChange}
-              bodySection={formData?.bodySection}
-              defaultOpen
-              valuePreconsultation={preconsult}
-            />
-            <div className="flex justify-center p-6 bg-[#fafafc]">
-            <Elboton
-            nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={handleBodySave}
-            size={"sm"}
-            className={"bg-greenPrimary w-40 text-sm font-bold"}
-            />
-            </div>
+                <InputCuerpoPre
+                  title={"Exploracion fisica"}
+                  onBodyChange={handleBodyChange}
+                  bodySection={formData?.bodySection}
+                  defaultOpen
+                  valuePreconsultation={preconsult}
+                />
+                <div className="flex justify-center p-6 bg-[#fafafc]">
+                  <Elboton
+                    nombre={"Guardar"}
+                    icon={<IconGuardar />}
+                    onPress={handleBodySave}
+                    size={"sm"}
+                    className={"bg-greenPrimary w-40 text-sm font-bold"}
+                  />
+                </div>
 
-            <InputExam
-              title={"Examen fisico"}
-              defaultOpen
-              diagnostico={medicalEventExist}
-            />
-              
+                <InputExam
+                  title={"Examen fisico"}
+                  defaultOpen
+                  diagnostico={medicalEventExist}
+                />
+
               </dvi>}
-           
 
-              {/*  DIAGNOSTICO Y TRATAMIENTO CON EVOLUCION */}
+
+            {/*  DIAGNOSTICO Y TRATAMIENTO CON EVOLUCION */}
             {handleNav === "DiagnosticoyTratamiento" &&
-            <div>
-              <InputConsulta
-              title={"Evolucion"}
-              diagnostico={medicalEventExist}
-              subtitle={["Anotaciones sobre la consulta"]}
-              defaultOpen
-            />
-            <InputDiagnostico
-              diagnostico={medicalEventExist}
-              title={"Diagnósticos y tratamiento"}
-              subtitle={[
-                "Conducta terapeutica",
-                "Tratamientos no farmacológicos",
-                "Pauta de alarma",
-              ]}
-              defaultOpen
-              subtitle2={["Diagnostico", "Procedimientos"]}
-              subtitle3={"Medicamentos"}
-            />
+              <div>
+                <InputConsulta
+                  title={"Evolucion"}
+                  diagnostico={medicalEventExist}
+                  subtitle={["Anotaciones sobre la consulta"]}
+                  defaultOpen
+                />
+                <InputDiagnostico
+                  diagnostico={medicalEventExist}
+                  title={"Diagnósticos y tratamiento"}
+                  subtitle={[
+                    "Conducta terapeutica",
+                    "Tratamientos no farmacológicos",
+                    "Pauta de alarma",
+                  ]}
+                  defaultOpen
+                  subtitle2={["Diagnostico", "Procedimientos"]}
+                  subtitle3={"Medicamentos"}
+                />
               </div>}
-          
+
             {/* ESTUDIOS */}
             {handleNav === "Estudios" &&
-            <DynamicTable
-            title={"Lista de Importaciones"}
-            rows={ importaciones}
-            columns={ImportacionesColumns}
-            showHistoryIcon={true}
-            renderDropDown={(row) => {
-              return (
-                <MenuDropDown
-                  label="Opciones"
-                  icon={<IconOptions color="white" />}
-                  categories={[
-                    {
-                      items: [
+              <DynamicTable
+                title={"Lista de Importaciones"}
+                rows={importaciones}
+                columns={ImportacionesColumns}
+                showHistoryIcon={true}
+                renderDropDown={(row) => {
+                  return (
+                    <MenuDropDown
+                      label="Opciones"
+                      icon={<IconOptions color="white" />}
+                      categories={[
                         {
-                          label: "Ver Detalles",
-                          icon: <IconOptions color={"#B2B2B2"} />,
-                          onClick: () => {
-                            setSelectedImport(row);
-                            setFlagFile(false)
-                            setIsModalOpen(true);
-                            
-                          },
+                          items: [
+                            {
+                              label: "Ver Detalles",
+                              icon: <IconOptions color={"#B2B2B2"} />,
+                              onClick: () => {
+                                setSelectedImport(row);
+                                setFlagFile(false)
+                                setIsModalOpen(true);
+
+                              },
+                            },
+                            {
+                              label: "Ver archivo",
+                              icon: <IconImportar color={"#B2B2B2"} />,
+                              onClick: () => {
+                                setSelectedImport(row);
+                                setIsModalOpenFile(true);
+                              },
+                            },
+                          ].filter(Boolean),
                         },
-                        {
-                          label: "Ver archivo",
-                          icon: <IconImportar color={"#B2B2B2"} />,
-                          onClick: () => {
-                            setSelectedImport(row);
-                            setIsModalOpenFile(true);
-                          },
-                        },
-                      ].filter(Boolean),
-                    },
-                  ]}
-                  className={"w-[40px] md:w-full lg:w-fit mx-auto"}
-                />
-              );
-            }}
-           
-          />
+                      ]}
+                      className={"w-[40px] md:w-full lg:w-fit mx-auto"}
+                    />
+                  );
+                }}
+
+              />
             }
-            
+
 
             {/* PRECONSULTA */}
 
-           {(handleNav === "Preconsulta" || "") && formData && formData.questions && (
-            Object.keys(formData.questions).map((question, index) => (
-            <PreconsultaQuestion
-            key={index}
-            question={question}
-            section={formData.questions[question]}
-            sectionIndex={index}
-            preconsult={preconsult}
-            />
-             ))
+            {(handleNav === "Preconsulta" || "") && formData && formData.questions && (
+              Object.keys(formData.questions).map((question, index) => (
+                <PreconsultaQuestion
+                  key={index}
+                  question={question}
+                  section={formData.questions[question]}
+                  sectionIndex={index}
+                  preconsult={preconsult}
+                />
+              ))
             )}
 
 
 
-            
+
           </form>
         ) : (
           <div className="flex items-center justify-center h-20">
@@ -1160,51 +1164,18 @@ const anamnesisCompleto = async () => {
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
         </div>
-        {handleNav === "Estudios" && !flagFile  ? (
-           <ModalModularizado
-           isOpen={isModalOpen}
-           onClose={closeModal}
-           Modals={[
-             <ImportarHC
-               key={"importar hc"}
-               state={selectedImport}
-               disabled={true}
-             />,
-           ]}
-           title={"Ver detalles de importacion"}
-           button1={"hidden"}
-           button2={"bg-greenPrimary text-white block"}
-           progessBar={"hidden"}
-           size={"md:min-h-[4rem] md:w-[35rem]"}
-           buttonText={{ end: `Cerrar` }}
-           buttonIcon={<></>}
-         />
-        )
-      :
-      (
-        <ModalModularizado
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
-        title={"Importar Historia Clínica"}
-        button1={"hidden"}
-        button2={"bg-greenPrimary text-white block"}
-        progessBar={"hidden"}
-        size={"h-[35rem] md:h-fit md:w-[35rem]"}
-        buttonText={{ end: `Importar` }}
-        funcion={submitModalData}
-       
-      />
-      )}
-        
-
-        <ModalModularizado
-            isOpen={isModalOpenFile}
-            onClose={closeModalFile}
+        {handleNav === "Estudios" && !flagFile ? (
+          <ModalModularizado
+            isOpen={isModalOpen}
+            onClose={closeModal}
             Modals={[
-              <FileDisplay key={"displayFile"} state={selectedImport} />,
+              <ImportarHC
+                key={"importar hc"}
+                state={selectedImport}
+                disabled={true}
+              />,
             ]}
-            title={"Visualizacion de archivo"}
+            title={"Ver detalles de importacion"}
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}
             progessBar={"hidden"}
@@ -1212,6 +1183,39 @@ const anamnesisCompleto = async () => {
             buttonText={{ end: `Cerrar` }}
             buttonIcon={<></>}
           />
+        )
+          :
+          (
+            <ModalModularizado
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
+              title={"Importar Historia Clínica"}
+              button1={"hidden"}
+              button2={"bg-greenPrimary text-white block"}
+              progessBar={"hidden"}
+              size={"h-[35rem] md:h-fit md:w-[35rem]"}
+              buttonText={{ end: `Importar` }}
+              funcion={submitModalData}
+
+            />
+          )}
+
+
+        <ModalModularizado
+          isOpen={isModalOpenFile}
+          onClose={closeModalFile}
+          Modals={[
+            <FileDisplay key={"displayFile"} state={selectedImport} />,
+          ]}
+          title={"Visualizacion de archivo"}
+          button1={"hidden"}
+          button2={"bg-greenPrimary text-white block"}
+          progessBar={"hidden"}
+          size={"md:min-h-[4rem] md:w-[35rem]"}
+          buttonText={{ end: `Cerrar` }}
+          buttonIcon={<></>}
+        />
       </div>
     </FormProvider>
   );

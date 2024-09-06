@@ -8,7 +8,7 @@ import AvatarDashPte from "@/components/avatar/avatarDashPte";
 import CalcularEdad from "@/utils/calcularEdad";
 import { usePathname } from "next/navigation";
 import LastLogin from "@/utils/lastLogin";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import IconExportar from "@/components/icons/IconExportar";
@@ -20,6 +20,7 @@ import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconEditar from "@/components/icons/iconEditar";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
+import { setReload } from "@/redux/slices/doctor/HistorialClinico";
 
 const Datos = () => {
   const pathname = usePathname();
@@ -39,6 +40,9 @@ const Datos = () => {
     setIsModalOpen(true);
   };
 
+
+  const dispatch = useAppDispatch()
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -56,7 +60,7 @@ const Datos = () => {
       // Realizar la petición POST
       setLoading(true)
       const response = await ApiSegimed.post('/patient-studies', payload);
-
+      dispatch(setReload(true))
       // Manejar la respuesta según sea necesario
       console.log('Respuesta del servidor:', response.data);
       setLoading(false)

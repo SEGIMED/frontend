@@ -17,6 +17,7 @@ import {
   addUserHistory,
   changeTabs,
   addImportHistory,
+  setReload,
 } from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Cookies from "js-cookie";
@@ -38,6 +39,7 @@ export default function SubNavbar({ id }) {
   const [openDetails, setOpenDetails] = useState(false);
   const params = useParams();
   const selectedTab = useAppSelector((state) => state.clinicalHistory.tab);
+  const reload = useAppSelector((state) => state.clinicalHistory.reload);
   const segiChat = useAppSelector((state) => state.chatBot.messages);
   const userId = params?.userId;
   const getSelectedClass = (name) =>
@@ -176,6 +178,13 @@ export default function SubNavbar({ id }) {
       dispatch(toogleChat(false));
     };
   }, [userId, dispatch]);
+
+  useEffect(() => {
+    if (reload) {
+      getImportHistory().catch(console.error);
+      dispatch(setReload(false))
+    }
+  }, [reload]);
 
   return (
     <div className="border-b border-b-[#cecece] bg-[#fafafc] flex flex-row-reverse md:flex-row justify-around items-center md:pr-6">

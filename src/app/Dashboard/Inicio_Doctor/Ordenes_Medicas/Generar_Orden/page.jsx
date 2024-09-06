@@ -444,11 +444,18 @@ export default function HomeDoc() {
                                             <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between ">  <span className="md:hidden block">Nombre:</span><p className="w-1/2">{drug.drugCreation.drugName}</p></div>
                                             <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between">
                                                 <span className="md:hidden block">Dosis:</span>
-                                                <input
-                                                    type="number"
+                                                <select
                                                     onChange={(e) => handleInputChange(index, "doseMeasure", e.target.value)}
                                                     className={`md:w-full w-1/2 p-2 border rounded-lg outline-none ${errors[`doseMeasure-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
-                                                />
+                                                >
+                                                    <option value="">Seleccionar</option> {/* Opción por defecto */}
+                                                    <option value="1">1</option>
+                                                    <option value="1/2">1/2</option>
+                                                    <option value="1/3">1/3</option>
+                                                    <option value="1/4">1/4</option>
+                                                    <option value="1/8">1/8</option>
+                                                    <option value="0.5">0.5</option>
+                                                </select>
                                             </div>
                                             <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between">
                                                 <span className="md:hidden block">Frecuencia:</span>
@@ -460,10 +467,14 @@ export default function HomeDoc() {
                                             </div>
                                             <div className="py-2 px-4 w-full md:w-[20%] flex items-center justify-between">
                                                 <span className="md:hidden block">Duración:</span>
-                                                <input
+                                                <select
                                                     onChange={(e) => handleInputChange(index, "timeMeasureType", e.target.value)}
                                                     className={`md:w-full w-1/2 p-2 border rounded-lg outline-none ${errors[`timeMeasureType-${index}`] ? 'border-red-500' : 'border-gray-300'}`}
-                                                />
+                                                >
+                                                    <option value="">Seleccionar</option> {/* Opción por defecto */}
+                                                    <option value="Hs">Hs</option>
+                                                    <option value="Min">Min</option>
+                                                </select>
                                             </div>
                                             <div className=" flex items-center justify-between md:justify-center py-2 px-4 w-full md:w-[20%] gap-4 ">
                                                 <span className="md:hidden block">Acciones:</span>
