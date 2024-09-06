@@ -757,7 +757,8 @@ const fetchMedicalEvent = async (scheduleId) => {
             <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar/>}
-            onPress={()=>{anamnesisCompleto
+            onPress={()=>{
+              anamnesisCompleto()
               Swal.fire({
                 icon: "success",
                 title: "Datos guardados con exito",
