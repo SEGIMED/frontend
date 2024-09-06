@@ -101,7 +101,7 @@ export default function ClincalCuerpo({ info }) {
                   name={"painTime"}
                   disabled={true}
                   selectedOptions={
-                    info?.patientPainMap?.painDurationDetail.name
+                    info?.patientPainMap?.painDurationDetail?.name
                   }
                 />
                 <div className="w-[90%] md:w-[80%]  flex flex-col">

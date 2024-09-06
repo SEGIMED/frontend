@@ -22,7 +22,7 @@ const ImportacionesSection = () => {
     const fetchImportationsData = async () => {
       try {
         const response = await ApiSegimed("/patient-studies", {
-          params: { userId: user.userId },
+          params: { userId: user.id },
         });
         setImportacionesData(response.data);
       } catch (error) {

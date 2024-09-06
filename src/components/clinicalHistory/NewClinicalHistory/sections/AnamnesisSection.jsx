@@ -14,7 +14,7 @@ const AnamnesisSection = () => {
     const fetchAnamnesisData = async () => {
       try {
         const response = await ApiSegimed("/medical-history/anamnesis", {
-          params: { userId: user.userId },
+          params: { userId: user.id },
         });
         setAnamnesisData(response.data);
       } catch (error) {

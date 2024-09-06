@@ -13,7 +13,7 @@ const ConsultasSection = () => {
     const fetchConsultasData = async () => {
       try {
         const response = await ApiSegimed("/medical-history/consultation", {
-          params: { userId: user.userId },
+          params: { patientId: user.id },
         });
         setConsultasData(response.data);
       } catch (error) {

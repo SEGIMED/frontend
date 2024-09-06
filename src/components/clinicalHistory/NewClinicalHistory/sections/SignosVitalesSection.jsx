@@ -14,7 +14,7 @@ const SignosVitalesSection = () => {
     const fetchSignosVitalesData = async () => {
       try {
         const response = await ApiSegimed("/medical-history/vital-signs", {
-          params: { patientId: user.userId },
+          params: { patientId: user.id },
         });
         setSignosVitalesData(response.data);
       } catch (error) {
@@ -47,13 +47,13 @@ const SignosVitalesSection = () => {
     //   width: "w-16",
     // },
     {
-      label: "Centro de atencion ",
+      label: "Centro de Atención",
       key: "appSch.attendancePlace.alias",
       showMobile: true,
       width: "w-16",
     },
     {
-      label: "Motivo de consulta",
+      label: "Motivo de Consulta ",
       key: "appSch.reasonForConsultation",
       showMobile: false,
       width: "w-16",

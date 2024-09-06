@@ -170,7 +170,22 @@ function DynamicTable({
   };
 
   const filteredRows = rows?.filter((row) => !isRowEmpty(row));
-
+  const getAttentionCenter = (row) => {
+    return row.reasonForConsultation == "Autoevaluación"
+      ? row.attendancePlace
+      : row.appSch.attendancePlace?.alias;
+  };
+  const getReasonForConsultation = (row) => {
+    return row.reasonForConsultation == "Autoevaluación"
+      ? row.reasonForConsultation
+      : row.appSch?.reasonForConsultation;
+  };
+  const getAttentionCenterSV = (row) => {
+    return row.appSch ? row.appSch?.attendancePlace?.alias : "En Casa";
+  };
+  const getReasonForConsultationSV = (row) => {
+    return row.appSch ? row.appSch?.reasonForConsultation : "Autoevaluación";
+  };
   const getValueFromKey = (obj, key) => {
     return key.split(".").reduce((acc, part) => acc && acc[part], obj);
   };
@@ -198,6 +213,16 @@ function DynamicTable({
         return formatTypeInterconsult(value);
       case "Especialidad":
         return specialitySwitch(value);
+      //Excepciones especial para autoevaluacion que puede tener en 2 lugares distiton estos 2 valores
+      case "Motivo de Consulta":
+        return getReasonForConsultation(row);
+      case "Centro de Atencion":
+        return getAttentionCenter(row);
+      //Excepciones especial para autoevaluacion que puede tener en 2 lugares distiton estos 2 valores
+      case "Motivo de Consulta ":
+        return getReasonForConsultationSV(row);
+      case "Centro de Atención":
+        return getAttentionCenterSV(row);
       default:
         return value;
     }

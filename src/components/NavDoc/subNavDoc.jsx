@@ -155,7 +155,7 @@ export default function SubNavbar({ id }) {
   };
   const getUser = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patient-details?id=${userId}`,
+      `/medical-history/patient-detail?id=${userId}`,
       headers
     );
     dispatch(addUserHistory(response.data));

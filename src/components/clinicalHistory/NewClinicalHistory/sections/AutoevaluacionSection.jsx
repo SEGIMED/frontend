@@ -14,7 +14,7 @@ const AutoevaluacionSection = () => {
     const fetchAutoevaluacionData = async () => {
       try {
         const response = await ApiSegimed("/self-evaluation-event/pain-map", {
-          params: { patientId: user.userId },
+          params: { patientId: user.id },
         });
         setAutoevaluacionData(response.data);
       } catch (error) {
@@ -47,14 +47,14 @@ const AutoevaluacionSection = () => {
     //   width: "w-16",
     // },
     {
-      label: "Centro de atencion ",
-      key: "attendancePlace",
+      label: "Centro de Atencion",
+      key: "appSch.attendancePlace.alias",
       showMobile: true,
       width: "w-16",
     },
     {
-      label: "Motivo de consulta",
-      key: "reasonForConsultation",
+      label: "Motivo de Consulta",
+      key: "appSch.reasonForConsultation",
       showMobile: false,
       width: "w-16",
     },

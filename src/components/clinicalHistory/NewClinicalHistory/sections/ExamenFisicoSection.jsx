@@ -13,9 +13,12 @@ const ExamenFisicoSection = () => {
   useEffect(() => {
     const fetchExamenFisicoData = async () => {
       try {
-        const response = await ApiSegimed("/patient-physical-examination", {
-          params: { patientId: user.userId },
-        });
+        const response = await ApiSegimed(
+          "/medical-history/physical-examination",
+          {
+            params: { patientId: user.id },
+          }
+        );
         setExamenFisicoData(response.data);
       } catch (error) {
         console.error("Error fetching evoluciones data:", error);

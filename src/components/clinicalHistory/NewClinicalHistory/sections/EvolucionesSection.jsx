@@ -15,7 +15,7 @@ const EvolucionesSection = () => {
       try {
         // Simulate a data fetch
         const response = await ApiSegimed("/medical-history/evolution", {
-          params: { patientId: user.userId },
+          params: { patientId: user.id },
         });
         setEvolucionesData(response.data);
       } catch (error) {
