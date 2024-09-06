@@ -22,7 +22,7 @@ export default function DoctorCard({ doctor, button }) {
           {specialtiesString ? ` - ${specialtiesString}` : null}
         </span>
       </div>
-      {button}
+      <div className="w-1/5 lg:w-fit">{button}</div>
     </div>
   );
 }

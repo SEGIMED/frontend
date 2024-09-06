@@ -54,13 +54,13 @@ export default function CentroDetAtención({ handleDisabled, state, handleChange
     };
 
     return (
-        <div className="w-full flex flex-col items-center gap-3">
+        <div className="w-full flex flex-col items-center gap-3 ">
             <p className="font-medium text-3xl leading-10 text-center">
                 Seleccione su centro de atención
             </p>
 
             <Dropdown>
-                <DropdownTrigger className="max-w-[25rem] md:max-w-[45rem]">
+                <DropdownTrigger className="max-w-[20rem] md:max-w-[45rem]">
                     <Button
                         style={{
                             borderRadius: "0.5rem",
