@@ -48,6 +48,7 @@ import postPhysycalExam from "@/utils/dataFetching/fetching/postPatientPhysycalE
 import patchPhysicalExam from "@/utils/dataFetching/fetching/patchPhysycalExam";
 import patchPatientDiagnostic from "@/utils/dataFetching/fetching/patchPatientDiagnostic";
 import patchMedicalEvent from "@/utils/dataFetching/fetching/patchMedicalEvent";
+import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
 
 
 
@@ -62,7 +63,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const userId =Number(Cookies.get("patientId"));
   const scheduleId = Number(id); // id de agendamiento
   const [medicalEventExist, setMedicalEventExist] = useState();
-  const [handleNav, setHandleNav] = useState("DiagnosticoyTratamiento");
+  const [handleNav, setHandleNav] = useState("Anamnesis");
 
   console.log(medicalEventExist)
  
@@ -100,8 +101,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   
   const [physicalExamination, setPhysicalExamination] = useState();
   const [physicalExaminationPatch, setPhysicalExaminationPatch] = useState();
-  console.log(physicalExamination, physicalExaminationPatch)
-console.log(patient)
+
 
 //diagnostic
 const [diagnostic, setDiagnostic] = useState();
@@ -125,7 +125,28 @@ const [restofDiag, setRestofDiag] =useState()
    
   console.log(medicalEventExist, "esto es medical event")
 
+  useEffect(() => {
+    
+    const intervalId = setInterval(() => {
+    // handleAnamnesisSave()
+    // handleBackgroundSave()
+    handlePhysicalExam()
+    handleDiagnostic()
+    anamnesisCompleto()
+      console.log("se ejecuto el autosave")
+    }, 60000); // Guarda cada 60 segundos
 
+    return () => {
+      // handleAnamnesisSave()
+      // handleBackgroundSave()
+      handlePhysicalExam()
+      handleDiagnostic()
+      anamnesisCompleto()
+
+      clearInterval(intervalId);
+     
+    };
+  }, []);
 
 
   //UTIL NECESARIO PARA AUTOEVALUACION!!!
@@ -190,7 +211,7 @@ const [restofDiag, setRestofDiag] =useState()
       ) ?? null,
   };
 
-  console.log(preconsult, "esto es preconsulta para ver que patch se hizo")
+
   
   
   useEffect(() => {
@@ -200,7 +221,7 @@ const [restofDiag, setRestofDiag] =useState()
     });
     
   }, [selectedRisk]);
-  console.log(selectedRisk2, "riskhtp")
+  
   useEffect(() => {
     setHTPRisk({
       patientId: Number(userId),
@@ -263,30 +284,20 @@ const [restofDiag, setRestofDiag] =useState()
       patientId: Number(userId),
       medicalEventId: Number(medicalEventId),
       schedulingId: Number(scheduleId),
-      allergicBackground: data["Alergias"] === "" ? "" : data["Alergias"],
+      allergicBackground: data["Alergias"],
       familyBackground:
-        data["Antecedentes familiares"] === ""
-          ? ""
-          : data["Antecedentes familiares"],
+        data["Antecedentes familiares"] ,
       nonPathologicBackground:
-        data["Antecedentes no patologicos"] === ""
-          ? ""
-          : data["Antecedentes no patologicos"],
+        data["Antecedentes no patologicos"] ,
       pathologicBackground:
-        data["Antecedentes patologicos"] === ""
-          ? ""
-          : data["Antecedentes patologicos"],
+        data["Antecedentes patologicos"],
       pediatricBackground:
-        data["Antecedentes de infancia"] === ""
-          ? ""
-          : data["Antecedentes de infancia"],
+        data["Antecedentes de infancia"],
       pharmacologicalBackground:
-        data["Medicación actual"] === "" ? "" : data["Medicación actual"],
+        data["Medicación actual"] ,
       surgicalBackground:
-        data["Antecedentes quirúrgicos"] === ""
-          ? ""
-          : data["Antecedentes quirúrgicos"],
-      vaccinationBackground: data["Vacunas"] === "" ? "" : data["Vacunas"],
+        data["Antecedentes quirúrgicos"] ,
+      vaccinationBackground: data["Vacunas"] ,
       
     });
     if (patient?.backgrounds) {
@@ -504,7 +515,7 @@ const [restofDiag, setRestofDiag] =useState()
   const fetchMedicalEvent = async (scheduleId) => {
     try {
       
-      const response =await  getMedicalEventDetail(scheduleId)
+      const response = await  getMedicalEventDetail(scheduleId)
       setMedicalEventExist(response.data);
       if (response.data){
         setImportaciones(response.data.patientStudies)
@@ -619,7 +630,10 @@ const [restofDiag, setRestofDiag] =useState()
 
   const handleBackgroundSave = async (background) => {
     try {
-        const response = await postPatientBackgrounds(background);
+        console.log(background)
+        if(background !== undefined || background !== null) {
+          const response = await postPatientBackgrounds(background);
+        }
         console.log(response);
     } catch (error) {
         console.error('Error saving background:', error);
@@ -630,9 +644,9 @@ const handleHtpRiskSave = async (htpRisk) => {
     try {
         console.log(htpRisk);
         const response = await patchHTPRisk(htpRisk);
-        console.log("HTP risk:", response.data);
+     
     } catch (error) {
-        console.error('Error saving HTP risk:', error);
+       
     }
 };
 
@@ -657,10 +671,11 @@ const handleAnamnesisSave = async (anamnesisData) => {
 
 const anamnesisCompleto = async () => {
     try {
-        await handleHtpRiskSave(htpRisk);
-        await handleBackgroundSave(background);
-        await handleAnamnesisSave({ ...necesaryData, ...anamnesis });
-        await handleCardioVascularSave(cardiovascularRisk);
+      const responseR = await patchHTPRisk(htpRisk);
+        const responseB = await postPatientBackgrounds(background)
+        const responseA = await patchPreconsultation({ ...necesaryData, ...anamnesis });
+        const responseC = await patchCardiovascularRisk(cardiovascularRisk);
+        const responseG= await htpGroup(hpGroup)
     } catch (error) {
         console.error('Error completing anamnesis:', error);
     }
@@ -1019,7 +1034,7 @@ const handleDiagnostic= async ()=>{
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
-        <SubNavbarConsulta handleClic={handleClic} />
+        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} />
 
          <MenuDropDown
               label="Importar archivo"
@@ -1108,7 +1123,7 @@ const handleDiagnostic= async ()=>{
             nombre={"Guardar Cambios"}
             icon={<IconGuardar />}
             onPress={()=>{
-              anamnesisCompleto
+              anamnesisCompleto()
               Swal.fire({
                 icon: "success",
                 title: "Exito",
@@ -1232,7 +1247,15 @@ const handleDiagnostic= async ()=>{
           <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar />}
-            onPress={()=>{handleDiagnostic}}
+            onPress={()=>{handleDiagnostic
+              Swal.fire({
+                icon: "success",
+                title: "Exito",
+                text: "Se han guardado los cambios",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
             size={"lg"}
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />

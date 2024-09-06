@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import rutas from "@/utils/rutas";
 import Link from "next/link";
-
+import Elboton from "../Buttons/Elboton";
 import IconClinicalHistory from "../icons/IconClinicalHistory";
 import IconSubNavbar from "../icons/IconSubNavbar";
 import IconRegresar from "../icons/iconRegresar";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import IconArrowDetailUp from "../icons/IconArrowDetailUp";
-
+import Swal from "sweetalert2";
 
 import {
   Dropdown,
@@ -19,9 +19,44 @@ import {
   Button,
 
 } from "@nextui-org/react";
+import IconAccion from "../icons/IconAccion";
+import IconTablillaTilde from "../icons/iconTablillaTilde";
+import patchSchedule from "@/utils/dataFetching/fetching/patchSchedule";
+import { useRouter } from "next/navigation";
 
 export default function SubNavbarConsulta({ id, handleClic }) {
   const [openDetails, setOpenDetails] = useState(false);
+  const router=useRouter()
+  const endConsult = async () => {
+    try {
+    
+      const result = await Swal.fire({
+        title: "¿Quiere Finalizar la consulta?",
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Sí",
+        denyButtonText: "No",
+      });
+  
+      
+      if (result.isConfirmed) {
+        
+        await Swal.fire("La consulta ha finalizado.", "", "success");
+  
+      
+        await patchSchedule(id,{ schedulingStatus: 2 });
+        
+       
+        router.push(`${rutas.Doctor}${rutas.Consultas}`); 
+      } else if (result.isDenied) {
+ 
+        await Swal.fire("Continúe con su consulta.", "", "info");
+      }
+    } catch (error) {
+      
+      console.error("Error al finalizar la consulta:", error);
+    }
+  };
   
  
 
@@ -182,6 +217,16 @@ export default function SubNavbarConsulta({ id, handleClic }) {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
+      <Elboton
+            nombre={"Finalizar Consulta"}
+            icon={<IconTablillaTilde  color="white"/>}
+            onPress={()=>{
+             endConsult()
+            }}
+            size={"md"}
+            className={"bg-[#f53a3a] w-60 text-sm font-bold m-2"}
+          />
+
       <Link href={`${rutas.Doctor}/${rutas.Consultas}`}>
         <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">
           <IconRegresar />

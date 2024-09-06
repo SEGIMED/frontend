@@ -28,6 +28,7 @@ export default function InputConsulta({
   onRiskChange2,
   onGroupChange,
   diagnostico,
+  
 }) {
   const [valuesAmnesis, setValuesAmnesis] = useState([]);
   const [valuesBackground, setValuesBackground] = useState([]);
@@ -63,11 +64,7 @@ export default function InputConsulta({
       const group = paciente.patientPulmonaryHypertensionGroups.group;
       setGroupPatientPulmonaryHypertensionButton([group]);
     }*/
-    if (paciente?.patientPulmonaryHypertensionGroups?.group) {
-      setGroupPatientPulmonaryHypertensionButton(
-        paciente?.patientPulmonaryHypertensionGroups?.group
-      );
-    }
+    
     setValuesBackground([
       paciente?.backgrounds?.surgicalBackground,
       paciente?.backgrounds?.pathologicBackground,
@@ -88,29 +85,35 @@ export default function InputConsulta({
   }, [preconsult, diagnostico]);
   useEffect(() => {
     setValueEvolution(diagnostico?.physicianComments);
+    if (diagnostico?.patientHpGroups[0]?.group) {
+      
+      setGroupPatientPulmonaryHypertensionButton(
+        diagnostico?.patientHpGroups[0]?.group
+      );
+    }
   }, [diagnostico]);
 
   const handleOption = (sub) => {
-    console.log(sub);
+    
     setRiskCardiovascularButton(sub);
     if (onRiskChange) onRiskChange(IdRiskCardiovascular(sub));
   };
-
+  
   const handleOption2 = (sub) => {
     setRiskHTPButton(sub);
     if (onRiskChange2) onRiskChange2(IdRiskSurgical(sub));
   };
-  /* //esto es la logica de elegir varios botones del grupo a la vez
-  const handleGroupChange = (sub) => {
-    const updatedSelection = groupPatientPulmonaryHypertensionRisksButton.includes(sub)
-      ? groupPatientPulmonaryHypertensionRisksButton.filter(item => item !== sub)
-      : [...groupPatientPulmonaryHypertensionRisksButton, sub];
+  //esto es la logica de elegir varios botones del grupo a la vez
+  // const handleGroupChange = (sub) => {
+  //   const updatedSelection = groupPatientPulmonaryHypertensionRisksButton.includes(sub)
+  //     ? groupPatientPulmonaryHypertensionRisksButton.filter(item => item !== sub)
+  //     : [...groupPatientPulmonaryHypertensionRisksButton, sub];
       
-    setGroupPatientPulmonaryHypertensionButton(updatedSelection);
-    if (onGroupChange) onGroupChange(updatedSelection.map(RomanToInt));
-  };
+  //   setGroupPatientPulmonaryHypertensionButton(updatedSelection);
+  //   if (onGroupChange) onGroupChange(updatedSelection.map(RomanToInt));
+  // };
   
-*/
+
 
   const handleGroupChange = (sub) => {
     setGroupPatientPulmonaryHypertensionButton(sub);
@@ -233,42 +236,43 @@ export default function InputConsulta({
             </div>
           </div>
         ))}
-        {riskGroup?.map((sub, index) => (
-          <div
-            key={index}
-            className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]">
-            <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
-              <IconCurrentRouteNav className="w-[1.5rem]" />
-              {sub}
-            </label>
-            <div className="flex">
-              {groupHTP?.map((sub, index) => (
-                <button
-                  key={index}
-                  className={`p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2 ${
-                    //groupPatientPulmonaryHypertensionRisksButton.includes(sub) //esto es la logica de elegir varios botones del grupo a la vez
-                    groupPatientPulmonaryHypertensionRisksButton === sub
-                      ? "bg-primary text-white"
-                      : "bg-white"
-                    }`}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    handleGroupChange(sub);
-                  }}>
-                  <IconPreConsulta
-                    color={
-                      //groupPatientPulmonaryHypertensionRisksButton.includes(sub) //esto es la logica de elegir varios botones del grupo a la vez
-                      groupPatientPulmonaryHypertensionRisksButton === sub
-                        ? "#ffffff"
-                        : "#808080"
-                    }
-                  />
-                  {sub}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
+        {riskGroup?.map((risk, riskIndex) => (
+  <div
+    key={riskIndex}
+    className="flex flex-col gap-2 px-6 py-4 md:flex-row md:py-2 bg-[#fafafc]"
+  >
+    <label className="text-start w-full md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
+      <IconCurrentRouteNav className="w-[1.5rem]" />
+      {risk}
+    </label>
+    <div className="flex">
+      {groupHTP?.map((htp, htpIndex) => (
+        <button
+          key={htpIndex}
+          className={`p-2 md:px-4 md:py-2 border mx-1 md:mx-2 rounded-lg border-[#D7D7D7] flex gap-2 ${
+            groupPatientPulmonaryHypertensionRisksButton === htp
+              ? "bg-primary text-white"
+              : "bg-white"
+          }`}
+          onClick={(event) => {
+            event.preventDefault();
+            handleGroupChange(htp); // Cambia el estado al hacer clic en el botón
+          }}
+        >
+          <IconPreConsulta
+            color={
+              groupPatientPulmonaryHypertensionRisksButton === htp
+                ? "#ffffff"
+                : "#808080"
+            }
+          />
+          {htp}
+        </button>
+      ))}
+    </div>
+  </div>
+))}
+
         {subtitle?.map((sub, index) => (
           <div
             key={index}
