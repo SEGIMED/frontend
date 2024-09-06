@@ -930,17 +930,17 @@ export default function ConsultaDoc({ id, preconsult }) {
   const handleClic = (title) => {
 
     setHandleNav(title);
-    const hasReloaded = localStorage.getItem("hasReloaded");
+    // const hasReloaded = localStorage.getItem("hasReloaded");
 
-    if (title === "Anamnesis" && !hasReloaded) {
-      // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
-      localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
-      window.location.reload();
-    } else if (title !== "Anamnesis") {
-      // Si selecciona otra opción, eliminar la bandera de recarga
-      localStorage.removeItem("hasReloaded");
+    // if (title === "Anamnesis" && !hasReloaded) {
+    //   // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
+    //   localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
+    //   window.location.reload();
+    // } else if (title !== "Anamnesis") {
+    //   // Si selecciona otra opción, eliminar la bandera de recarga
+    //   localStorage.removeItem("hasReloaded");
 
-    }
+    // }
 
   };
 
