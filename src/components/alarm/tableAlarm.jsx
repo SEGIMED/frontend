@@ -22,13 +22,13 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 const PriorityIcon = ({ priority }) => {
   switch (priority) {
     case "Alta":
-      return <IconAlarmRed className="md:w-8 w-[75%]" />;
+      return <IconAlarmRed className="lg:w-8 w-[75%]" />;
     case "Media":
-      return <IconAlarmYellow className="md:w-8 w-[75%]" />;
+      return <IconAlarmYellow className="lg:w-8 w-[75%]" />;
     case "Baja":
-      return <IconAlarmGreen className="md:w-8 w-[75%]" />;
+      return <IconAlarmGreen className="lg:w-8 w-[75%]" />;
     case "Indefinida":
-      return <IconAlarmBlue color={"gray"} className="md:w-8 w-[75%]" />;
+      return <IconAlarmBlue color={"gray"} className="lg:w-8 w-[75%]" />;
   }
 };
 
@@ -92,29 +92,29 @@ export default function TableAlarm({ alarms, updateAlarms }) {
           <div
             key={index}
             className="w-[100%] flex border-b border-b-[#cecece] py-2 items-center">
-            <div className="w-[12%] md:w-[5%] items-center flex justify-center">
+            <div className="w-[12%] lg:w-[5%] items-center flex justify-center">
               <PriorityIcon priority={alarm?.ia_priority} />
             </div>
-            <div className="text-center w-[70%] md:w-[75%] md:text-start gap-3  grid grid-cols-3 md:grid-cols-5 items-center py-2 bg-white h-fit ">
-              <span className="hidden md:flex items-center justify-between pr-6 ">
+            <div className="text-center w-[75%] lg:w-[75%] lg:text-start gap-0 lg:gap-3  grid grid-cols-3 lg:grid-cols-5 items-center py-2 bg-white h-fit ">
+              <span className="hidden lg:flex items-center justify-between pr-6 ">
                 {alarm?.ia_priority}
-                <IconCurrentRouteNav className="w-[1.5rem] hidden md:block " />
+                <IconCurrentRouteNav className="w-[1.5rem] hidden lg:block " />
               </span>
               <div className="text-[#5F5F5F]">{Fecha(alarm?.createdAt)}</div>
               <div className="text-[#5F5F5F]">{Hora(alarm?.createdAt)}</div>
-              <p className=" text-[#686868] font-normal  md:text-base leading-6  line-clamp-2">
+              <p className=" text-[#686868] font-normal  lg:text-base leading-6  line-clamp-2">
                 {alarm?.patient.name} {alarm?.patient.lastname}
               </p>
 
-              {/* <div className="text-[#5F5F5F] hidden md:block ">
+              {/* <div className="text-[#5F5F5F] hidden lg:block ">
                 {" "}
                 {alarm?.htp_group || "No asignado"}
               </div> */}
-              <div className="text-[#5F5F5F] hidden md:line-clamp-2">
+              <div className="text-[#5F5F5F] hidden lg:line-clamp-2">
                 {alarm?.alarm_description}
               </div>
             </div>
-            <div className="w-[18%] md:w-[20%] items-center justify-center flex">
+            <div className="w-[10%] lg:w-[20%] items-center  lg:flex">
               <MenuDropDown
                 icon={<IconOptions color="white" />}
                 items={[
