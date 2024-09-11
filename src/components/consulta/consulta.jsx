@@ -391,79 +391,27 @@ const [restofDiag, setRestofDiag] =useState()
     });
     
 
-    if (medicalEventExist?.physicalExaminations[0]?.id) {
-      setPhysicalExaminationPatch({
-        physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
-        description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-        id: Number(medicalEventExist.physicalExaminations[0].id),
-      });
-    }
-    if (
-      data["Diagnostico"] !== "" &&
-      data["medications"] !== "" &&
-      data["Procedimientos"] !== "" &&
-      data["Conducta terapeutica"] !== "" &&
-      data["Tratamientos no farmacológicos"] !== ""
-    ) {
-      setDiagnostic({
+
+    setDiagnostic({
         patientId: Number(userId),
-        // diseaseId: orden?.diagnostic,
-        diagnosticNotes: data["Descripción del Diagnóstico"],
         medicalEventId: Number(medicalEventId),
-        // drugId: null,
-        // drugName: data["medications"],
-        // prescribedDose: null,
-        // quantityDrug: null,
-        // medicalProcedureId: null,
-        medicalProcedureName: data["Procedimientos"]
-          ? data["Procedimientos"]
-          : null,
-        therapyId: null,
-        descriptionTherapy: data["Conducta terapeutica"], // donde aparece en medical event
-        quantityTherapy: null,
-        descriptionIndication: data["Tratamientos no farmacológicos"],
+        
       });
-    }
+   
     setRestofDiag({
       id:Number(medicalEventId),
+      treatmentPlan: data["Conducta terapeutica"], 
       chiefComplaint:data["Evolucion"],
       historyOfPresentIllness:data["Evolucion"],
       alarmPattern:data["Pautas de alarma"],
-      diagnostic:orden?.diagnostic,
+      diagnostic: orden?.diagnostic,
       physicianComments:data["Descripción del Diagnóstico"],
+      diagnosticNotes: data["Descripción del Diagnóstico"],
+      medicalProcedureName: data["Procedimientos"],
+      descriptionIndication: data["Tratamientos no farmacológicos"],
     })
 
-    // setDiagnosticPatch(
-    //   //diagnosticPatch
-    //   {
-    //     id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
-    //     diseaseId: orden?.diagnostic,
-    //     diagnosticNotes:
-    //       data["Diagnostico"],
-    //     medicalEventId: Number(medicalEventId),
-    //     // drugId: null,
-    //     // drugName:
-    //     //   data["medications"] !== ""
-    //     //     ? data["medications"]
-    //     //     : medicalEventExist?.drugPrescriptions || "", // Si está vacío, usa el valor de la receta existente
-    //     // quantityDrug: null,
-    //     // medicalProcedureId: null,
-    //     medicalProcedureName:
-    //       data["Procedimientos"] ,
-    //       // !== ""
-    //       //   ? data["Procedimientos"]
-    //       //   : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
-    //       //     null, // Usa el valor del procedimiento existente si está vacío
-    //     therapyId: null,
-    //     therapyDescription:
-    //       data["Conducta terapeutica"] ,
-    //       // !== ""
-    //       //   ? data["Conducta terapeutica"]
-    //       //   : medicalEventExist?.TherapyPrescription || null, // Usa la terapia existente si está vacío
-    //     quantityTherapy: null,
-    //     descriptionIndication: ["Tratamientos no farmacológicos"],
-    //   }
-    // );
+    
 
 
     // patch medical event
@@ -686,9 +634,9 @@ const handleDiagnostic= async ()=>{
 
 
     
-    const response2= await patchMedicalEvent(restofDiag)
-    const response= await postPatientDiagnostic(diagnostic)
-
+    const response= await patchMedicalEvent(restofDiag)
+    // const response= await postPatientDiagnostic(diagnostic)
+    console.log(response)
   } catch (error) {
     console.error(error.message)
   }
