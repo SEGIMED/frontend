@@ -8,6 +8,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 export default function NewModalDrugs({ drugs, id, handleOptionChange, info, error }) {
     const [selectedDrug, setSelectedDrug] = useState(null);
     const [presentation, setPresentation] = useState([]);
+    const [dosesPresentation, setDosesPresentation] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isSelectedNewDrug, setIsSelectedNewDrug] = useState(false);
     const [isSelectedNewDose, setIsSelectedNewDose] = useState(false);
@@ -23,6 +24,7 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info, err
     useEffect(() => {
         if (info) {
             setPresentation(info.result);
+            setDosesPresentation(info.presentation);
         }
     }, []);
 
@@ -116,19 +118,18 @@ export default function NewModalDrugs({ drugs, id, handleOptionChange, info, err
                 <div className="flex gap-3">
 
                     {!isSelectedNewDose ? (
-                        <select
-                            className={`w-1/2 py-2 px-3 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg ${error?.dose ? 'border-red-500' : ''}`}
-                            onChange={(e) => handleInputChange("dose", e.target.value)}
+                        <Autocomplete
+                            aria-label="dosis"
+                            defaultItems={dosesPresentation}
+                            variant="bordered"
+                            placeholder="Ingresar dosis"
+                            className="w-1/2 bg-white"
+                            onSelectionChange={(value) => handleInputChange("dose", value)}
+
                         >
-                            <option value="">Seleccione la cantidad</option>
-                            <option value="100">100</option>
-                            <option value="150">150</option>
-                            <option value="200">200</option>
-                            <option value="400">400</option>
-                            <option value="500">500</option>
-                            <option value="600">600</option>
-                            <option value="1000">1000</option>
-                        </select>
+
+                            {(drug) => <AutocompleteItem key={drug.dose}>{drug.dose}</AutocompleteItem>}
+                        </Autocomplete>
                     ) : (
                         <InputInfoText
                             classNameInput={`md:w-full ${error?.dose ? 'border-red-500' : ''}`}
