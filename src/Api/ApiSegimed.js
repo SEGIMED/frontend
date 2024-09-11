@@ -23,7 +23,7 @@ ApiSegimed.interceptors.request.use(
       //Si no existe se redirige al login
       Swal.fire({
         icon: "error",
-        title: "Sesión expirada",
+        title: "Sesión terminada",
         text: "Por favor inicie sesión de nuevo",
         allowOutsideClick: false,
         showConfirmButton: true,
@@ -48,7 +48,7 @@ ApiSegimed.interceptors.request.use(
       //Si no existe se redirige al login
       Swal.fire({
         icon: "error",
-        title: "Sesión expirada",
+        title: "Sesión terminada",
         text: "Por favor inicie sesión de nuevo",
         allowOutsideClick: false,
         showConfirmButton: true,
@@ -93,7 +93,7 @@ ApiSegimed.interceptors.response.use(
       if (!refreshToken) {
         Swal.fire({
           icon: "error",
-          title: "Sesión expirada",
+          title: "Sesión terminada",
           text: "Por favor inicie sesión de nuevo",
           allowOutsideClick: false,
           showConfirmButton: true,
@@ -118,7 +118,7 @@ ApiSegimed.interceptors.response.use(
       console.log("error");
       Swal.fire({
         icon: "error",
-        title: "Sesión expirada",
+        title: "Sesión terminada",
         text: "Por favor inicie sesión de nuevo",
         allowOutsideClick: false,
         showConfirmButton: true,

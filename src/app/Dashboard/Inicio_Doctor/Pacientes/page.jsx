@@ -262,8 +262,8 @@ export default function HomeDoc() {
   return (
     <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
-      <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 md:pl-10 md:pr-6 py-2 h-[10%] bg-white sticky top-0 z-10 ">
-        <div className="flex gap-2 md:gap-4 items-center">
+      <div className="flex items-center border-b justify-between border-b-[#cecece] px-2 lg:pl-10 lg:pr-[3%] py-2 h-[10%] bg-white sticky top-0 z-10 ">
+        <div className="flex gap-2 lg:gap-4 items-center">
           {/* Se comenta por falta de funcionalidad */}
           {/* <button
             className={
@@ -293,14 +293,16 @@ export default function HomeDoc() {
 
           <button
             onClick={handleFavoriteClick}
-            className={`${showFavorites
-              ? "bg-bluePrimary text-white"
-              : "bg-white text-bluePrimary  border-bluePrimary"
-              } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+            className={`${
+              showFavorites
+                ? "bg-bluePrimary text-white"
+                : "bg-white text-bluePrimary  border-bluePrimary"
+            } py-2 px-4 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
             {showFavorites ? <IconFavoriteYellow /> : <IconFavoriteBlue />}
             <p
-              className={`hidden md:block ${showFavorites ? "text-white" : "text-bluePrimary"
-                } font-bold`}>
+              className={`hidden md:block ${
+                showFavorites ? "text-white" : "text-bluePrimary"
+              } font-bold`}>
               Favoritos
             </p>
           </button>
@@ -312,7 +314,7 @@ export default function HomeDoc() {
         </div>
 
         <h1 className="font-bold ml-4">Listado de pacientes</h1>
-        <div className="flex items-center">
+        <div className="lg:w-fit w-1/6">
           <MenuDropDown
             label="Filtrar"
             iconr={<IconFilter />}
@@ -441,64 +443,64 @@ export default function HomeDoc() {
                       router.push(url);
                     }}
                     classNameText={"hidden md:block "}
-                  // icon={<IconMas />}
+                    // icon={<IconMas />}
                   />
                 ) : (
-                  <MenuDropDown
-                    label="Opciones"
-                    icon={<IconOptions color="#FFFFFF" />}
-                    categories={[
-                      {
-                        title: "Acciones",
-                        items: [
-                          {
-                            label: "Agendar Consulta",
-                            onClick: () => openModal(paciente.id),
-                            icon: <IconMiniCalendar />,
-                          },
-                          {
-                            label: paciente.isFavorite
-                              ? "Quitar de Favoritos"
-                              : "Agregar a Favoritos",
-                            onClick: () => changeFavorite(paciente),
-                            icon: (
-                              <IconTStar2 className={"w-6"} borde={"#B2B2B2"} />
-                            ),
-                          },
-                        ],
-                      },
-                      {
-                        title: "Información",
-                        items: [
-                          {
-                            label: "Ver Historia Clínica",
-                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}`,
-                            icon: <IconClinicalHistory />,
-                          },
-                          {
-                            label: "Ver datos Personales",
-                            href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
-                            icon: <IconPersonalData />,
-                          },
-                          {
-                            label: "Ver antiguas consultas",
-                            href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}/${rutas.Consultas}`,
-                            icon: <IconClinicalHistory />,
-                          },
-                          {
-                            label: "Ver Mensajes",
-                            onClick: () => handleSeeMessages(paciente.id),
-                            icon: <IconMessages />,
-                          },
-                          {
-                            label: "Ver Geolocalización",
-                            onClick: () => handleGeolocationClick(paciente),
-                            icon: <IconGeolocation />,
-                          },
-                        ],
-                      },
-                    ]}
-                  />
+                  <div className="lg:w-fit w-1/2">
+                    <MenuDropDown
+                      label="Opciones"
+                      icon={<IconOptions color="#FFFFFF" />}
+                      categories={[
+                        {
+                          title: "Acciones",
+                          items: [
+                            {
+                              label: "Agendar Consulta",
+                              onClick: () => openModal(paciente.id),
+                              icon: <IconMiniCalendar />,
+                            },
+                            {
+                              label: paciente.isFavorite
+                                ? "Quitar de Favoritos"
+                                : "Agregar a Favoritos",
+                              onClick: () => changeFavorite(paciente),
+                              icon: (
+                                <IconTStar2
+                                  className={"w-6"}
+                                  borde={"#B2B2B2"}
+                                />
+                              ),
+                            },
+                          ],
+                        },
+                        {
+                          title: "Información",
+                          items: [
+                            {
+                              label: "Ver Historia Clínica",
+                              href: `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}`,
+                              icon: <IconClinicalHistory />,
+                            },
+                            {
+                              label: "Ver datos Personales",
+                              href: `${rutas.Doctor}${rutas.Pacientes}/${paciente.id}`,
+                              icon: <IconPersonalData />,
+                            },
+                            {
+                              label: "Ver Mensajes",
+                              onClick: () => handleSeeMessages(paciente.id),
+                              icon: <IconMessages />,
+                            },
+                            {
+                              label: "Ver Geolocalización",
+                              onClick: () => handleGeolocationClick(paciente),
+                              icon: <IconGeolocation />,
+                            },
+                          ],
+                        },
+                      ]}
+                    />
+                  </div>
                 )}
               </div>
             </div>

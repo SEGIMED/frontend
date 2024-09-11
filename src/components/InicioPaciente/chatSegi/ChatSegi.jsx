@@ -134,7 +134,7 @@ export const ChatSegi = ({ toggleChat }) => {
     }
   };
   return (
-    <div className="fixed z-50 h-[75%] max-h-[700px] lg:max-h-[600px] w-[90%] lg:h-[85%] lg:max-w-[600px] lg:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
+    <div className="fixed z-50 h-[75%] max-h-[600px] lg:max-h-[600px] w-[90%] lg:h-[85%] lg:max-w-[600px] lg:w-[30%] bottom-[4%] right-[2%] border-bluePrimary bg-bluePrimary border overflow-hidden rounded-3xl">
       <div className="flex flex-col h-full">
         <div className="h-[10%] lg:h-16 py-2 flex items-center px-4 justify-between">
           <div className="flex items-center gap-4">

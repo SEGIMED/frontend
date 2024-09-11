@@ -14,6 +14,14 @@ export default function Especialidad({ handleDisabled, state, options }) {
             </p>
 
             <DropNext
+                style={{
+                    borderRadius: "0.5rem",
+                    textAlign: "start",
+                    borderWidth: "1px",
+                    justifyContent: "flex-start",
+                    opacity: "1",
+                    color: "#686868",
+                }}
                 selectedOptions={state.specialty2}
                 handleDisabled={handleDisabled}
                 type={true}

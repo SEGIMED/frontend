@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Agenda from "@/components/agenda/Agenda";
 import IconPendientes from "@/components/icons/IconPendientes";
+import { useRouter } from "next/navigation";
 
 export default function HomeDoc() {
   const user = useAppSelector((state) => state.user);
@@ -43,6 +44,9 @@ export default function HomeDoc() {
       console.log(error);
     }
   };
+
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -165,7 +169,7 @@ export default function HomeDoc() {
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start  gap-2">
               <IconNewUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-6xl md:text-7xl font-semibold ml-2">
-                6
+                4
               </span>
               <IconArrowUp className="hidden md:block" />
             </div>
@@ -187,7 +191,9 @@ export default function HomeDoc() {
             </p>
           </div>
 
-          <div className="w-full bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
+          <div
+            onClick={() => router.push(`${rutas.Doctor}${rutas.Alarm}`)}
+            className="w-full cursor-pointer bg-[#FF7E7E] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
@@ -200,7 +206,11 @@ export default function HomeDoc() {
             </p>
           </div>
 
-          <div className="w-full bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
+          <div
+            onClick={() =>
+              router.push(`${rutas.Doctor}${rutas.Alarm}${rutas.resueltas}`)
+            }
+            className="w-full cursor-pointer bg-[#ECD652] flex flex-col justify-around gap-3 md:px-8 px-3 py-5 text-white text-xl rounded-3xl lg:w-1/4 h-40">
             <div className="h-full w-full flex items-center justify-start md:justify-center lg:justify-start gap-2">
               <IconAlarmUsers className="w-[40%] md:w-12" color="white" />
               <span className="text-4xl xs:text-5xl md:text-6xl font-semibold ml-2">
