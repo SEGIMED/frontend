@@ -55,7 +55,7 @@ import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
 export default function ConsultaDoc ({id, preconsult}) {
 
   const orden = useAppSelector((state) => state.formSlice.selectedOptions);
-  console.log(orden)
+  
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
@@ -65,7 +65,7 @@ export default function ConsultaDoc ({id, preconsult}) {
   const [medicalEventExist, setMedicalEventExist] = useState();
   const [handleNav, setHandleNav] = useState("Anamnesis");
 
-  console.log(medicalEventExist)
+ 
  
   //vital signs y glicemia
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
@@ -123,7 +123,7 @@ const [restofDiag, setRestofDiag] =useState()
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
    
-  console.log(medicalEventExist, "esto es medical event")
+
 
   useEffect(() => {
     
@@ -363,7 +363,7 @@ const [restofDiag, setRestofDiag] =useState()
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
-    console.log("aca se guardan los signos vitales", updateVitalSigns )
+   
     setVitalSignsPreconsult(updateVitalSigns);
     setAnamnesis({
       //anamnesis sin evolucion de la enfermedad
@@ -398,7 +398,7 @@ const [restofDiag, setRestofDiag] =useState()
         medicalProcedureName: data["Procedimientos"],
         descriptionIndication: data["Tratamientos no farmacológicos"],
       });
-   
+      
     setRestofDiag({
       id:Number(medicalEventId),
       treatmentPlan: data["Conducta terapeutica"], 
@@ -409,6 +409,7 @@ const [restofDiag, setRestofDiag] =useState()
       physicianComments:data["Descripción del Diagnóstico"],
       diagnosticNotes: data["Descripción del Diagnóstico"],
     })
+
 
     
 
@@ -455,7 +456,7 @@ const [restofDiag, setRestofDiag] =useState()
       const response= await getPatientDetail(userId)
       setPatient(response);
     } catch (error) {
-      console.log("No existe este paciente", error);
+      console.error("No existe este paciente", error);
     }
   };
   
@@ -469,7 +470,7 @@ const [restofDiag, setRestofDiag] =useState()
         setIsLoading(false)
       }
     } catch (error) {
-      console.log("No se ah echo un diagnostico anteriormente:", error);
+      console.error("No se ah echo un diagnostico anteriormente:", error);
     }
   };
 
@@ -577,11 +578,11 @@ const [restofDiag, setRestofDiag] =useState()
 
   const handleBackgroundSave = async (background) => {
     try {
-        console.log(background)
+        
         if(background !== undefined || background !== null) {
           const response = await postPatientBackgrounds(background);
         }
-        console.log(response);
+        
     } catch (error) {
         console.error('Error saving background:', error);
     }
@@ -589,7 +590,7 @@ const [restofDiag, setRestofDiag] =useState()
 
 const handleHtpRiskSave = async (htpRisk) => {
     try {
-        console.log(htpRisk);
+      
         const response = await patchHTPRisk(htpRisk);
      
     } catch (error) {
@@ -599,9 +600,9 @@ const handleHtpRiskSave = async (htpRisk) => {
 
 const handleCardioVascularSave = async (cardiovascularRisk) => {
     try {
-        console.log(cardiovascularRisk);
+       
         const response = await patchCardiovascularRisk(cardiovascularRisk);
-        console.log("Cardiovascular risk:", response);
+       
     } catch (error) {
         console.error('Error saving cardiovascular risk:', error);
     }
@@ -610,7 +611,7 @@ const handleCardioVascularSave = async (cardiovascularRisk) => {
 const handleAnamnesisSave = async (anamnesisData) => {
     try {
         const response = await patchPreconsultation(anamnesisData);
-        console.log("Anamnesis:", response.data);
+        
     } catch (error) {
         console.error('Error saving anamnesis:', error);
     }
@@ -630,8 +631,7 @@ const anamnesisCompleto = async () => {
 
 const handleDiagnostic= async ()=>{
   try {
-
-
+   
     
     const response2= await patchMedicalEvent(restofDiag)
     const response= await postPatientDiagnostic(diagnostic)
@@ -910,7 +910,7 @@ const handleDiagnostic= async ()=>{
 
   const submitModalData = async () => {
     const payload = { scheduleId: scheduleId, userId: userId, studies: [dataImportar] };
-    console.log(payload);
+    
     try {
       // Realizar la petición POST
     
@@ -1194,7 +1194,7 @@ const handleDiagnostic= async ()=>{
           <Elboton
             nombre={"Guardar"}
             icon={<IconGuardar />}
-            onPress={()=>{handleDiagnostic
+            onPress={()=>{handleDiagnostic()
               Swal.fire({
                 icon: "success",
                 title: "Exito",
