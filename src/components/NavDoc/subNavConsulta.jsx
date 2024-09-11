@@ -25,7 +25,7 @@ import patchSchedule from "@/utils/dataFetching/fetching/patchSchedule";
 import { useRouter } from "next/navigation";
 
 export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
-  console.log(preconsult)
+  
   const [openDetails, setOpenDetails] = useState(false);
   const router=useRouter()
   const endConsult = async () => {

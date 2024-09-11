@@ -55,7 +55,7 @@ import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
 export default function ConsultaDoc({ id, preconsult }) {
 
   const orden = useAppSelector((state) => state.formSlice.selectedOptions);
-  console.log(preconsult)
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
@@ -877,17 +877,17 @@ const handleDiagnostic= async ()=>{
   const handleClic = (title) => {
 
     setHandleNav(title);
-    // const hasReloaded = localStorage.getItem("hasReloaded");
+    const hasReloaded = localStorage.getItem("hasReloaded");
 
-    // if (title === "Anamnesis" && !hasReloaded) {
-    //   // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
-    //   localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
-    //   window.location.reload();
-    // } else if (title !== "Anamnesis") {
-    //   // Si selecciona otra opción, eliminar la bandera de recarga
-    //   localStorage.removeItem("hasReloaded");
+    if (title === "Anamnesis" && !hasReloaded) {
+      // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
+      localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
+      window.location.reload();
+    } else if (title !== "Anamnesis") {
+      // Si selecciona otra opción, eliminar la bandera de recarga
+      localStorage.removeItem("hasReloaded");
 
-    // }
+    }
 
   };
 
