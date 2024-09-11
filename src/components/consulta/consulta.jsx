@@ -395,7 +395,8 @@ const [restofDiag, setRestofDiag] =useState()
     setDiagnostic({
         patientId: Number(userId),
         medicalEventId: Number(medicalEventId),
-        
+        medicalProcedureName: data["Procedimientos"],
+        descriptionIndication: data["Tratamientos no farmacológicos"],
       });
    
     setRestofDiag({
@@ -407,8 +408,6 @@ const [restofDiag, setRestofDiag] =useState()
       diagnostic: orden?.diagnostic,
       physicianComments:data["Descripción del Diagnóstico"],
       diagnosticNotes: data["Descripción del Diagnóstico"],
-      medicalProcedureName: data["Procedimientos"],
-      descriptionIndication: data["Tratamientos no farmacológicos"],
     })
 
     
@@ -634,9 +633,9 @@ const handleDiagnostic= async ()=>{
 
 
     
-    const response= await patchMedicalEvent(restofDiag)
-    // const response= await postPatientDiagnostic(diagnostic)
-    console.log(response)
+    const response2= await patchMedicalEvent(restofDiag)
+    const response= await postPatientDiagnostic(diagnostic)
+
   } catch (error) {
     console.error(error.message)
   }
