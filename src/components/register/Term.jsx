@@ -16,7 +16,8 @@ export default function Term({ isOpen, onOpenChange, onAccept }) {
       onOpenChange={onOpenChange}
       isDismissable={false}
       scrollBehavior={"inside"}
-      isKeyboardDismissDisabled={true}>
+      isKeyboardDismissDisabled={true}
+      size="3xl">
       <ModalContent>
         {(onClose) => (
           <>
