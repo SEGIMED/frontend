@@ -55,7 +55,7 @@ import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
 export default function ConsultaDoc({ id, preconsult }) {
 
   const orden = useAppSelector((state) => state.formSlice.selectedOptions);
-  
+  console.log(preconsult)
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
@@ -988,7 +988,7 @@ const handleDiagnostic= async ()=>{
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
-        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} />
+        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} preconsult={preconsult} />
 
         <MenuDropDown
           label="Importar archivo"
