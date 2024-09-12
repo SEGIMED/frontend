@@ -44,12 +44,26 @@ const Agenda = ({ schedules, title }) => {
   };
 
   const eventStyleGetter = (event, start, end, isSelected) => {
-    let backgroundColor = "#E9EFFF"; // Fondo claro
-    let borderColor = "#5272E9"; // Borde izquierdo azul
+    const now = new Date();
+    let backgroundColor = "#E6FEFF"; // Fondo claro
+    let borderColor = "#24B0C9"; // Borde izquierdo azul
+    let textColor = "#5272E9"; // Borde izquierdo azul
 
     if (isSelected) {
       backgroundColor = "#dce9ff"; // Fondo claro cuando está seleccionado
       borderColor = "#77A6F7"; // Borde izquierdo azul claro cuando está seleccionado
+      textColor = "#77A6F7"; // Borde izquierdo azul claro cuando está seleccionado
+    }
+
+    if (event.schedulingStatus == 2) {
+      backgroundColor = "#CAFFBF"; // Fondo claro
+      borderColor = "#46A432"; // Borde izquierdo azul
+      textColor = "#46A432";
+    }
+    if (start < now && event.schedulingStatus != 2) {
+      backgroundColor = "#FFC6FF"; // Fondo claro
+      borderColor = "#C237C2"; // Borde izquierdo azul
+      textColor = "#C237C2"; // Borde izquierdo azul
     }
 
     return {
@@ -59,8 +73,8 @@ const Agenda = ({ schedules, title }) => {
         borderLeft: `5px solid ${borderColor}`, // Borde izquierdo de 5px
         borderRadius: "5px",
         opacity: 1,
-        color: "#5272E9",
-        borderColor: "#5272E9",
+        color: textColor,
+        borderColor: borderColor,
         fontWeight: "500",
         display: "block",
         padding: "5px", // Espaciado interno
@@ -132,8 +146,9 @@ const Agenda = ({ schedules, title }) => {
   };
   return (
     <div
-      className={` flex flex-col font-Montserrat items-center ${title ? "bg-white" : "bg-[#FAFAFC]"
-        } rounded-2xl ${title ? "h-screen" : "h-full"} `}>
+      className={` flex flex-col font-Montserrat items-center ${
+        title ? "bg-white" : "bg-[#FAFAFC]"
+      } rounded-2xl ${title ? "h-screen" : "h-full"} `}>
       {title && <p className="text-sm md:text-lg text-center">{title}</p>}
 
       <div className={`h-[90%] w-full rounded-2xl ${title && "bg-white"}`}>

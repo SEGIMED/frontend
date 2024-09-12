@@ -5,12 +5,16 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { useRouter } from "next/navigation";
+import { Button, useDisclosure } from "@nextui-org/react";
+
 import Swal from "sweetalert2";
 import IconPasswordClose from "../icons/IconPasswordClose";
 import IconPasswordOpen from "../icons/IconPasswordOpen";
 import IconCheckBoton from "../icons/iconCheckBoton";
 import Link from "next/link";
 import LoadingFallback from "../loading/loading";
+import Privacy from "../register/Privacy";
+import Term from "../register/Term";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -28,6 +32,8 @@ export const FormUser = ({ formData, setFormData }) => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const PrivacyModal = useDisclosure();
+  const TermModal = useDisclosure();
   const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -124,7 +130,8 @@ export const FormUser = ({ formData, setFormData }) => {
                 validate: noEmptySpaces,
                 maxLength: {
                   value: 100,
-                  message: "El correo electrónico no debe exceder los 100 caracteres.",
+                  message:
+                    "El correo electrónico no debe exceder los 100 caracteres.",
                 },
               })}
             />
@@ -265,7 +272,8 @@ export const FormUser = ({ formData, setFormData }) => {
                 validate: noEmptySpaces,
                 maxLength: {
                   value: 20,
-                  message: "El número de identificación no debe exceder los 20 caracteres.",
+                  message:
+                    "El número de identificación no debe exceder los 20 caracteres.",
                 },
               })}
             />
@@ -419,13 +427,12 @@ export const FormUser = ({ formData, setFormData }) => {
               checked={termsAccepted}
               onChange={() => handleCheckboxChange("terms")}
             />
-            <Link
-              href="/Term"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={TermModal.onOpen}
               className="cursor-pointer">
               Acepto los términos y condiciones.
-            </Link>
+            </button>
           </div>
 
           <div className="w-full max-w-96 flex items-center text-[#487FFA]">
@@ -436,13 +443,12 @@ export const FormUser = ({ formData, setFormData }) => {
               checked={privacyAccepted}
               onChange={() => handleCheckboxChange("privacy")}
             />
-            <Link
-              href="/Priv"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={PrivacyModal.onOpen}
               className="cursor-pointer">
               Acepto la política de privacidad.
-            </Link>
+            </button>
           </div>
 
           <div className="w-full max-w-96 flex justify-center mt-4 mb-10">
@@ -468,6 +474,16 @@ export const FormUser = ({ formData, setFormData }) => {
           </div>
         </div>
       </form>
+      <Privacy
+        isOpen={PrivacyModal.isOpen}
+        onOpenChange={PrivacyModal.onOpenChange}
+        onAccept={() => setPrivacyAccepted(true)}
+      />
+      <Term
+        isOpen={TermModal.isOpen}
+        onOpenChange={TermModal.onOpenChange}
+        onAccept={() => setTermsAccepted(true)}
+      />
     </div>
   );
 };
