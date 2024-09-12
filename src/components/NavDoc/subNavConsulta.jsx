@@ -24,7 +24,8 @@ import IconTablillaTilde from "../icons/iconTablillaTilde";
 import patchSchedule from "@/utils/dataFetching/fetching/patchSchedule";
 import { useRouter } from "next/navigation";
 
-export default function SubNavbarConsulta({ id, handleClic }) {
+export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
+  
   const [openDetails, setOpenDetails] = useState(false);
   const router=useRouter()
   const endConsult = async () => {
@@ -217,15 +218,17 @@ export default function SubNavbarConsulta({ id, handleClic }) {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
+      {preconsult?.ProvisionalPreConsultationSchedule?.schedulingStatus === 1 &&
       <Elboton
-            nombre={"Finalizar Consulta"}
-            icon={<IconTablillaTilde  color="white"/>}
-            onPress={()=>{
-             endConsult()
-            }}
-            size={"md"}
-            className={"bg-[#f53a3a] w-60 text-sm font-bold m-2"}
-          />
+      nombre={"Finalizar Consulta"}
+      icon={<IconTablillaTilde  color="white"/>}
+      onPress={()=>{
+       endConsult()
+      }}
+      size={"md"}
+      className={"bg-[#f53a3a] w-60 text-sm font-bold m-2"}
+    />}
+      
 
       <Link href={`${rutas.Doctor}/${rutas.Consultas}`}>
         <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">

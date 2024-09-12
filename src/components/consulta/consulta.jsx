@@ -55,7 +55,7 @@ import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
 export default function ConsultaDoc({ id, preconsult }) {
 
   const orden = useAppSelector((state) => state.formSlice.selectedOptions);
-  console.log(orden)
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
@@ -65,8 +65,8 @@ export default function ConsultaDoc({ id, preconsult }) {
   const [medicalEventExist, setMedicalEventExist] = useState();
   const [handleNav, setHandleNav] = useState("Anamnesis");
 
-  console.log(medicalEventExist)
-
+ 
+ 
   //vital signs y glicemia
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
@@ -122,8 +122,8 @@ export default function ConsultaDoc({ id, preconsult }) {
   const methods = useForm();
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
+   
 
-  console.log(medicalEventExist, "esto es medical event")
 
   useEffect(() => {
 
@@ -363,7 +363,7 @@ export default function ConsultaDoc({ id, preconsult }) {
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
-    console.log("aca se guardan los signos vitales", updateVitalSigns)
+   
     setVitalSignsPreconsult(updateVitalSigns);
     setAnamnesis({
       //anamnesis sin evolucion de la enfermedad
@@ -391,79 +391,27 @@ export default function ConsultaDoc({ id, preconsult }) {
     });
 
 
-    if (medicalEventExist?.physicalExaminations[0]?.id) {
-      setPhysicalExaminationPatch({
-        physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
-        description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-        id: Number(medicalEventExist.physicalExaminations[0].id),
-      });
-    }
-    if (
-      data["Diagnostico"] !== "" &&
-      data["medications"] !== "" &&
-      data["Procedimientos"] !== "" &&
-      data["Conducta terapeutica"] !== "" &&
-      data["Tratamientos no farmacológicos"] !== ""
-    ) {
-      setDiagnostic({
+
+    setDiagnostic({
         patientId: Number(userId),
-        // diseaseId: orden?.diagnostic,
-        diagnosticNotes: data["Descripción del Diagnóstico"],
         medicalEventId: Number(medicalEventId),
-        // drugId: null,
-        // drugName: data["medications"],
-        // prescribedDose: null,
-        // quantityDrug: null,
-        // medicalProcedureId: null,
-        medicalProcedureName: data["Procedimientos"]
-          ? data["Procedimientos"]
-          : null,
-        therapyId: null,
-        descriptionTherapy: data["Conducta terapeutica"], // donde aparece en medical event
-        quantityTherapy: null,
+        medicalProcedureName: data["Procedimientos"],
         descriptionIndication: data["Tratamientos no farmacológicos"],
       });
-    }
+      
     setRestofDiag({
-      id: Number(medicalEventId),
-      chiefComplaint: data["Evolucion"],
-      historyOfPresentIllness: data["Evolucion"],
-      alarmPattern: data["Pautas de alarma"],
+      id:Number(medicalEventId),
+      treatmentPlan: data["Conducta terapeutica"], 
+      chiefComplaint:data["Evolucion"],
+      historyOfPresentIllness:data["Evolucion"],
+      alarmPattern:data["Pautas de alarma"],
       diagnostic: orden?.diagnostic,
-      physicianComments: data["Descripción del Diagnóstico"],
+      physicianComments:data["Descripción del Diagnóstico"],
+      diagnosticNotes: data["Descripción del Diagnóstico"],
     })
 
-    // setDiagnosticPatch(
-    //   //diagnosticPatch
-    //   {
-    //     id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
-    //     diseaseId: orden?.diagnostic,
-    //     diagnosticNotes:
-    //       data["Diagnostico"],
-    //     medicalEventId: Number(medicalEventId),
-    //     // drugId: null,
-    //     // drugName:
-    //     //   data["medications"] !== ""
-    //     //     ? data["medications"]
-    //     //     : medicalEventExist?.drugPrescriptions || "", // Si está vacío, usa el valor de la receta existente
-    //     // quantityDrug: null,
-    //     // medicalProcedureId: null,
-    //     medicalProcedureName:
-    //       data["Procedimientos"] ,
-    //       // !== ""
-    //       //   ? data["Procedimientos"]
-    //       //   : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
-    //       //     null, // Usa el valor del procedimiento existente si está vacío
-    //     therapyId: null,
-    //     therapyDescription:
-    //       data["Conducta terapeutica"] ,
-    //       // !== ""
-    //       //   ? data["Conducta terapeutica"]
-    //       //   : medicalEventExist?.TherapyPrescription || null, // Usa la terapia existente si está vacío
-    //     quantityTherapy: null,
-    //     descriptionIndication: ["Tratamientos no farmacológicos"],
-    //   }
-    // );
+
+    
 
 
     // patch medical event
@@ -508,7 +456,7 @@ export default function ConsultaDoc({ id, preconsult }) {
       const response = await getPatientDetail(userId)
       setPatient(response);
     } catch (error) {
-      console.log("No existe este paciente", error);
+      console.error("No existe este paciente", error);
     }
   };
 
@@ -522,7 +470,7 @@ export default function ConsultaDoc({ id, preconsult }) {
         setIsLoading(false)
       }
     } catch (error) {
-      console.log("No se ah echo un diagnostico anteriormente:", error);
+      console.error("No se ah echo un diagnostico anteriormente:", error);
     }
   };
 
@@ -630,11 +578,11 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleBackgroundSave = async (background) => {
     try {
-      console.log(background)
-      if (background !== undefined || background !== null) {
-        const response = await postPatientBackgrounds(background);
-      }
-      console.log(response);
+        
+        if(background !== undefined || background !== null) {
+          const response = await postPatientBackgrounds(background);
+        }
+        
     } catch (error) {
       console.error('Error saving background:', error);
     }
@@ -642,9 +590,9 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleHtpRiskSave = async (htpRisk) => {
     try {
-      console.log(htpRisk);
-      const response = await patchHTPRisk(htpRisk);
-
+      
+        const response = await patchHTPRisk(htpRisk);
+     
     } catch (error) {
 
     }
@@ -652,9 +600,9 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleCardioVascularSave = async (cardiovascularRisk) => {
     try {
-      console.log(cardiovascularRisk);
-      const response = await patchCardiovascularRisk(cardiovascularRisk);
-      console.log("Cardiovascular risk:", response);
+       
+        const response = await patchCardiovascularRisk(cardiovascularRisk);
+       
     } catch (error) {
       console.error('Error saving cardiovascular risk:', error);
     }
@@ -662,8 +610,8 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleAnamnesisSave = async (anamnesisData) => {
     try {
-      const response = await patchPreconsultation(anamnesisData);
-      console.log("Anamnesis:", response.data);
+        const response = await patchPreconsultation(anamnesisData);
+        
     } catch (error) {
       console.error('Error saving anamnesis:', error);
     }
@@ -681,13 +629,12 @@ export default function ConsultaDoc({ id, preconsult }) {
     }
   };
 
-  const handleDiagnostic = async () => {
-    try {
-
-
-
-      const response2 = await patchMedicalEvent(restofDiag)
-      const response = await postPatientDiagnostic(diagnostic)
+const handleDiagnostic= async ()=>{
+  try {
+   
+    
+    const response2= await patchMedicalEvent(restofDiag)
+    const response= await postPatientDiagnostic(diagnostic)
 
     } catch (error) {
       console.error(error.message)
@@ -930,17 +877,17 @@ export default function ConsultaDoc({ id, preconsult }) {
   const handleClic = (title) => {
 
     setHandleNav(title);
-    // const hasReloaded = localStorage.getItem("hasReloaded");
+    const hasReloaded = localStorage.getItem("hasReloaded");
 
-    // if (title === "Anamnesis" && !hasReloaded) {
-    //   // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
-    //   localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
-    //   window.location.reload();
-    // } else if (title !== "Anamnesis") {
-    //   // Si selecciona otra opción, eliminar la bandera de recarga
-    //   localStorage.removeItem("hasReloaded");
+    if (title === "Anamnesis" && !hasReloaded) {
+      // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
+      localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
+      window.location.reload();
+    } else if (title !== "Anamnesis") {
+      // Si selecciona otra opción, eliminar la bandera de recarga
+      localStorage.removeItem("hasReloaded");
 
-    // }
+    }
 
   };
 
@@ -963,7 +910,7 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const submitModalData = async () => {
     const payload = { scheduleId: scheduleId, userId: userId, studies: [dataImportar] };
-    console.log(payload);
+    
     try {
       // Realizar la petición POST
 
@@ -1041,7 +988,7 @@ export default function ConsultaDoc({ id, preconsult }) {
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
-        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} />
+        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} preconsult={preconsult} />
 
         <MenuDropDown
           label="Importar archivo"
@@ -1250,25 +1197,24 @@ export default function ConsultaDoc({ id, preconsult }) {
                 />
 
 
-                <div className="flex justify-center p-6 bg-[#fafafc]">
-                  <Elboton
-                    nombre={"Guardar"}
-                    icon={<IconGuardar />}
-                    onPress={() => {
-                      handleDiagnostic
-                      Swal.fire({
-                        icon: "success",
-                        title: "Exito",
-                        text: "Se han guardado los cambios",
-                        confirmButtonColor: "#487FFA",
-                        confirmButtonText: "Aceptar",
-                      });
-                    }}
-                    size={"lg"}
-                    className={"bg-greenPrimary w-60 text-sm font-bold"}
-                  />
-                </div>
-
+          <div className="flex justify-center p-6 bg-[#fafafc]">
+          <Elboton
+            nombre={"Guardar"}
+            icon={<IconGuardar />}
+            onPress={()=>{handleDiagnostic()
+              Swal.fire({
+                icon: "success",
+                title: "Exito",
+                text: "Se han guardado los cambios",
+                confirmButtonColor: "#487FFA",
+                confirmButtonText: "Aceptar",
+              });
+            }}
+            size={"lg"}
+            className={"bg-greenPrimary w-60 text-sm font-bold"}
+          />
+            </div>
+          
               </div>
 
 
