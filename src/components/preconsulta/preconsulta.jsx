@@ -893,7 +893,7 @@ export default function PreconsultaPte({ params, preconsult, schedule }) {
               button1={"hidden"}
               button2={"bg-greenPrimary text-white block"}
               progessBar={"hidden"}
-              size={"h-[35rem] text-white md:h-[35rem] md:w-[55rem]"}
+              size={" text-white max-h-[35rem] min-h-[15rem] md:w-[55rem]"}
               buttonText={{ end: `Importar` }}
               funcion={submitModalData}
               loading={loading}

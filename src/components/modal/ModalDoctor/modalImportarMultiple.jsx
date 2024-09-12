@@ -117,7 +117,7 @@ export default function ImportarMultiple({ onData, text, disabled, state, errors
                                 />
                             </div>
                             {errors[0] && errors[0].message ? <span className='text-red-500'>Seleccione un archivo</span> : null}
-                            <div className='w-full h-[20rem] flex flex-col overflow-y-auto'>
+                            <div className='w-full max-h-[20rem] flex flex-col overflow-y-auto'>
                                 {studies.map((study, index) => (
                                     <div key={index} className="flex flex-col w-full gap-4  mt-4">
                                         <div className="flex items-center gap-4">
