@@ -22,6 +22,7 @@ import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
 import { Fecha } from "@/utils/NormaliceFechayHora";
 import { setReload } from "@/redux/slices/doctor/HistorialClinico";
+import ImportarMultiple from "@/components/modal/ModalDoctor/modalImportarMultiple";
 
 const Datos = () => {
   const pathname = usePathname();
@@ -29,6 +30,8 @@ const Datos = () => {
 
   const pathArray = pathname.split("/");
 
+  const [isModalOpenText, setIsModalOpenText] = useState(false);
+  const [errorsImport, setErrorsImport] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dataImportar, setDataImportar] = useState({});
@@ -37,12 +40,10 @@ const Datos = () => {
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setIsModalOpenText(false)
   };
   console.log(user);
   const handleModalData = (data) => {
@@ -50,20 +51,48 @@ const Datos = () => {
   };
 
   const submitModalData = async () => {
-    const payload = { userId: user.id, studies: [dataImportar] };
+    // Validación: Verificar si hay algo en dataImportar
+    if (!dataImportar || dataImportar.length === 0) {
+      return setErrorsImport([{ message: 'No hay datos para importar.' }]); // Retorna el error si no hay estudios
+    }
+
+    const errors = [];
+
+    // Validación: Iterar sobre el array dataImportar y verificar los campos
+    dataImportar.forEach((item, index) => {
+      let itemErrors = {}; // Errores para cada objeto
+
+      if (!item.title) {
+        itemErrors.title = `El título es requerido .`;
+      }
+
+
+      if (!item.description) {
+        itemErrors.description = `Debe haber al menos una descripción.`;
+      }
+
+      if (Object.keys(itemErrors).length > 0) {
+        errors[index] = itemErrors;
+      }
+    });
+
+    // Si hay errores, retornar y salir de la función
+    if (errors.length > 0) {
+      setErrorsImport(errors);
+      return; // Salir si hay errores
+    }
+
+    const payload = { userId: user.id, studies: dataImportar };
     console.log(payload);
 
     try {
-      // Realizar la petición POST
       setLoading(true);
-      const response = await ApiSegimed.post("/patient-studies", payload);
-
-      // Manejar la respuesta según sea necesario
-      console.log("Respuesta del servidor:", response.data);
+      const response = await ApiSegimed.post('/patient-studies', payload);
       setLoading(false);
-      // Cerrar el modal después de la petición
       setIsModalOpen(false);
-      setLoading(false);
+      setIsModalOpenText(false)
+      setDataImportar([])
+      setErrorsImport([])
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -71,9 +100,10 @@ const Datos = () => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
+
+      return null;
     } catch (error) {
-      console.error("Error al enviar los datos:", error.message);
-      setIsModalOpen(false);
+      console.error('Error al enviar los datos:', error.message);
       Swal.fire({
         title: "Error",
         text: "No pudo realizarse la importacion, intente mas tarde",
@@ -82,8 +112,11 @@ const Datos = () => {
         confirmButtonText: "Aceptar",
       });
       setLoading(false);
+      return { message: 'Error al realizar la importación.' };
     }
   };
+
+
 
   return (
     <div className="min-h-screen w-full flex flex-col ">
@@ -105,7 +138,7 @@ const Datos = () => {
                       label: "Importar texto libre",
                       onClick: () => {
                         setText(true);
-                        openModal();
+                        setIsModalOpenText(true)
                       },
                       icon: <IconEditar color={"#B2B2B2"} />,
                     },
@@ -113,7 +146,7 @@ const Datos = () => {
                       label: "Importar archivo",
                       onClick: () => {
                         setText(false);
-                        openModal();
+                        setIsModalOpen(true)
                       },
                       icon: <IconExportar color={"#B2B2B2"} />,
                     },
@@ -287,20 +320,39 @@ const Datos = () => {
       )}
 
       <ModalModularizado
-        isOpen={isModalOpen}
+        isOpen={isModalOpenText}
         onClose={closeModal}
         Modals={[
           <ImportarHC
             key={"importar hc"}
             onData={handleModalData}
-            text={text}
+            text={true}
           />,
         ]}
-        title={"Importar Historia Clínica"}
+        title={"Importar archivos"}
         button1={"hidden"}
         button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
         size={"h-[35rem] md:h-fit md:w-[35rem]"}
+        buttonText={{ end: `Importar` }}
+        funcion={submitModalData}
+        loading={loading}
+      />
+      <ModalModularizado
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        Modals={[
+          <ImportarMultiple
+            key={"importarHc"}
+            onData={handleModalData} errors={errorsImport}
+          />,
+        ]}
+        titleClassName={"text-[#686868]"}
+        title={"Importar archivos"}
+        button1={"hidden"}
+        button2={"bg-greenPrimary text-white block"}
+        progessBar={"hidden"}
+        size={"h-[35rem] text-white md:h-[35rem] md:w-[55rem]"}
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
         loading={loading}

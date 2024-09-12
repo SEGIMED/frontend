@@ -49,6 +49,7 @@ import patchPhysicalExam from "@/utils/dataFetching/fetching/patchPhysycalExam";
 import patchPatientDiagnostic from "@/utils/dataFetching/fetching/patchPatientDiagnostic";
 import patchMedicalEvent from "@/utils/dataFetching/fetching/patchMedicalEvent";
 import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
+import ImportarMultiple from "../modal/ModalDoctor/modalImportarMultiple";
 
 
 
@@ -86,6 +87,7 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   //para importar archivos 
   const [dataImportar, setDataImportar] = useState({});
+  const [errorsImport, setErrorsImport] = useState([]);
   const [text, setText] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [flagFile, setFlagFile] = useState(false)
@@ -962,7 +964,40 @@ export default function ConsultaDoc({ id, preconsult }) {
 
 
   const submitModalData = async () => {
-    const payload = { scheduleId: scheduleId, userId: userId, studies: [dataImportar] };
+    if (!dataImportar || dataImportar.length === 0) {
+      return setErrorsImport([{ message: 'No hay datos para importar.' }]); // Retorna el error si no hay estudios
+    }
+
+    const errors = [];
+
+    // Validación: Iterar sobre el array dataImportar y verificar los campos
+    dataImportar.forEach((item, index) => {
+      let itemErrors = {}; // Errores para cada objeto
+
+      if (!item.title) {
+        itemErrors.title = `El título es requerido .`;
+      }
+
+      if (!item.study) {
+        itemErrors.content = `Debe haber al menos un estudio.`;
+      }
+      if (!item.description) {
+        itemErrors.description = `Debe haber al menos una descripción.`;
+      }
+
+
+      if (Object.keys(itemErrors).length > 0) {
+        errors[index] = itemErrors;
+      }
+    });
+
+    // Si hay errores, retornar y salir de la función
+    if (errors.length > 0) {
+      setErrorsImport(errors);
+      return; // Salir si hay errores
+    }
+    const payload = { scheduleId: scheduleId, userId: userId, studies: dataImportar };
+
     console.log(payload);
     try {
       // Realizar la petición POST
@@ -1345,17 +1380,12 @@ export default function ConsultaDoc({ id, preconsult }) {
             <LoadingFallback />
           </div>
         )}
-
         {handleNav === "Estudios" && !flagFile ? (
           <ModalModularizado
             isOpen={isModalOpen}
             onClose={closeModal}
             Modals={[
-              <ImportarHC
-                key={"importar hc"}
-                state={selectedImport}
-                disabled={true}
-              />,
+              <ImportarHC key={"importar hc"} state={selectedImport} disabled={true} />,
             ]}
             title={"Ver detalles de importacion"}
             button1={"hidden"}
@@ -1365,23 +1395,45 @@ export default function ConsultaDoc({ id, preconsult }) {
             buttonText={{ end: `Cerrar` }}
             buttonIcon={<></>}
           />
-        )
-          :
-          (
+        ) : (
+          text ? (
             <ModalModularizado
               isOpen={isModalOpen}
               onClose={closeModal}
-              Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
+              titleClassName={"text-[#686868]"}
+              Modals={[
+                <ImportarHC
+                  key={"importar hc"}
+                  onData={handleModalData}
+                  text={text}
+                />,
+              ]}
               title={"Importar Historia Clínica"}
               button1={"hidden"}
               button2={"bg-greenPrimary text-white block"}
               progessBar={"hidden"}
-              size={"h-[35rem] md:h-fit md:w-[35rem]"}
+              size={"h-fit text-white md:h-fit md:w-[33rem]"}
               buttonText={{ end: `Importar` }}
               funcion={submitModalData}
-
             />
-          )}
+          ) : (
+            <ModalModularizado
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              titleClassName={"text-[#686868]"}
+              Modals={[
+                <ImportarMultiple key={"importar hc"} onData={handleModalData} errors={errorsImport} />,
+              ]}
+              title={"Importar Historia Clínica"}
+              button1={"hidden"}
+              button2={"bg-greenPrimary text-white block"}
+              progessBar={"hidden"}
+              size={"h-[35rem] text-white md:h-[35rem] md:w-[55rem]"}
+              buttonText={{ end: `Importar` }}
+              funcion={submitModalData}
+            />
+          )
+        )}
 
 
         <ModalModularizado

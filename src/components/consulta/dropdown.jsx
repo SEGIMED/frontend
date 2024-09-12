@@ -47,9 +47,10 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
 
   return (
     <div>
-      <div className='flex items-center justify-center'>
+
+      {text && <div className='flex items-center justify-center'>
         <div className="mb-2 font-bold ">{text}</div>
-      </div>
+      </div>}
       <Dropdown className="emptyContent">
         <DropdownTrigger
           style={{
@@ -59,7 +60,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
           {!disabled ? (
             <Button
               variant="bordered"
-              className="capitalize"
+              className="capitalize min-w-[16rem]"
               style={style ? style : {
                 backgroundColor: colorBackground || "none",
                 color: colorText || "#487FFA",
@@ -93,6 +94,7 @@ export default function DropNext({ text, options, text2, name, disabled, selecte
           <DropdownMenu
             aria-label="Options menu"
             variant="flat"
+
             disallowEmptySelection
             selectionMode="single"
             selectedKeys={selectedOption ? new Set([selectedOption]) : new Set()}
