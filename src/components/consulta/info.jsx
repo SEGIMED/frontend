@@ -17,7 +17,7 @@ export default function DataPatient({ info, title, geolocation, openModal }) {
           />
           {title}
         </label>
-        {title === "Dirección de domicilio" ? (
+        {title === "Ubicación" ? (
           <Elboton
             onPress={(e) => {
               e.preventDefault();

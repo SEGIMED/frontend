@@ -139,7 +139,7 @@ export default function SubNavbar({ id }) {
     dispatch(addImportHistory(response.data));
   };
   const handleClinicalHistorySegi = () => {
-    dispatch(toogleChat(true));
+    // dispatch(toogleChat(true));
     dispatch(toogleAlarms(false));
     if (
       segiChat[segiChat.length - 1].message !=
@@ -180,8 +180,10 @@ export default function SubNavbar({ id }) {
   }, [userId, dispatch]);
 
   useEffect(() => {
-    if (reload) { getImportHistory().catch(console.error); dispatch(setReload(false)) }
-
+    if (reload) {
+      getImportHistory().catch(console.error);
+      dispatch(setReload(false));
+    }
   }, [reload]);
 
   return (

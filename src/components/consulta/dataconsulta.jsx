@@ -18,7 +18,7 @@ import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import ModalModularizado from "../modal/ModalPatient/ModalModurizado";
 
 export default function Consulta({ paciente, title, defaultOpen = false }) {
-
+  console.log(paciente)
   const [showMapModal, setShowMapModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
@@ -32,7 +32,8 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
     email: '',
     geolocation: '',
     currentLocationCountry: '',
-    birthDate: ''
+    birthDate: '',
+    adrress:"",
 
   });
 
@@ -44,12 +45,14 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
         genre: paciente?.sociodemographicDetails?.genre,
         idNumber: paciente?.idNumber,
         medicalCoverage: paciente?.sociodemographicDetails?.healthCarePlan,
+        medicalNumber: paciente?.sociodemographicDetails?.healthCareNumber,
         phone: paciente?.cellphone,
         emergencyNumber: paciente?.sociodemographicDetails?.emergencyContactPhone,
         email: paciente?.email,
         geolocation: paciente?.geolocation,
-        currentLocationCountry: [paciente?.currentLocationCity, paciente?.currentLocationCountry].filter(Boolean).join(" "),
-        birthDate: paciente?.sociodemographicDetails?.birthDate
+        currentLocationCountry: paciente?.currentLocationCountry,
+        birthDate: paciente?.sociodemographicDetails?.birthDate,
+        address: paciente?.sociodemographicDetails?.address,
       });
     }
   }, [paciente]);
@@ -78,11 +81,13 @@ export default function Consulta({ paciente, title, defaultOpen = false }) {
         <DataPatient title="Edad" info={values.edad} />
         <DataPatient title="Genero" info={values.genre} />
         <DataPatient title="Número de documento" info={values.idNumber} />
-        <DataPatient title="Cobertura medica" info={values.medicalCoverage} />
-        {/* <DataPatient title="Telefono" info={values.phone} />
+        <DataPatient title="Cobertura medica" info={values.medicalCoverage}   />
+        <DataPatient title="Numero de cobertura" info={values.medicalNumber}   />
+        <DataPatient title="Telefono" info={values.phone} />
         <DataPatient title="Telefono de emergencia" info={values.emergencyNumber} />
-        <DataPatient title="Correo electronico" info={values.email} /> */}
-        <DataPatient title="Dirección de domicilio" geolocation={paciente?.geolocation} openModal={handleGeolocationClick} />
+        <DataPatient title="Correo electronico" info={values.email} />
+        <DataPatient title="Ubicación" geolocation={paciente?.geolocation} openModal={handleGeolocationClick} />
+        <DataPatient title="Dirección de domicilio" info={values.address} />
         <DataPatient title="Lugar de nacimiento" info={values.currentLocationCountry} />
         <DataPatient title="Fecha de nacimiento" info={values.birthDate} />
       </details>
