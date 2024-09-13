@@ -33,32 +33,35 @@ import DynamicTable from "../table/DynamicTable";
 import ModalModularizado from "../modal/ModalPatient/ModalModurizado";
 import ImportarHC from "../modal/ModalDoctor/modalImportarHC";
 import FileDisplay from "../modal/ModalDoctor/modalDisplayFile";
+import ImportarMultiple from "../modal/ModalDoctor/modalImportarMultiple";
 
 
 
-export default function PreconsultaPte({params, preconsult, schedule}) {
+export default function PreconsultaPte({ params, preconsult, schedule }) {
   const dispatch = useAppDispatch();
-  const scheduleId =Number(params)
+  const scheduleId = Number(params)
   const token = Cookies.get("a");
   const patientId = Number(Cookies.get("c"));
-  const medicalEventId= schedule?.medicalEvent?.id
+  const medicalEventId = schedule?.medicalEvent?.id
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
   const [glicemiaPreconsult, setGlicemiaPreconsult] = useState([])
-  const [background, setBackground]= useState()
-  const [anamnesis, setAnamnesis]= useState()
-  const [patient, setPatient]=useState()
+  const [background, setBackground] = useState()
+  const [loading, setLoading] = useState()
+  const [anamnesis, setAnamnesis] = useState()
+  const [patient, setPatient] = useState()
   const [medicalEventExist, setMedicalEventExist] = useState();
 
 
-   //para importar archivos 
-   const [dataImportar, setDataImportar] = useState({});
-   const [text, setText] = useState(false);
-   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [flagFile, setFlagFile]=useState(false)
-   const [importaciones, setImportaciones]=useState([])
-   const [isModalOpenFile, setIsModalOpenFile] = useState(false);
-   const [selectedImport, setSelectedImport] = useState({});
-  
+  //para importar archivos 
+  const [dataImportar, setDataImportar] = useState({});
+  const [text, setText] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [flagFile, setFlagFile] = useState(false)
+  const [importaciones, setImportaciones] = useState([])
+  const [errorsImport, setErrorsImport] = useState([])
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  const [selectedImport, setSelectedImport] = useState({});
+
 
 
 
@@ -66,23 +69,23 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   const [available, setAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [enableButton, setEnableButton] = useState(false);
-  
+
   const [preconsultationAlreadyExists, setPreconsultationAlreadyExists] =
     useState(null);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
-  
-  
 
-  
+
+
+
 
   useEffect(() => {
-    
+
     const intervalId = setInterval(() => {
-    handleAnamnesisSave()
-    handleBackgroundSave()
-    handleBodySave()
-    handleSaveVitalSigns()
-    handleQuestionary()
+      handleAnamnesisSave()
+      handleBackgroundSave()
+      handleBodySave()
+      handleSaveVitalSigns()
+      handleQuestionary()
 
     }, 60000); // Guarda cada 60 segundos
 
@@ -93,12 +96,12 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
       handleSaveVitalSigns()
       handleQuestionary()
       clearInterval(intervalId);
-     
+
     };
   }, []);
 
   useEffect(() => {
-  
+
     fetchPatientDetail(patientId)
     fetchMedicalEvent(scheduleId)
   }, []);
@@ -116,7 +119,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
       getValue(
         preconsult?.provisionalPreConsultationPainMap?.isTherePain,
         formData?.bodySection?.isTherePain
-       
+
       ) ?? null,
     painDurationId:
       getValue(
@@ -196,48 +199,48 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     urineStatus: formData?.questions?.urineStatus?.selectedOption,
     exerciseStatus: formData?.questions?.exerciseStatus?.selectedOption,
     bodyPain: formData?.questions?.bodyPain?.selectedOption,
-  
-  //   painRecordsToUpdate: [bodyOBJFormat],
-  //   ...anamnesis,
-  //   updateVitalSigns:
-  //   vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
-  // ...glicemiaPreconsult,
+
+    //   painRecordsToUpdate: [bodyOBJFormat],
+    //   ...anamnesis,
+    //   updateVitalSigns:
+    //   vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+    // ...glicemiaPreconsult,
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // setIsLoading(true);
-   
-   
-      const response =await patchPreconsultation(bodyForm)
-      handleBackgroundSave()
-      handleAnamnesisSave()
-      handleBodySave()
-      handleSaveVitalSigns()
-
-      console.log(response)
-      if (response) {
-        Swal.fire({
-          icon: "success",
-          title: "Preconsulta creada con éxito",
-          text: "",
-          confirmButtonColor: "#487FFA",
-          confirmButtonText: "Aceptar",
-        });
-        console.log({ resupuestaCreate: response.data });
-      }
 
 
-   
-     
+    const response = await patchPreconsultation(bodyForm)
+    handleBackgroundSave()
+    handleAnamnesisSave()
+    handleBodySave()
+    handleSaveVitalSigns()
+
+    console.log(response)
+    if (response) {
+      Swal.fire({
+        icon: "success",
+        title: "Preconsulta creada con éxito",
+        text: "",
+        confirmButtonColor: "#487FFA",
+        confirmButtonText: "Aceptar",
+      });
+      console.log({ resupuestaCreate: response.data });
+    }
+
+
+
+
     //   if (available) {
     //     console.log({
     //       toCreate: bodyForm,
     //       preconsultationAlreadyExists: !!preconsultationAlreadyExists,
     //     });
     //     console.log(bodyForm, "justo antes del submit")
-        
-       
+
+
     //     setIsLoading(false);
     //     return;
     //   } else {
@@ -273,9 +276,9 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     dispatch(updateDescription({ question, description })); // guardamos la descripción proporcionada
   };
 
- 
 
-  
+
+
   const handleBodyChange = (name, value) => {
     dispatch(updateBodyPainLevel({ name, option: value }));
   };
@@ -322,7 +325,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   //   );
   // }
 
-  const onSubmit= (data)=>{
+  const onSubmit = (data) => {
     const vitalSigns = [
       { id: 1344, measureType: 1, measure: Number(data["Temperatura"]) },
       {
@@ -357,7 +360,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
-    
+
     setVitalSignsPreconsult(updateVitalSigns);
     setGlicemiaPreconsult({
       lastAbnormalGlycemia:
@@ -394,7 +397,7 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
           ? ""
           : data["Antecedentes quirúrgicos"],
       vaccinationBackground: data["Vacunas"] === "" ? "" : data["Vacunas"],
-      
+
     });
     setAnamnesis({
       //anamnesis sin evolucion de la enfermedad
@@ -409,30 +412,30 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
     });
 
   }
-  const necesaryData= {
+  const necesaryData = {
     // ids
-   preconsultationId: Number(preconsult?.id),
-   patient: Number(patientId),
-   appointmentSchedule: Number(scheduleId),
-   // status
-   status: "sent"
-    }
+    preconsultationId: Number(preconsult?.id),
+    patient: Number(patientId),
+    appointmentSchedule: Number(scheduleId),
+    // status
+    status: "sent"
+  }
 
-  const handleSaveVitalSigns = async ()=>{
+  const handleSaveVitalSigns = async () => {
     try {
-      const data= {
-         // ids
+      const data = {
+        // ids
         preconsultationId: Number(preconsult?.id),
         patient: Number(patientId),
         appointmentSchedule: Number(scheduleId),
         // status
         status: "sent",
         updateVitalSigns:
-      vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
-    ...glicemiaPreconsult,
+          vitalSignsPreconsult.length > 0 ? vitalSignsPreconsult : null,
+        ...glicemiaPreconsult,
       }
-      
-      const response= await patchPreconsultation(data)
+
+      const response = await patchPreconsultation(data)
       console.log(response)
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
@@ -442,81 +445,81 @@ export default function PreconsultaPte({params, preconsult, schedule}) {
   const handleBackgroundSave = async () => {
     try {
 
-        const response = await postPatientBackgrounds(background);
-        console.log(response)
-    } catch (error) {
-        console.error('Error saving background:', error);
-    }
-};
-  const handleAnamnesisSave = async () => {
-    try {
-        const data = {
-            ...necesaryData,
-            ...anamnesis
-        };
-
-        const response = await patchPreconsultation(data);
+      const response = await postPatientBackgrounds(background);
       console.log(response)
     } catch (error) {
-        console.error('Error saving anamnesis:', error);
+      console.error('Error saving background:', error);
     }
-};
+  };
+  const handleAnamnesisSave = async () => {
+    try {
+      const data = {
+        ...necesaryData,
+        ...anamnesis
+      };
+
+      const response = await patchPreconsultation(data);
+      console.log(response)
+    } catch (error) {
+      console.error('Error saving anamnesis:', error);
+    }
+  };
 
 
 
   const anamnesisCompleto = async () => {
     await handleBackgroundSave();
     await handleAnamnesisSave();
-   
-};
-const handleBodySave = async ()=>{
-  try {
-      const data= {
-       ...necesaryData,
-       painRecordsToUpdate: [bodyOBJFormat],
+
+  };
+  const handleBodySave = async () => {
+    try {
+      const data = {
+        ...necesaryData,
+        painRecordsToUpdate: [bodyOBJFormat],
       }
-      
-      const response= await patchPreconsultation(data)
+
+      const response = await patchPreconsultation(data)
       console.log(response)
-     
+
     } catch (error) {
       console.error("No pudo cargarse la data en el servidor", error.message)
     }
-  
 
-}
-const handleQuestionary=async ()=>{
-  try {
-    
-    const response= await patchPreconsultation(bodyForm)
-    console.log(response)
-  } catch (error) {
-    console.error(error)
-  }
-}
 
-const fetchPatientDetail = async (userId) => {
-  try {
- 
-    const response= await getPatientDetail(userId)
-    setPatient(response);
-  } catch (error) {
-    console.log("No existe este paciente", error);
   }
-};
-const fetchMedicalEvent = async (scheduleId) => {
-  try {
-    
-    const response =await  getMedicalEventDetail(scheduleId)
-    setMedicalEventExist(response.data);
-    if (response.data){
-      setImportaciones(response.data.patientStudies)
-      setIsLoading(false)
+  const handleQuestionary = async () => {
+    try {
+
+      const response = await patchPreconsultation(bodyForm)
+      console.log(response)
+    } catch (error) {
+      console.error(error)
     }
-  } catch (error) {
-    console.log("No se ah echo un diagnostico anteriormente:", error);
   }
-};
+
+  const fetchPatientDetail = async (userId) => {
+    try {
+
+      const response = await getPatientDetail(userId)
+      setPatient(response);
+    } catch (error) {
+      console.log("No existe este paciente", error);
+    }
+  };
+  const fetchMedicalEvent = async (scheduleId) => {
+    try {
+
+      const response = await getMedicalEventDetail(scheduleId)
+      setMedicalEventExist(response.data);
+      if (response.data) {
+        setImportaciones(response.data.patientStudies)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.log("No se ah echo un diagnostico anteriormente:", error);
+    }
+  };
 
   //IMPORTAR ARCHIVOS 
   const openModal = () => {
@@ -536,19 +539,52 @@ const fetchMedicalEvent = async (scheduleId) => {
 
 
   const submitModalData = async () => {
-    const payload = { scheduleId: scheduleId, userId: patientId, studies: [dataImportar] };
+    if (!dataImportar || dataImportar.length === 0) {
+      return setErrorsImport([{ message: 'No hay datos para importar.' }]); // Retorna el error si no hay estudios
+    }
+
+    const errors = [];
+
+    // Validación: Iterar sobre el array dataImportar y verificar los campos
+    dataImportar.forEach((item, index) => {
+      let itemErrors = {}; // Errores para cada objeto
+
+      if (!item.title) {
+        itemErrors.title = `El título es requerido .`;
+      }
+
+      if (!item.study) {
+        itemErrors.content = `Debe haber al menos un estudio.`;
+      }
+      if (!item.description) {
+        itemErrors.description = `Debe haber al menos una descripción.`;
+      }
+
+
+      if (Object.keys(itemErrors).length > 0) {
+        errors[index] = itemErrors;
+      }
+    });
+
+    // Si hay errores, retornar y salir de la función
+    if (errors.length > 0) {
+      setErrorsImport(errors);
+      return; // Salir si hay errores
+    }
+    const payload = { scheduleId: scheduleId, userId: patientId, studies: dataImportar };
     console.log(payload);
     try {
       // Realizar la petición POST
-    
+
+      setLoading(true)
       const response = await postPatientStudiesOrHc(payload)
 
-      
-      
-      
+
+
+      setLoading(false)
       // Cerrar el modal después de la petición
       setIsModalOpen(false);
-     
+
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -566,7 +602,7 @@ const fetchMedicalEvent = async (scheduleId) => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-     
+
     }
 
   }
@@ -605,44 +641,44 @@ const fetchMedicalEvent = async (scheduleId) => {
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto gap-5 bg-[#fafafc]">
         <div className="flex items-center gap-2 p-4 border-b border-b-[#cecece] bg-white  justify-between">
-          
-            <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
-              <Elboton
-                size={"lg"}
-                nombre={"Regresar"}
-                icon={<IconRegresar />}
-              />
-            </Link>
-    
-       
-            <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
-              Crear preconsulta
-            </p>
-      
-          <MenuDropDown
-              label="Importar archivo"
-              icon={<IconExportar color="#487FFA" />}
-              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
-              categories={[
-                {
-                  items: [
-                    {
-                      label: "Importar archivo",
-                      onClick: () => {
-                        setText(false);
-                        openModal()
-                        setFlagFile(true)
 
-
-                      },
-                      icon: <IconExportar color={"#B2B2B2"} />,
-                    },
-
-                  ],
-                }
-              ]
-              }
+          <Link href={`${rutas.PacienteDash}${rutas.Preconsulta}`}>
+            <Elboton
+              size={"lg"}
+              nombre={"Regresar"}
+              icon={<IconRegresar />}
             />
+          </Link>
+
+
+          <p className="text-xl leading-6 text-[#5F5F5F] font-bold">
+            Crear preconsulta
+          </p>
+
+          <MenuDropDown
+            label="Importar archivo"
+            icon={<IconExportar color="#487FFA" />}
+            classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
+            categories={[
+              {
+                items: [
+                  {
+                    label: "Importar archivo",
+                    onClick: () => {
+                      setText(false);
+                      openModal()
+                      setFlagFile(true)
+
+
+                    },
+                    icon: <IconExportar color={"#B2B2B2"} />,
+                  },
+
+                ],
+              }
+            ]
+            }
+          />
         </div>
         {formData && formData?.questions && Object.keys(formData?.questions).map((question, index) => (
           <PreconsultaQuestion
@@ -657,11 +693,12 @@ const fetchMedicalEvent = async (scheduleId) => {
             preconsult={preconsult}
           />
         ))}
-           <div className="flex justify-center p-6 bg-[#fafafc]">
-            <Elboton
+        <div className="flex justify-center p-6 bg-[#fafafc]">
+          <Elboton
             nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={()=>{handleQuestionary
+            icon={<IconGuardar />}
+            onPress={() => {
+              handleQuestionary
               Swal.fire({
                 icon: "success",
                 title: "Datos guardados con exito",
@@ -672,74 +709,76 @@ const fetchMedicalEvent = async (scheduleId) => {
             }}
             size={"sm"}
             className={"bg-greenPrimary w-40 text-sm font-bold"}
-            />
-            </div>
+          />
+        </div>
         <form onChange={methods.handleSubmit(onSubmit)}>
-     
-       <SignosVitalesInfo
-              title={"Signos vitales"}
-              preconsult={preconsult}
-        />
-            
-            <div className="flex justify-center p-6 bg-[#fafafc]">
+
+          <SignosVitalesInfo
+            title={"Signos vitales"}
+            preconsult={preconsult}
+          />
+
+          <div className="flex justify-center p-6 bg-[#fafafc]">
             <Elboton
-            nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={()=>{handleSaveVitalSigns
-              Swal.fire({
-                icon: "success",
-                title: "Datos guardados con exito",
-                text: "",
-                confirmButtonColor: "#487FFA",
-                confirmButtonText: "Aceptar",
-              });
-            }}
-            size={"md"}
-            className={"bg-greenPrimary w-40 text-sm font-bold"}
+              nombre={"Guardar"}
+              icon={<IconGuardar />}
+              onPress={() => {
+                handleSaveVitalSigns
+                Swal.fire({
+                  icon: "success",
+                  title: "Datos guardados con exito",
+                  text: "",
+                  confirmButtonColor: "#487FFA",
+                  confirmButtonText: "Aceptar",
+                });
+              }}
+              size={"md"}
+              className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
-            </div>
+          </div>
 
 
-            <InputCuerpoPre
-              title={"Autoevaluación"}
-              onBodyChange={handleBodyChange}
-              bodySection={formData?.bodySection}
-              defaultOpen
-              valuePreconsultation={preconsult}
-            />
-            <div className="flex justify-center p-6 bg-[#fafafc]">
+          <InputCuerpoPre
+            title={"Autoevaluación"}
+            onBodyChange={handleBodyChange}
+            bodySection={formData?.bodySection}
+            defaultOpen
+            valuePreconsultation={preconsult}
+          />
+          <div className="flex justify-center p-6 bg-[#fafafc]">
             <Elboton
-            nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={()=>{handleBodySave
-              Swal.fire({
-                icon: "success",
-                title: "Datos guardados con exito",
-                text: "",
-                confirmButtonColor: "#487FFA",
-                confirmButtonText: "Aceptar",
-              });
-            }}
-            size={"md"}
-            className={"bg-greenPrimary w-40 text-sm font-bold"}
+              nombre={"Guardar"}
+              icon={<IconGuardar />}
+              onPress={() => {
+                handleBodySave
+                Swal.fire({
+                  icon: "success",
+                  title: "Datos guardados con exito",
+                  text: "",
+                  confirmButtonColor: "#487FFA",
+                  confirmButtonText: "Aceptar",
+                });
+              }}
+              size={"md"}
+              className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
-            </div>
+          </div>
 
 
 
-              <InputConsulta
+          <InputConsulta
             title={"Anamnesis"}
             subtitle={[
               "Motivo de consulta",
               "Sintomas importantes",
             ]}
             preconsult={preconsult}
-           
+
             defaultOpen
-            />
-             <InputConsulta
+          />
+          <InputConsulta
             title={"Antecedentes"}
-           
+
             subtitle={[
               "Antecedentes quirúrgicos",
               "Antecedentes patologicos",
@@ -752,29 +791,29 @@ const fetchMedicalEvent = async (scheduleId) => {
             ]}
             defaultOpen
             paciente={patient}
-            />
-             <div className="flex justify-center p-6 bg-[#fafafc]">
+          />
+          <div className="flex justify-center p-6 bg-[#fafafc]">
             <Elboton
-            nombre={"Guardar"}
-            icon={<IconGuardar/>}
-            onPress={()=>{
-              anamnesisCompleto()
-              Swal.fire({
-                icon: "success",
-                title: "Datos guardados con exito",
-                text: "",
-                confirmButtonColor: "#487FFA",
-                confirmButtonText: "Aceptar",
-              });
-            }}
-            size={"md"}
-            className={"bg-greenPrimary w-40 text-sm font-bold"}
+              nombre={"Guardar"}
+              icon={<IconGuardar />}
+              onPress={() => {
+                anamnesisCompleto()
+                Swal.fire({
+                  icon: "success",
+                  title: "Datos guardados con exito",
+                  text: "",
+                  confirmButtonColor: "#487FFA",
+                  confirmButtonText: "Aceptar",
+                });
+              }}
+              size={"md"}
+              className={"bg-greenPrimary w-40 text-sm font-bold"}
             />
-            </div>
+          </div>
 
-            <DynamicTable
+          <DynamicTable
             title={"Lista de Importaciones"}
-            rows={ importaciones}
+            rows={importaciones}
             columns={ImportacionesColumns}
             showHistoryIcon={true}
             renderDropDown={(row) => {
@@ -792,7 +831,7 @@ const fetchMedicalEvent = async (scheduleId) => {
                             setSelectedImport(row);
                             setFlagFile(false)
                             setIsModalOpen(true);
-                            
+
                           },
                         },
                         {
@@ -810,7 +849,7 @@ const fetchMedicalEvent = async (scheduleId) => {
                 />
               );
             }}
-           
+
           />
 
         </form>
@@ -824,51 +863,18 @@ const fetchMedicalEvent = async (scheduleId) => {
             className={"bg-greenPrimary w-60 text-sm font-bold"}
           />
         </div> */}
-        {!flagFile  ? (
-           <ModalModularizado
-           isOpen={isModalOpen}
-           onClose={closeModal}
-           Modals={[
-             <ImportarHC
-               key={"importar hc"}
-               state={selectedImport}
-               disabled={true}
-             />,
-           ]}
-           title={"Ver detalles de importacion"}
-           button1={"hidden"}
-           button2={"bg-greenPrimary text-white block"}
-           progessBar={"hidden"}
-           size={"md:min-h-[4rem] md:w-[35rem]"}
-           buttonText={{ end: `Cerrar` }}
-           buttonIcon={<></>}
-         />
-        )
-      :
-      (
-        <ModalModularizado
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
-        title={"Importar Historia Clínica"}
-        button1={"hidden"}
-        button2={"bg-greenPrimary text-white block"}
-        progessBar={"hidden"}
-        size={"h-[35rem] md:h-fit md:w-[35rem]"}
-        buttonText={{ end: `Importar` }}
-        funcion={submitModalData}
-       
-      />
-      )}
-        
-
-        <ModalModularizado
-            isOpen={isModalOpenFile}
-            onClose={closeModalFile}
+        {!flagFile ? (
+          <ModalModularizado
+            isOpen={isModalOpen}
+            onClose={closeModal}
             Modals={[
-              <FileDisplay key={"displayFile"} state={selectedImport} />,
+              <ImportarHC
+                key={"importar hc"}
+                state={selectedImport}
+                disabled={true}
+              />,
             ]}
-            title={"Visualizacion de archivo"}
+            title={"Ver detalles de importacion"}
             button1={"hidden"}
             button2={"bg-greenPrimary text-white block"}
             progessBar={"hidden"}
@@ -876,6 +882,40 @@ const fetchMedicalEvent = async (scheduleId) => {
             buttonText={{ end: `Cerrar` }}
             buttonIcon={<></>}
           />
+        )
+          :
+          (
+            <ModalModularizado
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              Modals={[<ImportarMultiple key={"importar hc"} onData={handleModalData} errors={errorsImport} />]}
+              title={"Importar Historia Clínica"}
+              button1={"hidden"}
+              button2={"bg-greenPrimary text-white block"}
+              progessBar={"hidden"}
+              size={" text-white max-h-[35rem] min-h-[15rem] md:w-[55rem]"}
+              buttonText={{ end: `Importar` }}
+              funcion={submitModalData}
+              loading={loading}
+
+            />
+          )}
+
+
+        <ModalModularizado
+          isOpen={isModalOpenFile}
+          onClose={closeModalFile}
+          Modals={[
+            <FileDisplay key={"displayFile"} state={selectedImport} />,
+          ]}
+          title={"Visualizacion de archivo"}
+          button1={"hidden"}
+          button2={"bg-greenPrimary text-white block"}
+          progessBar={"hidden"}
+          size={"md:min-h-[4rem] md:w-[35rem]"}
+          buttonText={{ end: `Cerrar` }}
+          buttonIcon={<></>}
+        />
 
       </div>
     </FormProvider>
