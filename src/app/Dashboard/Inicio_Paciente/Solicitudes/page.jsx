@@ -32,7 +32,6 @@ import { useSearchParams } from "next/navigation";
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
     const infoSend = useAppSelector((state) => state.formSlice.selectedOptions);
-    console.log(infoSend);
 
     const router = useRouter();
     const searchParams = useSearchParams();
