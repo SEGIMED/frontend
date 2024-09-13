@@ -29,6 +29,7 @@ export default function HomePte() {
   const [disabledButton, setDisabledButton] = useState(false);
   const [autoEvaluacionType, setAutoevaluaciónType] = useState("");
   const [vitalSings, setVitalSings] = useState([]);
+  const [glicemia, setGlicemia] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEvaluacionOpen, setIsModalEvaluacionOpen] = useState(false);
@@ -154,15 +155,18 @@ export default function HomePte() {
 
   const submitModalVitalData = async () => {
     const payload = {
-      patient: user.userId,
-      vitalSignsToCreate: vitalSings
+      vitalSigns: vitalSings,
+      glycemia: glicemia
     };
+
+    console.log(payload);
 
     try {
       if (autoEvaluacionType === 'SignosVitales') {
-        const response = await ApiSegimed.post('/vital-signs/create-vital-sign', payload);
+        const response = await ApiSegimed.post('/self-evaluation-event/vital-signs', payload);
         console.log('Respuesta de la API:', response.data);
         setVitalSings([]); // Limpiar el estado después de una respuesta exitosa
+        setGlicemia([]); // Limpiar el estado después de una respuesta exitosa
         Swal.fire({
           icon: "success",
           title: "Exito",
@@ -203,14 +207,14 @@ export default function HomePte() {
   const handleVitalSignChange = (id, value) => {
     setVitalSings(prevState => {
       // Verificar si ya existe un objeto con el mismo id en el array
-      const existingIndex = prevState.findIndex(sign => sign.measureType === id);
+      const existingIndex = prevState.findIndex(sign => sign.measureType === Number(id));
 
       if (existingIndex !== -1) {
         // Si ya existe, actualizar el objeto correspondiente en el array
         const updatedSigns = [...prevState];
         updatedSigns[existingIndex] = {
           ...updatedSigns[existingIndex],
-          measure: value
+          measure: Number(value)
         };
         return updatedSigns;
       } else {
@@ -218,12 +222,18 @@ export default function HomePte() {
         return [
           ...prevState,
           {
-            measureType: id,
-            measure: value
+            measureType: Number(id),
+            measure: Number(value)
           }
         ];
       }
     });
+  };
+
+  console.log(glicemia);
+
+  const handleGlicemia = (name, value) => {
+    setGlicemia([Number(value)])
   };
 
   const isVitalSingsEmpty = Object.values(vitalSings).every(value => !value);
@@ -238,7 +248,7 @@ export default function HomePte() {
       <ModalInputVitalSings key="modalInputVitalSings4" text={"Ingresa tu saturación de oxígeno "} unit={"% "} handleChange={handleVitalSignChange} name={'6'} state={vitalSings} />,
       <ModalInputVitalSings key="modalInputVitalSings5" text={"Ingresa tu temperatura corporal"} unit={"°C"} handleChange={handleVitalSignChange} name={'1'} state={vitalSings} />,
       <ModalInputVitalSings key="modalInputVitalSings6" text={"Ingresa tu peso actual"} unit={"Kg "} handleChange={handleVitalSignChange} name={'9'} state={vitalSings} />,
-      // <ModalInputVitalSings key="modalInputVitalSings7" text={"Ingresa tu nivel de glicemia"} unit={"mg/dl"} handleChange={handleVitalSignChange} name={'Glicemia'} state={vitalSings} />,
+      <ModalInputVitalSings key="modalInputVitalSings7" text={"Ingresa tu nivel de glicemia"} unit={"mg/dl"} handleChange={handleGlicemia} name={'Glicemia'} state={glicemia} />,
       isVitalSingsEmpty
         ? <ModalVitalSings key="modalVitalSingsIncomplete" text={"Debes completar al menos 1 signo vital para finalizar"} setDisabledButton={setDisabledButton} />
         : <ModalVitalSings key="modalVitalSingsComplete" text={"¡Perfecto! Ya completaste tu registro diario."} subtitle={"Apreta el boton de finalizar para guardar tu registro de signos vitales correctamente."} />,

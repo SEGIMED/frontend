@@ -15,7 +15,10 @@ export default function MedicamentosTable({ medicamentos }) {
     return (
         <div className="h-full text-[#686868] w-full ">
             {medicamentos.map((medicamento, index) => (
+
                 <div key={index}>
+                    {console.log(medicamento)}
+
                     <div className="flex border-b border-b-[#cecece] border-t border-t-[#cecece] px-2">
                         <div className="w-[5%] bg-white items-center justify-center hidden md:flex">
                             <IconMedicamento />
@@ -32,7 +35,7 @@ export default function MedicamentosTable({ medicamentos }) {
                             <div className="flex gap-3">
                                 <button
                                     className="bg-bluePrimary py-2 px-4 items-center flex rounded-lg gap-2 w-full"
-                                    onClick={() => router.push(`${rutas.PacienteDash}${rutas.Solicitudes}`)}>
+                                    onClick={() => router.push(`${rutas.PacienteDash}${rutas.Solicitudes}?id=${medicamento.physicianId}`)}>
                                     <IconSolicitar />
                                     <p className="hidden md:block text-white font-bold">Solicitar</p>
                                 </button>

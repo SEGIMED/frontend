@@ -27,6 +27,7 @@ import IconEditar from "@/components/icons/iconEditar";
 import IconClose2 from "@/components/icons/IconClose2";
 import DeleteOrden from "@/components/modal/ModalPatient/ModalDeteleOrden";
 import ModalConsultationCalendar from "@/components/modal/ModalDoctor/ModalConsultationCalendar";
+import { useSearchParams } from "next/navigation";
 
 export default function HomeDoc() {
     const searchTerm = useAppSelector((state) => state.allPatients.searchTerm);
@@ -34,12 +35,14 @@ export default function HomeDoc() {
     console.log(infoSend);
 
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [showModalModify, setShowModalModify] = useState(false);
     const [showModalConsultation, setShowModalConsultation] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState({});
+    const [physicianId, setPhysicianId] = useState();
     const [isLoading, setisLoading] = useState(true);
     const [isSorted, setIsSorted] = useState(false);
     const [errors, setErrors] = useState({});
@@ -56,6 +59,15 @@ export default function HomeDoc() {
     const token = Cookies.get("a");
     const id = Cookies.get("c");
     const lastSegmentTextToShow = PathnameShow();
+
+    useEffect(() => {
+        if (searchParams.get("id")) {
+            setPhysicianId(Number(searchParams.get("id")));
+            setShowModal(true)
+        }
+
+        return;
+    }, [searchParams]);
 
     const getPatientRequest = async (headers) => {
         try {
@@ -361,7 +373,7 @@ export default function HomeDoc() {
             <ModalModularizado
                 isOpen={showModal}
                 onClose={() => { setShowModal(false); dispatch(resetFormState()); setErrors({}) }}
-                Modals={[<ModalOrdenPte key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} />]}
+                Modals={[<ModalOrdenPte key={"modalOrden"} doctors={allDoctors} handleChange={handleChange} errors={errors} doctorSelected={physicianId} />]}
                 title={"Generar nueva solicitud"}
                 button1={"hidden"}
                 button2={"bg-greenPrimary block text-white font-font-Roboto"}
