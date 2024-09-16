@@ -53,7 +53,7 @@ export default function ImportarHC({ onData, text, disabled, state }) {
                     const base64String = event.target.result; // Contenido del archivo en base64
                     setStudyBase(base64String);
 
-                    sendData({ study: base64String, title, description, studyType }); // Envía el archivo en base64 al backend
+                    sendData([{ study: base64String, title, description, studyType }]); // Envía el archivo en base64 al backend
                 };
 
                 reader.readAsDataURL(selectedFile); // Lee el archivo como una URL de datos (base64)
@@ -65,24 +65,24 @@ export default function ImportarHC({ onData, text, disabled, state }) {
 
     const handleDeleteFile = () => {
         setStudy(null);
-        sendData({ study: null, title, description, studyType });
+        sendData([{ study: null, title, description, studyType }]);
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
-        sendData({ study: studyBase, title: e.target.value, description, studyType });
+        sendData([{ study: studyBase, title: e.target.value, description, studyType }]);
     };
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
-        sendData({ study: studyBase, title, description: e.target.value, studyType });
+        sendData([{ study: studyBase, title, description: e.target.value, studyType }]);
     };
 
     const handleStudyType = (name, value) => {
         const selectedStudy = catalog.find(item => item.name === value);
         if (selectedStudy) {
             setStudyType(selectedStudy.id); // Guarda el id en lugar del nombre
-            sendData({ study: studyBase, title, description, studyType: selectedStudy.id });
+            sendData([{ study: studyBase, title, description, studyType: selectedStudy.id }]);
         }
     };
 

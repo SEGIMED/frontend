@@ -16,6 +16,7 @@ import {
   clearClinicalHistory,
   addUserHistory,
   changeTabs,
+  setReload,
   addImportHistory,
 } from "@/redux/slices/doctor/HistorialClinico";
 import { ApiSegimed } from "@/Api/ApiSegimed";
@@ -38,6 +39,7 @@ export default function SubNavbar({ id }) {
   const [openDetails, setOpenDetails] = useState(false);
   const params = useParams();
   const selectedTab = useAppSelector((state) => state.clinicalHistory.tab);
+  const reload = useAppSelector((state) => state.clinicalHistory.reload);
   const segiChat = useAppSelector((state) => state.chatBot.messages);
   const userId = params?.userId;
   const getSelectedClass = (name) =>
@@ -137,7 +139,7 @@ export default function SubNavbar({ id }) {
     dispatch(addImportHistory(response.data));
   };
   const handleClinicalHistorySegi = () => {
-    dispatch(toogleChat(true));
+    // dispatch(toogleChat(true));
     dispatch(toogleAlarms(false));
     if (
       segiChat[segiChat.length - 1].message !=
@@ -155,7 +157,7 @@ export default function SubNavbar({ id }) {
   };
   const getUser = async (headers) => {
     const response = await ApiSegimed.get(
-      `/patient-details?id=${userId}`,
+      `/medical-history/patient-detail?id=${userId}`,
       headers
     );
     dispatch(addUserHistory(response.data));
@@ -176,6 +178,13 @@ export default function SubNavbar({ id }) {
       dispatch(toogleChat(false));
     };
   }, [userId, dispatch]);
+
+  useEffect(() => {
+    if (reload) {
+      getImportHistory().catch(console.error);
+      dispatch(setReload(false));
+    }
+  }, [reload]);
 
   return (
     <div className="border-b border-b-[#cecece] bg-[#fafafc] flex flex-row-reverse md:flex-row justify-around items-center md:pr-6">

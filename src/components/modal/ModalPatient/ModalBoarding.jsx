@@ -21,6 +21,9 @@ import Especialidad from "../boarding/Especialidad";
 import IconArrowRight from "@/components/icons/iconArrowRight";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import ObraSocial from "../boarding/ObraSocial";
+import HealthCareNumber from "../boarding/HealthCareNumber";
+import Medicamentos from "../boarding/Medicamentos";
 
 const ProgressBar = ({ steps, currentIndex }) => {
   return (
@@ -50,6 +53,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
   const handleDisabled = () => {
     setDisabled(false);
   };
+
 
   const getCatalog = async () => {
     try {
@@ -113,6 +117,24 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
           handleChange={handleChange}
           rol={rol}
         />,
+        // <ObraSocial
+        //   key="obraSocial"
+        //   handleDisabled={handleDisabled}
+        //   state={formStateGlobal}
+        //   handleChange={handleChange}
+        // />,
+        // <HealthCareNumber
+        //   key="HealthCareNumber"
+        //   handleDisabled={handleDisabled}
+        //   state={formStateGlobal}
+        //   handleChange={handleChange}
+        // />,
+        // <Medicamentos
+        //   key="Medicamentos"
+        //   handleDisabled={handleDisabled}
+        //   state={formStateGlobal}
+        //   handleChange={handleChange}
+        // />,
         <ViveSolo
           key="vive_solo"
           handleDisabled={handleDisabled}

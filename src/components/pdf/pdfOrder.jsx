@@ -3,6 +3,8 @@
 import React from 'react';
 import LogoSegimed from '../logo/LogoSegimed';
 import { Fecha } from '@/utils/NormaliceFechayHora';
+import images from '../../components/images/images.png'
+import Image from 'next/image';
 
 import IconDownload from '../icons/IconDownload';
 
@@ -43,8 +45,9 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                     <p>{specialtiesString}</p>
                                     <p>Matrícula Nac. :  {user?.medicalRegistries?.Nacional?.registryId} </p>
                                 </div>
-                                <div>
+                                <div className='flex flex-col justify-around'>
                                     <p className='text-bluePrimary'>www.segimed.com</p>
+                                    <div className='mt-3 flex justify-end'>Fecha :  {Fecha(date)}</div>
                                 </div>
                             </div>
                             <hr className='mt-5 solid border-black' />
@@ -54,6 +57,8 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                 <p><strong>D.N.I. : </strong>{patient?.sociodemographicDetails?.birthDate} </p>
                                 <p><strong>Sexo : </strong>{patient?.sociodemographicDetails?.genre}</p>
                                 <p><strong>Cobertura médica : </strong>{patient?.sociodemographicDetails?.healthCarePlan}</p>
+                                <p><strong>Numero de cobertura médica : </strong>{patient?.sociodemographicDetails?.healthCarePlan}</p>
+                                <p><strong>Telefono : </strong>{patient?.cellphone}</p>
                             </div>
                             <hr className='mt-5 solid border-black' />
                             <div className='mt-5 mb-5 flex flex-col gap-[8rem] h-[30rem] justify-start'>
@@ -71,15 +76,30 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                     <p>{data?.diagnostic2?.code} - {data?.diagnostic2?.description}</p>
                                 </div>
                             </div>
-                            <div className='flex flex-col justify-center  w-[50%] font-semibold '>
-                                <p>{user?.name} {user?.lastname}</p>
-                                <p>{specialtiesString}</p>
-                                <p>Matrícula Nac. : {user?.medicalRegistries?.Nacional?.registryId} </p>
-                                <p>Matrícula Prov. : {user?.medicalRegistries?.Provincial?.registryId} </p>
-                                <hr className='mt-5 border-dashed border-black' />
-                                <p className='text-center'>FIRMA Y SELLO</p>
+                            <div className='w-[100%] flex'>
+                                <div className='flex flex-col justify-center  w-[50%] font-semibold '>
+                                    <div className='flex justify-around items-end'>
+                                        <div>
+                                            <p>{user?.name} {user?.lastname}</p>
+                                            <p>{specialtiesString} </p>
+                                        </div>
+                                        {/* <Image
+                                            src={images}
+                                            alt='firma'
+                                            className='w-[50%]'
+                                        /> */}
+                                    </div>
+
+                                    <hr className='mt-5 border-dashed border-black' />
+                                    <p className='text-center'>FIRMA Y SELLO</p>
+                                </div>
+                                <div className='flex flex-col justify-center items-center  w-[50%] font-semibold mb-5'>
+                                    <p>Matrícula Nac. : {user?.medicalRegistries?.Nacional?.registryId} </p>
+                                    <p>Matrícula Prov. : {user?.medicalRegistries?.Provincial?.registryId} </p>
+                                </div>
                             </div>
-                            <div className='mt-3 flex justify-end'>Fecha :  {Fecha(date)}</div>
+
+
                             <hr className='mt-5 solid border-black' />
                         </div>
                         <div className="page-break"></div>
@@ -94,8 +114,9 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                     <p>{specialtiesString}</p>
                                     <p>Matrícula Nac. :  {user?.medicalRegistries?.Nacional?.registryId} </p>
                                 </div>
-                                <div>
+                                <div className='flex flex-col justify-around'>
                                     <p className='text-bluePrimary'>www.segimed.com</p>
+                                    <div className='mt-3 flex justify-end'>Fecha :  {Fecha(date)}</div>
                                 </div>
                             </div>
                             <hr className='mt-5 solid border-black' />
@@ -105,6 +126,8 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
                                 <p><strong>D.N.I. : </strong>{patient?.sociodemographicDetails?.birthDate} </p>
                                 <p><strong>Sexo : </strong>{patient?.sociodemographicDetails?.genre}</p>
                                 <p><strong>Cobertura médica : </strong>{patient?.sociodemographicDetails?.healthCarePlan}</p>
+                                <p><strong>Numero de cobertura médica : </strong>{patient?.sociodemographicDetails?.healthCarePlan}</p>
+                                <p><strong>Telefono : </strong>{patient?.cellphone}</p>
                             </div>
                             <hr className='mt-5 solid border-black' />
                             <div className='mt-5 mb-5 flex flex-col gap-7 h-[30rem] justify-start'>
@@ -121,15 +144,29 @@ const PDFExportComponent = ({ data, user, drugs, patient }) => {
 
 
                             </div>
-                            <div className='flex flex-col justify-center w-[50%] font-semibold '>
-                                <p>{user?.name} {user?.lastname}</p>
-                                <p>{specialtiesString}</p>
-                                <p>Matrícula Nac. : {user?.medicalRegistries?.Nacional?.registryId} </p>
-                                <p>Matrícula Prov. : {user?.medicalRegistries?.Provincial?.registryId} </p>
-                                <hr className='mt-5 border-dashed border-black' />
-                                <p className='text-center'>FIRMA Y SELLO</p>
+                            <div className='w-[100%] flex'>
+                                <div className='flex flex-col justify-center  w-[50%] font-semibold '>
+                                    <div className='flex justify-around items-end'>
+                                        <div>
+                                            <p>{user?.name} {user?.lastname}</p>
+                                            <p>{specialtiesString} </p>
+                                        </div>
+                                        {/* <Image
+                                            src={images}
+                                            alt='firma'
+                                            className='w-[50%]'
+                                        /> */}
+                                    </div>
+
+                                    <hr className='mt-5 border-dashed border-black' />
+                                    <p className='text-center'>FIRMA Y SELLO</p>
+                                </div>
+                                <div className='flex flex-col justify-center items-center  w-[50%] font-semibold mb-5'>
+                                    <p>Matrícula Nac. : {user?.medicalRegistries?.Nacional?.registryId} </p>
+                                    <p>Matrícula Prov. : {user?.medicalRegistries?.Provincial?.registryId} </p>
+                                </div>
                             </div>
-                            <div className='mt-3 flex justify-end'>Fecha :  {Fecha(date)}</div>
+
                             <hr className='mt-5 solid border-black' />
                         </div>
 

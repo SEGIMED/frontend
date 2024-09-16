@@ -8,7 +8,7 @@ import AvatarDashPte from "@/components/avatar/avatarDashPte";
 import CalcularEdad from "@/utils/calcularEdad";
 import { usePathname } from "next/navigation";
 import LastLogin from "@/utils/lastLogin";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import SkeletonList from "@/components/skeletons/HistorialSkeleton";
 import ButtonBlancoBorde from "@/components/Buttons/ButtonBlancoBorder";
 import IconExportar from "@/components/icons/IconExportar";
@@ -20,49 +20,79 @@ import MenuDropDown from "@/components/dropDown/MenuDropDown";
 import IconEditar from "@/components/icons/iconEditar";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import Swal from "sweetalert2";
+import { Fecha } from "@/utils/NormaliceFechayHora";
+import { setReload } from "@/redux/slices/doctor/HistorialClinico";
+import ImportarMultiple from "@/components/modal/ModalDoctor/modalImportarMultiple";
 
 const Datos = () => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
 
   const pathArray = pathname.split("/");
 
+  const [isModalOpenText, setIsModalOpenText] = useState(false);
+  const [errorsImport, setErrorsImport] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dataImportar, setDataImportar] = useState({});
   const [text, setText] = useState(false);
-
   const user = useAppSelector((state) => state.clinicalHistory.user);
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setIsModalOpenText(false)
   };
-
+  console.log(user);
   const handleModalData = (data) => {
     setDataImportar(data);
   };
 
   const submitModalData = async () => {
-    const payload = { userId: user.userId, studies: [dataImportar] };
+    // Validación: Verificar si hay algo en dataImportar
+    if (!dataImportar || dataImportar.length === 0) {
+      return setErrorsImport([{ message: 'No hay datos para importar.' }]); // Retorna el error si no hay estudios
+    }
+
+    const errors = [];
+
+    // Validación: Iterar sobre el array dataImportar y verificar los campos
+    dataImportar.forEach((item, index) => {
+      let itemErrors = {}; // Errores para cada objeto
+
+      if (!item.title) {
+        itemErrors.title = `El título es requerido .`;
+      }
+
+
+      if (!item.description) {
+        itemErrors.description = `Debe haber al menos una descripción.`;
+      }
+
+      if (Object.keys(itemErrors).length > 0) {
+        errors[index] = itemErrors;
+      }
+    });
+
+    // Si hay errores, retornar y salir de la función
+    if (errors.length > 0) {
+      setErrorsImport(errors);
+      return; // Salir si hay errores
+    }
+
+    const payload = { userId: user.id, studies: dataImportar };
     console.log(payload);
 
-
     try {
-      // Realizar la petición POST
-      setLoading(true)
+      setLoading(true);
       const response = await ApiSegimed.post('/patient-studies', payload);
-
-      // Manejar la respuesta según sea necesario
-      console.log('Respuesta del servidor:', response.data);
-      setLoading(false)
-      // Cerrar el modal después de la petición
+      setLoading(false);
       setIsModalOpen(false);
-      setLoading(false)
+      setIsModalOpenText(false)
+      setDataImportar([])
+      setErrorsImport([])
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -70,9 +100,10 @@ const Datos = () => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
+
+      return null;
     } catch (error) {
       console.error('Error al enviar los datos:', error.message);
-      setIsModalOpen(false);
       Swal.fire({
         title: "Error",
         text: "No pudo realizarse la importacion, intente mas tarde",
@@ -80,9 +111,12 @@ const Datos = () => {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-      setLoading(false)
+      setLoading(false);
+      return { message: 'Error al realizar la importación.' };
     }
   };
+
+
 
   return (
     <div className="min-h-screen w-full flex flex-col ">
@@ -91,11 +125,12 @@ const Datos = () => {
       ) : (
         <>
           <div className="w-full  flex md:justify-end justify-evenly gap-3 items-center border-b md:pr-2 bg-white border-b-[#cecece] py-2">
-
             <MenuDropDown
               label="Importar archivo"
               icon={<IconExportar color="#487FFA" />}
-              classNameButton={"border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"}
+              classNameButton={
+                "border-[#487FFA] border-2 bg-[#FFFFFF] text-start text-[#487FFA] font-bold text-base leading-5"
+              }
               categories={[
                 {
                   items: [
@@ -103,7 +138,7 @@ const Datos = () => {
                       label: "Importar texto libre",
                       onClick: () => {
                         setText(true);
-                        openModal()
+                        setIsModalOpenText(true)
                       },
                       icon: <IconEditar color={"#B2B2B2"} />,
                     },
@@ -111,17 +146,13 @@ const Datos = () => {
                       label: "Importar archivo",
                       onClick: () => {
                         setText(false);
-                        openModal()
-
-
+                        setIsModalOpen(true)
                       },
                       icon: <IconExportar color={"#B2B2B2"} />,
                     },
-
                   ],
-                }
-              ]
-              }
+                },
+              ]}
             />
 
             <ButtonBlancoBorde
@@ -140,18 +171,16 @@ const Datos = () => {
                   {user?.name} {user?.lastname}
                 </span>
                 <span>
-                  {user?.sociodemographicDetails?.birthDate
-                    ? `${CalcularEdad(
-                      user.sociodemographicDetails.birthDate
-                    )} años`
+                  {user?.socDemDet?.birthDate
+                    ? `${CalcularEdad(user.socDemDet.birthDate)} años`
                     : "Sin especificar nacimiento"}
                 </span>
                 <span>
-                  {user?.sociodemographicDetails?.isAlive ? "Vivo" : null}
+                  {user?.socDemDet?.dateOfDeathReport ? "Muerto" : null}
                 </span>
                 <span>
                   <b>Ultima consulta:</b>{" "}
-                  {LastLogin(user?.lastMedicalEventDate)}
+                  {Fecha(user?.patientAppScheds?.scheduledStartTimestamp)}
                 </span>
                 <span>
                   <b>Medico tratante: </b>{" "}
@@ -163,7 +192,10 @@ const Datos = () => {
             </div>
             <div className="rounded-full border-4 border-blue-400 h-14 w-14 md:w-24 md:h-24 flex items-center justify-center md:mr-20">
               <h1 className="text-2xl text-center text-blue-400  text-">
-                <b>{user?.patientPulmonaryHypertensionGroups?.group}</b>
+                <b>
+                  {user?.userHpGroups?.length > 0 &&
+                    user?.userHpGroups[0]?.catHpGroup?.name}
+                </b>
               </h1>
             </div>
           </div>
@@ -181,19 +213,19 @@ const Datos = () => {
               </label>
               <div className="  grid grid-cols-2 md:flex gap-4">
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Moderado"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Alto"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientCardiovascularRisks?.risk}
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Muy Alto"}
                 />
               </div>
@@ -205,15 +237,15 @@ const Datos = () => {
               </label>
               <div className="flex gap-3">
                 <BotonDashPte
-                  riesgo={user?.patientSurgicalRisks?.risk}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientSurgicalRisks?.risk}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Moderado"}
                 />
                 <BotonDashPte
-                  riesgo={user?.patientSurgicalRisks?.risk}
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Alto"}
                 />
               </div>
@@ -288,14 +320,39 @@ const Datos = () => {
       )}
 
       <ModalModularizado
-        isOpen={isModalOpen}
+        isOpen={isModalOpenText}
         onClose={closeModal}
-        Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
-        title={"Importar Historia Clínica"}
+        Modals={[
+          <ImportarHC
+            key={"importar hc"}
+            onData={handleModalData}
+            text={true}
+          />,
+        ]}
+        title={"Importar archivos"}
         button1={"hidden"}
         button2={"bg-greenPrimary text-white block"}
         progessBar={"hidden"}
         size={"h-[35rem] md:h-fit md:w-[35rem]"}
+        buttonText={{ end: `Importar` }}
+        funcion={submitModalData}
+        loading={loading}
+      />
+      <ModalModularizado
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        Modals={[
+          <ImportarMultiple
+            key={"importarHc"}
+            onData={handleModalData} errors={errorsImport}
+          />,
+        ]}
+        titleClassName={"text-[#686868]"}
+        title={"Importar archivos"}
+        button1={"hidden"}
+        button2={"bg-greenPrimary text-white block"}
+        progessBar={"hidden"}
+        size={" text-white max-h-[35rem] min-h-[15rem] md:w-[55rem]"}
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
         loading={loading}

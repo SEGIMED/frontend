@@ -119,6 +119,9 @@ function DynamicTable({
   const formatPatientName = (row) => {
     return `${row.patientUser.name} ${row.patientUser.lastname}`;
   };
+  const formatMedicoName = (row) => {
+    return `${row.physician.name} ${row.physician.lastname}`;
+  };
   // Helper function to translate healthCenter values
 
   const renderPatientPulmonaryRisk = (row) => {
@@ -139,6 +142,23 @@ function DynamicTable({
     return boolean === true ? "Aprobado" : "No Aprobado";
   };
 
+  const formatHpGroups = (row) => {
+    if (
+      row.appSch &&
+      row.appSch.patientUser &&
+      Array.isArray(row.appSch.patientUser.userHpGroups)
+    ) {
+      if (row.appSch.patientUser.userHpGroups.length > 0) {
+        return row.appSch.patientUser.userHpGroups
+          .map((group) => group.catHpGroup.name)
+          .join(",");
+      } else {
+        return "Sin asignar";
+      }
+    }
+    return [];
+  };
+
   const isRowEmpty = (row) => {
     // Verifica si todas las columnas relevantes están vacías
     return columns.every((column) => {
@@ -150,7 +170,82 @@ function DynamicTable({
   };
 
   const filteredRows = rows?.filter((row) => !isRowEmpty(row));
+  const getAttentionCenter = (row) => {
+    return row.reasonForConsultation == "Autoevaluación"
+      ? row.attendancePlace
+      : row.appSch.attendancePlace?.alias;
+  };
+  const getReasonForConsultation = (row) => {
+    return row.reasonForConsultation == "Autoevaluación"
+      ? row.reasonForConsultation
+      : row.appSch?.reasonForConsultation;
+  };
+  const getAttentionCenterSV = (row) => {
+    return row.appSch ? row.appSch?.attendancePlace?.alias : "En Casa";
+  };
+  const getReasonForConsultationSV = (row) => {
+    return row.appSch ? row.appSch?.reasonForConsultation : "Autoevaluación";
+  };
+  const getValueFromKey = (obj, key) => {
+    return key.split(".").reduce((acc, part) => acc && acc[part], obj);
+  };
+  const renderColumnContent = (column, row) => {
+    const value = getValueFromKey(row, column.key);
 
+    switch (column.label) {
+      //Recibe timestamps
+      case "Fecha":
+        return formatDate(value);
+      //Recibe timestamps
+      case "Hora":
+        return formatHour(value);
+      //Recibe el array de objetos de htpgroups
+      case "Grupo HTP":
+        return formatHpGroups(row);
+      //Para cuando reciba solo el id del centro de salud
+      case "Centro de atencion":
+        return healthCenterSwitch(value);
+      case "Paciente":
+        return formatPatientName(row);
+      case "Médico":
+        return formatMedicoName(row);
+      case "Tipo":
+        return formatTypeInterconsult(value);
+      case "Especialidad":
+        return specialitySwitch(value);
+      //Excepciones especial para autoevaluacion que puede tener en 2 lugares distiton estos 2 valores
+      case "Motivo de Consulta":
+        return getReasonForConsultation(row);
+      case "Centro de Atencion":
+        return getAttentionCenter(row);
+      //Excepciones especial para autoevaluacion que puede tener en 2 lugares distiton estos 2 valores
+      case "Motivo de Consulta ":
+        return getReasonForConsultationSV(row);
+      case "Centro de Atención":
+        return getAttentionCenterSV(row);
+      default:
+        return value;
+    }
+    // case column.key === "patientUser.name":
+    //   return formatPatientName(row);
+
+    // case column.key === "healthCenter":
+    //   return healthCenterSwitch(row[column.key]);
+
+    // case column.label === "Especialidad":
+    //   return specialitySwitch(row[column.key]);
+
+    // case column.key == "isPriority":
+    //   return formatTypeInterconsult(row[column.key]);
+
+    // case column.label === "Fecha":
+    //   return formatDate(row[column.key]);
+
+    // case column.label === "Hora":
+    //   return formatHour(row[column.key]);
+
+    //Para acceder a una propiedad de un objeto
+  };
   if (loading) {
     return <SkeletonList count={10} />;
   }
@@ -175,10 +270,13 @@ function DynamicTable({
             {columns.map((column, index) => (
               <th
                 key={index}
-                className={`${index == 0 && !showRisks && !showHistoryIcon && "lg:pl-[3%]"
-                  } lg:px-2 font-normal py-2 lg:text-left text-center ${column.showMobile ? "table-cell" : "hidden md:table-cell"
-                  }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${column.width
-                  }`}>
+                className={`${
+                  index == 0 && !showRisks && !showHistoryIcon && "lg:pl-[3%]"
+                } lg:px-2 font-normal py-2 lg:text-left text-center ${
+                  column.showMobile ? "table-cell" : "hidden md:table-cell"
+                }  max-w-[60px] xs:max-w-[70px] md:max-w-[100px] ${
+                  column.width
+                }`}>
                 {column.label}
               </th>
             ))}
@@ -198,8 +296,9 @@ function DynamicTable({
             filteredRows?.map((row, rowIndex) => (
               <Fragment key={rowIndex}>
                 <tr
-                  className={`hover:bg-gray-100 ${clickable ? "cursor-pointer" : "cursor-default"
-                    } border-b-[1px] border-b-[#D7D7D7] `}
+                  className={`hover:bg-gray-100 ${
+                    clickable ? "cursor-pointer" : "cursor-default"
+                  } border-b-[1px] border-b-[#D7D7D7] `}
                   onClick={() => handleRowClick(rowIndex)}>
                   {showRisks && (
                     <td className="py-2 lg:pl-[2%] w-[10px] max-w-[10px] hidden md:table-cell">
@@ -214,35 +313,17 @@ function DynamicTable({
                   {columns.map((column, colIndex) => (
                     <td
                       key={colIndex}
-                      className={`${colIndex === 0 &&
+                      className={`${
+                        colIndex === 0 &&
                         !showRisks &&
                         !showHistoryIcon &&
                         "lg:pl-[2%]"
-                        }  lg:px-[2%] py-2 text-[#686868] whitespace-normal ${column.showMobile
+                      }  lg:px-[2%] py-2 text-[#686868] whitespace-normal ${
+                        column.showMobile
                           ? "table-cell"
                           : "hidden md:table-cell"
-                        }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
-                      {column.key === "patientUser.name"
-                        ? formatPatientName(row)
-                        : column.key === "healthCenter"
-                          ? healthCenterSwitch(row[column.key])
-                          : column.label === "Especialidad"
-                            ? specialitySwitch(row[column.key])
-                            : column.key === "patientPulmonaryHypertensionRisks"
-                              ? renderPatientPulmonaryRisk(row)
-                              : column.key == "isPriority"
-                                ? formatTypeInterconsult(row[column.key])
-                                : column.label === "Fecha"
-                                  ? formatDate(row[column.key])
-                                  : column.label === "Hora"
-                                    ? formatHour(row[column.key])
-                                    : column.key == "IsApproved"
-                                      ? formatIsApproved(row[column.key])
-                                      : column.key?.includes(".")
-                                        ? column.key
-                                          .split(".")
-                                          .reduce((acc, part) => acc && acc[part], row)
-                                        : row[column.key]}
+                      }  xs:max-w-[60px] md:max-w-[100px]  ${column.width} `}>
+                      {renderColumnContent(column, row)}
                     </td>
                   ))}
                   {renderDropDown && (
