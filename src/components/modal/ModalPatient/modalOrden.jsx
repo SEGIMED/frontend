@@ -7,7 +7,7 @@ import IconUser2 from "@/components/icons/iconUser2";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
 import IconClinicalHistory from "@/components/icons/IconClinicalHistory";
 
-export default function ModalOrdenPte({ doctors, handleChange, errors, state, disabled }) {
+export default function ModalOrdenPte({ doctors, handleChange, errors, state, disabled, doctorSelected }) {
     const [selectedDoctor, setSelectedDoctor] = useState(new Set());
     const [selectedDoctorName, setSelectedDoctorName] = useState("");
 
@@ -19,7 +19,14 @@ export default function ModalOrdenPte({ doctors, handleChange, errors, state, di
                 setSelectedDoctorName(`${doctor.name} ${doctor.lastname}`);
             }
         }
-    }, [state?.physicianId, doctors]);
+        if (doctorSelected) {
+            const doctor = doctors.find((item) => item.id === doctorSelected);
+            if (doctor) {
+                setSelectedDoctor(new Set([doctor.id.toString()]));
+                setSelectedDoctorName(`${doctor.name} ${doctor.lastname}`);
+            }
+        }
+    }, [state?.physicianId, doctors, doctorSelected]);
 
     const options = [
         "Receta médica",

@@ -18,18 +18,23 @@ import ModalVitalSings from "@/components/modal/ModalPatient/ModalVitalSing";
 import ModalInputVitalSings from "@/components/modal/ModalPatient/ModalInputVital";
 import Swal from "sweetalert2";
 import { ApiSegimed } from "@/Api/ApiSegimed";
+import ImportarMultiple from "@/components/modal/ModalDoctor/modalImportarMultiple";
 
 
 export default function HomePte() {
   const user = useAppSelector((state) => state.user);
   const router = useRouter()
-  const [dataImportar, setDataImportar] = useState({});
+  const [dataImportar, setDataImportar] = useState([]);
+  const [errorsImport, setErrorsImport] = useState([]);
   const [disabledButton, setDisabledButton] = useState(false);
   const [autoEvaluacionType, setAutoevaluaciónType] = useState("");
   const [vitalSings, setVitalSings] = useState([]);
+  const [glicemia, setGlicemia] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEvaluacionOpen, setIsModalEvaluacionOpen] = useState(false);
+
+  console.log(errorsImport);
 
 
   const Buttons = [
@@ -75,25 +80,53 @@ export default function HomePte() {
 
 
   const handleModalData = (data) => {
+    console.log(data);
     setDataImportar(data);
   };
 
   const submitModalData = async () => {
-    const payload = { userId: user.userId, studies: [dataImportar] };
+    // Validación: Verificar si hay algo en dataImportar
+    if (!dataImportar || dataImportar.length === 0) {
+      return setErrorsImport([{ message: 'No hay datos para importar.' }]); // Retorna el error si no hay estudios
+    }
+
+    const errors = [];
+
+    // Validación: Iterar sobre el array dataImportar y verificar los campos
+    dataImportar.forEach((item, index) => {
+      let itemErrors = {}; // Errores para cada objeto
+
+      if (!item.title) {
+        itemErrors.title = `El título es requerido .`;
+      }
+
+      if (!item.study) {
+        itemErrors.content = `Debe haber al menos un estudio.`;
+      }
+      if (!item.description) {
+        itemErrors.description = `Debe haber al menos una descripción.`;
+      }
+
+      if (Object.keys(itemErrors).length > 0) {
+        errors[index] = itemErrors;
+      }
+    });
+
+    // Si hay errores, retornar y salir de la función
+    if (errors.length > 0) {
+      setErrorsImport(errors);
+      return; // Salir si hay errores
+    }
+
+    const payload = { userId: user.userId, studies: dataImportar };
     console.log(payload);
 
-
     try {
-      // Realizar la petición POST
-      setLoading(true)
+      setLoading(true);
       const response = await ApiSegimed.post('/patient-studies', payload);
-
-      // Manejar la respuesta según sea necesario
-      console.log('Respuesta del servidor:', response.data);
-      setLoading(false)
-      // Cerrar el modal después de la petición
+      setLoading(false);
       setIsModalOpen(false);
-      setLoading(false)
+      setDataImportar([])
       Swal.fire({
         icon: "success",
         title: "Exito",
@@ -101,9 +134,10 @@ export default function HomePte() {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
+
+      return null;
     } catch (error) {
       console.error('Error al enviar los datos:', error.message);
-      setIsModalOpen(false);
       Swal.fire({
         title: "Error",
         text: "No pudo realizarse la importacion, intente mas tarde",
@@ -111,22 +145,28 @@ export default function HomePte() {
         confirmButtonColor: "#487FFA",
         confirmButtonText: "Aceptar",
       });
-      setLoading(false)
+      setLoading(false);
+      return { message: 'Error al realizar la importación.' };
     }
   };
 
 
+
+
   const submitModalVitalData = async () => {
     const payload = {
-      patient: user.userId,
-      vitalSignsToCreate: vitalSings
+      vitalSigns: vitalSings,
+      glycemia: glicemia
     };
+
+    console.log(payload);
 
     try {
       if (autoEvaluacionType === 'SignosVitales') {
-        const response = await ApiSegimed.post('/vital-signs/create-vital-sign', payload);
+        const response = await ApiSegimed.post('/self-evaluation-event/vital-signs', payload);
         console.log('Respuesta de la API:', response.data);
         setVitalSings([]); // Limpiar el estado después de una respuesta exitosa
+        setGlicemia([]); // Limpiar el estado después de una respuesta exitosa
         Swal.fire({
           icon: "success",
           title: "Exito",
@@ -167,14 +207,14 @@ export default function HomePte() {
   const handleVitalSignChange = (id, value) => {
     setVitalSings(prevState => {
       // Verificar si ya existe un objeto con el mismo id en el array
-      const existingIndex = prevState.findIndex(sign => sign.measureType === id);
+      const existingIndex = prevState.findIndex(sign => sign.measureType === Number(id));
 
       if (existingIndex !== -1) {
         // Si ya existe, actualizar el objeto correspondiente en el array
         const updatedSigns = [...prevState];
         updatedSigns[existingIndex] = {
           ...updatedSigns[existingIndex],
-          measure: value
+          measure: Number(value)
         };
         return updatedSigns;
       } else {
@@ -182,12 +222,18 @@ export default function HomePte() {
         return [
           ...prevState,
           {
-            measureType: id,
-            measure: value
+            measureType: Number(id),
+            measure: Number(value)
           }
         ];
       }
     });
+  };
+
+  console.log(glicemia);
+
+  const handleGlicemia = (name, value) => {
+    setGlicemia([Number(value)])
   };
 
   const isVitalSingsEmpty = Object.values(vitalSings).every(value => !value);
@@ -202,7 +248,7 @@ export default function HomePte() {
       <ModalInputVitalSings key="modalInputVitalSings4" text={"Ingresa tu saturación de oxígeno "} unit={"% "} handleChange={handleVitalSignChange} name={'6'} state={vitalSings} />,
       <ModalInputVitalSings key="modalInputVitalSings5" text={"Ingresa tu temperatura corporal"} unit={"°C"} handleChange={handleVitalSignChange} name={'1'} state={vitalSings} />,
       <ModalInputVitalSings key="modalInputVitalSings6" text={"Ingresa tu peso actual"} unit={"Kg "} handleChange={handleVitalSignChange} name={'9'} state={vitalSings} />,
-      // <ModalInputVitalSings key="modalInputVitalSings7" text={"Ingresa tu nivel de glicemia"} unit={"mg/dl"} handleChange={handleVitalSignChange} name={'Glicemia'} state={vitalSings} />,
+      <ModalInputVitalSings key="modalInputVitalSings7" text={"Ingresa tu nivel de glicemia"} unit={"mg/dl"} handleChange={handleGlicemia} name={'Glicemia'} state={glicemia} />,
       isVitalSingsEmpty
         ? <ModalVitalSings key="modalVitalSingsIncomplete" text={"Debes completar al menos 1 signo vital para finalizar"} setDisabledButton={setDisabledButton} />
         : <ModalVitalSings key="modalVitalSingsComplete" text={"¡Perfecto! Ya completaste tu registro diario."} subtitle={"Apreta el boton de finalizar para guardar tu registro de signos vitales correctamente."} />,
@@ -235,13 +281,13 @@ export default function HomePte() {
       <ModalModularizado
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        Modals={[<ImportarHC key={"importar archivos"} onData={handleModalData} />]}
+        Modals={[<ImportarMultiple key={"importar archivos"} onData={handleModalData} errors={errorsImport} />]}
         title={"Importar estudios"}
         titleClassName={"text-[#686868]"}
         button1={"hidden"}
         button2={"bg-greenPrimary block"}
         progessBar={"hidden"}
-        size={"h-[35rem] text-white md:h-[33rem] md:w-[35rem]"}
+        size={" text-white max-h-[35rem] min-h-[15rem] md:w-[55rem]"}
         buttonText={{ end: `Importar` }}
         funcion={submitModalData}
         loading={isLoading}

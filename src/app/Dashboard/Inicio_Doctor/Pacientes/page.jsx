@@ -258,7 +258,6 @@ export default function HomeDoc() {
     setSelectedPatient(patient);
     setShowMapModal(true);
   };
-
   return (
     <div className="flex flex-col h-full ">
       <title>{lastSegmentTextToShow}</title>
@@ -384,16 +383,24 @@ export default function HomeDoc() {
                   <IconRisk color="lightGray" />
                 )}
 
-                <div className="flex justify-center items-center">
-                  <img
-                    src={paciente?.avatar !== null ? paciente.avatar : avatar}
-                    alt={paciente?.name}
-                    className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
-                  />
-                </div>
-                <p className="text-base w-fit">
-                  {paciente.name} {paciente.lastname}
-                </p>
+                <button
+                  onClick={() =>
+                    router.push(
+                      `${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${paciente.id}`
+                    )
+                  }
+                  className="flex justify-center items-center">
+                  <div className="flex justify-center items-center">
+                    <img
+                      src={paciente?.avatar !== null ? paciente.avatar : avatar}
+                      alt={paciente?.name}
+                      className="w-9 h-9 md:w-12 md:h-12 object-cover rounded-full"
+                    />
+                  </div>
+                  <p className="text-base w-fit">
+                    {paciente.name} {paciente.lastname}
+                  </p>
+                </button>
                 <div
                   className="cursor-pointer"
                   onClick={() => changeFavorite(paciente)}>
@@ -411,7 +418,7 @@ export default function HomeDoc() {
                   <div className="text-sm md:text-base text-bluePrimary flex gap-1">
                     <p className="hidden md:block">Grupo HTP:</p>
                     <p className="font-bold">
-                      {paciente.patientPulmonaryHypertensionRisks?.group || "-"}
+                      {paciente.userHpGroups[0]?.catHpGroup?.name || "-"}
                     </p>
                   </div>
                 </div>

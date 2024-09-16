@@ -37,7 +37,7 @@ export default function Medicamentos() {
 
     return (
         <div className="h-[100%] text-[#686868] w-[100%]">
-            {/* <PDFExportComponent data={data} />  para visualizar pdf comentar todo y poner esto */}
+            {/* <PDFExportComponent />  para visualizar pdf comentar todo y poner esto */}
             <title>{lastSegmentTextToShow}</title>
             <div className="h-full w-full">
                 <div className="flex border-b border-b-[#cecece]">
@@ -58,9 +58,9 @@ export default function Medicamentos() {
                 ) : medicamentos.length === 0 ? (
                     <NotFound text="Actualmente no tenes ningún medicamento asignado." sizeText="w-[80%]" />
                 ) : (
-                    medicamentos.map((medicamento, index) => (
-                        <MedicamentosTable key={index} medicamento={medicamento} />
-                    ))
+
+                    <MedicamentosTable medicamentos={medicamentos} />
+
                 )}
             </div>
         </div>

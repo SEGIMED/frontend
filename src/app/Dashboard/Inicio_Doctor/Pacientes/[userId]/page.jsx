@@ -38,10 +38,8 @@ export default function DetallePaciente({ params }) {
     try {
       const token = Cookies.get("a");
       const [response1, response2] = await Promise.all([
-        ApiSegimed.get(`/patient/${id}`, { headers: { token: token } }),
-        ApiSegimed.get(`/patient-details?id=${id}`, {
-          headers: { token: token },
-        }),
+        ApiSegimed.get(`/patient/${id}`),
+        ApiSegimed.get(`/patient-details?id=${id}`),
       ]);
 
       if (response1.data && response2.data) {
@@ -61,7 +59,7 @@ export default function DetallePaciente({ params }) {
   useEffect(() => {
     getPatient();
   }, [id]);
-
+  console.log(user);
   return isLoading ? (
     <SkeletonList count={9} />
   ) : (
@@ -110,69 +108,15 @@ export default function DetallePaciente({ params }) {
           title={"Fecha de nacimiento:"}
           data={user?.sociodemographicDetails?.birthDate}
         />
-        <Detail
-          title={"Telefono de contacto:"}
-          data={
-            <ButtonSolicitar
-              onPress={() =>
-                Swal.fire({
-                  icon: "success",
-                  title: "Se solicito acceso a esta información",
-                  text: "Se te notificará cuando se tenga una respuesta.",
-                })
-              }
-              nombre={"Solicitar permiso"}
-              size={"sm"}
-            />
-          }
-        />
+        <Detail title={"Telefono de contacto:"} data={user?.cellphone} />
         <Detail
           title={"Telefono de urgencia:"}
-          data={
-            <ButtonSolicitar
-              onPress={() =>
-                Swal.fire({
-                  icon: "success",
-                  title: "Se solicito acceso a esta información",
-                  text: "Se te notificará cuando se tenga una respuesta.",
-                })
-              }
-              nombre={"Solicitar permiso"}
-              size={"sm"}
-            />
-          }
+          data={user?.sociodemographicDetails?.emergencyContactPhone || "-"}
         />
-        <Detail
-          title={"Correo electronico:"}
-          data={
-            <ButtonSolicitar
-              onPress={() =>
-                Swal.fire({
-                  icon: "success",
-                  title: "Se solicito acceso a esta información",
-                  text: "Se te notificará cuando se tenga una respuesta.",
-                })
-              }
-              nombre={"Solicitar permiso"}
-              size={"sm"}
-            />
-          }
-        />
+        <Detail title={"Correo electronico:"} data={user?.email} />
         <Detail
           title={"Lugar de domicilio:"}
-          data={
-            <ButtonSolicitar
-              onPress={() =>
-                Swal.fire({
-                  icon: "success",
-                  title: "Se solicito acceso a esta información",
-                  text: "Se te notificará cuando se tenga una respuesta.",
-                })
-              }
-              nombre={"Solicitar permiso"}
-              size={"sm"}
-            />
-          }
+          data={user?.currentLocationCity || "-"}
         />
         <Detail title={"Fecha del Diagnostico Principal:"} data={"-"} />
         <Detail title={"Lugar de atencion medica:"} data={"-"} />
@@ -182,7 +126,7 @@ export default function DetallePaciente({ params }) {
         />
         <Detail
           title={"Estado:"}
-          data={user?.sociodemographicDetails?.civilStatus}
+          data={user?.sociodemographicDetails?.civilStatus || "-"}
         />
         <Detail title={"Última Conexión:"} data={LastLogin(user?.lastLogin)} />
         <Detail title={"Actividad Última Semana:"} data={"-"} />

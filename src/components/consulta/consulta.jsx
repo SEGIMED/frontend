@@ -49,13 +49,14 @@ import patchPhysicalExam from "@/utils/dataFetching/fetching/patchPhysycalExam";
 import patchPatientDiagnostic from "@/utils/dataFetching/fetching/patchPatientDiagnostic";
 import patchMedicalEvent from "@/utils/dataFetching/fetching/patchMedicalEvent";
 import htpGroup from "@/utils/dataFetching/fetching/htpGroup";
+import ImportarMultiple from "../modal/ModalDoctor/modalImportarMultiple";
 
 
 
 export default function ConsultaDoc({ id, preconsult }) {
 
   const orden = useAppSelector((state) => state.formSlice.selectedOptions);
-  console.log(orden)
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = Cookies.get("a");
@@ -65,7 +66,7 @@ export default function ConsultaDoc({ id, preconsult }) {
   const [medicalEventExist, setMedicalEventExist] = useState();
   const [handleNav, setHandleNav] = useState("Anamnesis");
 
-  console.log(medicalEventExist)
+
 
   //vital signs y glicemia
   const [vitalSignsPreconsult, setVitalSignsPreconsult] = useState([]);
@@ -86,6 +87,7 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   //para importar archivos 
   const [dataImportar, setDataImportar] = useState({});
+  const [errorsImport, setErrorsImport] = useState([]);
   const [text, setText] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [flagFile, setFlagFile] = useState(false)
@@ -123,7 +125,7 @@ export default function ConsultaDoc({ id, preconsult }) {
   const formState = useAppSelector((state) => state.formSlice.selectedOptions);
   const formData = useAppSelector((state) => state.preconsultaForm.formData);
 
-  console.log(medicalEventExist, "esto es medical event")
+
 
   useEffect(() => {
 
@@ -363,7 +365,7 @@ export default function ConsultaDoc({ id, preconsult }) {
     const updateVitalSigns = vitalSigns.filter(
       (sign) => sign.measure !== 0 && sign.measure !== ""
     );
-    console.log("aca se guardan los signos vitales", updateVitalSigns)
+
     setVitalSignsPreconsult(updateVitalSigns);
     setAnamnesis({
       //anamnesis sin evolucion de la enfermedad
@@ -391,79 +393,27 @@ export default function ConsultaDoc({ id, preconsult }) {
     });
 
 
-    if (medicalEventExist?.physicalExaminations[0]?.id) {
-      setPhysicalExaminationPatch({
-        physicalSubsystemId: IdSubSystem(formState.selectSubsistema), //tienen que modificar el catalogo
-        description: data["inputSubsistema"] ? data["inputSubsistema"] : "",
-        id: Number(medicalEventExist.physicalExaminations[0].id),
-      });
-    }
-    if (
-      data["Diagnostico"] !== "" &&
-      data["medications"] !== "" &&
-      data["Procedimientos"] !== "" &&
-      data["Conducta terapeutica"] !== "" &&
-      data["Tratamientos no farmacológicos"] !== ""
-    ) {
-      setDiagnostic({
-        patientId: Number(userId),
-        // diseaseId: orden?.diagnostic,
-        diagnosticNotes: data["Descripción del Diagnóstico"],
-        medicalEventId: Number(medicalEventId),
-        // drugId: null,
-        // drugName: data["medications"],
-        // prescribedDose: null,
-        // quantityDrug: null,
-        // medicalProcedureId: null,
-        medicalProcedureName: data["Procedimientos"]
-          ? data["Procedimientos"]
-          : null,
-        therapyId: null,
-        descriptionTherapy: data["Conducta terapeutica"], // donde aparece en medical event
-        quantityTherapy: null,
-        descriptionIndication: data["Tratamientos no farmacológicos"],
-      });
-    }
+
+    setDiagnostic({
+      patientId: Number(userId),
+      medicalEventId: Number(medicalEventId),
+      medicalProcedureName: data["Procedimientos"],
+      descriptionIndication: data["Tratamientos no farmacológicos"],
+    });
+
     setRestofDiag({
       id: Number(medicalEventId),
+      treatmentPlan: data["Conducta terapeutica"],
       chiefComplaint: data["Evolucion"],
       historyOfPresentIllness: data["Evolucion"],
       alarmPattern: data["Pautas de alarma"],
       diagnostic: orden?.diagnostic,
       physicianComments: data["Descripción del Diagnóstico"],
+      diagnosticNotes: data["Descripción del Diagnóstico"],
     })
 
-    // setDiagnosticPatch(
-    //   //diagnosticPatch
-    //   {
-    //     id: Number(medicalEventExist?.diagnostics[0]?.id), // id del diagnostico - obligatorio
-    //     diseaseId: orden?.diagnostic,
-    //     diagnosticNotes:
-    //       data["Diagnostico"],
-    //     medicalEventId: Number(medicalEventId),
-    //     // drugId: null,
-    //     // drugName:
-    //     //   data["medications"] !== ""
-    //     //     ? data["medications"]
-    //     //     : medicalEventExist?.drugPrescriptions || "", // Si está vacío, usa el valor de la receta existente
-    //     // quantityDrug: null,
-    //     // medicalProcedureId: null,
-    //     medicalProcedureName:
-    //       data["Procedimientos"] ,
-    //       // !== ""
-    //       //   ? data["Procedimientos"]
-    //       //   : medicalEventExist?.procedurePrescriptions?.[0]?.medicalProcedureName ||
-    //       //     null, // Usa el valor del procedimiento existente si está vacío
-    //     therapyId: null,
-    //     therapyDescription:
-    //       data["Conducta terapeutica"] ,
-    //       // !== ""
-    //       //   ? data["Conducta terapeutica"]
-    //       //   : medicalEventExist?.TherapyPrescription || null, // Usa la terapia existente si está vacío
-    //     quantityTherapy: null,
-    //     descriptionIndication: ["Tratamientos no farmacológicos"],
-    //   }
-    // );
+
+
 
 
     // patch medical event
@@ -508,7 +458,7 @@ export default function ConsultaDoc({ id, preconsult }) {
       const response = await getPatientDetail(userId)
       setPatient(response);
     } catch (error) {
-      console.log("No existe este paciente", error);
+      console.error("No existe este paciente", error);
     }
   };
 
@@ -522,7 +472,7 @@ export default function ConsultaDoc({ id, preconsult }) {
         setIsLoading(false)
       }
     } catch (error) {
-      console.log("No se ah echo un diagnostico anteriormente:", error);
+      console.error("No se ah echo un diagnostico anteriormente:", error);
     }
   };
 
@@ -630,11 +580,11 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleBackgroundSave = async (background) => {
     try {
-      console.log(background)
+
       if (background !== undefined || background !== null) {
         const response = await postPatientBackgrounds(background);
       }
-      console.log(response);
+
     } catch (error) {
       console.error('Error saving background:', error);
     }
@@ -642,7 +592,7 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleHtpRiskSave = async (htpRisk) => {
     try {
-      console.log(htpRisk);
+
       const response = await patchHTPRisk(htpRisk);
 
     } catch (error) {
@@ -652,9 +602,9 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleCardioVascularSave = async (cardiovascularRisk) => {
     try {
-      console.log(cardiovascularRisk);
+
       const response = await patchCardiovascularRisk(cardiovascularRisk);
-      console.log("Cardiovascular risk:", response);
+
     } catch (error) {
       console.error('Error saving cardiovascular risk:', error);
     }
@@ -663,7 +613,7 @@ export default function ConsultaDoc({ id, preconsult }) {
   const handleAnamnesisSave = async (anamnesisData) => {
     try {
       const response = await patchPreconsultation(anamnesisData);
-      console.log("Anamnesis:", response.data);
+
     } catch (error) {
       console.error('Error saving anamnesis:', error);
     }
@@ -683,7 +633,6 @@ export default function ConsultaDoc({ id, preconsult }) {
 
   const handleDiagnostic = async () => {
     try {
-
 
 
       const response2 = await patchMedicalEvent(restofDiag)
@@ -930,17 +879,17 @@ export default function ConsultaDoc({ id, preconsult }) {
   const handleClic = (title) => {
 
     setHandleNav(title);
-    // const hasReloaded = localStorage.getItem("hasReloaded");
+    const hasReloaded = localStorage.getItem("hasReloaded");
 
-    // if (title === "Anamnesis" && !hasReloaded) {
-    //   // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
-    //   localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
-    //   window.location.reload();
-    // } else if (title !== "Anamnesis") {
-    //   // Si selecciona otra opción, eliminar la bandera de recarga
-    //   localStorage.removeItem("hasReloaded");
+    if (title === "Anamnesis" && !hasReloaded) {
+      // Si selecciona "anamnesis" y no se ha recargado antes, recargar la página
+      localStorage.setItem("hasReloaded", "true"); // Establecer la bandera
+      window.location.reload();
+    } else if (title !== "Anamnesis") {
+      // Si selecciona otra opción, eliminar la bandera de recarga
+      localStorage.removeItem("hasReloaded");
 
-    // }
+    }
 
   };
 
@@ -962,7 +911,40 @@ export default function ConsultaDoc({ id, preconsult }) {
 
 
   const submitModalData = async () => {
-    const payload = { scheduleId: scheduleId, userId: userId, studies: [dataImportar] };
+    if (!dataImportar || dataImportar.length === 0) {
+      return setErrorsImport([{ message: 'No hay datos para importar.' }]); // Retorna el error si no hay estudios
+    }
+
+    const errors = [];
+
+    // Validación: Iterar sobre el array dataImportar y verificar los campos
+    dataImportar.forEach((item, index) => {
+      let itemErrors = {}; // Errores para cada objeto
+
+      if (!item.title) {
+        itemErrors.title = `El título es requerido .`;
+      }
+
+      if (!item.study) {
+        itemErrors.content = `Debe haber al menos un estudio.`;
+      }
+      if (!item.description) {
+        itemErrors.description = `Debe haber al menos una descripción.`;
+      }
+
+
+      if (Object.keys(itemErrors).length > 0) {
+        errors[index] = itemErrors;
+      }
+    });
+
+    // Si hay errores, retornar y salir de la función
+    if (errors.length > 0) {
+      setErrorsImport(errors);
+      return; // Salir si hay errores
+    }
+    const payload = { scheduleId: scheduleId, userId: userId, studies: dataImportar };
+
     console.log(payload);
     try {
       // Realizar la petición POST
@@ -1041,7 +1023,7 @@ export default function ConsultaDoc({ id, preconsult }) {
   return (
     <FormProvider {...methods}>
       <div className="flex flex-col h-full overflow-y-auto bg-[#fafafc]">
-        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} />
+        <SubNavbarConsulta handleClic={handleClic} id={scheduleId} preconsult={preconsult} />
 
         <MenuDropDown
           label="Importar archivo"
@@ -1255,7 +1237,7 @@ export default function ConsultaDoc({ id, preconsult }) {
                     nombre={"Guardar"}
                     icon={<IconGuardar />}
                     onPress={() => {
-                      handleDiagnostic
+                      handleDiagnostic()
                       Swal.fire({
                         icon: "success",
                         title: "Exito",
@@ -1345,17 +1327,12 @@ export default function ConsultaDoc({ id, preconsult }) {
             <LoadingFallback />
           </div>
         )}
-
         {handleNav === "Estudios" && !flagFile ? (
           <ModalModularizado
             isOpen={isModalOpen}
             onClose={closeModal}
             Modals={[
-              <ImportarHC
-                key={"importar hc"}
-                state={selectedImport}
-                disabled={true}
-              />,
+              <ImportarHC key={"importar hc"} state={selectedImport} disabled={true} />,
             ]}
             title={"Ver detalles de importacion"}
             button1={"hidden"}
@@ -1365,23 +1342,45 @@ export default function ConsultaDoc({ id, preconsult }) {
             buttonText={{ end: `Cerrar` }}
             buttonIcon={<></>}
           />
-        )
-          :
-          (
+        ) : (
+          text ? (
             <ModalModularizado
               isOpen={isModalOpen}
               onClose={closeModal}
-              Modals={[<ImportarHC key={"importar hc"} onData={handleModalData} text={text} />]}
+              titleClassName={"text-[#686868]"}
+              Modals={[
+                <ImportarHC
+                  key={"importar hc"}
+                  onData={handleModalData}
+                  text={text}
+                />,
+              ]}
               title={"Importar Historia Clínica"}
               button1={"hidden"}
               button2={"bg-greenPrimary text-white block"}
               progessBar={"hidden"}
-              size={"h-[35rem] md:h-fit md:w-[35rem]"}
+              size={"h-fit text-white md:h-fit md:w-[33rem]"}
               buttonText={{ end: `Importar` }}
               funcion={submitModalData}
-
             />
-          )}
+          ) : (
+            <ModalModularizado
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              titleClassName={"text-[#686868]"}
+              Modals={[
+                <ImportarMultiple key={"importar hc"} onData={handleModalData} errors={errorsImport} />,
+              ]}
+              title={"Importar Historia Clínica"}
+              button1={"hidden"}
+              button2={"bg-greenPrimary text-white block"}
+              progessBar={"hidden"}
+              size={" text-white max-h-[35rem] min-h-[15rem] md:w-[55rem]"}
+              buttonText={{ end: `Importar` }}
+              funcion={submitModalData}
+            />
+          )
+        )}
 
 
         <ModalModularizado

@@ -7,6 +7,7 @@ import { SegiBot } from "@/components/InicioPaciente/chatSegi/SegiBot";
 import { SideBarMod } from "@/components/Modularizaciones/SideBarMod";
 import { buttonsPaciente } from "@/components/NavDoc/NavbarButtons";
 import { NavBarMod } from "@/components/Modularizaciones/NavbarMod";
+import { Suspense } from "react";
 
 export default function RootLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function RootLayout({ children }) {
         {/* <SidePte search={true} toggleSidebar={toggleSidebar} /> */}
         <NavBarMod search={true} toggleSidebar={toggleSidebar} />
         {/* Contenido principal */}
-        <div className="h-[88%] w-[100%]">{children}</div>
+        <Suspense> <div className="h-[88%] w-[100%]">{children}</div>  </Suspense>
       </div>
       <SegiBot />
     </div>
