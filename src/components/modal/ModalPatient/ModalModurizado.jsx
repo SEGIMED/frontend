@@ -93,13 +93,13 @@ const ModalModularizado = ({ isOpen, onClose, icon, buttonIcon, Modals, title, t
           currentIndex={index}
           progessBar={progessBar}
         />
-        <div className="flex flex-col items-center gap-5 justify-center w-full h-full ">
+        <div className="flex flex-col items-center  gap-5 justify-center w-full h-full ">
           {loading ? (
             <div className="flex items-center justify-center w-full h-full">
               <LoadingFallback className="w-6 h-6" />
             </div>
           ) : (
-            <div className="px-8 bg-[#fafafc] h-[80%] md:h-[100%] w-[100%] justify-center items-center flex">
+            <div className="px-8 bg-[#fafafc] h-[100%] md:h-[100%] w-[100%] justify-center overflow-auto items-center flex">
               {Modals[index]}
             </div>
           )}
