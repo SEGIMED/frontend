@@ -34,11 +34,11 @@ const MensajesContainer = ({
           <p className="text-2xl text-bluePrimary font-semibold py-1">
             Mensajes
           </p>
-          <IconCloseBoton
+          {/* <IconCloseBoton
             onClick={handleMensajeClick}
             className="h-6 w-6 cursor-pointer"
             color={"#487FFA"}
-          />
+          /> */}
         </div>
         <div className="w-full flex flex-col gap-4 max-h-[80%] overflow-y-auto">
           {mappedChats ? (

@@ -284,7 +284,7 @@ const Datos = () => {
               }
             />
             <AntecedenteDash
-              title={"Antecedentes de infancia"}
+              title={"Antecedentes de juventud"}
               info={
                 user?.backgrounds?.pediatricBackground
                   ? user?.backgrounds?.pediatricBackground

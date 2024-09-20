@@ -238,10 +238,19 @@ export default function HomeDoc() {
       <div className="flex flex-col w-full h-full">
         <div className="w-full flex justify-center md:justify-between px-2 items-center border-b gap-3 bg-white border-b-[#cecece] pb-2 pt-2">
           {/* <Ordenar /> */}
-          <div></div>
-
+          {/* <div></div> */}
+          <button
+            onClick={() => setShowModalConsultation(true)}
+            className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
+            <IconMas color={"#487ffa"} />
+            <p
+              className={` text-bluePrimary
+                         font-bold `}>
+              Nueva consulta
+            </p>
+          </button>
           <h1 className="hidden font-bold md:text-xl md:block">Proximas</h1>
-          <div className="flex gap-3 pr-14">
+          <div className="flex gap-3 md:pr-14">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
@@ -249,18 +258,9 @@ export default function HomeDoc() {
                 </p>
               </button>
             </Link> */}
-            <button
-              onClick={() => setShowModalConsultation(true)}
-              className={` bg-white text-bluePrimary  border-bluePrimary md:px-4 md:py-2 py-2 px-2 items-center flex rounded-lg border gap-2 w-fit transition duration-300 ease-in-out`}>
-              <IconMas color={"#487ffa"} />
-              <p
-                className={` text-bluePrimary
-                         font-bold `}>
-                Nueva consulta
-              </p>
-            </button>
+
             <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Pasadas}`}>
-              <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
+              <button className="flex px-3 md:px-6 py-2 h-full rounded-lg gap-1 items-center border-solid border-[#487FFA] border bg-white">
                 <IconFolder className="hidden h-6 md:block" />
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">
                   Pasadas

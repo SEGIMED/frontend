@@ -1,8 +1,9 @@
 import Link from "next/link";
 
-const SideBarItems = ({ name, path, icon: Icon, isActive, onClick, external }) => (
+const SideBarItems = ({ name, path, icon: Icon, isActive, onClick, external, id }) => (
     external ? (
         <a
+            id={id}  // Asignamos el id dinámicamente
             onClick={onClick}
             href={path}
             target="_blank"
@@ -14,6 +15,7 @@ const SideBarItems = ({ name, path, icon: Icon, isActive, onClick, external }) =
         </a>
     ) : (
         <Link
+            id={id}  // Asignamos el id dinámicamente
             onClick={onClick}
             href={path}
             className={`flex items-center gap-4 ${isActive ? "text-[#487FFA]" : "text-[#808080]"}`}

@@ -387,9 +387,9 @@ export default function PreconsultaPte({ params, preconsult, schedule }) {
           ? ""
           : data["Antecedentes patologicos"],
       pediatricBackground:
-        data["Antecedentes de infancia"] === ""
+        data["Antecedentes de juventud"] === ""
           ? ""
-          : data["Antecedentes de infancia"],
+          : data["Antecedentes de juventud"],
       pharmacologicalBackground:
         data["Medicación actual"] === "" ? "" : data["Medicación actual"],
       surgicalBackground:
@@ -784,7 +784,7 @@ export default function PreconsultaPte({ params, preconsult, schedule }) {
               "Antecedentes patologicos",
               "Antecedentes no patologicos",
               "Antecedentes familiares",
-              "Antecedentes de infancia",
+              "Antecedentes de juventud",
               "Medicación actual",
               "Alergias",
               "Vacunas",

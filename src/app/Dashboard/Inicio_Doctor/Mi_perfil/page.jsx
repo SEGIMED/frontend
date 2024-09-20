@@ -23,6 +23,8 @@ import {
   Button,
 } from "@nextui-org/react";
 import IconUpload from "@/components/icons/IconUpload";
+import ReactFlagsSelect from "react-flags-select";
+import flags from "@/utils/countriesFlags";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -33,6 +35,10 @@ export default function HomeDoc() {
   const [catalogCenter, setCatalogCenter] = useState([]);
   const doctor = useAppSelector((state) => state.user);
   const [buttonSize, setButtonSize] = useState("lg");
+  const [selected, setSelected] = useState("");
+  const [selectedPrefix, setSelectedPrefix] = useState("");
+
+
 
   const countries = [
     { iso: 'AR', prefix: '+54', name: 'Argentina' },
@@ -381,38 +387,41 @@ export default function HomeDoc() {
             Especialidades:
           </label>
           {edit ? (
-            <Dropdown>
-              <DropdownTrigger className="md:w-1/2 w-full">
-                <Button
-                  style={{
-                    borderRadius: "0.5rem",
-                    textAlign: "start",
-                    borderWidth: "1px",
-                    justifyContent: "flex-start",
-                    opacity: "1",
-                    color: "#686868",
-                  }}
-                  variant="bordered"
+            <div className="w-1/2 pr-5 flex flex-col ">
+              <Dropdown>
+                <DropdownTrigger className=" w-full">
+                  <Button
+                    style={{
+                      borderRadius: "0.5rem",
+                      textAlign: "start",
+                      borderWidth: "1px",
+                      justifyContent: "flex-start",
+                      backgroundColor: "#FBFBFB",
+                      opacity: "1",
+                      color: "#686868",
+                    }}
+                    variant="bordered"
+                  >
+                    {selectedValue}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label=""
+                  variant="flat"
+                  closeOnSelect={false}
+                  disallowEmptySelection
+                  selectionMode="multiple"
+                  selectedKeys={selectedKeys}
+                  onSelectionChange={handleSelectionChange}
                 >
-                  {selectedValue}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label=""
-                variant="flat"
-                closeOnSelect={false}
-                disallowEmptySelection
-                selectionMode="multiple"
-                selectedKeys={selectedKeys}
-                onSelectionChange={handleSelectionChange}
-              >
-                {catalog?.map((item) => (
-                  <DropdownItem key={item.name} value={item.id}>
-                    {item.name}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+                  {catalog?.map((item) => (
+                    <DropdownItem key={item.name} value={item.id}>
+                      {item.name}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           ) : (
             <div className="w-1/2 text-start px-2 py-2">
               {doctor?.specialties?.map((specialty) => (
@@ -470,30 +479,18 @@ export default function HomeDoc() {
             Pais:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.currentLocationCountry}
-                {...register("country", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 3,
-                    message: "Debe tener al menos 3 caracteres",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "No puede tener más de 20 caracteres",
-                  },
-                  pattern: {
-                    value: /^[A-Za-z ]+$/,
-                    message: "Solo se permiten letras y espacios",
-                  },
-                })}
+            <div className="flex items-center gap-2 w-full">
+
+              <ReactFlagsSelect
+                className="w-full pr-6 "
+                placeholder="Seleccione un pais"
+                searchable={true}
+                selected={selected}
+                onSelect={(code) => {
+                  setSelected(code);
+                }}
               />
-              {errors.country && (
-                <p className="text-red-500 text-sm">{errors.country.message}</p>
-              )}
+
             </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
@@ -613,7 +610,7 @@ export default function HomeDoc() {
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-1/2 flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
-            Centro de atencion
+            Centro de atencion:
           </label>
           {edit ? (
             <div className="w-1/2 pr-5 flex flex-col ">
@@ -625,6 +622,7 @@ export default function HomeDoc() {
                       textAlign: "start",
                       borderWidth: "1px",
                       justifyContent: "flex-start",
+                      backgroundColor: "#FBFBFB",
                       opacity: "1",
                       color: "#686868",
                     }}
@@ -785,36 +783,40 @@ export default function HomeDoc() {
           </label>
           {edit ? (
             <div className="w-full flex flex-col">
-              <div className="flex">
-
-                <select
+              <div className="flex items-center gap-2">
+                {/* <select
                   id="cellphone-prefix"
-                  className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
-                  {...register("cellphonePrefix"
-                    //   , {
-                    //   required: {
-                    //     value: true,
-                    //     message: "* Prefijo requerido *",
-                    //   },
-                    // }
-                  )}
+                  className="w-1/4 bg-[#FBFBFB] py-2 px-3 border border-[#DCDBDB] rounded-lg  focus:outline-none focus:border-[#487FFA] mr-2"
+                  {...register("cellphonePrefix", {
+                    required: {
+                      value: true,
+                      message: "* Prefijo requerido *",
+                    },
+                  })}
                 >
                   <option value="" disabled selected>Prefijo</option>
                   {countries.map((country) => (
                     <option key={country.iso} value={country.prefix}>
                       <span>
-                        {/* <img
-                        src={findFlagUrlByIso2Code(country.iso)}
-                        alt={`Bandera de ${country.name}`}
-                        className="inline-block w-4 h-4 mr-1"
-                      /> */}
+                      
                         {`${country.prefix} (${country.name})`}
                       </span>
                     </option>
                   ))}
-                </select>
+                </select> */}
+                <ReactFlagsSelect
+                  className="items-center justify-center pt-1 w-[15rem]"
+                  customLabels={flags}
+                  searchable={true}
+                  selected={selectedPrefix}
+                  showSelectedLabel={false}
+                  placeholder="Prefijo"
+                  onSelect={(code) => {
+                    setSelectedPrefix(code);
+                  }}
+                />
                 <input
-                  className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                  className="bg-[#FBFBFB] w-full border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
                   type="text"
                   defaultValue={doctor?.cellphone}
                   {...register("cellphone", {
