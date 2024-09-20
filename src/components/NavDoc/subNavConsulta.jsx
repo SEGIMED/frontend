@@ -17,20 +17,17 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-
 } from "@nextui-org/react";
 import IconAccion from "../icons/IconAccion";
 import IconTablillaTilde from "../icons/iconTablillaTilde";
 import patchSchedule from "@/utils/dataFetching/fetching/patchSchedule";
 import { useRouter } from "next/navigation";
 
-export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
-  
+export default function SubNavbarConsulta({ id, handleClic, actualTab }) {
   const [openDetails, setOpenDetails] = useState(false);
-  const router=useRouter()
+  const router = useRouter();
   const endConsult = async () => {
     try {
-    
       const result = await Swal.fire({
         title: "¿Quiere Finalizar la consulta?",
         showDenyButton: true,
@@ -38,31 +35,23 @@ export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
         confirmButtonText: "Sí",
         denyButtonText: "No",
       });
-  
-      
+
       if (result.isConfirmed) {
-        
         await Swal.fire("La consulta ha finalizado.", "", "success");
-  
-      
-        await patchSchedule(id,{ schedulingStatus: 2 });
-        
-       
-        router.push(`${rutas.Doctor}${rutas.Consultas}`); 
+
+        await patchSchedule(id, { schedulingStatus: 2 });
+
+        router.push(`${rutas.Doctor}${rutas.Consultas}`);
       } else if (result.isDenied) {
- 
         await Swal.fire("Continúe con su consulta.", "", "info");
       }
     } catch (error) {
-      
       console.error("Error al finalizar la consulta:", error);
     }
   };
-  
- 
 
   return (
-    <div className="border-b border-b-[#cecece] bg-[#fafafc] flex  flex-row items-center ">
+    <div className="border-b border-b-[#cecece] bg-[#fafafc] flex w-full  flex-row items-center ">
       <Navbar
         className="flex justify-start items-center w-[86%] md:w-full bg-[#fafafc] cursor-pointer"
         classNames={{
@@ -71,7 +60,8 @@ export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
             "items-center",
             "w-full",
             "h-full",
-            "justify-start",
+            "max-w-full",
+            "justify-center",
             // "px-0",
             "pr-4",
             "pl-4",
@@ -79,60 +69,34 @@ export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
             "border-r-1",
             "border-l-1",
           ],
-          wrapper: ["px-0"],
+          wrapper: ["px-0", "max-w-full"],
+          menu: ["w-full", "max-w-full"],
         }}>
-        <NavbarContent className="gap-0 px-0 overflow-x-auto md:flex hidden ">
-          
+        <NavbarContent className="gap-0 w-full px-0 overflow-x-auto md:flex hidden ">
           <NavbarItem
-            
-            onClick={() =>
-              handleClic("Anamnesis")
-            }>
-            <div className="flex items-center gap-2" aria-current="page">
-              <IconSubNavbar /> Anamnesis
-            </div>
-          </NavbarItem>
-          
-          <NavbarItem
-         
-            onClick={() =>
-              handleClic("ExamenFisico")
-            }>
-            <div className="flex items-center gap-2">
-              <IconSubNavbar /> Examen Fisico
-            </div>
-          </NavbarItem>
-          <NavbarItem
-            
-            onClick={() =>
-              handleClic("DiagnosticoyTratamiento")
-            }>
-            <div className="flex items-center gap-2">
-              <IconSubNavbar /> Diagnostico y Tratamiento
-            </div>
-          </NavbarItem>
-          <NavbarItem
-            
-            onClick={() =>
-              handleClic("Estudios")
-            }>
-            <div className="flex items-center gap-2">
-              <IconSubNavbar /> Estudios
-            </div>
+            className="flex items-center gap-2"
+            onClick={() => handleClic("Consulta")}>
+            <IconSubNavbar /> Consulta
           </NavbarItem>
 
           <NavbarItem
-           
-            onClick={() =>
-              handleClic("Preconsulta")
-            }>
-            <div className="flex items-center gap-2 " aria-current="page">
-              <IconClinicalHistory /> Preconsulta
-            </div>
+            className="flex items-center gap-2"
+            onClick={() => handleClic("Preconsulta")}>
+            <IconSubNavbar /> Preconsulta
+          </NavbarItem>
+          <NavbarItem
+            className="flex items-center gap-2 "
+            onClick={() => handleClic("Estudios")}>
+            <IconSubNavbar /> Estudios
           </NavbarItem>
 
-          </NavbarContent>
-          <NavbarContent className="gap-0 px-0 overflow-x-auto md:hidden flex">
+          <NavbarItem
+            className="flex items-center gap-2 "
+            onClick={() => handleClic("Antecedentes")}>
+            <IconClinicalHistory /> Antecedentes
+          </NavbarItem>
+        </NavbarContent>
+        <NavbarContent className="gap-0 px-0 overflow-x-auto md:hidden flex">
           <NavbarItem className="flex items-center gap-2 cursor-pointer ">
             <Dropdown>
               <DropdownTrigger>
@@ -145,7 +109,7 @@ export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
                   }}
                   variant="bordered"
                   onClick={() => setOpenDetails(!openDetails)}>
-                  Mas{" "}
+                  {actualTab}
                   {openDetails ? (
                     <IconArrowDetailUp />
                   ) : (
@@ -154,88 +118,37 @@ export default function SubNavbarConsulta({ id, handleClic, preconsult }) {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-              
-                <DropdownItem
-                 
-                  key="new1">
+                <DropdownItem key="new1">
                   <div
                     className="w-full"
-                    onClick={() =>
-                      handleClic("Anamnesis")
-                    }>
-                    
-                    <p>Anamnesis</p>
+                    onClick={() => handleClic("Consulta")}>
+                    <p>Consulta</p>
                   </div>
                 </DropdownItem>
-                <DropdownItem
-                
-                  key="copy1">
-                  <div
-                    onClick={() =>
-                      handleClic("ExamenFisico")
-                    }>
-                    <p>Examen Fisico</p>
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-                 
-                  key="copy2">
-                  <div
-                    onClick={() =>
-                      handleClic("DiagnosticoyTratamiento")
-                    }
-                    className="w-full">
-                    <p>Diagnostico y Tratamiento</p>
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-              
-                  key="edit1">
-                  <div
-                    className="w-full"
-                    onClick={() =>
-                      handleClic("Estudios")
-                    }>
-                    <p>Estudios</p>
-                  </div>
-                </DropdownItem>
-
-                <DropdownItem
-                
-                  key="new">
-                  <div
-                    className="w-full"
-                    onClick={() =>
-                      handleClic("Preconsulta")
-                    }
-                    >
+                <DropdownItem key="copy1">
+                  <div onClick={() => handleClic("Preconsulta")}>
                     <p>Preconsulta</p>
                   </div>
                 </DropdownItem>
-                
+                <DropdownItem key="copy2">
+                  <div
+                    onClick={() => handleClic("Estudios")}
+                    className="w-full">
+                    <p>Estudios</p>
+                  </div>
+                </DropdownItem>
+                <DropdownItem key="new">
+                  <div
+                    className="w-full"
+                    onClick={() => handleClic("Antecedentes")}>
+                    <p>Antecedentes</p>
+                  </div>
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      {preconsult?.ProvisionalPreConsultationSchedule?.schedulingStatus === 1 &&
-      <Elboton
-      nombre={"Finalizar Consulta"}
-      icon={<IconTablillaTilde  color="white"/>}
-      onPress={()=>{
-       endConsult()
-      }}
-      size={"md"}
-      className={"bg-[#f53a3a] w-60 text-sm font-bold m-2"}
-    />}
-      
-
-      <Link href={`${rutas.Doctor}/${rutas.Consultas}`}>
-        <button className="flex items-center px-2 md:px-6 py-2 bg-[#487FFA] rounded-lg gap-3 text-white font-bold">
-          <IconRegresar />
-          <p className="hidden md:block">Regresar</p>
-        </button>
-      </Link>
     </div>
   );
 }
