@@ -226,7 +226,7 @@ export default function HomeDoc() {
           {/* <Ordenar /> */}
           <div></div>
           <h1 className="hidden font-bold md:text-xl md:block">Pasadas</h1>
-          <div className="flex gap-3">
+          <div className="flex gap-3 md:pr-14">
             {/* <Link href={`${rutas.Doctor}${rutas.Historial}${rutas.Teleconsulta}`}>
               <button className="flex px-3 md:px-6 py-2 rounded-lg gap-1 items-center border-solid border-[#487FFA] border-2 bg-white">
                 <p className="text-start text-[#487FFA] font-bold text-sm md:text-base leading-5">

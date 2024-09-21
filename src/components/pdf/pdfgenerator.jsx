@@ -158,8 +158,7 @@ export default async function GeneratePDF(user, consultas) {
   doc.setFont("helvetica", "normal");
   doc.text(`${user.name} ${user.lastname}`, 120, y + 10);
   doc.text(
-    `${user.sociodemographicDetails?.birthDate || "-"} (${
-      CalcularEdad(user.sociodemographicDetails?.birthDate) || "-"
+    `${user.sociodemographicDetails?.birthDate || "-"} (${CalcularEdad(user.sociodemographicDetails?.birthDate) || "-"
     } años)`,
     120,
     y + 20
@@ -217,7 +216,7 @@ export default async function GeneratePDF(user, consultas) {
       data: user.backgrounds?.familyBackground || "-",
     },
     {
-      title: "Antecedentes de infancia:",
+      title: "Antecedentes de juventud:",
       data: user.backgrounds?.pediatricBackground || "-",
     },
     {

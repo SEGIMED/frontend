@@ -114,7 +114,7 @@ export default function TableAlarm({ alarms, updateAlarms }) {
                 {alarm?.alarm_description}
               </div>
             </div>
-            <div className="w-[10%] lg:w-[20%] items-center  lg:flex">
+            <div className="w-[10%] pr-4 lg:w-[20%] justify-center items-center  lg:flex">
               <MenuDropDown
                 icon={<IconOptions color="white" />}
                 items={[

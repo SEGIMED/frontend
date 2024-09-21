@@ -16,6 +16,8 @@ import clinicalHistory from "./slices/doctor/HistorialClinico";
 import chatBot from "./slices/chat/chatBot";
 import searchBar from "./slices/user/searchBar";
 import alarmasChat from "./slices/chat/alarmasChat";
+import tourstate from "./slices/user/tour";
+
 enableMapSet();
 // Define a reset action type
 const RESET_ACTION_TYPE = "root/reset";
@@ -38,6 +40,7 @@ const appReducer = combineReducers({
   chatBot,
   searchBar,
   alarmasChat,
+  tourstate,
 });
 
 // Create a root reducer that handles the reset action

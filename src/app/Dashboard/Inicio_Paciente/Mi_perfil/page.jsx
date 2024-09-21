@@ -20,6 +20,15 @@ import IconRegresar from "@/components/icons/iconRegresar";
 import PhotoModalPte from "@/components/modal/PhotoModalPTe";
 import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import ModalModularizado from "@/components/modal/ModalPatient/ModalModurizado";
+import ReactFlagsSelect from "react-flags-select";
+import flags from "@/utils/countriesFlags";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@nextui-org/react";
 
 const sexoOptions = [
   { value: 2, label: "Masculino" },
@@ -33,8 +42,16 @@ export default function HomePte() {
   const token = Cookies.get("a");
 
   const [buttonSize, setButtonSize] = useState("lg");
+  const [selected, setSelected] = useState("");
+  const [selectedPrefix, setSelectedPrefix] = useState("");
+  const [catalogCenter, setCatalogCenter] = useState([]);
+  const [selectedCenters, setSelectedCenters] = useState([]);
+  const [selectedCentersId, setSelectedCentersId] = useState([]);
+  const [selectedKeysCenter, setSelectedKeysCenter] = useState(new Set());
+
 
   useEffect(() => {
+    getCatalogCenter()
     if (typeof window !== "undefined") {
       const handleResize = () => {
         setButtonSize(window.innerWidth <= 768 ? "md" : "lg");
@@ -56,6 +73,24 @@ export default function HomePte() {
     { iso: 'EC', prefix: '+593', name: 'Ecuador' },
     { iso: 'UY', prefix: '+598', name: 'Uruguay' },
   ];
+
+  console.log(paciente.sociodemographicDetails);
+
+
+  const getCatalogCenter = async () => {
+    try {
+      const response = await ApiSegimed.get("/catalog/get-catalog?catalogName=center_att");
+      if (response.data) {
+        setCatalogCenter(response.data);
+        console.log(response.data);
+
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log(catalogCenter);
 
   const {
     register,
@@ -114,6 +149,15 @@ export default function HomePte() {
         confirmButtonText: "Aceptar",
       });
     }
+  };
+  // 
+  const handleSelectionChangeCenter = (keys) => {
+    setSelectedKeysCenter(keys);
+    const centers = catalogCenter.filter((item) => keys.has(item.name));
+    const ids = centers.map((item) => item.id); // Obtenemos los IDs de los centros seleccionados
+    const numericIds = ids.map(id => Number(id));
+    setSelectedCenters(centers);
+    setSelectedCentersId(numericIds);  // Actualizamos el estado con los centros seleccionados
   };
 
   // Para la ubicación
@@ -270,7 +314,7 @@ export default function HomePte() {
           {edit ? (
             <div className="w-1/2 flex flex-col">
               <select
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-[${errors.genreId ? "red" : "#DCDBDB"}]`}
+                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 pr-6 border-[${errors.genreId ? "red" : "#DCDBDB"}]`}
                 defaultValue={
                   paciente.sociodemographicDetails?.genre === "Masculino"
                     ? 2
@@ -293,6 +337,31 @@ export default function HomePte() {
           ) : (
             <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.genre}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex  justify-start gap-3 font-medium">
+            <IconCircle className="w-2" />
+            Pais:
+          </label>
+          {edit ? (
+            <div className="flex items-center gap-2 w-1/2">
+
+              <ReactFlagsSelect
+                className="w-full pr-6 "
+                placeholder="Seleccione un pais"
+                searchable={true}
+                selected={selected}
+                onSelect={(code) => {
+                  setSelected(code);
+                }}
+              />
+
+            </div>
+          ) : (
+            <span className="w-1/2 text-start px-6 py-2">
+              {Fecha(paciente.sociodemographicDetails?.address)}
             </span>
           )}
         </div>
@@ -330,10 +399,10 @@ export default function HomePte() {
           </label>
           {edit ? (
             <div className="w-1/2 flex flex-col">
-              <div className="flex">
-                <select
+              <div className="flex items-center gap-2">
+                {/* <select
                   id="cellphone-prefix"
-                  className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
+                  className="w-1/4 bg-[#FBFBFB] py-2 px-3 border border-[#DCDBDB] rounded-lg  focus:outline-none focus:border-[#487FFA] mr-2"
                   {...register("cellphonePrefix", {
                     required: {
                       value: true,
@@ -345,18 +414,25 @@ export default function HomePte() {
                   {countries.map((country) => (
                     <option key={country.iso} value={country.prefix}>
                       <span>
-                        {/* <img
-                        src={findFlagUrlByIso2Code(country.iso)}
-                        alt={`Bandera de ${country.name}`}
-                        className="inline-block w-4 h-4 mr-1"
-                      /> */}
+                      
                         {`${country.prefix} (${country.name})`}
                       </span>
                     </option>
                   ))}
-                </select>
+                </select> */}
+                <ReactFlagsSelect
+                  className="  items-center justify-center pt-1 w-[10rem]"
+                  customLabels={flags}
+                  searchable={true}
+                  selected={selectedPrefix}
+                  showSelectedLabel={false}
+                  placeholder="Prefijo"
+                  onSelect={(code) => {
+                    setSelectedPrefix(code);
+                  }}
+                />
                 <input
-                  className={`bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"}]`}
+                  className={`bg-[#FBFBFB] h-[2.7rem] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-1 md:p-2 mr-6 border-[${errors.cellphone ? "red" : "#DCDBDB"}]`}
                   type="text"
                   defaultValue={paciente?.cellphone}
                   {...register("cellphone", {
@@ -432,6 +508,54 @@ export default function HomePte() {
             <span className="w-1/2 text-start px-6 py-2">
               {paciente.sociodemographicDetails?.emergencyContactPhone}
             </span>
+          )}
+        </div>
+        <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium py-2">
+            <IconCircle className="w-2" />
+            Centro de atencion:
+          </label>
+          {edit ? (
+            <div className="w-1/2 pr-5 flex flex-col ">
+              <Dropdown>
+                <DropdownTrigger className="w-full">
+                  <Button
+                    style={{
+                      borderRadius: "0.5rem",
+                      textAlign: "start",
+                      borderWidth: "1px",
+                      justifyContent: "flex-start",
+                      backgroundColor: "#FBFBFB",
+                      opacity: "1",
+                      color: "#686868",
+                    }}
+                    variant="bordered"
+                  >
+                    {selectedCenters.length > 0
+                      ? Array.from(selectedKeysCenter).join(", ")
+                      : "Seleccione su centro de atención"}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Seleccionar centro de atención"
+                  variant="flat"
+
+                  selectionMode={"simple"}
+                  selectedKeys={selectedKeysCenter}  // Aseguramos que se mantengan seleccionadas las opciones
+                  onSelectionChange={handleSelectionChangeCenter}
+                >
+                  {catalogCenter?.map((item) => (
+                    <DropdownItem key={item.name} value={item.name}>
+                      {item.name}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          ) : (
+            <div className="w-1/2 text-start px-2 py-2">
+              Nombre del centro
+            </div>
           )}
         </div>
         <div className="flex items-center justify-between border-b border-b-[#cecece] h-fit md:h-16 pl-3 md:pl-8 py-2">

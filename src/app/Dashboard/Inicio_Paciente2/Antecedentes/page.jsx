@@ -112,7 +112,7 @@ export default function HomePte() {
                 <AntecedenteDash title={"Antecedentes patológicos"} info={user?.backgrounds?.pathologicBackground ? user?.backgrounds?.pathologicBackground : "No hay antecedentes"} />
                 <AntecedenteDash title={"Antecedentes no patológicos"} info={user?.backgrounds?.nonPathologicBackground ? user?.backgrounds?.nonPathologicBackground : "No hay antecedentes"} />
                 <AntecedenteDash title={"Antecedentes familiares"} info={user?.backgrounds?.familyBackground ? user?.backgrounds?.familyBackground : "No hay antecedentes"} />
-                <AntecedenteDash title={"Antecedentes de infancia"} info={user?.backgrounds?.pediatricBackground ? user?.backgrounds?.pediatricBackground : "No hay antecedentes"} />
+                <AntecedenteDash title={"Antecedentes de juventud"} info={user?.backgrounds?.pediatricBackground ? user?.backgrounds?.pediatricBackground : "No hay antecedentes"} />
                 <AntecedenteDash title={"Medicación actual"} info={user?.backgrounds?.allergicBackground ? user?.backgrounds?.allergicBackground : "No hay antecedentes"} />
                 <AntecedenteDash title={"Alergias"} info={user?.backgrounds?.allergicBackground ? user?.backgrounds?.allergicBackground : "No hay antecedentes"} />
                 <AntecedenteDash title={"Vacunas"} info={user?.backgrounds?.vaccinationBackground ? user?.backgrounds?.vaccinationBackground : "No hay antecedentes"} />

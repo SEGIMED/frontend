@@ -10,50 +10,78 @@ body {
   color: #686868;
   background: white;
 }
-.swal2-confirm{
-  background-color: #70C247!important;
+
+.swal2-confirm {
+  background-color: #70C247 !important;
 }
-.swal2-cancel{
-  background-color: #E73F3F!important;
+
+.swal2-cancel {
+  background-color: #E73F3F !important;
 }
+
 @media screen and (max-width: 640px) {
   .rbc-timeslot-group {
-    min-height: 100px!important;
+    min-height: 100px !important;
   }
 }
-details > summary {
+
+details>summary {
   list-style: none;
 }
 
-details > summary::marker, /* Latest Chrome, Edge, Firefox */ 
-details > summary::-webkit-details-marker /* Safari */ {
+details>summary::marker,
+/* Latest Chrome, Edge, Firefox */
+details>summary::-webkit-details-marker
+
+/* Safari */
+  {
   display: none;
 }
 
 .rbc-allday-cell {
   display: none;
 }
+
 .rbc-time-view .rbc-header {
   border-bottom: none;
 }
-.rbc-time-view,.rbc-header,.rbc-timeslot-group,.rbc-time-header-content,.rbc-time-content{
-  border: none!important;
+
+.rbc-time-view,
+.rbc-header,
+.rbc-timeslot-group,
+.rbc-time-header-content,
+.rbc-time-content {
+  border: none !important;
 }
-.rbc-time-content > * + * > *{
-  border-left: none!important;
-  border-bottom: 1px solid #e0e0e0!important;
+
+.rbc-time-content>*+*>* {
+  border-left: none !important;
+  border-bottom: 1px solid #e0e0e0 !important;
 }
-.rbc-header.rbc-today{
+
+.rbc-header.rbc-today {
   background: #eaf6ff;
   color: #5272E9;
 }
-.rbc-current-time-indicator{
-  background: #5272E9!important;
-  height: 2px!important;
+
+.rbc-current-time-indicator {
+  background: #5272E9 !important;
+  height: 2px !important;
 }
-.rbc-header{
-  padding-bottom: 20px!important;
+
+.rbc-header {
+  padding-bottom: 20px !important;
 }
-.rbc-show-more{
-  color: #5272E9!important;
+
+.rbc-show-more {
+  color: #5272E9 !important;
+}
+
+#rfs-btn {
+  width: 100%;
+  color: #686868;
+  background-color: #FBFBFB;
+  border: 1px solid #DCDBDB;
+  border-radius: 0.5rem;
+  font-size: 16px;
 }

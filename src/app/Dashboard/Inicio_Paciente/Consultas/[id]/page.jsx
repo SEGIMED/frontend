@@ -84,7 +84,7 @@ const DetallePaciente = (id) => {
                     <Consulta title={"Datos del paciente"} paciente={patient} />
                     <InputConsulta title={"Antecedentes"} risk={["Riesgo cardiovascular", "Riesgo quirúrgico", "Grupo HTP"]}
                         options={["Bajo", "Medio", "Alto", " Muy Alto"]}
-                        subtitle={["Antecedentes quirúrgicos", "Antecedentes patologicos", "Antecedentes no patologicos", "Antecedentes familiares", "Antecedentes de infancia", "Alergias", "Medicamentos actuales", "Vacunas"]}
+                        subtitle={["Antecedentes quirúrgicos", "Antecedentes patologicos", "Antecedentes no patologicos", "Antecedentes familiares", "Antecedentes de juventud", "Alergias", "Medicamentos actuales", "Vacunas"]}
                     />
                     <InputConsulta title={"Anamnesis"} subtitle={["Motivo de consulta", "Evolucion de la enfermedad", "Sintomas"]} />
                     <Consulta title={"Signos vitales"} paciente={patient} />
