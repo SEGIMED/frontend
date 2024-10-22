@@ -5,8 +5,6 @@ import { Slider, Button } from "@nextui-org/react";
 import ButtonNext from "@/components/consulta/button";
 import DropNext from "@/components/consulta/dropdown";
 import IconConsulta from "@/components/icons/IconConsulta";
-import Image from "next/image";
-import circleData from "@/components/images/circleData.png";
 import IconDolor from "@/components/icons/IconDolor";
 import IconDolor2 from "@/components/icons/IconDolor2";
 import { useAppDispatch } from "@/redux/hooks";
@@ -260,7 +258,7 @@ export default function CuerpoPatient() {
                         <IconDolor />
                       </span>
                       <Slider
-                        className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
+                        className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center max-w-md"
                         aria-label="Nivel de dolor"
                         size="lg"
                         step={1}
@@ -312,7 +310,6 @@ export default function CuerpoPatient() {
                           },
                         ]}
                         defaultValue={1}
-                        className="max-w-md"
                         showTooltip={true}
                       />
                       <span className="h-12">
