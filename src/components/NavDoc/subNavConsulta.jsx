@@ -51,7 +51,7 @@ export default function SubNavbarConsulta({ id, handleClic, actualTab }) {
   };
 
   return (
-    <div className="border-b border-b-[#cecece] bg-[#fafafc] flex w-full  flex-row items-center ">
+    <div className="border-y border-y-[#cecece] bg-[#fafafc] flex w-full  flex-row items-center ">
       <Navbar
         className="flex justify-start items-center w-[86%] md:w-full bg-[#fafafc] cursor-pointer"
         classNames={{
@@ -75,14 +75,13 @@ export default function SubNavbarConsulta({ id, handleClic, actualTab }) {
         <NavbarContent className="gap-0 w-full px-0 overflow-x-auto md:flex hidden ">
           <NavbarItem
             className="flex items-center gap-2"
-            onClick={() => handleClic("Consulta")}>
-            <IconSubNavbar /> Consulta
+            onClick={() => handleClic("Historia Clínica")}>
+            <IconSubNavbar /> Historia Clínica
           </NavbarItem>
-
           <NavbarItem
-            className="flex items-center gap-2"
-            onClick={() => handleClic("Preconsulta")}>
-            <IconSubNavbar /> Preconsulta
+            className="flex items-center gap-2 "
+            onClick={() => handleClic("Antecedentes")}>
+            <IconClinicalHistory /> Antecedentes
           </NavbarItem>
           <NavbarItem
             className="flex items-center gap-2 "
@@ -91,9 +90,9 @@ export default function SubNavbarConsulta({ id, handleClic, actualTab }) {
           </NavbarItem>
 
           <NavbarItem
-            className="flex items-center gap-2 "
-            onClick={() => handleClic("Antecedentes")}>
-            <IconClinicalHistory /> Antecedentes
+            className="flex items-center gap-2"
+            onClick={() => handleClic("Preconsulta")}>
+            <IconSubNavbar /> Preconsulta
           </NavbarItem>
         </NavbarContent>
         <NavbarContent className="gap-0 px-0 overflow-x-auto md:hidden flex">
@@ -103,12 +102,12 @@ export default function SubNavbarConsulta({ id, handleClic, actualTab }) {
                 <Button
                   style={{
                     color: "#686868",
-                    fontWeight: 400,
-                    fontSize: 16,
+                    fontWeight: 700,
+                    fontSize: 18,
                     border: "0",
                   }}
                   variant="bordered"
-                  onClick={() => setOpenDetails(!openDetails)}>
+                  onPress={() => setOpenDetails(!openDetails)}>
                   {actualTab}
                   {openDetails ? (
                     <IconArrowDetailUp />
@@ -120,28 +119,31 @@ export default function SubNavbarConsulta({ id, handleClic, actualTab }) {
               <DropdownMenu aria-label="Static Actions">
                 <DropdownItem key="new1">
                   <div
-                    className="w-full"
-                    onClick={() => handleClic("Consulta")}>
-                    <p>Consulta</p>
+                    className="font-semibold  text-lg w-full"
+                    onClick={() => handleClic("Historia Clínica")}>
+                    <p>Historia clínica</p>
                   </div>
                 </DropdownItem>
-                <DropdownItem key="copy1">
-                  <div onClick={() => handleClic("Preconsulta")}>
-                    <p>Preconsulta</p>
+                <DropdownItem key="new">
+                  <div
+                    className="font-semibold  text-lg w-full"
+                    onClick={() => handleClic("Antecedentes")}>
+                    <p>Antecedentes</p>
                   </div>
                 </DropdownItem>
                 <DropdownItem key="copy2">
                   <div
                     onClick={() => handleClic("Estudios")}
-                    className="w-full">
+                    className="font-semibold  text-lg w-full">
                     <p>Estudios</p>
                   </div>
                 </DropdownItem>
-                <DropdownItem key="new">
+
+                <DropdownItem key="copy1">
                   <div
-                    className="w-full"
-                    onClick={() => handleClic("Antecedentes")}>
-                    <p>Antecedentes</p>
+                    onClick={() => handleClic("Preconsulta")}
+                    className="font-semibold  text-lg w-full">
+                    <p>Preconsulta</p>
                   </div>
                 </DropdownItem>
               </DropdownMenu>

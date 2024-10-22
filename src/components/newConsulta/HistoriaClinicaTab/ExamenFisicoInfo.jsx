@@ -13,6 +13,9 @@ export default function ExamenFisicoInfo({
 }) {
   const handleSubsistemas = (value) => {
     onExamenFisicoChange("useSubsystems", value === "Si");
+    if (value === "No") {
+      onExamenFisicoChange("selectedSubsystem", "");
+    }
   };
 
   const handleOptionChange = (selectedOption) => {
@@ -29,6 +32,7 @@ export default function ExamenFisicoInfo({
             name={"subsistemas"}
             handleSelection={(value) => handleSubsistemas(value)}
             defaultValue={examenFisico?.useSubsystems ? "Si" : "No"}
+            selectedOptions={examenFisico?.useSubsystems}
           />
         </div>
         {/* Select para seleccionar subsistema */}
@@ -36,25 +40,32 @@ export default function ExamenFisicoInfo({
           <div className="w-full max-w-md mt-4">
             {/* Select de NextUI para seleccionar el subsistema */}
             <Select
+              aria-label="Selecciona subsistema"
               placeholder="Seleccione un subsistema"
-              value={examenFisico.selectedSubsystem || ""}
+              value={examenFisico?.selectedSubsystem || ""}
               onValueChange={handleOptionChange}
               onChange={handleOptionChange}
               className="w-full">
-              <SelectItem key="Sistema Cardiovascular">
+              <SelectItem key="Sistema Cardiovascular" aria-label="cardio">
                 Sistema Cardiovascular
               </SelectItem>
-              <SelectItem key="Sistema Respiratorio">
+              <SelectItem key="Sistema Respiratorio" aria-label="respiratorio">
                 Sistema Respiratorio
               </SelectItem>
-              <SelectItem key="Sistema Neurológico">
+              <SelectItem key="Sistema Neurológico" aria-label="neurologico">
                 Sistema Neurológico
               </SelectItem>
-              <SelectItem key="Sistema Digestivo">Sistema Digestivo</SelectItem>
-              <SelectItem key="Sistema Osteomuscular">
+              <SelectItem key="Sistema Digestivo" aria-label="digestivo">
+                Sistema Digestivo
+              </SelectItem>
+              <SelectItem
+                key="Sistema Osteomuscular"
+                aria-label="osteomuscular">
                 Sistema Osteomuscular
               </SelectItem>
-              <SelectItem key="Sistema Endocrino">Sistema Endocrino</SelectItem>
+              <SelectItem key="Sistema Endocrino" aria-label="endocrino">
+                Sistema Endocrino
+              </SelectItem>
               <SelectItem key="Sistema Reproductor y Urológico">
                 Sistema Reproductor y Urológico
               </SelectItem>
@@ -75,6 +86,7 @@ export default function ExamenFisicoInfo({
         )}
         <div className="flex flex-col w-full gap-2 py-2 ">
           <textarea
+            aria-label="input-description"
             className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-white border border-[#DCDBDB] rounded-lg px-3 py-3 outline-[#a8a8a8]"
             placeholder="Describa toda la información posible"
             value={examenFisico.description || ""}

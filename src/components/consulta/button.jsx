@@ -68,6 +68,7 @@ export default function ButtonNext({
         {options?.map((opcion, index) => (
           <Button
             variant="bordered"
+            aria-label="button"
             key={index}
             style={{
               backgroundColor: selectedOption === opcion ? "#487FFA" : "white",

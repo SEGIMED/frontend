@@ -7,51 +7,45 @@ import { setFormData } from "@/redux/slices/user/preconsultaFormSlice";
 import getPreConsultation from "@/utils/dataFetching/fetching/getPreconsultation";
 import { DraftFormat } from "@/utils/formatResponse";
 import getSchedule from "@/utils/dataFetching/fetching/getSchedule";
+import PreconsultaInfo from "@/components/newConsulta/PreconsultaTab/PreconsultaInfo";
+import LoadingFallback from "@/components/loading/loading";
 
 export default function PrePte({ params }) {
-  const dispatch = useAppDispatch();
   const [preconsult, setPreconsult] = useState(null);
-  const [schedule, setSchedule]=useState()
-  // Función para obtener la preconsulta desde el servidor
-  const fetchPreconsultation = async (scheduleId) => {
+  const [schedule, setSchedule] = useState();
+  const [loading, setLoading] = useState(false);
+  const fetchSchedule = async (scheduleId) => {
     try {
-      const response = await getPreConsultation(scheduleId);
-      setPreconsult(response.data);
-    
-      if (response.data) {
-        const formatPreconsult = DraftFormat(response.data);
-       
-        dispatch(setFormData(formatPreconsult));
-      } else {
-        dispatch(FormDataUtil)
-      }
+      setLoading(true);
+      const response = await getSchedule(scheduleId);
+
+      if (response.data) setSchedule(response.data[0]);
+      setLoading(false);
     } catch (error) {
-      console.error("Este agendamiento no tiene preconsulta", error);
+      console.error(error.message);
     }
   };
-  const fetchSchedule= async (scheduleId)=>{
-    try {
-        const response= await getSchedule(scheduleId)
-        
-        if (response.data) setSchedule(response.data[0])
-    } catch (error) {
-        console.error(error.message)
-    }
-  }
-
 
   // Se ejecuta solo al cargar el componente
   useEffect(() => {
-    fetchPreconsultation(Number(params.id));
     fetchSchedule(Number(params.id));
   }, []);
 
-  
- 
-
   return (
     <>
-      <PreconsultaPte params={Number(params.id)} preconsult={preconsult} schedule={schedule} />
+      {schedule ? (
+        <PreconsultaInfo
+          medicalEventId={schedule?.medicalEvent?.id}
+          scheduleId={schedule?.id}
+          showSignosVitales={false}
+        />
+      ) : (
+        <div className="flex justify-center items-center">
+          <LoadingFallback className="w-10 h-10" />
+        </div>
+      )}
+
+      {/* <PreconsultaPte params={Number(params.id)} preconsult={preconsult} schedule={schedule} /> */}
     </>
   );
 }
