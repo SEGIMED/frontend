@@ -168,6 +168,53 @@ const EstudiosTab = ({
       });
     }
   };
+
+  const handleDelete = async (row) => {
+    const { id } = row;
+    Swal.fire({
+      title: "¿Está seguro?",
+      text: "Esta seguro que desea eliminar este estudio?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Realizar la petición DELETE
+          await ApiSegimed.delete(`/patient-studies?id=${id}`);
+
+          // Después de la petición DELETE, hacer un GET para obtener los estudios del paciente usando query parameters
+          const getResponse = await ApiSegimed.get(
+            `/patient-studies?userId=${patientId}&scheduleId=${scheduleId}`
+          );
+
+          // Setear los datos obtenidos en setImportaciones
+          if (getResponse.data) {
+            setImportacionesData(getResponse.data);
+          }
+
+          Swal.fire({
+            icon: "success",
+            title: "Éxito",
+            text: "El estudio se eliminó correctamente",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+          });
+        } catch (error) {
+          console.error("Error al eliminar el estudio:", error.message);
+          Swal.fire({
+            title: "Error",
+            text: "No pudo eliminarse el estudio, intente más tarde",
+            icon: "error",
+            confirmButtonColor: "#487FFA",
+            confirmButtonText: "Aceptar",
+          });
+        }
+      }
+    });
+  };
   return (
     <div>
       <Accordion
@@ -245,6 +292,13 @@ const EstudiosTab = ({
                               ...prev,
                               file: true,
                             }));
+                          },
+                        },
+                        {
+                          label: "Eliminar estudio",
+                          icon: <IconImportar color={"#B2B2B2"} />,
+                          onClick: () => {
+                            handleDelete(row);
                           },
                         },
                       ].filter(Boolean),
