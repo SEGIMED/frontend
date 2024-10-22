@@ -64,9 +64,8 @@ export default function HomeDoc() {
 
   useEffect(() => {
     try {
-      if (reload)
-        getSchedulesByUserId();
-      setReload(false)
+      if (reload) getSchedulesByUserId();
+      setReload(false);
     } catch (error) {
       console.log(error);
     }
@@ -153,7 +152,7 @@ export default function HomeDoc() {
   };
   const columns = [
     {
-      label: "Nombre",
+      label: "Paciente",
       key: "patientUser.name",
       showMobile: true,
       width: "w-8",

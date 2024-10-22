@@ -9,6 +9,8 @@ import NotFound from "../notFound/notFound";
 import SkeletonList from "../skeletons/HistorialSkeleton";
 import { specialitySwitch } from "@/utils/medicalSpecialitys";
 import { healthCenterSwitch } from "@/utils/healthCenters";
+import Link from "next/link";
+import rutas from "@/utils/rutas";
 
 //Ejemplo con consulta (data)
 // [{
@@ -117,7 +119,14 @@ function DynamicTable({
   };
 
   const formatPatientName = (row) => {
-    return `${row.patientUser.name} ${row.patientUser.lastname}`;
+    return (
+      <Link
+        href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${row.patient}`}>
+        <p className="text-start text-[#686868] font-normal text-base leading-6">
+          {row.patientUser.name} {row.patientUser.lastname}
+        </p>
+      </Link>
+    );
   };
   const formatMedicoName = (row) => {
     return `${row.physician.name} ${row.physician.lastname}`;
