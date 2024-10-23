@@ -75,7 +75,7 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
   const router = useRouter(); // Use the useRouter hook
 
   const getUser = async (headers) => {
-    const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
+    const response = await ApiSegimed.get(`/profile`, headers);
     // const response = await ApiSegimed.get(`/physician-info?id=4`, headers);
 
     if (response.data) {
@@ -216,11 +216,11 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
       }
     }
   }, []);
-
+  console.log(user);
   useEffect(() => {
     if (user.name)
       if (!user.medicalRegistries?.Nacional?.registryId) {
-        router.push(rutas.Doctor)
+        router.push(rutas.Doctor);
         setIsModalOpen(true);
       }
   }, [user]);
@@ -340,9 +340,10 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
 
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-            }`}>
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -358,7 +359,12 @@ export const SideDoctor = ({ search, toggleSidebar }) => {
           />
         )}
       </div>
-      <ModalBoarding isOpen={isModalOpen} onClose={closeModal} rol={"Medico"} setOnboarding={setOnboarding} />
+      <ModalBoarding
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        rol={"Medico"}
+        setOnboarding={setOnboarding}
+      />
     </div>
   );
 };

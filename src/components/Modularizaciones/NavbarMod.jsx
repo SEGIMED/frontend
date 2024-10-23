@@ -46,7 +46,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
   const id = Cookies.get("c");
   const token = Cookies.get("a");
-
   const refreshToken = Cookies.get("d");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,12 +58,12 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     if (!user.name || !rol) return;
 
     if (rol === "Médico") {
-      if (!user.medicalRegistries?.Nacional?.registryId) {
+      if (!user?.physicianMedicalRegistries[0]?.registryId) {
         router.push(rutas.Doctor);
         setIsModalOpen(true);
       }
     } else if (rol === "Paciente") {
-      if (!user.sociodemographicDetails?.genre) {
+      if (!user.socDemDet?.genre) {
         router.push(rutas.PacienteDash);
         setIsModalOpen(true);
       }
@@ -348,17 +347,21 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             {rol === "Médico"
               ? "Médico"
               : rol === "Paciente"
-                ? "Paciente"
-                : rol === "Admin"
-                  ? "Administrador"
-                  : ""}
+              ? "Paciente"
+              : rol === "Admin"
+              ? "Administrador"
+              : ""}
           </span>
         </div>
         <button
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
-            }`}>
-          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#B2B2B2"} />
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+          }`}>
+          <IconChat
+            className="w-6 h-6"
+            color={showChats || hasUnreadMessages ? "white" : "#B2B2B2"}
+          />
         </button>
         {showChats && (
           <MensajesContainer
@@ -369,9 +372,10 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         )}
         <button
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-            }`}>
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={

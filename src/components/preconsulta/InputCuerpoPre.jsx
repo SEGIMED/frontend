@@ -9,9 +9,6 @@ import Image from "next/image";
 import circleData from "@/components/images/circleData.png";
 import IconDolor from "../icons/IconDolor";
 import IconDolor2 from "../icons/IconDolor2";
-import { useFormContext } from "react-hook-form";
-import { updateBodyPainLevel } from "@/redux/slices/user/preconsultaFormSlice";
-import { useAppDispatch } from "@/redux/hooks";
 import IconArrowDetailDown from "../icons/IconArrowDetailDown";
 import ButtonNextPreconsultationWorst from "./ButtonWorstPaintOfYourLife";
 import LoadingFallback from "../loading/loading";
@@ -21,18 +18,14 @@ export default function InputCuerpoPre({
   onBodyChange,
   bodySection,
   defaultOpen = false,
-  valuePreconsultation,
-  flag= false
+  flag = false,
+  isReadOnly = false,
 }) {
-  
   const [selectedMuscles, setSelectedMuscles] = useState([]);
   const [isPain, setIsPain] = useState(); // Estado para manejar si hay dolor
   const [selectedMuscleName, setSelectedMuscleName] = useState("");
   const [musclesObject, setMusclesObject] = useState({});
   const [modelType, setModelType] = useState("anterior");
-  const [painLevel, setPainLevel] = useState(1);
- 
-  const { register } = useFormContext();
   const muscleTranslations = {
     /* Back */
     trapezius: "Trapecio",
@@ -119,27 +112,37 @@ export default function InputCuerpoPre({
   };
   useEffect(() => {
     const getMuscleNames = (painAreas) => {
+      const newMusclesArray = []; // This will store all active muscles
       if (painAreas) {
-        const muscleData = painAreas.map((area) => ({
-          name: "Musculo",
-          muscles: area.painArea ? [painAreaMapIngles[area.painArea]] : [],
-          painNotes: area.painNotes,
-        }));
-        setSelectedMuscles(muscleData);
+        Object.keys(painAreas).forEach((key) => {
+          if (painAreas[key].active) {
+            // Collect muscles under one object with 'muscles' array
+            newMusclesArray.push(key); // Use the key directly (like "abs", "quadriceps", etc.)
+          }
+        });
+      }
+
+      // Merge new muscles with existing selected muscles
+      if (newMusclesArray.length > 0) {
+        setSelectedMuscles((prevSelectedMuscles) => {
+          // If there are previous muscles selected, merge them
+          const existingMuscles =
+            prevSelectedMuscles.length > 0
+              ? prevSelectedMuscles[0].muscles
+              : [];
+
+          // Create a new array combining existing muscles and the new ones
+          const updatedMuscles = [
+            ...new Set([...existingMuscles, ...newMusclesArray]),
+          ];
+
+          return [{ muscles: updatedMuscles }];
+        });
       }
     };
 
-    getMuscleNames(
-      valuePreconsultation?.provisionalPreConsultationPainMap?.painAreas
-    );
-    setIsPain(
-      valuePreconsultation?.provisionalPreConsultationPainMap?.isTherePain
-    );
-    setPainLevel(
-      valuePreconsultation?.provisionalPreConsultationPainMap?.painScale
-    );
-  }, [valuePreconsultation]);
-  
+    getMuscleNames(bodySection?.painAreas);
+  }, [bodySection]);
   useEffect(() => {
     const colors = {
       1: "text-green-500",
@@ -166,9 +169,10 @@ export default function InputCuerpoPre({
     const timeoutId = setTimeout(applyColors, 100);
 
     return () => clearTimeout(timeoutId); // Cleanup on unmount
-  }, [isPain, painLevel]);
+  }, [isPain, bodySection?.painScale]);
 
   const handleClick = ({ muscle }) => {
+    if (isReadOnly) return;
     const prevMusc = [...selectedMuscles];
     const existingData = prevMusc.length > 0 ? prevMusc[0] : { muscles: [] };
     let updatedMuscles;
@@ -227,6 +231,7 @@ export default function InputCuerpoPre({
   };
 
   const handleDescription = (description, muscle) => {
+    if (isReadOnly) return;
     // agregamos una descripción del dolor muscular que seleccionamos
     setMusclesObject({
       ...musclesObject,
@@ -249,299 +254,273 @@ export default function InputCuerpoPre({
       },
     });
   };
-  console.log(selectedMuscles)
   const handlePainSelection = (selection) => {
+    if (isReadOnly) return;
     // setea si hay dolor o no
     setIsPain(selection);
   };
 
   const handleModelTypeChange = (type) => {
+    if (isReadOnly) return;
     // para dar vuelta el cuerpo
     if (type === "Frente") setModelType("anterior");
     else setModelType("posterior");
   };
 
   const handleChangePainLevel = (value) => {
-    // el slide de la escala de dolor
-    setPainLevel(value);
+    if (isReadOnly) return;
     onBodyChange("painScale", value);
   };
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="flex flex-col">
-         {flag ? (
+      {flag ? (
         <div className="flex items-center justify-center h-20">
-        <LoadingFallback />
-      </div>
-      ) :
-      (
+          <LoadingFallback />
+        </div>
+      ) : (
         <details open={defaultOpen}>
-        <summary
-          className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer"
-          onClick={() => setIsOpen(!isOpen)}>
-          <div />
-          <div className="flex items-center">
-            <Image src={circleData} alt="" />
-            <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
-              {title}
-             
-            </p>
-          </div>
-          <div className={isOpen || defaultOpen === true ? "rotate-180" : ""}>
-            <IconArrowDetailDown />
-          </div>
-        </summary>
-        <div className="flex flex-col items-center justify-center w-full md:flex-row md:items-start ">
-          <div className="flex flex-col items-center justify-center w-full h-full py-4 md:w-1/2">
-            <div className="items-center justify-center ">
-              <ButtonNextPreconsultation
-                onBodyChange={onBodyChange}
-                options={[
-                  { value: "Frente", text: "Frente" },
-                  { value: "Dorso", text: "Dorso" },
-                ]}
-                handleSelection={handleModelTypeChange}
-                name={"modelType"}
-              />
+          <summary
+            className="flex items-center justify-between h-16 gap-1 px-6 bg-white border cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}>
+            <div />
+            <div className="flex items-center">
+              <Image src={circleData} alt="" />
+              <p className="text-start text-[#5F5F5F] font-bold text-base leading-5">
+                {title}
+              </p>
             </div>
-            <div>
-              <Model
-                data={selectedMuscles}
-                style={{ width: "20rem", padding: "3rem" }}
-                onClick={handleClick}
-                type={modelType}
-              />
+            <div className={isOpen || defaultOpen === true ? "rotate-180" : ""}>
+              <IconArrowDetailDown />
             </div>
-
-            {selectedMuscles.length > 0 &&
-              selectedMuscles[0].muscles.map((muscle, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col gap-2 w-full py-3 px-7 border-b border-b-[#cecece]">
-                  <label
-                    className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
-                    htmlFor={`muscle-note-${index}`}>
-                    <IconConsulta />
-                    {muscleTranslations[muscle]}
-                  </label>
-                  <textarea
-                    
-                    {...register(muscleTranslations[muscle])}
-                    onChange={(e) => handleDescription(e.target.value, muscle)}
-                    className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
-                    placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`}
-                  
-                  />
-                </div>
-              ))}
-          </div>
-          <div className="sticky top-0 items-center w-full md:w-1/2">
-            <div className="flex flex-col items-center gap-3 py-4 md:items-start ">
-              <div>
+          </summary>
+          <div className="flex flex-col items-center justify-center w-full md:flex-row md:items-start ">
+            <div className="flex flex-col items-center justify-center w-full h-full py-4 md:w-1/2">
+              <div className="items-center justify-center ">
                 <ButtonNextPreconsultation
                   onBodyChange={onBodyChange}
-                  text={"¿Hay dolor?"}
-                  selectedOptions={
-                    isPain
-                  }
                   options={[
-                    { value: true, text: "Si" },
-                    { value: false, text: "No" },
+                    { value: "Frente", text: "Frente" },
+                    { value: "Dorso", text: "Dorso" },
                   ]}
-                  handleSelection={handlePainSelection}
-                  name={"isTherePain"}
+                  handleSelection={handleModelTypeChange}
+                  name={"modelType"}
                 />
               </div>
-              {bodySection?.isTherePain ||
-              valuePreconsultation?.provisionalPreConsultationPainMap
-                ?.isTherePain ? (
-                <>
-                  <div>
-                    <ButtonNextPreconsultation
-                      onBodyChange={onBodyChange}
-                      text={"¿Desde hace cuánto tiempo tiene el dolor?"}
-                      selectedOptions={
-                        bodySection?.painDuration ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.painDuration
+              <div>
+                <Model
+                  data={selectedMuscles}
+                  style={{ width: "20rem", padding: "3rem" }}
+                  onClick={handleClick}
+                  type={modelType}
+                />
+              </div>
+
+              {selectedMuscles.length > 0 &&
+                selectedMuscles[0]?.muscles?.map((muscle, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col gap-2 w-full py-3 px-7 border-b border-b-[#cecece]">
+                    <label
+                      className="text-start text-[#686868] font-medium text-base leading-4 flex gap-2 items-center"
+                      htmlFor={`muscle-note-${index}`}>
+                      <IconConsulta />
+                      {muscleTranslations[muscle]}
+                    </label>
+                    <textarea
+                      onChange={(e) =>
+                        handleDescription(e.target.value, muscle)
                       }
-                      options={[
-                        { value: 1, text: "Horas" },
-                        { value: 2, text: "Días" },
-                        { value: 3, text: "Semana" },
-                      ]}
-                      name={"painDuration"}
+                      value={bodySection?.painAreas?.[muscle]?.painNotes}
+                      className="w-full h-20 text-start text-[#686868] font-normal text-base leading-6 bg-[#FBFBFB] border border-[#DCDBDB] rounded-lg px-4 py-1 outline-[#a8a8a8]"
+                      placeholder={`Ingrese aquí sus anotaciones sobre el ${muscleTranslations[muscle]}`}
                     />
                   </div>
-                  <div className="w-[90%] md:w-[80%]  flex flex-col">
-                    <div className="flex items-center space-x-2">
-                      <span className="h-12">
-                        <IconDolor />
-                      </span>
-                      <Slider
-                        aria-label="Nivel de dolor"
-                        size="lg"
-                        step={1}
-                        value={painLevel}
-                        onChange={handleChangePainLevel}
-                        showSteps={true}
-                        maxValue={10}
-                        minValue={1}
-                        marks={[
-                          {
-                            value: 1,
-                            label: "1",
-                          },
-                          {
-                            value: 2,
-                            label: "2",
-                          },
-                          {
-                            value: 3,
-                            label: "3",
-                          },
-                          {
-                            value: 4,
-                            label: "4",
-                          },
-                          {
-                            value: 5,
-                            label: "5",
-                          },
-                          {
-                            value: 6,
-                            label: "6",
-                          },
-                          {
-                            value: 7,
-                            label: "7",
-                          },
-                          {
-                            value: 8,
-                            label: "8",
-                          },
-                          {
-                            value: 9,
-                            label: "9",
-                          },
-                          {
-                            value: 10,
-                            label: "10",
-                          },
+                ))}
+            </div>
+            <div className="sticky top-0 items-center w-full md:w-1/2">
+              <div className="flex flex-col items-center gap-3 py-4 md:items-start ">
+                <div>
+                  <ButtonNextPreconsultation
+                    disabled={isReadOnly}
+                    onBodyChange={onBodyChange}
+                    text={"¿Hay dolor?"}
+                    selectedOptions={bodySection?.isTherePain}
+                    options={[
+                      { value: true, text: "Si" },
+                      { value: false, text: "No" },
+                    ]}
+                    handleSelection={handlePainSelection}
+                    name={"isTherePain"}
+                  />
+                </div>
+                {bodySection?.isTherePain ? (
+                  <>
+                    <div>
+                      <ButtonNextPreconsultation
+                        disabled={isReadOnly}
+                        onBodyChange={onBodyChange}
+                        text={"¿Desde hace cuánto tiempo tiene el dolor?"}
+                        selectedOptions={bodySection?.painDuration}
+                        options={[
+                          { value: 1, text: "Horas" },
+                          { value: 2, text: "Días" },
+                          { value: 3, text: "Semana" },
                         ]}
-                        defaultValue={1}
-                        className="max-w-md"
-                        showTooltip={true}
+                        name={"painDuration"}
                       />
-                      <span className="h-12">
-                        <IconDolor2 />
-                      </span>
                     </div>
-                  </div>
-                  <div>
-                    <DropNextPreconsultation
-                      onBodyChange={onBodyChange}
-                      text={"Tipo de dolor"}
-                      selectedOptions={
-                        bodySection?.painType ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.painType
-                      }
-                      options={[
-                        { value: 1, text: "Opresión" },
-                        { value: 2, text: "Punzante" },
-                        { value: 3, text: "Cólico (va y viene)" },
-                        { value: 4, text: "Quemante" },
-                        { value: 5, text: "Molestia" },
-                        { value: 6, text: "Eléctrico" },
-                        { value: 7, text: "Desgarro" },
-                        { value: 8, text: "Cansancio" },
-                        { value: 9, text: "Irritante" },
-                        { value: 10, text: "Pulsátil" },
-                        { value: 11, text: "Taladreante" },
-                      ]}
-                      text2={"Seleccione tipo de dolor"}
-                      name={"painType"}
-                    />
-                  </div>
-                  <div>
-                    <ButtonNextPreconsultation
-                      onBodyChange={onBodyChange}
-                      text={"¿Tomó analgésicos?"}
-                      selectedOptions={
-                        bodySection?.isTakingAnalgesic ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.isTakingAnalgesic
-                      }
-                      options={[
-                        { value: true, text: "Si" },
-                        { value: false, text: "No" },
-                      ]}
-                      name={"isTakingAnalgesic"}
-                    />
-                  </div>
-                  <div>
-                    <ButtonNextPreconsultation
-                      onBodyChange={onBodyChange}
-                      text={"¿Calma con analgésicos?"}
-                      selectedOptions={
-                        bodySection?.doesAnalgesicWorks ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap?.doesAnalgesicWorks
-                      }
-                      options={[
-                        { value: true, text: "Si" },
-                        { value: false, text: "No" },
-                      ]}
-                      name={"doesAnalgesicWorks"}
-                    />
-                  </div>
-                  <div>
-                    <DropNextPreconsultation
-                      onBodyChange={onBodyChange}
-                      text={"Frecuencia del dolor"}
-                      selectedOptions={
-                        bodySection?.painFrequency ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.painFrequency
-                      }
-                      options={[
-                        { value: 1, text: "De vez en cuando" },
-                        { value: 2, text: "Algunas veces" },
-                        { value: 3, text: "Intermitente" },
-                        { value: 4, text: "Muchas veces" },
-                        { value: 5, text: "Siempre" },
-                      ]}
-                      text2={"Seleccione frecuencia"}
-                      name={"painFrequency"}
-                    />
-                  </div>
-                  <div>
-                    <ButtonNextPreconsultationWorst
-                      onBodyChange={onBodyChange}
-                      text={"¿Es el peor dolor de su vida?"}
-                      selectedOptions={
-                        bodySection?.isWorstPainEver ||
-                        valuePreconsultation?.provisionalPreConsultationPainMap
-                          ?.isWorstPainEver
-                      }
-                      worstPainOfYourLife
-                      options={[
-                        { value: true, text: "Si" },
-                        { value: false, text: "No" },
-                      ]}
-                      name={"isWorstPainEver"}
-                    />
-                  </div>
-                </>
-              ) : null}
+                    <div className="w-[90%] md:w-[80%]  flex flex-col">
+                      <div className="flex items-center space-x-2">
+                        <span className="h-12">
+                          <IconDolor />
+                        </span>
+                        <Slider
+                          aria-label="Nivel de dolor"
+                          size="lg"
+                          step={1}
+                          value={bodySection?.painScale}
+                          onChange={handleChangePainLevel}
+                          showSteps={true}
+                          maxValue={10}
+                          minValue={1}
+                          marks={[
+                            {
+                              value: 1,
+                              label: "1",
+                            },
+                            {
+                              value: 2,
+                              label: "2",
+                            },
+                            {
+                              value: 3,
+                              label: "3",
+                            },
+                            {
+                              value: 4,
+                              label: "4",
+                            },
+                            {
+                              value: 5,
+                              label: "5",
+                            },
+                            {
+                              value: 6,
+                              label: "6",
+                            },
+                            {
+                              value: 7,
+                              label: "7",
+                            },
+                            {
+                              value: 8,
+                              label: "8",
+                            },
+                            {
+                              value: 9,
+                              label: "9",
+                            },
+                            {
+                              value: 10,
+                              label: "10",
+                            },
+                          ]}
+                          defaultValue={1}
+                          className="max-w-md"
+                          showTooltip={true}
+                        />
+                        <span className="h-12">
+                          <IconDolor2 />
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <DropNextPreconsultation
+                        disabled={isReadOnly}
+                        onBodyChange={onBodyChange}
+                        text={"Tipo de dolor"}
+                        selectedOptions={bodySection?.painType}
+                        options={[
+                          { value: 1, text: "Opresión" },
+                          { value: 2, text: "Punzante" },
+                          { value: 3, text: "Cólico (va y viene)" },
+                          { value: 4, text: "Quemante" },
+                          { value: 5, text: "Molestia" },
+                          { value: 6, text: "Eléctrico" },
+                          { value: 7, text: "Desgarro" },
+                          { value: 8, text: "Cansancio" },
+                          { value: 9, text: "Irritante" },
+                          { value: 10, text: "Pulsátil" },
+                          { value: 11, text: "Taladreante" },
+                        ]}
+                        text2={"Seleccione tipo de dolor"}
+                        name={"painType"}
+                      />
+                    </div>
+                    <div>
+                      <ButtonNextPreconsultation
+                        disabled={isReadOnly}
+                        onBodyChange={onBodyChange}
+                        text={"¿Tomó analgésicos?"}
+                        selectedOptions={bodySection?.isTakingAnalgesic}
+                        options={[
+                          { value: true, text: "Si" },
+                          { value: false, text: "No" },
+                        ]}
+                        name={"isTakingAnalgesic"}
+                      />
+                    </div>
+                    {/* <div>
+                      <ButtonNextPreconsultation
+                        onBodyChange={onBodyChange}
+                        text={"¿Calma con analgésicos?"}
+                        selectedOptions={bodySection?.doesAnalgesicWorks}
+                        options={[
+                          { value: true, text: "Si" },
+                          { value: false, text: "No" },
+                        ]}
+                        name={"doesAnalgesicWorks"}
+                      />
+                    </div> */}
+                    <div>
+                      <DropNextPreconsultation
+                        disabled={isReadOnly}
+                        onBodyChange={onBodyChange}
+                        text={"Frecuencia del dolor"}
+                        selectedOptions={bodySection?.painFrequency}
+                        options={[
+                          { value: 1, text: "De vez en cuando" },
+                          { value: 2, text: "Algunas veces" },
+                          { value: 3, text: "Intermitente" },
+                          { value: 4, text: "Muchas veces" },
+                          { value: 5, text: "Siempre" },
+                        ]}
+                        text2={"Seleccione frecuencia"}
+                        name={"painFrequency"}
+                      />
+                    </div>
+                    <div>
+                      <ButtonNextPreconsultationWorst
+                        disabled={isReadOnly}
+                        onBodyChange={onBodyChange}
+                        text={"¿Es el peor dolor de su vida?"}
+                        selectedOptions={bodySection?.isWorstPainEver}
+                        worstPainOfYourLife
+                        options={[
+                          { value: true, text: "Si" },
+                          { value: false, text: "No" },
+                        ]}
+                        name={"isWorstPainEver"}
+                      />
+                    </div>
+                  </>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
-      </details>
-      )
-      }
-     
+        </details>
+      )}
     </div>
   );
 }
