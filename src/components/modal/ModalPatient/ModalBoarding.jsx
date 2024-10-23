@@ -12,7 +12,6 @@ import Final from "../boarding/Final";
 import Domicilio from "../boarding/Domicilio";
 import CentroDetAtención from "../boarding/CentroDeAtencion";
 import IconCurrentRouteNav from "@/components/icons/IconCurrentRouteNav";
-import Doctor from "../boarding/Doctor";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { mapBoolean } from "@/utils/MapeoCuerpo";
 import MatriculaNumber from "../boarding/Matricula";
@@ -25,6 +24,7 @@ import ObraSocial from "../boarding/ObraSocial";
 import HealthCareNumber from "../boarding/HealthCareNumber";
 import Medicamentos from "../boarding/Medicamentos";
 import PhoneAssistant from "../boarding/PhoneAssistant";
+import Cookies from "js-cookie";
 
 const ProgressBar = ({ steps, currentIndex }) => {
   return (
@@ -44,7 +44,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
   const [index, setIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
   const [catalog, setCatalog] = useState([]);
-
+  const userId = Cookies.get("c");
   const formStateGlobal = useAppSelector(
     (state) => state.formSlice.selectedOptions
   );
@@ -54,7 +54,6 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
   const handleDisabled = () => {
     setDisabled(false);
   };
-
 
   const getCatalog = async () => {
     try {
@@ -217,9 +216,26 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
       setIndex(index + 1);
       setDisabled(true);
     } else {
-      const infoSend = mapBoolean(formStateGlobal);
       console.log(infoSend);
 
+      console.log(formStateGlobal);
+      function transformData(originalData) {
+        // Transformación de la estructura
+        return {
+          ...originalData,
+          genre: originalData.genre, // Asignar el mismo valor de genre
+          birthDate: originalData.birthDate, // Asignar el mismo valor de birthDate
+          address:
+            originalData.address.length > 3 && originalData.address.length < 50
+              ? originalData.address
+              : "Dirección no válida", // Validar longitud de address
+          centerAttention: originalData.centerAttention, // Mantener los mismos centros de atención
+          specialty: [originalData.specialty], // Convertir specialty a un array
+          nacionalRegistration: `NR-${originalData.nacionalRegistration}`, // Añadir prefijo NR-
+          provincialRegistration: `PR-${originalData.provincialRegistration}`, // Añadir prefijo PR-
+        };
+      }
+      const infoSend = transformData(formStateGlobal);
       try {
         await ApiSegimed.patch(
           `/onboarding`,

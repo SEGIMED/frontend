@@ -32,11 +32,23 @@ import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
 import { IconChat } from "../InicioPaciente/IconChat";
 import { setTourstate } from "@/redux/slices/user/tour";
 import IconGuide from "../icons/IconGuide";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
+import Elboton from "../Buttons/Elboton";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
   // const rol = Cookies.get("b");
   const [rol, setRol] = useState(null); // Initialize as null
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [inviteCode, setInviteCode] = useState("");
 
   const notifications = useAppSelector((state) => state.notifications);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -48,7 +60,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   // const adjustedPathname = pathname.startsWith('/Dash') ? pathname.slice(5) : pathname;
   const id = Cookies.get("c");
   const token = Cookies.get("a");
-
   const refreshToken = Cookies.get("d");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -288,6 +299,18 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     router.push(`${Inicio}${rutas.Mensajes}/${id}`);
   };
 
+  const handleShowCode = async () => {
+    try {
+      const response = await ApiSegimed.post(`/physician/token?id=${id}`);
+      if (response.data) {
+        setInviteCode(response.data);
+        onOpen();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between  h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="lg:hidden p-4">
@@ -347,6 +370,48 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         </div>
       )}
       <div className="flex items-center justify-center gap-4">
+        {rol === "Médico" && (
+          <>
+            <Elboton onPress={handleShowCode} nombre="Invitar a un paciente" />
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Código de invitación
+                    </ModalHeader>
+                    <ModalBody>
+                      <span className="text-center font-bold font-Poppins text-2xl">
+                        {inviteCode}
+                      </span>
+                      <div>
+                        <p>Use este código para invitar a un nuevo paciente.</p>
+                        <p className="text-red-500 font-semibold">
+                          Recuerde que el código expira en 5 minutos.
+                        </p>
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button
+                        color="primary"
+                        onPress={() => {
+                          navigator.clipboard.writeText(inviteCode);
+                          Swal.fire({
+                            icon: "success",
+                            title: "Código copiado",
+                            confirmButtonColor: "#487FFA",
+                            confirmButtonText: "Aceptar",
+                          });
+                        }}>
+                        Copiar
+                      </Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
+          </>
+        )}
         <div className="w-12 h-12 flex justify-center items-center">
           <AvatarSideBar
             avatar={user?.avatar !== null ? user.avatar : avatar}
@@ -371,7 +436,10 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           onClick={handleChatClick}
           className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
             }`}>
-          <IconChat className="w-6 h-6" color={(showChats || hasUnreadMessages) ? "white" : "#B2B2B2"} />
+          <IconChat
+            className="w-6 h-6"
+            color={showChats || hasUnreadMessages ? "white" : "#B2B2B2"}
+          />
         </button>
         {showChats && (
           <MensajesContainer

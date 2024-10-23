@@ -18,6 +18,7 @@ import { Fecha, Hora } from "@/utils/NormaliceFechayHora";
 import IconAlarmBlue from "../icons/iconAlarmBlue";
 import { addAlarmsChatbot } from "@/redux/slices/chat/chatBot";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import Link from "next/link";
 
 const PriorityIcon = ({ priority }) => {
   switch (priority) {
@@ -102,9 +103,12 @@ export default function TableAlarm({ alarms, updateAlarms }) {
               </span>
               <div className="text-[#5F5F5F]">{Fecha(alarm?.createdAt)}</div>
               <div className="text-[#5F5F5F]">{Hora(alarm?.createdAt)}</div>
-              <p className=" text-[#686868] font-normal  lg:text-base leading-6  line-clamp-2">
-                {alarm?.patient.name} {alarm?.patient.lastname}
-              </p>
+              <Link
+                href={`${rutas.Doctor}${rutas.Pacientes}${rutas.Historia_Clinica}/${alarm?.patient?.id}`}>
+                <p className=" text-[#686868] font-normal  lg:text-base leading-6  line-clamp-2">
+                  {alarm?.patient.name} {alarm?.patient.lastname}
+                </p>
+              </Link>
 
               {/* <div className="text-[#5F5F5F] hidden lg:block ">
                 {" "}
