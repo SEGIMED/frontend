@@ -40,6 +40,8 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import Elboton from "../Buttons/Elboton";
+import IconNewUsers from "../icons/IconNewUsers";
+import { isUserUsingMobile } from "@/utils/checkMobile";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -300,7 +302,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   };
 
   return (
-    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
+    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-1">
       <div className="lg:hidden p-4">
         <button
           className="text-[#B2B2B2] p-2 border rounded-lg focus:outline-none"
@@ -356,10 +358,26 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           </button>
         </div>
       )}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center lg:gap-4 gap-1">
         {rol === "Médico" && (
           <>
-            <Elboton onPress={handleShowCode} nombre="Invitar a un paciente" />
+            {isUserUsingMobile() ? (
+              <button
+                onClick={handleShowCode}
+                className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center                
+              }`}>
+                <IconNewUsers className="w-8 h-8" />
+              </button>
+            ) : (
+              <Elboton
+                onPress={handleShowCode}
+                nombre="Agregar paciente"
+                classNameText={"hidden md:block"}
+                icon={
+                  <IconNewUsers className={"w-10 md:hidden"} color={"white"} />
+                }
+              />
+            )}
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
               <ModalContent>
                 {(onClose) => (
@@ -399,7 +417,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             </Modal>
           </>
         )}
-        <div className="w-12 h-12 flex justify-center items-center">
+        <div className="w-12 h-12 lg:flex justify-center items-center hidden">
           <AvatarSideBar
             avatar={user?.avatar !== null ? user.avatar : avatar}
           />
