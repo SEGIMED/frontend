@@ -69,7 +69,6 @@ export const FormUser = ({ formData, setFormData }) => {
       const updatedData = {
         ...formData,
         ...data,
-        cellphone: data.cellphonePrefix + data.cellphone,
       };
       setFormData(updatedData);
 
@@ -336,14 +335,14 @@ export const FormUser = ({ formData, setFormData }) => {
             )}
           </div>
           <div className="w-full max-w-96">
-            <label htmlFor="cellphone-prefix">Número de Celular</label>
+            <label htmlFor="areaCode">Número de Celular</label>
 
             <div className="flex">
               {/* Select para el prefijo con banderas */}
               <select
-                id="cellphone-prefix"
-                className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
-                {...register("cellphonePrefix", {
+                id="areaCode"
+                className="w-1/3 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
+                {...register("areaCode", {
                   required: {
                     value: true,
                     message: "* Prefijo requerido *",
@@ -371,7 +370,7 @@ export const FormUser = ({ formData, setFormData }) => {
                 id="cellphone"
                 type="text"
                 placeholder="Ingrese Número de Celular"
-                className="w-3/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
+                className="w-2/3 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
                 {...register("cellphone", {
                   required: {
                     value: true,
@@ -386,9 +385,9 @@ export const FormUser = ({ formData, setFormData }) => {
             </div>
 
             {/* Mostrar errores si existen */}
-            {errors.cellphonePrefix && (
+            {errors.areaCode && (
               <span className="text-red-500 text-sm font-medium">
-                {errors.cellphonePrefix.message}
+                {errors.areaCode.message}
               </span>
             )}
             {errors.cellphone && (
@@ -418,6 +417,28 @@ export const FormUser = ({ formData, setFormData }) => {
               </span>
             )}
           </div>
+          {formData?.role == 3 && (
+            <div className="w-full max-w-96">
+              <label htmlFor="token">Código de invitación:</label>
+              <input
+                placeholder="Ingrese el código de invitación"
+                id="token"
+                className="w-full bg-[#FBFBFB] py-2 px-2 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
+                {...register("token", {
+                  required: {
+                    value: true,
+                    message: "* Este dato es requerido *",
+                  },
+                })}
+              />
+
+              {errors.token && (
+                <span className="text-red-500 text-sm font-medium">
+                  {errors.token.message}
+                </span>
+              )}
+            </div>
+          )}
 
           <div className="w-full max-w-96 flex items-center text-[#487FFA]">
             <input
