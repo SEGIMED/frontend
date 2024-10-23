@@ -417,7 +417,7 @@ export const FormUser = ({ formData, setFormData }) => {
               </span>
             )}
           </div>
-          {formData.role == 3 && (
+          {formData?.role == 3 && (
             <div className="w-full max-w-96">
               <label htmlFor="token">Código de invitación:</label>
               <input
