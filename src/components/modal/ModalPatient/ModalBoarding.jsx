@@ -216,7 +216,6 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
       setIndex(index + 1);
       setDisabled(true);
     } else {
-      console.log(infoSend);
 
       console.log(formStateGlobal);
       function transformData(originalData) {
