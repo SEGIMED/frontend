@@ -166,8 +166,8 @@ const PDFExportHC = ({ patient, consultas, data, user, drugs }) => {
 
                                     <p>{user?.name} {user?.lastname}</p>
                                     <div className='flex justify-center items-center'>
-                                        {user?.physicianSpecialties?.map((specialty) => (
-                                            <span key={specialty.medicalSpecialty}>
+                                        {user?.physicianSpecialties?.map((specialty, index) => (
+                                            <span key={index}>
                                                 {specialty.specialty.name}/
                                             </span>
                                         ))}
