@@ -108,11 +108,11 @@ const PDFExportHC = ({ patient, consultas, data, user, drugs }) => {
                             {/* Página nueva */}
                             <div className="page-break"></div>
                             {patient?.history?.map((consulta, index) => (
-                                <div className='flex flex-col h-[100%]'>
+                                <div key={index} className='flex flex-col h-[100%]'>
                                     <div className='mt-5 mb-5 flex flex-col  justify-start'>
                                         <div className='flex flex-col gap-2'>
                                             <p className='text-xl text-center'><strong>Consulta : {Fecha(consulta?.extraData?.appSch?.scheduledStartTimestamp)} </strong></p>
-                                            <div key={index} className='flex justify-start flex-col gap-2'>
+                                            <div className='flex justify-start flex-col gap-2'>
                                                 <div className='flex justify-start flex-col gap-1'>
 
                                                     <p className='text-xl mb-1'><strong>Anamnesis : </strong></p>
