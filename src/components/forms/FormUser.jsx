@@ -15,6 +15,8 @@ import Link from "next/link";
 import LoadingFallback from "../loading/loading";
 import Privacy from "../register/Privacy";
 import Term from "../register/Term";
+import ReactFlagsSelect from "react-flags-select";
+import flags from "@/utils/countriesFlags";
 
 export const FormUser = ({ formData, setFormData }) => {
   const {
@@ -38,18 +40,10 @@ export const FormUser = ({ formData, setFormData }) => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedPrefix, setSelectedPrefix] = useState("");
+  const [selected, setSelected] = useState("");
 
-  const countries = [
-    { iso: "AR", prefix: "+54", name: "Argentina" },
-    { iso: "PE", prefix: "+51", name: "Perú" },
-    { iso: "BR", prefix: "+55", name: "Brasil" },
-    { iso: "CL", prefix: "+56", name: "Chile" },
-    { iso: "CO", prefix: "+57", name: "Colombia" },
-    { iso: "VE", prefix: "+58", name: "Venezuela" },
-    { iso: "BO", prefix: "+591", name: "Bolivia" },
-    { iso: "EC", prefix: "+593", name: "Ecuador" },
-    { iso: "UY", prefix: "+598", name: "Uruguay" },
-  ];
+
 
   const handleCheckboxChange = (type) => {
     if (type === "terms") {
@@ -69,9 +63,12 @@ export const FormUser = ({ formData, setFormData }) => {
       const updatedData = {
         ...formData,
         ...data,
-        cellphone: data.cellphonePrefix + data.cellphone,
+        areaCode: flags[selectedPrefix],
+        nationality: selected
       };
       setFormData(updatedData);
+      console.log(updatedData);
+
 
       const response = await ApiSegimed.post(
         "/user/register-user",
@@ -187,45 +184,40 @@ export const FormUser = ({ formData, setFormData }) => {
             {showPasswordCriteria && (
               <ul className="mt-2 text-sm ">
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasUpperCase ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasUpperCase && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener una letra mayúscula
                 </li>
                 <li
-                  className={`flex gap-2  items-center whitespace-nowrap ${
-                    passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2  items-center whitespace-nowrap ${passwordCriteria.hasLowerCase ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasLowerCase && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener una letra minúscula
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasSpecialChar ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasSpecialChar && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe contener un carácter especial
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasMinLength ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasMinLength && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
                   Debe tener al menos 6 caracteres
                 </li>
                 <li
-                  className={`flex gap-2 items-center whitespace-nowrap ${
-                    passwordCriteria.hasNumber ? "text-[#70C247]" : ""
-                  }`}>
+                  className={`flex gap-2 items-center whitespace-nowrap ${passwordCriteria.hasNumber ? "text-[#70C247]" : ""
+                    }`}>
                   {passwordCriteria.hasNumber && (
                     <IconCheckBoton className={"w-4"} />
                   )}{" "}
@@ -338,40 +330,25 @@ export const FormUser = ({ formData, setFormData }) => {
           <div className="w-full max-w-96">
             <label htmlFor="cellphone-prefix">Número de Celular</label>
 
-            <div className="flex">
-              {/* Select para el prefijo con banderas */}
-              <select
-                id="cellphone-prefix"
-                className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
-                {...register("cellphonePrefix", {
-                  required: {
-                    value: true,
-                    message: "* Prefijo requerido *",
-                  },
-                })}>
-                <option value="" disabled selected>
-                  Prefijo
-                </option>
-                {countries.map((country) => (
-                  <option key={country.iso} value={country.prefix}>
-                    <span>
-                      {/* <img
-                        src={findFlagUrlByIso2Code(country.iso)}
-                        alt={`Bandera de ${country.name}`}
-                        className="inline-block w-4 h-4 mr-1"
-                      /> */}
-                      {`${country.prefix} (${country.name})`}
-                    </span>
-                  </option>
-                ))}
-              </select>
+            <div className="flex gap-2 justify-around items-center">
+              <ReactFlagsSelect
+                className="  items-center justify-center pt-1 w-[10rem]"
+                customLabels={flags}
+                searchable={true}
+                selected={selectedPrefix}
+                showSelectedLabel={false}
+                placeholder="Prefijo"
+                onSelect={(code) => {
+                  setSelectedPrefix(code);
+                }}
+              />
 
               {/* Input para el número de celular */}
               <input
                 id="cellphone"
                 type="text"
                 placeholder="Ingrese Número de Celular"
-                className="w-3/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
+                className="w-3/5 h-[3rem] bg-[#FBFBFB] py-1 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
                 {...register("cellphone", {
                   required: {
                     value: true,
@@ -400,18 +377,16 @@ export const FormUser = ({ formData, setFormData }) => {
 
           <div className="w-full max-w-96">
             <label htmlFor="nationality">Nacionalidad</label>
-            <select
-              id="nationality"
-              className="w-full bg-[#FBFBFB] py-2 px-2 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] placeholder:font-medium"
-              {...register("nationality", {
-                required: {
-                  value: true,
-                  message: "* Este dato es requerido *",
-                },
-              })}>
-              <option value="2">Argentina</option>
-              <option value="1">Colombia</option>
-            </select>
+            <ReactFlagsSelect
+              className="w-full  "
+              placeholder="Seleccione un pais"
+              searchable={true}
+              selected={selected}
+              onSelect={(code) => {
+                setSelected(code);
+              }}
+
+            />
             {errors.nationality && (
               <span className="text-red-500 text-sm font-medium">
                 {errors.nationality.message}
@@ -455,10 +430,9 @@ export const FormUser = ({ formData, setFormData }) => {
             <button
               type="submit"
               className={`w-full py-2 px-4 rounded-lg
-                ${
-                  termsAccepted && privacyAccepted
-                    ? "bg-[#70C247] text-white"
-                    : "bg-gray-400 text-white cursor-not-allowed"
+                ${termsAccepted && privacyAccepted
+                  ? "bg-[#70C247] text-white"
+                  : "bg-gray-400 text-white cursor-not-allowed"
                 } ${loading ? "bg-bluePrimary" : "bg-[#70C247]"}`}
               disabled={(!termsAccepted && !privacyAccepted) || loading}>
               {loading ? (

@@ -57,16 +57,19 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
+
+  console.log(user);
+
   useEffect(() => {
     if (!user.name || !rol) return;
 
     if (rol === "Médico") {
-      if (!user.medicalRegistries?.Nacional?.registryId) {
+      if (!user.physicianMedicalRegistries[0]?.registryId) {
         router.push(rutas.Doctor);
         setIsModalOpen(true);
       }
     } else if (rol === "Paciente") {
-      if (!user.sociodemographicDetails?.genre) {
+      if (!user.socDemDet) {
         router.push(rutas.PacienteDash);
         setIsModalOpen(true);
       }
@@ -135,11 +138,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
 
   const searchTerm = useAppSelector((state) => state.user.searchTerm);
 
-  useEffect(() => {
-    if (rol) {
-      protectRoute(pathname, rol, dispatch, router);
-    }
-  }, [pathname, rol]);
+  // useEffect(() => {
+  //   if (rol) {
+  //     protectRoute(pathname, rol, dispatch, router);
+  //   }
+  // }, [pathname, rol]);
 
   useEffect(() => {
     const fetchedRol = Cookies.get("b");
@@ -163,11 +166,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       }
       if (rol === "Paciente") {
         obtenerUbicacion();
-        getUser({ headers: { token: token } }).catch(console.error);
-        getAllDoc({ headers: { token: token } }).catch(console.error);
-        getSchedules({ headers: { token: token } }).catch(console.error);
+        getUser().catch(console.error);
+        getAllDoc().catch(console.error);
+        getSchedules().catch(console.error);
 
-        getPatientNotifications({ headers: { token: token } }).catch(
+        getPatientNotifications().catch(
           console.error
         );
         if (!socket.isConnected()) {
@@ -191,11 +194,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   useEffect(() => {
     if (rol === "Médico") {
       getUserDoctor().catch(console.error);
-      setTourstate(true)
+      dispatch(setTourstate(true))
     }
     if (rol === "Paciente") {
       getUser({ headers: { token: token } }).catch(console.error);
-      setTourstate(true)
+      dispatch(setTourstate(true))
     }
   }, [onboarding]);
 
@@ -286,7 +289,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   };
 
   return (
-    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
+    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between  h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
       <div className="lg:hidden p-4">
         <button
           id="buttonResponsive"

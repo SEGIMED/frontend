@@ -5,7 +5,7 @@ export default function HealthCareNumber({ handleDisabled, state, handleChange }
 
 
     useEffect(() => {
-        if (state.HealthCareNumber) { handleDisabled() }
+        if (state.healthCareNumber) { handleDisabled() }
     }, [state]);
 
     const handleSelect = (event) => {

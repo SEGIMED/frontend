@@ -82,6 +82,18 @@ const SignosVitales = ({ info }) => {
         </div>
       ))}
 
+      <div>
+        <DataPatient
+          title="Glucemia"
+          info={
+            info.glycemia && info.glycemia.length > 0
+              ? info.glycemia.map((detail) => detail.value).join(' - ')
+              : '-'
+          }
+        />
+      </div>
+
+
       {/* {info.vitalSigns?.map((vital, vitalIndex) => (
         <div key={vitalIndex}>
           <DataPatient

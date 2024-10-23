@@ -16,6 +16,8 @@ const SignosVitalesSection = () => {
         const response = await ApiSegimed("/medical-history/vital-signs", {
           params: { patientId: user.id },
         });
+        console.log(response.data);
+
         setSignosVitalesData(response.data);
       } catch (error) {
         console.error("Error fetching evoluciones data:", error);

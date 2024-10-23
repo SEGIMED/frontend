@@ -24,6 +24,7 @@ import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
 import ObraSocial from "../boarding/ObraSocial";
 import HealthCareNumber from "../boarding/HealthCareNumber";
 import Medicamentos from "../boarding/Medicamentos";
+import PhoneAssistant from "../boarding/PhoneAssistant";
 
 const ProgressBar = ({ steps, currentIndex }) => {
   return (
@@ -117,18 +118,19 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
           handleChange={handleChange}
           rol={rol}
         />,
-        // <ObraSocial
-        //   key="obraSocial"
-        //   handleDisabled={handleDisabled}
-        //   state={formStateGlobal}
-        //   handleChange={handleChange}
-        // />,
-        // <HealthCareNumber
-        //   key="HealthCareNumber"
-        //   handleDisabled={handleDisabled}
-        //   state={formStateGlobal}
-        //   handleChange={handleChange}
-        // />,
+        <ObraSocial
+          key="obraSocial"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+        />,
+        <HealthCareNumber
+          key="HealthCareNumber"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+        />,
+
         // <Medicamentos
         //   key="Medicamentos"
         //   handleDisabled={handleDisabled}
@@ -149,6 +151,12 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
           key="uso_celular"
           handleDisabled={handleDisabled}
           state={formStateGlobal}
+        />,
+        <PhoneAssistant
+          key="PhoneAssistant"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
         />,
 
         <Final
@@ -210,10 +218,11 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
       setDisabled(true);
     } else {
       const infoSend = mapBoolean(formStateGlobal);
+      console.log(infoSend);
+
       try {
         await ApiSegimed.patch(
-          `/onboarding?tipo=${rol === "Médico" ? 2 : 3}&id=${user.userId}`,
-          // `/onboarding?tipo=2&id=15`,
+          `/onboarding`,
           infoSend
         );
         setOnboarding(true);

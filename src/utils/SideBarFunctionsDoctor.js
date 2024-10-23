@@ -99,8 +99,9 @@ const useDataFetching = () => {
     }
   };
 
-  const getUserDoctor = async (headers) => {
-    const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
+  const getUserDoctor = async () => {
+    // const response = await ApiSegimed.get(`/physician-info?id=${id}`, headers);
+    const response = await ApiSegimed.get(`/profile`);
     if (response.data) {
       dispatch(adduser(response.data));
     }

@@ -24,11 +24,11 @@ const useDataFetchingPte = () => {
 
     const getUser = async (headers) => {
         try {
-            const response1 = await ApiSegimed.get(`/patient-details?id=${id}`, headers);
-            const response2 = await ApiSegimed.get(`/patient/${id}`, headers);
+            const response1 = await ApiSegimed.get(`/profile`);
+            // const response2 = await ApiSegimed.get(`/patient/${id}`, headers);
             const combinedData = {
                 ...response1.data,
-                ...response2.data,
+                // ...response2.data,
             };
             dispatch(adduser(combinedData));
             console.log(combinedData);
