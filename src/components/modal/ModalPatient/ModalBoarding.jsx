@@ -219,9 +219,20 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
 
       console.log(formStateGlobal);
       function transformData(originalData) {
-        // Transformación de la estructura
-        return {
-          ...originalData,
+        return Object.entries(originalData).reduce((acc, [key, value]) => {
+          // Si el valor es "sí" o "no", lo transformamos a true o false
+          if (value === 'Si') {
+            acc[key] = true;
+          } else if (value === 'No') {
+            acc[key] = false;
+          } else {
+            // Para otros valores, mantener el valor original o aplicar otras transformaciones específicas
+            acc[key] = value;
+          }
+
+          return acc;
+        }, {
+          // Transformaciones específicas adicionales
           genre: originalData.genre, // Asignar el mismo valor de genre
           birthDate: originalData.birthDate, // Asignar el mismo valor de birthDate
           address:
@@ -232,7 +243,7 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
           specialty: [originalData.specialty], // Convertir specialty a un array
           nacionalRegistration: `NR-${originalData.nacionalRegistration}`, // Añadir prefijo NR-
           provincialRegistration: `PR-${originalData.provincialRegistration}`, // Añadir prefijo PR-
-        };
+        });
       }
       const infoSend = transformData(formStateGlobal);
       try {
