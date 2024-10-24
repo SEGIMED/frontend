@@ -60,6 +60,7 @@ export const SideBarMod = ({ toggleSidebar, isOpen, buttons }) => {
                     isActive={pathname === button.path}
                     onClick={toggleSidebar}
                     external={button.external}
+                    id={button.id}
                   />
                 ))}
               </div>

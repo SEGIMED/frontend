@@ -10,6 +10,7 @@ export default function ImportarMultiple({ onData, text, disabled, state, errors
     const fileInputRef = useRef(null);
     const [studies, setStudies] = useState([]);
     const [catalog, setCatalog] = useState([]);
+    const [SizeFile, setSizeFile] = useState("");
 
     useEffect(() => {
         const getCatalog = async () => {
@@ -37,9 +38,23 @@ export default function ImportarMultiple({ onData, text, disabled, state, errors
         try {
             if (e.target.files.length) {
                 const selectedFiles = Array.from(e.target.files);
-                selectedFiles.forEach(file => {
-                    const reader = new FileReader();
+                const MAX_SIZE_MB = 10 * 1024 * 1024; // 10MB en bytes
+                const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif"]; // Tipos de archivo permitidos
 
+                selectedFiles.forEach(file => {
+                    // Validar tipo de archivo
+                    if (!allowedTypes.includes(file.type)) {
+                        setSizeFile(`El tipo de archivo "${file.name}" no es permitido. Solo se aceptan imágenes y archivos PDF.`);
+                        return; // Salir si el tipo de archivo no es permitido
+                    }
+
+                    if (file.size > MAX_SIZE_MB) {
+                        setSizeFile(`El archivo supera los 10MB: ${file.name}`);
+                        return; // Salir si el archivo es demasiado grande
+                    }
+
+                    const reader = new FileReader();
+                    setSizeFile("");
                     reader.onload = (event) => {
                         const base64String = event.target.result;
                         const newStudy = {
@@ -115,7 +130,9 @@ export default function ImportarMultiple({ onData, text, disabled, state, errors
                                     multiple
                                     disabled={disabled}
                                 />
+
                             </div>
+                            <span className='text-red-500 text-center'> {SizeFile}</span>
                             {errors[0] && errors[0].message ? <span className='text-red-500'>Seleccione un archivo</span> : null}
                             <div className='w-full max-h-[20rem] flex flex-col overflow-y-auto'>
                                 {studies.map((study, index) => (

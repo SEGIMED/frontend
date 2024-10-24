@@ -61,78 +61,6 @@ export default function SubNavbar({ id }) {
     });
   };
 
-  const getConsultas = async (headers) => {
-    try {
-      const response = await ApiSegimed.get(
-        `/medical-event/get-medical-event-history?patientId=${userId}`,
-        headers
-      );
-
-      if (response.data) {
-        const defaultAnthropometricDetails = [
-          { measureType: "Estatura", measureUnit: "Cm", measure: "-" },
-          { measureType: "Peso", measureUnit: "Kg", measure: "-" },
-          {
-            measureType: "Índice de Masa Corporal",
-            measureUnit: "Kg/m²",
-            measure: "-",
-          },
-        ];
-
-        const defaultVitalSigns = [
-          { measureType: "Temperatura", measureUnit: "°C", measure: "-" },
-          {
-            measureType: "Frecuencia Cardiaca",
-            measureUnit: "bpm",
-            measure: "-",
-          },
-          {
-            measureType: "Presión Arterial Sistólica",
-            measureUnit: "mmHg",
-            measure: "-",
-          },
-          {
-            measureType: "Presión Arterial Diastólica",
-            measureUnit: "mmHg",
-            measure: "-",
-          },
-          {
-            measureType: "Frecuencia Respiratoria",
-            measureUnit: "rpm",
-            measure: "-",
-          },
-          {
-            measureType: "Saturación de Oxígeno",
-            measureUnit: "%",
-            measure: "-",
-          },
-          // { measureType: "Estatura", measureUnit: "Cm", measure: "-" },
-          // { measureType: "Peso", measureUnit: "Kg", measure: "-" },
-          // { measureType: "IMC", measureUnit: "Kg/m²", measure: "-" },
-        ];
-
-        const combinedConsultas = response.data.map((consulta) => {
-          const combinedAnthropometricDetails = combineDetails(
-            consulta.anthropometricDetails || [],
-            defaultAnthropometricDetails
-          );
-          const combinedVitalSigns = combineVitalSigns(
-            consulta.vitalSigns || [],
-            defaultVitalSigns
-          );
-
-          return {
-            ...consulta,
-            anthropometricDetails: combinedAnthropometricDetails,
-            vitalSigns: combinedVitalSigns,
-          };
-        });
-        dispatch(addClinicalHistory(combinedConsultas));
-      }
-    } catch (error) {
-      console.error("Error fetching consultas:", error);
-    }
-  };
 
   const getImportHistory = async () => {
     const response = await ApiSegimed.get(`/patient-studies?userId=${userId}`);
@@ -155,18 +83,34 @@ export default function SubNavbar({ id }) {
       );
     }
   };
-  const getUser = async (headers) => {
-    const response = await ApiSegimed.get(
-      `/medical-history/patient-detail?id=${userId}`,
-      headers
-    );
-    dispatch(addUserHistory(response.data));
+  const getUser = async () => {
+    try {
+
+      const [patientDetailResponse, historyResponse] = await Promise.all([
+        ApiSegimed.get(`/medical-history/patient-detail?id=${userId}`),
+        ApiSegimed.get(`/medical-event/history?userId=${userId}`)
+      ]);
+
+      const combinedData = {
+        ...patientDetailResponse.data,
+        history: historyResponse.data
+      };
+
+      // Imprimir los datos combinados en consola
+      console.log(combinedData);
+
+
+      dispatch(addUserHistory(combinedData));
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+    }
   };
+
 
   useEffect(() => {
     dispatch(setLoading(true));
     getUser().catch(console.error);
-    getConsultas().catch(console.error);
+    // getConsultas().catch(console.error);
     getImportHistory().catch(console.error);
     if (socket.isConnected()) {
       socket.emit("sendPatientInfo", { message: userId });
