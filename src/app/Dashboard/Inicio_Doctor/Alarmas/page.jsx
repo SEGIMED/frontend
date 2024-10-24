@@ -55,7 +55,7 @@ export default function AlarmHome() {
           <h1 className="font-bold md:text-xl hidden md:block">
             Listado de Alarmas
           </h1>
-          <div className="flex gap-3">
+          <div className="flex gap-3 md:pr-14">
             <Link href={`${rutas.Doctor}${rutas.Alarm}${rutas.resueltas}`}>
               <button className="flex items-center px-6 py-2 bg-[#70C247] rounded-lg gap-3 text-white font-bold">
                 Ver resueltas

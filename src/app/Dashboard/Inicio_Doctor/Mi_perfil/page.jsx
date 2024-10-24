@@ -21,8 +21,12 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  avatar,
 } from "@nextui-org/react";
 import IconUpload from "@/components/icons/IconUpload";
+import ReactFlagsSelect from "react-flags-select";
+import flags from "@/utils/countriesFlags";
+import useDataFetching from "@/utils/SideBarFunctionsDoctor";
 
 export default function HomeDoc() {
   const dispatch = useAppDispatch();
@@ -30,20 +34,24 @@ export default function HomeDoc() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [catalog, setCatalog] = useState([]);
+  const [catalogCenter, setCatalogCenter] = useState([]);
   const doctor = useAppSelector((state) => state.user);
   const [buttonSize, setButtonSize] = useState("lg");
+  const [selected, setSelected] = useState("");
+  const [selectedPrefix, setSelectedPrefix] = useState("");
 
-  const countries = [
-    { iso: 'AR', prefix: '+54', name: 'Argentina' },
-    { iso: 'PE', prefix: '+51', name: 'Perú' },
-    { iso: 'BR', prefix: '+55', name: 'Brasil' },
-    { iso: 'CL', prefix: '+56', name: 'Chile' },
-    { iso: 'CO', prefix: '+57', name: 'Colombia' },
-    { iso: 'VE', prefix: '+58', name: 'Venezuela' },
-    { iso: 'BO', prefix: '+591', name: 'Bolivia' },
-    { iso: 'EC', prefix: '+593', name: 'Ecuador' },
-    { iso: 'UY', prefix: '+598', name: 'Uruguay' },
-  ];
+  useEffect(() => {
+    if (doctor.areaCode) {
+      setSelectedPrefix(doctor.areaCode.primary)
+    }
+    if (doctor.nationality) {
+      setSelected(doctor.nationality)
+    }
+  }, [doctor]);
+
+  const {
+    getUserDoctor,
+  } = useDataFetching(); // Use the useRouter hook
 
   console.log(doctor);
 
@@ -84,7 +92,12 @@ export default function HomeDoc() {
   };
 
   const [selectedKeys, setSelectedKeys] = useState(new Set());
+  const [selectedKeysCenter, setSelectedKeysCenter] = useState(new Set());
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [selectedSpecialtiesId, setSelectedSpecialtiesId] = useState([]);
+  const [selectedCenters, setSelectedCenters] = useState([]);
+  const [selectedCentersId, setSelectedCentersId] = useState([]);
+  const [centerName, setCenterName] = useState("");
 
   const selectedValue = useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
@@ -106,56 +119,55 @@ export default function HomeDoc() {
   };
 
 
-  // const get = async () => {
-  //   try {
-  //     const response = await ApiSegimed.get(
-  //       "/onboardingDetails?physicianId=11",
-  //     );
-  //     if (response.data) {
-  //       console.log(response.data, "acaa");
 
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const getCatalogCenter = async () => {
+    try {
+      const response = await ApiSegimed.get("/catalog/get-catalog?catalogName=center_att");
+      if (response.data) {
+        setCatalogCenter(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleSelectionChangeCenter = (keys) => {
+    setSelectedKeysCenter(keys);
+    const centers = catalogCenter.filter((item) => keys.has(item.name));
+    const ids = centers.map((item) => item.id); // Obtenemos los IDs de los centros seleccionados
+    const numericIds = ids.map(id => Number(id));
+    setSelectedCenters(centers);
+    setSelectedCentersId(numericIds);  // Actualizamos el estado con los centros seleccionados
+  };
+
+
+
 
   const onSubmit = async (data) => {
-    const headers = { headers: { token: token } };
-    const updatedData = {
-      ...doctor,
-      ...data,
-      medicalSpecialtyIds: selectedSpecialties.map((spec) => spec.id),
-      specialties: selectedSpecialties,
-      currentLocationCity: data.city,
-      currentLocationCountry: data.country,
-      attendancePlace: {
-        addressDetails: data.addressDetails,
-        alias: data.alias,
-        googleMapsLink: data.googleMapsLink,
+
+
+    const dataTosend = {
+      userData: {
+        ...data,
+        avatar: doctor.avatarDoc,
+        areaCode: flags[selectedPrefix],
+        nationality: selected
       },
-      cellphone: data.cellphonePrefix + data.cellphone,
-      medicalRegistries: {
-        Provincial: { registryId: data.registryIdProvincial },
-        Nacional: { registryId: data.registryIdNacional },
-      },
+      onboardingData: { address: data.address, genre: doctor.PhysicianOnboarding.genre, provincialRegistration: data.provincialRegistration, nacionalRegistration: data.nacionalRegistration, specialty: selectedSpecialtiesId, centerAttention: selectedCentersId },
     };
 
-    const updatedDataSend = {
-      ...doctor,
-      ...data,
-      medicalSpecialtyIds: selectedSpecialties.map((spec) => spec.id),
-      specialties: selectedSpecialties,
-    };
-    dispatch(adduser({ ...doctor, ...updatedData }));
 
+    console.log(
+      dataTosend, "userData"
+
+    );
     try {
       const response = await ApiSegimed.patch(
-        `/update-full-physician`,
-        updatedDataSend,
-        headers
+        `/profile`,
+        dataTosend
       );
+      console.log(response);
 
+      getUserDoctor()
       setEdit(false);
       Swal.fire({
         title: "¡Datos actualizados correctamente!",
@@ -174,20 +186,40 @@ export default function HomeDoc() {
     const headers = { headers: { token: token } };
     if (token) {
       getCatalog(headers);
+      getCatalogCenter()
+
     }
   }, []);
 
   useEffect(() => {
-    if (doctor?.specialties?.length > 0) {
-      setSelectedKeys(new Set(doctor?.specialties?.map((item) => item.name)));
-      setSelectedSpecialties(doctor?.specialties);
+    if (doctor?.physicianSpecialties?.length > 0) {
+      setSelectedKeys(new Set(doctor?.physicianSpecialties?.map((item) => item.specialty.name)));
+      setSelectedSpecialties(doctor?.physicianSpecialties);
+      setSelectedSpecialtiesId(doctor?.physicianSpecialties?.map((item) => Number(item.medicalSpecialty)));
     }
   }, [doctor]);
+
+  useEffect(() => {
+    if (doctor?.AttendentPlaces?.length > 0) {
+      setSelectedKeysCenter(new Set(doctor?.AttendentPlaces?.map((item) => item.center.name)));
+      setSelectedCenters(doctor?.AttendentPlaces);
+      setSelectedCentersId(doctor?.AttendentPlaces?.map((item) => Number(item.center.id)));
+    }
+  }, [doctor]);
+
+
+
+
+
+
+  console.log(selectedSpecialtiesId);
+
 
   const handleSelectionChange = (keys) => {
     setSelectedKeys(keys);
     const specialties = catalog.filter((item) => keys.has(item.name));
     setSelectedSpecialties(specialties);
+    setSelectedSpecialtiesId(specialties.map((specialties) => Number(specialties.id)));
   };
 
   const noEmptySpaces = (value) => value.trim() !== "";
@@ -333,123 +365,82 @@ export default function HomeDoc() {
             Especialidades:
           </label>
           {edit ? (
-            <Dropdown>
-              <DropdownTrigger className="md:w-1/2 w-full">
-                <Button
-                  style={{
-                    borderRadius: "0.5rem",
-                    textAlign: "start",
-                    borderWidth: "1px",
-                    justifyContent: "flex-start",
-                    opacity: "1",
-                    color: "#686868",
-                  }}
-                  variant="bordered"
+            <div className="w-1/2 pr-5 flex flex-col ">
+              <Dropdown>
+                <DropdownTrigger className=" w-full">
+                  <Button
+                    style={{
+                      borderRadius: "0.5rem",
+                      textAlign: "start",
+                      borderWidth: "1px",
+                      justifyContent: "flex-start",
+                      backgroundColor: "#FBFBFB",
+                      opacity: "1",
+                      color: "#686868",
+                    }}
+                    variant="bordered"
+                  >
+                    {selectedValue}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label=""
+                  variant="flat"
+                  closeOnSelect={false}
+                  disallowEmptySelection
+                  selectionMode="multiple"
+                  selectedKeys={selectedKeys}
+                  onSelectionChange={handleSelectionChange}
                 >
-                  {selectedValue}
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label=""
-                variant="flat"
-                closeOnSelect={false}
-                disallowEmptySelection
-                selectionMode="multiple"
-                selectedKeys={selectedKeys}
-                onSelectionChange={handleSelectionChange}
-              >
-                {catalog?.map((item) => (
-                  <DropdownItem key={item.name} value={item.id}>
-                    {item.name}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+                  {catalog?.map((item) => (
+                    <DropdownItem key={item.name} value={item.id}>
+                      {item.name}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           ) : (
             <div className="w-1/2 text-start px-2 py-2">
-              {doctor?.specialties?.map((specialty) => (
-                <span className="pr-2" key={specialty.id}>
-                  {specialty.name} /
+              {doctor?.physicianSpecialties?.map((specialty) => (
+                <span className="pr-2" key={specialty.medicalSpecialty}>
+                  {specialty.specialty.name} /
                 </span>
               ))}
             </div>
           )}
         </div>
-
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
             Nacionalidad:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className={`bg-[#FBFBFB] border outline-[#a8a8a8] rounded-lg px-2 py-2 mr-6 border-${errors.nationality ? "red" : "#DCDBDB"
-                  }`}
-                type="text"
-                defaultValue={doctor?.nationality}
-                {...register("nationality", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 2,
-                    message: "Debe tener al menos 2 caracteres",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "No puede tener más de 20 caracteres",
-                  },
-                  pattern: {
-                    value: /^[A-Za-z]+$/,
-                    message: "Solo se permiten letras",
-                  },
-                })}
+            <div className="flex items-center gap-2 w-full">
+
+              <ReactFlagsSelect
+                className="w-full pr-6 "
+                placeholder="Seleccione un pais"
+                searchable={true}
+                selected={selected}
+                onSelect={(code) => {
+                  setSelected(code);
+                }}
               />
-              {errors.nationality && (
-                <p className="text-red-500 text-sm">
-                  {errors.nationality.message}
-                </p>
-              )}
+
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.nationality}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
-            <IconCircle className="w-2" />
-            Pais:
-          </label>
-          {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.currentLocationCountry}
-                {...register("country", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 3,
-                    message: "Debe tener al menos 3 caracteres",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "No puede tener más de 20 caracteres",
-                  },
-                  pattern: {
-                    value: /^[A-Za-z ]+$/,
-                    message: "Solo se permiten letras y espacios",
-                  },
-                })}
+            <span className="w-full text-start justify-start px-6 py-2">
+
+              <ReactFlagsSelect
+                className="w-full "
+                placeholder="Seleccione un pais"
+                searchable={true}
+                disabled={true}
+                selected={selected}
+
               />
-              {errors.country && (
-                <p className="text-red-500 text-sm">{errors.country.message}</p>
-              )}
-            </div>
-          ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.currentLocationCountry}
+
             </span>
           )}
         </div>
@@ -457,15 +448,15 @@ export default function HomeDoc() {
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
-            Ciudad:
+            Direccion:
           </label>
           {edit ? (
             <div className="w-full flex flex-col">
               <input
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
                 type="text"
-                defaultValue={doctor?.currentLocationCity}
-                {...register("city", {
+                defaultValue={doctor?.PhysicianOnboarding?.address}
+                {...register("address", {
                   required: "*Este campo es obligatorio",
                   minLength: {
                     value: 3,
@@ -482,12 +473,12 @@ export default function HomeDoc() {
                 })}
               />
               {errors.city && (
-                <p className="text-red-500 text-sm">{errors.city.message}</p>
+                <p className="text-red-500 text-sm">{errors.address.message}</p>
               )}
             </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
-              {doctor?.currentLocationCity}
+              {doctor?.PhysicianOnboarding?.address}
             </span>
           )}
         </div>
@@ -501,8 +492,8 @@ export default function HomeDoc() {
             <div className="w-full flex flex-col">
               <input
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                defaultValue={doctor?.medicalRegistries?.Nacional?.registryId}
-                {...register("registryIdNacional", {
+                defaultValue={doctor?.physicianMedicalRegistries[0].registryType === 2 ? doctor?.physicianMedicalRegistries[0].registryId : doctor?.physicianMedicalRegistries[1].registryId}
+                {...register("nacionalRegistration", {
                   required: "*Este campo es obligatorio",
                   minLength: {
                     value: 2,
@@ -517,13 +508,17 @@ export default function HomeDoc() {
               />
               {errors.registryIdNacional && (
                 <p className="text-red-500 text-sm">
-                  {errors.registryIdNacional.message}
+                  {errors.nacionalRegistration.message}
                 </p>
               )}
             </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
-              {doctor?.medicalRegistries?.Nacional?.registryId}
+              {doctor?.physicianMedicalRegistries?.length > 0 &&
+                (doctor?.physicianMedicalRegistries[0]?.registryType === 2
+                  ? doctor?.physicianMedicalRegistries[0]?.registryId
+                  : doctor?.physicianMedicalRegistries?.length > 1 &&
+                  doctor?.physicianMedicalRegistries[1]?.registryId)}
             </span>
           )}
         </div>
@@ -536,8 +531,8 @@ export default function HomeDoc() {
             <div className="w-full flex flex-col">
               <input
                 className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                defaultValue={doctor?.medicalRegistries?.Provincial?.registryId}
-                {...register("registryIdProvincial", {
+                defaultValue={doctor?.physicianMedicalRegistries[1].registryType === 1 ? doctor?.physicianMedicalRegistries[1].registryId : doctor?.physicianMedicalRegistries[0].registryId}
+                {...register("provincialRegistration", {
                   required: "*Este campo es obligatorio",
                   minLength: {
                     value: 2,
@@ -552,116 +547,71 @@ export default function HomeDoc() {
               />
               {errors.registryIdProvincial && (
                 <p className="text-red-500 text-sm">
-                  {errors.registryIdProvincial.message}
+                  {errors.provincialRegistration.message}
                 </p>
               )}
             </div>
           ) : (
             <span className="w-full text-start px-6 py-2">
-              {doctor?.medicalRegistries?.Provincial?.registryId}
+              {doctor?.physicianMedicalRegistries?.[1]?.registryType === 1
+                ? doctor?.physicianMedicalRegistries[1]?.registryId
+                : doctor?.physicianMedicalRegistries?.[0]?.registryId}
             </span>
           )}
         </div>
-        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
+        <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
+          <label className="w-1/2 flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
-            Direccion de Atención:
+            Centro de atencion:
           </label>
           {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.attendancePlace?.addressDetails}
-                {...register("addressDetails", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 5,
-                    message: "Debe tener al menos 5 caracteres",
-                  },
-                  maxLength: {
-                    value: 50,
-                    message: "No puede tener más de 50 caracteres",
-                  },
-                })}
-              />
-              {errors.addressDetails && (
-                <p className="text-red-500 text-sm">
-                  {errors.addressDetails.message}
-                </p>
-              )}
-            </div>
-          ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.attendancePlace?.addressDetails}
-            </span>
-          )}
-        </div> */}
-        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
-            <IconCircle className="w-2" />
-            Lugar de Atención (Nombre):
-          </label>
-          {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.attendancePlace?.alias}
-                {...register("alias", {
-                  required: "*Este campo es obligatorio",
-                  minLength: {
-                    value: 2,
-                    message: "Debe tener al menos 2 caracteres",
-                  },
-                  maxLength: {
-                    value: 100,
-                    message: "No puede tener más de 100 caracteres",
-                  },
-                })}
-              />
-              {errors.alias && (
-                <p className="text-red-500 text-sm">{errors.alias.message}</p>
-              )}
-            </div>
-          ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.attendancePlace?.alias}
-            </span>
-          )}
-        </div> */}
+            <div className="w-1/2 pr-5 flex flex-col ">
+              <Dropdown>
+                <DropdownTrigger className="w-full">
+                  <Button
+                    style={{
+                      borderRadius: "0.5rem",
+                      textAlign: "start",
+                      borderWidth: "1px",
+                      justifyContent: "flex-start",
+                      backgroundColor: "#FBFBFB",
+                      opacity: "1",
+                      color: "#686868",
+                    }}
+                    variant="bordered"
+                  >
+                    {selectedCenters.length > 0
+                      ? Array.from(selectedKeysCenter).join(", ")
+                      : "Seleccione su centro de atención"}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Seleccionar centro de atención"
+                  variant="flat"
 
-        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
-            <IconCircle className="w-2" />
-            Lugar de Atención (Link de Maps):
-          </label>
-          {edit ? (
-            <div className="w-full flex flex-col">
-              <input
-                className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
-                type="text"
-                defaultValue={doctor?.attendancePlace?.googleMapsLink}
-                {...register("googleMapsLink", {
-                  required: "*Este campo es obligatorio",
-                  pattern: {
-                    value: /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(:\d+)?(\/[^\s]*)?$/,
-                    message: "Debe ser un link válido",
-                  }
-                })}
-              />
-              {errors.googleMapsLink && (
-                <p className="text-red-500 text-sm">
-                  {errors.googleMapsLink.message}
-                </p>
-              )}
+                  selectionMode={"multiple"} // Modo de selección basado en el rol
+                  selectedKeys={selectedKeysCenter}  // Aseguramos que se mantengan seleccionadas las opciones
+                  onSelectionChange={handleSelectionChangeCenter}
+                >
+                  {catalogCenter?.map((item) => (
+                    <DropdownItem key={item.name} value={item.name}>
+                      {item.name}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.attendancePlace?.googleMapsLink}
-            </span>
+            <div className="w-1/2 text-start px-2 py-2">
+              {doctor?.
+                AttendentPlaces?.map((center) => (
+                  <span className="pr-2" key={center.center.id}>
+                    {center.center.name} /
+                  </span>
+                ))}
+            </div>
           )}
-        </div> */}
+        </div>
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
@@ -681,15 +631,7 @@ export default function HomeDoc() {
             {doctor?.reviewsScore}
           </span>
         </div>
-        {/* <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
-          <label className="w-full flex justify-start gap-3 font-medium py-2">
-            <IconCircle className="w-2" />
-            Nivel de Experto:
-          </label>
-          <span className="w-full text-start px-6 py-2">
-            {doctor?.expertiseLevel?.name}
-          </span>
-        </div> */}
+
         <div className="flex items-center justify-between h-fit lg:h-16 border-b border-b-[#cecece] px-3 md:px-6 py-2">
           <label className="w-full flex justify-start gap-3 font-medium py-2">
             <IconCircle className="w-2" />
@@ -725,36 +667,20 @@ export default function HomeDoc() {
           </label>
           {edit ? (
             <div className="w-full flex flex-col">
-              <div className="flex">
-
-                <select
-                  id="cellphone-prefix"
-                  className="w-1/4 bg-[#FBFBFB] py-2 px-3 border-2 border-[#DCDBDB] rounded-lg focus:outline-none focus:border-[#487FFA] mr-2"
-                  {...register("cellphonePrefix"
-                    //   , {
-                    //   required: {
-                    //     value: true,
-                    //     message: "* Prefijo requerido *",
-                    //   },
-                    // }
-                  )}
-                >
-                  <option value="" disabled selected>Prefijo</option>
-                  {countries.map((country) => (
-                    <option key={country.iso} value={country.prefix}>
-                      <span>
-                        {/* <img
-                        src={findFlagUrlByIso2Code(country.iso)}
-                        alt={`Bandera de ${country.name}`}
-                        className="inline-block w-4 h-4 mr-1"
-                      /> */}
-                        {`${country.prefix} (${country.name})`}
-                      </span>
-                    </option>
-                  ))}
-                </select>
+              <div className="flex items-center gap-2">
+                <ReactFlagsSelect
+                  className="items-center justify-center pt-1 w-[15rem]"
+                  customLabels={flags}
+                  searchable={true}
+                  selected={selectedPrefix}
+                  showSelectedLabel={false}
+                  placeholder="Prefijo"
+                  onSelect={(code) => {
+                    setSelectedPrefix(code);
+                  }}
+                />
                 <input
-                  className="bg-[#FBFBFB] border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
+                  className="bg-[#FBFBFB] w-full border outline-[#a8a8a8] border-[#DCDBDB] rounded-lg p-2 mr-6"
                   type="text"
                   defaultValue={doctor?.cellphone}
                   {...register("cellphone", {
@@ -786,9 +712,19 @@ export default function HomeDoc() {
               )}
             </div>
           ) : (
-            <span className="w-full text-start px-6 py-2">
-              {doctor?.cellphone}
-            </span>
+            <div className="flex justify-start items-center w-full">  <ReactFlagsSelect
+              className="  items-center justify-center pt-1 w-[10rem]"
+              customLabels={flags}
+              searchable={true}
+              selected={selectedPrefix}
+              showSelectedLabel={false}
+              placeholder="Prefijo"
+              disabled={true}
+            />
+              <span className=" text-start px-6 py-2">
+                {doctor?.cellphone}
+              </span>
+            </div>
           )}
         </div>
         <div className="p-10 bg-[#FAFAFC]" />

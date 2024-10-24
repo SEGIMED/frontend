@@ -20,6 +20,10 @@ import Especialidad from "../boarding/Especialidad";
 import IconArrowRight from "@/components/icons/iconArrowRight";
 import { ApiSegimed } from "@/Api/ApiSegimed";
 import { setSelectedOption } from "@/redux/slices/doctor/formConsulta";
+import ObraSocial from "../boarding/ObraSocial";
+import HealthCareNumber from "../boarding/HealthCareNumber";
+import Medicamentos from "../boarding/Medicamentos";
+import PhoneAssistant from "../boarding/PhoneAssistant";
 import Cookies from "js-cookie";
 
 const ProgressBar = ({ steps, currentIndex }) => {
@@ -28,9 +32,8 @@ const ProgressBar = ({ steps, currentIndex }) => {
       {steps.map((step, index) => (
         <div
           key={index}
-          className={`h-1 w-5 md:w-8 ${
-            index <= currentIndex ? "bg-bluePrimary" : "bg-gray-300"
-          }`}
+          className={`h-1 w-5 md:w-8 ${index <= currentIndex ? "bg-bluePrimary" : "bg-gray-300"
+            }`}
         />
       ))}
     </div>
@@ -86,130 +89,150 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
   const Modals =
     rol === "Paciente"
       ? [
-          <Bienvenida key="bienvenida" />,
-          <Hipertension
-            key="hipertension"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <Genero
-            key="genero"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <Nacimiento
-            key="nacimiento"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <Domicilio
-            key="domicilio"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <CentroDetAtención
-            key="centro_det_atencion"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-            handleChange={handleChange}
-            rol={rol}
-          />,
-          // <ObraSocial
-          //   key="obraSocial"
-          //   handleDisabled={handleDisabled}
-          //   state={formStateGlobal}
-          //   handleChange={handleChange}
-          // />,
-          // <HealthCareNumber
-          //   key="HealthCareNumber"
-          //   handleDisabled={handleDisabled}
-          //   state={formStateGlobal}
-          //   handleChange={handleChange}
-          // />,
-          // <Medicamentos
-          //   key="Medicamentos"
-          //   handleDisabled={handleDisabled}
-          //   state={formStateGlobal}
-          //   handleChange={handleChange}
-          // />,
-          <ViveSolo
-            key="vive_solo"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <DispElectronicos
-            key="disp_electronicos"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <UsoCelular
-            key="uso_celular"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
+        <Bienvenida key="bienvenida" />,
+        <Hipertension
+          key="hipertension"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <Genero
+          key="genero"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <Nacimiento
+          key="nacimiento"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <Domicilio
+          key="domicilio"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <CentroDetAtención
+          key="centro_det_atencion"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+          rol={rol}
+        />,
+        <ObraSocial
+          key="obraSocial"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+        />,
+        <HealthCareNumber
+          key="HealthCareNumber"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+        />,
 
-          <Final
-            key="final"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-        ]
+        // <Medicamentos
+        //   key="Medicamentos"
+        //   handleDisabled={handleDisabled}
+        //   state={formStateGlobal}
+        //   handleChange={handleChange}
+        // />,
+        <ViveSolo
+          key="vive_solo"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <DispElectronicos
+          key="disp_electronicos"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <UsoCelular
+          key="uso_celular"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <PhoneAssistant
+          key="PhoneAssistant"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+        />,
+
+        <Final
+          key="final"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+      ]
       : [
-          <Bienvenida key="bienvenida" />,
-          <Genero
-            key="genero"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <Nacimiento
-            key="nacimiento"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <Domicilio
-            key="domicilio"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <CentroDetAtención
-            key="centro_det_atencion"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-            handleChange={handleChange}
-            rol={rol}
-          />,
-          <Especialidad
-            key="Especialidad"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-            options={catalog}
-          />,
-          <MatriculaNumber
-            key="MatriculaNumber"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <MatriculaProvNumber
-            key="MatriculaProvNumber"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-          <Final
-            key="final"
-            handleDisabled={handleDisabled}
-            state={formStateGlobal}
-          />,
-        ];
+        <Bienvenida key="bienvenida" />,
+        <Genero
+          key="genero"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <Nacimiento
+          key="nacimiento"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <Domicilio
+          key="domicilio"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <CentroDetAtención
+          key="centro_det_atencion"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          handleChange={handleChange}
+          rol={rol}
+        />,
+        <Especialidad
+          key="Especialidad"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+          options={catalog}
+        />,
+        <MatriculaNumber
+          key="MatriculaNumber"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <MatriculaProvNumber
+          key="MatriculaProvNumber"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+        <Final
+          key="final"
+          handleDisabled={handleDisabled}
+          state={formStateGlobal}
+        />,
+      ];
 
   const handleNext = async () => {
     if (index < Modals.length - 1) {
       setIndex(index + 1);
       setDisabled(true);
     } else {
+
       console.log(formStateGlobal);
       function transformData(originalData) {
-        // Transformación de la estructura
-        return {
+        return Object.entries(originalData).reduce((acc, [key, value]) => {
+          // Si el valor es "sí" o "no", lo transformamos a true o false
+          if (value === 'Si') {
+            acc[key] = true;
+          } else if (value === 'No') {
+            acc[key] = false;
+          } else {
+            // Para otros valores, mantener el valor original o aplicar otras transformaciones específicas
+            acc[key] = value;
+          }
+
+          return acc;
+        }, {
+          // Transformaciones específicas adicionales
           genre: originalData.genre, // Asignar el mismo valor de genre
           birthDate: originalData.birthDate, // Asignar el mismo valor de birthDate
           address:
@@ -220,13 +243,12 @@ const ModalBoarding = ({ isOpen, onClose, rol, setOnboarding }) => {
           specialty: [originalData.specialty], // Convertir specialty a un array
           nacionalRegistration: `NR-${originalData.nacionalRegistration}`, // Añadir prefijo NR-
           provincialRegistration: `PR-${originalData.provincialRegistration}`, // Añadir prefijo PR-
-        };
+        });
       }
       const infoSend = transformData(formStateGlobal);
       try {
         await ApiSegimed.patch(
           `/onboarding`,
-          // `/onboarding?tipo=2&id=15`,
           infoSend
         );
         setOnboarding(true);

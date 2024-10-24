@@ -612,7 +612,7 @@ export default function PreconsultaPte({ params, preconsult, schedule }) {
               "Antecedentes patologicos",
               "Antecedentes no patologicos",
               "Antecedentes familiares",
-              "Antecedentes de infancia",
+              "Antecedentes de juventud",
               "Medicación actual",
               "Alergias",
               "Vacunas",
