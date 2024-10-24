@@ -42,6 +42,8 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import Elboton from "../Buttons/Elboton";
+import IconNewUsers from "../icons/IconNewUsers";
+import { isUserUsingMobile } from "@/utils/checkMobile";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -67,7 +69,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
 
   console.log(user);
 
@@ -143,7 +144,6 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   };
 
   const startTour = () => {
-
     dispatch(setTourstate(true)); // Inicia el tour
   };
 
@@ -181,9 +181,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
         getAllDoc().catch(console.error);
         getSchedules().catch(console.error);
 
-        getPatientNotifications().catch(
-          console.error
-        );
+        getPatientNotifications().catch(console.error);
         if (!socket.isConnected()) {
           socket.setSocket(token, refreshToken, dispatch);
           socket.emit("onJoin", { id: id });
@@ -205,11 +203,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   useEffect(() => {
     if (rol === "Médico") {
       getUserDoctor().catch(console.error);
-      dispatch(setTourstate(true))
+      dispatch(setTourstate(true));
     }
     if (rol === "Paciente") {
       getUser({ headers: { token: token } }).catch(console.error);
-      dispatch(setTourstate(true))
+      dispatch(setTourstate(true));
     }
   }, [onboarding]);
 
@@ -312,7 +310,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   };
 
   return (
-    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between  h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
+    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-1">
       <div className="lg:hidden p-4">
         <button
           id="buttonResponsive"
@@ -369,10 +367,26 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           </button>
         </div>
       )}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center lg:gap-4 gap-2">
         {rol === "Médico" && (
           <>
-            <Elboton onPress={handleShowCode} nombre="Invitar a un paciente" />
+            {isUserUsingMobile() ? (
+              <button
+                onClick={handleShowCode}
+                className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center                
+              }`}>
+                <IconNewUsers className="w-8 h-8" />
+              </button>
+            ) : (
+              <Elboton
+                onPress={handleShowCode}
+                nombre="Agregar paciente"
+                classNameText={"hidden md:block"}
+                icon={
+                  <IconNewUsers className={"w-10 md:hidden"} color={"white"} />
+                }
+              />
+            )}
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
               <ModalContent>
                 {(onClose) => (
@@ -412,7 +426,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             </Modal>
           </>
         )}
-        <div className="w-12 h-12 flex justify-center items-center">
+        <div className="w-12 h-12 justify-center items-center hidden sm:flex">
           <AvatarSideBar
             avatar={user?.avatar !== null ? user.avatar : avatar}
           />
@@ -426,16 +440,18 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             {rol === "Médico"
               ? "Médico"
               : rol === "Paciente"
-                ? "Paciente"
-                : rol === "Admin"
-                  ? "Administrador"
-                  : ""}
+              ? "Paciente"
+              : rol === "Admin"
+              ? "Administrador"
+              : ""}
           </span>
         </div>
-        <button id="chatsButton"
+        <button
+          id="chatsButton"
           onClick={handleChatClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showChats || hasUnreadMessages) && "bg-[#E73F3F]"
-            }`}>
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
+          }`}>
           <IconChat
             className="w-6 h-6"
             color={showChats || hasUnreadMessages ? "white" : "#B2B2B2"}
@@ -448,11 +464,13 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             formattedChats={formattedChats}
           />
         )}
-        <button id="notificationButton"
+        <button
+          id="notificationButton"
           onClick={handleNotificationClick}
-          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${(showNotifications || unreadNotifications.length > 0) &&
+          className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
+            (showNotifications || unreadNotifications.length > 0) &&
             "bg-[#E73F3F]"
-            }`}>
+          }`}>
           <IconNotificaciones
             className="w-6 h-6"
             color={
@@ -470,7 +488,8 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             unreadNotifications={unreadNotifications}
           />
         )}
-        <button id="tour"
+        <button
+          id="tour"
           onClick={startTour}
           className={`w-fit gap-1 px-3 h-12 rounded-lg border-2 border-bluePrimary flex items-center justify-center"
             }`}>
