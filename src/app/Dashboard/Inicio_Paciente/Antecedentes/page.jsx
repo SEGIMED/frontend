@@ -142,7 +142,7 @@ export default function HomePte() {
           }
         />
         <AntecedenteDash
-          title={"Antecedentes de infancia"}
+          title={"Antecedentes de juventud"}
           info={
             user?.backgrounds?.pediatricBackground
               ? user?.backgrounds?.pediatricBackground

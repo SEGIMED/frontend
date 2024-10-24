@@ -30,6 +30,8 @@ import rutas from "@/utils/rutas";
 import IconMail from "../icons/iconMail";
 import ModalBoarding from "../modal/ModalPatient/ModalBoarding";
 import { IconChat } from "../InicioPaciente/IconChat";
+import { setTourstate } from "@/redux/slices/user/tour";
+import IconGuide from "../icons/IconGuide";
 import {
   Button,
   Modal,
@@ -40,6 +42,8 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import Elboton from "../Buttons/Elboton";
+import IconNewUsers from "../icons/IconNewUsers";
+import { isUserUsingMobile } from "@/utils/checkMobile";
 
 export const NavBarMod = ({ search, toggleSidebar }) => {
   const pathname = usePathname();
@@ -66,16 +70,18 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     setIsModalOpen(false);
   };
 
+  console.log(user);
+
   useEffect(() => {
     if (!user.name || !rol) return;
 
     if (rol === "Médico") {
-      if (!user?.physicianMedicalRegistries[0]?.registryId) {
+      if (!user.physicianMedicalRegistries[0]?.registryId) {
         router.push(rutas.Doctor);
         setIsModalOpen(true);
       }
     } else if (rol === "Paciente") {
-      if (!user.socDemDet?.genre) {
+      if (!user.socDemDet) {
         router.push(rutas.PacienteDash);
         setIsModalOpen(true);
       }
@@ -137,13 +143,17 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
     setShowChats(!showChats);
   };
 
+  const startTour = () => {
+    dispatch(setTourstate(true)); // Inicia el tour
+  };
+
   const searchTerm = useAppSelector((state) => state.user.searchTerm);
 
-  useEffect(() => {
-    if (rol) {
-      protectRoute(pathname, rol, dispatch, router);
-    }
-  }, [pathname, rol]);
+  // useEffect(() => {
+  //   if (rol) {
+  //     protectRoute(pathname, rol, dispatch, router);
+  //   }
+  // }, [pathname, rol]);
 
   useEffect(() => {
     const fetchedRol = Cookies.get("b");
@@ -167,13 +177,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
       }
       if (rol === "Paciente") {
         obtenerUbicacion();
-        getUser({ headers: { token: token } }).catch(console.error);
-        getAllDoc({ headers: { token: token } }).catch(console.error);
-        getSchedules({ headers: { token: token } }).catch(console.error);
+        getUser().catch(console.error);
+        getAllDoc().catch(console.error);
+        getSchedules().catch(console.error);
 
-        getPatientNotifications({ headers: { token: token } }).catch(
-          console.error
-        );
+        getPatientNotifications().catch(console.error);
         if (!socket.isConnected()) {
           socket.setSocket(token, refreshToken, dispatch);
           socket.emit("onJoin", { id: id });
@@ -195,9 +203,11 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   useEffect(() => {
     if (rol === "Médico") {
       getUserDoctor().catch(console.error);
+      dispatch(setTourstate(true));
     }
     if (rol === "Paciente") {
       getUser({ headers: { token: token } }).catch(console.error);
+      dispatch(setTourstate(true));
     }
   }, [onboarding]);
 
@@ -300,9 +310,10 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
   };
 
   return (
-    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-4">
+    <div className="md:pl-10 md:pr-16 flex bg-[#FAFAFC] items-center justify-between h-[12%] border-b-[1px] border-b-[#D7D7D7] p-1">
       <div className="lg:hidden p-4">
         <button
+          id="buttonResponsive"
           className="text-[#B2B2B2] p-2 border rounded-lg focus:outline-none"
           onClick={toggleSidebar}>
           <svg
@@ -319,7 +330,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           </svg>
         </button>
       </div>{" "}
-      <div className="flex items-center justify-center gap-4 text-lg font-semibold">
+      <div className=" hidden md:flex items-center justify-center gap-4 text-lg font-semibold">
         <IconCurrentRouteNav className="hidden w-[1.5rem] md:block" />
         {["Inicio_Doctor", "Inicio_Paciente", "Inicio_Admin"].includes(
           lastSegment
@@ -356,10 +367,26 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           </button>
         </div>
       )}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center lg:gap-4 gap-2">
         {rol === "Médico" && (
           <>
-            <Elboton onPress={handleShowCode} nombre="Invitar a un paciente" />
+            {isUserUsingMobile() ? (
+              <button
+                onClick={handleShowCode}
+                className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center                
+              }`}>
+                <IconNewUsers className="w-8 h-8" />
+              </button>
+            ) : (
+              <Elboton
+                onPress={handleShowCode}
+                nombre="Agregar paciente"
+                classNameText={"hidden md:block"}
+                icon={
+                  <IconNewUsers className={"w-10 md:hidden"} color={"white"} />
+                }
+              />
+            )}
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
               <ModalContent>
                 {(onClose) => (
@@ -399,7 +426,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             </Modal>
           </>
         )}
-        <div className="w-12 h-12 flex justify-center items-center">
+        <div className="w-12 h-12 justify-center items-center hidden sm:flex">
           <AvatarSideBar
             avatar={user?.avatar !== null ? user.avatar : avatar}
           />
@@ -420,6 +447,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           </span>
         </div>
         <button
+          id="chatsButton"
           onClick={handleChatClick}
           className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
             (showChats || hasUnreadMessages) && "bg-[#E73F3F]"
@@ -437,6 +465,7 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
           />
         )}
         <button
+          id="notificationButton"
           onClick={handleNotificationClick}
           className={`w-12 h-12 rounded-lg border-[1px] border-[#D7D7D7] flex items-center justify-center ${
             (showNotifications || unreadNotifications.length > 0) &&
@@ -459,6 +488,14 @@ export const NavBarMod = ({ search, toggleSidebar }) => {
             unreadNotifications={unreadNotifications}
           />
         )}
+        <button
+          id="tour"
+          onClick={startTour}
+          className={`w-fit gap-1 px-3 h-12 rounded-lg border-2 border-bluePrimary flex items-center justify-center"
+            }`}>
+          <IconGuide />
+          <span className="md:block hidden text-bluePrimary">Guía</span>
+        </button>
       </div>
       <ModalBoarding
         isOpen={isModalOpen}

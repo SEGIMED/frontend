@@ -6,7 +6,7 @@ import Ordenar from "@/components/Buttons/Ordenar";
 const TableToolBar = ({ title, showBackButton, button, button2 }) => {
   const router = useRouter();
   return (
-    <div className="flex justify-between py-2 lg:px-4 px-2 items-center bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] ">
+    <div className="flex-col sm:flex sm:flex-row justify-center sm:justify-between py-2 lg:px-4 px-2 items-center bg-[#FAFAFC] border-b-[1px] border-b-[#D7D7D7] ">
       {showBackButton && (
         <button
           type="button"
@@ -21,12 +21,13 @@ const TableToolBar = ({ title, showBackButton, button, button2 }) => {
           </p>
         </button>
       )}
-      {button && button}
+      {button && <div className="hidden sm:flex">{button}</div>}
       {!button && !showBackButton && <div></div>}
       <h1 className="font-Poppins font-bold md:text-xl text-center ">
         {title}
       </h1>
-      {button2 ? button2 : <Ordenar />}
+      {button && <div className="flex justify-center sm:hidden">{button}</div>}
+      {button2 ? <div className="flex justify-center">{button2}</div> : <Ordenar />}
     </div>
   );
 };

@@ -294,7 +294,7 @@ export default function ConsultaDoc({ id, preconsult }) {
       pathologicBackground:
         data["Antecedentes patologicos"],
       pediatricBackground:
-        data["Antecedentes de infancia"],
+        data["Antecedentes de juventud"],
       pharmacologicalBackground:
         data["Medicación actual"],
       surgicalBackground:
@@ -322,7 +322,7 @@ export default function ConsultaDoc({ id, preconsult }) {
         "nonPathologicBackground"
       );
       addBackgroundField("Antecedentes patologicos", "pathologicBackground");
-      addBackgroundField("Antecedentes de infancia", "pediatricBackground");
+      addBackgroundField("Antecedentes de juventud", "pediatricBackground");
       addBackgroundField("Medicación actual", "pharmacologicalBackground");
       addBackgroundField("Antecedentes quirúrgicos", "surgicalBackground");
       addBackgroundField("Vacunas", "vaccinationBackground");
@@ -1095,7 +1095,7 @@ export default function ConsultaDoc({ id, preconsult }) {
                     "Antecedentes patologicos",
                     "Antecedentes no patologicos",
                     "Antecedentes familiares",
-                    "Antecedentes de infancia",
+                    "Antecedentes de juventud",
                     "Medicación actual",
                     "Alergias",
                     "Vacunas",

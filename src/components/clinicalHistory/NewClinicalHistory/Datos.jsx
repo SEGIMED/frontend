@@ -23,6 +23,7 @@ import Swal from "sweetalert2";
 import { Fecha } from "@/utils/NormaliceFechayHora";
 import { setReload } from "@/redux/slices/doctor/HistorialClinico";
 import ImportarMultiple from "@/components/modal/ModalDoctor/modalImportarMultiple";
+import PDFExportHC from "@/components/pdf/PdfExportHC";
 
 const Datos = () => {
   const pathname = usePathname();
@@ -37,6 +38,7 @@ const Datos = () => {
   const [dataImportar, setDataImportar] = useState({});
   const [text, setText] = useState(false);
   const user = useAppSelector((state) => state.clinicalHistory.user);
+  const doctor = useAppSelector((state) => state.user);
   const infoPatient = useAppSelector((state) => state.clinicalHistory.data);
   const isLoading = useAppSelector((state) => state.clinicalHistory.loading);
 
@@ -46,6 +48,7 @@ const Datos = () => {
     setIsModalOpenText(false)
   };
   console.log(user);
+  console.log(doctor);
   const handleModalData = (data) => {
     setDataImportar(data);
   };
@@ -154,14 +157,15 @@ const Datos = () => {
                 },
               ]}
             />
-
-            <ButtonBlancoBorde
+            <PDFExportHC patient={user} user={doctor} />
+            {/* <ButtonBlancoBorde
               text={"Exportar"}
               iconLeft={<IconImportar />}
               funcion={() => GeneratePDF(user, infoPatient)}
-            />
+            /> */}
           </div>
-          <div className="flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
+
+          <div className=" flex justify-between items-center gap-2 px-6 py-2  border-b-[#cecece]">
             <div className="flex justify-center items-center ml-5">
               <div>
                 <AvatarDashPte avatar1={user?.avatar} />
@@ -190,14 +194,32 @@ const Datos = () => {
                 </span>
               </div>
             </div>
-            <div className="rounded-full border-4 border-blue-400 h-14 w-14 md:w-24 md:h-24 flex items-center justify-center md:mr-20">
-              <h1 className="text-2xl text-center text-blue-400  text-">
-                <b>
-                  {user?.userHpGroups?.length > 0 &&
-                    user?.userHpGroups[0]?.catHpGroup?.name}
-                </b>
-              </h1>
+            <div className="rounded-full border-4 border-blue-400 h-fit w-14 md:w-24 md:h-24 flex  md:hidden items-center justify-center md:mr-20">
+              {user?.userHpGroups?.length > 0 && (
+                <div className="flex flex-col items-center">
+                  {user?.userHpGroups.map((group, index) => (
+                    <h1 key={index} className="text-2xl text-center text-blue-400">
+                      <b>{group?.catHpGroup?.name}</b>
+                    </h1>
+                  ))}
+                </div>
+              )}
             </div>
+            <div className="hidden md:flex space-x-4">
+              {user?.userHpGroups?.length > 0 && (
+                user.userHpGroups.map((group, index) => (
+                  <div
+                    key={index}
+                    className="rounded-full border-4 border-blue-400 h-14 w-14 md:w-24 md:h-24 flex items-center justify-center"
+                  >
+                    <h1 className="text-2xl text-center text-blue-400">
+                      <b>{group?.catHpGroup?.name}</b>
+                    </h1>
+                  </div>
+                ))
+              )}
+            </div>
+
           </div>
           <div className="flex px-6 py-2 border gap-1 items-center justify-center ">
             <div className="flex items-center h-10">
@@ -208,7 +230,7 @@ const Datos = () => {
           </div>
           <div className="flex flex-col overflow-y-auto">
             <div className="flex flex-col md:flex-row md:gap-2 px-6 py-2 gap-2 border-b-[#cecece] bg-[#FAFAFC]">
-              <label className="text-start w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
+              <label className="text-start w-[30%] md:w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
                 <IconFatArrow /> Riesgo Cardiovascular
               </label>
               <div className="  grid grid-cols-2 md:flex gap-4">
@@ -218,31 +240,39 @@ const Datos = () => {
                 />
                 <BotonDashPte
                   riesgo={user?.ptCvRsks?.catCvRisk?.name}
-                  nombre={"Moderado"}
+                  nombre={"Intermedio-Bajo"}
+                  className={"min-w-[15rem]"}
+                />
+                <BotonDashPte
+                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
+                  nombre={"Intermedio-Alto"}
+                  className={"min-w-[15rem]"}
                 />
                 <BotonDashPte
                   riesgo={user?.ptCvRsks?.catCvRisk?.name}
                   nombre={"Alto"}
                 />
-                <BotonDashPte
-                  riesgo={user?.ptCvRsks?.catCvRisk?.name}
-                  nombre={"Muy Alto"}
-                />
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row md:gap-2 px-6 py-2 gap-2  border-b-[#cecece] bg-[#FAFAFC]">
-              <label className="text-start w-1/2 text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
+              <label className="text-start w-[30%] md:w-1/2  text-[#686868] font-medium text-base leading-4 flex gap-2 items-center">
                 <IconFatArrow /> Riesgo quirúrgico
               </label>
-              <div className="flex gap-3">
+              <div className="  grid grid-cols-2 md:flex gap-4">
                 <BotonDashPte
                   riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
                   nombre={"Bajo"}
                 />
                 <BotonDashPte
                   riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
-                  nombre={"Moderado"}
+                  nombre={"Intermedio-Bajo"}
+                  className={"min-w-[15rem]"}
+                />
+                <BotonDashPte
+                  riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
+                  nombre={"Intermedio-Alto"}
+                  className={"min-w-[15rem]"}
                 />
                 <BotonDashPte
                   riesgo={user?.patSgRisks?.catSurgicalRisk?.name}
@@ -284,7 +314,7 @@ const Datos = () => {
               }
             />
             <AntecedenteDash
-              title={"Antecedentes de infancia"}
+              title={"Antecedentes de juventud"}
               info={
                 user?.backgrounds?.pediatricBackground
                   ? user?.backgrounds?.pediatricBackground
